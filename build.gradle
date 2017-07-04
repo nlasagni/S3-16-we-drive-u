@@ -1,0 +1,23 @@
+
+allprojects {
+    group theGroup
+    version theVersion
+}
+
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        //testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+}
+
+apply plugin: 'java'
+sourceCompatibility = theSourceCompatibility
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+
