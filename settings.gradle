@@ -1,8 +1,7 @@
-rootProject.name = theName
+rootProject.name = "wedriveu"
 
-include "BackOffice"
-include "Vehicle"
-include "Mobile"
-include "Services"
-include "Services:Authentication"
-include "Services:Booking"
+include "backoffice"
+include "vehicle"
+include "mobile"
+include "services:authentication"
+include "services:booking"

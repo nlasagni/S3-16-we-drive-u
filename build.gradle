@@ -1,23 +1,10 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+group = "com.unibo"
+version = "0.1.0"
 
 allprojects {
-    group theGroup
-    version theVersion
-}
-
-subprojects {
     repositories {
-        mavenCentral()
-    }
-    dependencies {
-        //testCompile group: 'junit', name: 'junit', version: '4.12'
+        jcenter()
     }
 }
-
-apply plugin: 'java'
-sourceCompatibility = theSourceCompatibility
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
-
 
