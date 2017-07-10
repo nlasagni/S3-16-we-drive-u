@@ -2,6 +2,6 @@ rootProject.name = "wedriveu"
 
 include "backoffice"
 include "vehicle"
-include "mobile"
+include "mobiles"
 include "services:authentication"
 include "services:booking"
