@@ -12,6 +12,7 @@ buildscript {
 
 apply plugin: 'com.android.application'
 
+sourceCompatibility = 1.7
 
 android {
     compileSdkVersion 25
@@ -27,6 +28,12 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
     buildTypes {
         release {
             minifyEnabled false
