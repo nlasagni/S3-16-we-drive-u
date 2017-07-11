@@ -3,6 +3,9 @@ group = "com.unibo"
 version = "0.1.0"
 
 allprojects {
+
+    apply plugin: 'idea'
+
     repositories {
         jcenter()
     }
