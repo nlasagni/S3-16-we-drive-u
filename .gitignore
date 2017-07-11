@@ -83,6 +83,8 @@ build/
 ### Intellij
 *.iml
 .idea/
+*.ipr
+*.iws
 
 
 ### Android template
