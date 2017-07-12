@@ -1,6 +1,9 @@
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        VehicleStoreImpl obj = new VehicleStoreImpl();
+        obj.mapVehiclesToJSon();
+        Vehicle me;
+        me = obj.getVehicle("MACCHINA1");
     }
 }
