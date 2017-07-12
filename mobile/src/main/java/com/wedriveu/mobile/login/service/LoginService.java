@@ -1,7 +1,21 @@
 package com.wedriveu.mobile.login.service;
 
 /**
- * Created by Marco on 12/07/2017.
+ *
+ * This service interacts with the AuthenticationService backend to perform the user login.
+ * This service is part of the Model in MVVM pattern.
+ *
+ * @Author Marco Baldassarri
+ * @Since 12/07/2017
  */
 public interface LoginService {
+
+    /**
+     * Login method calls the AuthenticationService and perform a login request.
+     *
+     * @param username username login credential
+     * @param password password login credential
+     * @param callback method called from the LoginService in order to give the proper result back to the ViewModel
+     */
+    void login(String username, String password, LoginServiceCallback callback);
 }

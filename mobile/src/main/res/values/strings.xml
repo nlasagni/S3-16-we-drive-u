@@ -2,4 +2,5 @@
     <string name="app_name">We Drive U</string>
     <string name="we_drive_you_title">We Drive U</string>
     <string name="we_drive_you_slogan">You are just one click far from your destination</string>
+    <string name="login_error_message">Incorrect username or password, please try again</string>
 </resources>

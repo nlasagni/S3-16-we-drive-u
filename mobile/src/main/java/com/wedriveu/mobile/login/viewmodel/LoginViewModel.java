@@ -1,11 +1,19 @@
 package com.wedriveu.mobile.login.viewmodel;
 
 /**
- * Created by Marco on 12/07/2017.
+ *
+ * Represents the View business logic. Performs the logic tasks connected with the UI elements.
+ * @Author Marco Baldassarri
+ * @Since 12/07/2017
  */
 public interface LoginViewModel {
 
     String LOGIN_VIEW_MODEL_TAG = LoginViewModel.class.getSimpleName();
-    void onLoginButtonClick(String username, String password);
 
+    /**
+     * Method called when the user clicks to the Login button.
+     * @param username the username written by the user in the Login form
+     * @param password the password written by the user in the Login form
+     */
+    void onLoginButtonClick(String username, String password);
 }

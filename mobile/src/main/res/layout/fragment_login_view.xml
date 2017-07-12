@@ -14,7 +14,8 @@
         android:paddingTop="56dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
-        android:gravity="center_horizontal|center">
+        android:gravity="center_horizontal|center"
+        android:id="@+id/linearLayout">
 
         <!-- TODO: Update blank fragment layout -->
         <TextView
@@ -28,7 +29,7 @@
             android:text="@string/we_drive_you_slogan"
             android:gravity="center"/>
         <EditText
-            android:id="@+id/editTextEmail"
+            android:id="@+id/editTextUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -43,7 +44,17 @@
             android:hint="Password"
             android:ems="10"
             android:gravity="center"/>
+        <Button
+            android:text="Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="68dp"
+            android:id="@+id/loginButton" />
 
     </LinearLayout>
+
+
 
 </RelativeLayout>

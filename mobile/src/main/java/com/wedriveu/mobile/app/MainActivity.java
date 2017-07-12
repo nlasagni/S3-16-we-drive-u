@@ -5,13 +5,15 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import com.wedriveu.mobile.R;
+import com.wedriveu.mobile.login.router.LoginRouter;
 import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.login.view.LoginViewImpl;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModelImpl;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoginRouter, Application {
 
     private FragmentManager mFragmentManager;
 
@@ -23,21 +25,24 @@ public class MainActivity extends AppCompatActivity {
         mFragmentManager = getFragmentManager();
         if (savedInstanceState == null) {
             LoginViewImpl loginViewFragment = new LoginViewImpl();
-            /*LoginViewModelImpl loginViewModel = new LoginViewModelImpl();*/
+            LoginViewModelImpl loginViewModel = new LoginViewModelImpl();
+
             FragmentTransaction transaction = mFragmentManager.beginTransaction();
-            /*transaction.add(loginViewModel, LoginViewModel.LOGIN_VIEW_MODEL_TAG);*/
+            transaction.add(loginViewModel, LoginViewModel.LOGIN_VIEW_MODEL_TAG);
+
             transaction.replace(R.id.login_fragment_container, loginViewFragment, LoginView.LOGIN_VIEW_TAG);
-            transaction.addToBackStack(null);
             transaction.commit();
         }
     }
 
+    @Override
+    public Fragment getView(String tag){
+        return mFragmentManager.findFragmentByTag(tag);
+    }
 
-    public Fragment getPresenter(String tag){
-        Fragment fragment = null;
-        if ((LoginViewModel.LOGIN_VIEW_MODEL_TAG.equals(tag))) {
-            fragment = mFragmentManager.findFragmentByTag(tag);
-        }
-        return fragment;
+    @Override
+    public void showTripScheduling() {
+        //TODO: login was successful, show the scheduling fragment here
+        Log.i("USER", "scheduling fragment");
     }
 }
