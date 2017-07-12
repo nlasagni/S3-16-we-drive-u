@@ -78,7 +78,7 @@ out/
 ### Gradle files
 .gradle/
 build/
-
+mobile/gradle*
 
 ### Intellij
 *.iml

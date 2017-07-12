@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Mobile</string>
+    <string name="app_name">We Drive U</string>
+    <string name="we_drive_you_title">We Drive U</string>
+    <string name="we_drive_you_slogan">You are just one click far from your destination</string>
 </resources>
