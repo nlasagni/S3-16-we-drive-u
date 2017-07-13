@@ -4,6 +4,15 @@ jdk:
 script:
   - './gradlew clean build'
 
+
+notifications:
+  email:
+    recipients:
+      - marco.baldassarri2@studio.unibo.it
+      - michele.donati5@studio.unibo.it
+    on_success: always # default: change
+    on_failure: never # default: always
+
 language: android
 android:
   components:
@@ -28,3 +37,8 @@ android:
     # if you need to run emulator(s) during your tests
     - sys-img-armeabi-v7a-android-22
     - sys-img-armeabi-v7a-android-17
+
+   licenses:
+      - 'android-sdk-preview-license-52d11cd2'
+      - 'android-sdk-license-.+'
+      - 'google-gdk-license-.+'
