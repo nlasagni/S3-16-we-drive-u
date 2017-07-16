@@ -1,6 +1,4 @@
 dist: trusty
-services:
-  - docker
 sudo: required
 
 language: java
