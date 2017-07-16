@@ -38,3 +38,9 @@ notifications:
       - michele.donati5@studio.unibo.it
     on_success: always # default: change
     on_failure: never # default: always
+  email:
+    recipients:
+      - nicola.lasagni@gmail.com
+      - stefano.bernagozzi@studio.unibo.it
+    on_success: change # default: change
+    on_failure: always # default: always
