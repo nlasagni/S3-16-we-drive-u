@@ -1,18 +1,13 @@
+dist: trusty
+services:
+  - docker
+sudo: required
+
 language: java
 jdk:
   - oraclejdk8
 script:
   - './gradlew clean build'
-
-
-notifications:
-  email:
-    recipients:
-      - marco.baldassarri2@studio.unibo.it
-      - michele.donati5@studio.unibo.it
-    on_success: always # default: change
-    on_failure: never # default: always
-
 language: android
 android:
   components:
@@ -36,8 +31,17 @@ android:
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
     - sys-img-armeabi-v7a-android-22
-    - sys-img-armeabi-v7a-android-17
+    - sys-img-armeabi-v7a-android-19
   licenses:
     - 'android-sdk-preview-license-52d11cd2'
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
+
+# Notifications settings
+notifications:
+  email:
+    recipients:
+      - marco.baldassarri2@studio.unibo.it
+      - michele.donati5@studio.unibo.it
+    on_success: always # default: change
+    on_failure: never # default: always
