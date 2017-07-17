@@ -6,4 +6,5 @@ public class Main {
         Vehicle me;
         me = obj.getVehicle("MACCHINA1");
     }
+
 }

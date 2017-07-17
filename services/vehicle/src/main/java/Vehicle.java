@@ -1,3 +1,5 @@
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 /**
@@ -5,20 +7,22 @@ import java.util.Date;
  */
 public class Vehicle {
     private String carLicencePlate;
-    private String state; //can be: available, broken, recharging, booked
+    private String state;
     private Double latitude;
     private Double longitude;
     private Date lastUpdate;
 
-    public Vehicle(String carLicencePlate, String state, Double latitude, Double longitude, Date lastUpdate) {
+    public Vehicle(@JsonProperty("carLicencePlate")String carLicencePlate,
+                   @JsonProperty("state")String state,
+                   @JsonProperty("latitude")Double latitude,
+                   @JsonProperty("longitude")Double longitude,
+                   @JsonProperty("lastUpdate")Date lastUpdate) {
         this.carLicencePlate = carLicencePlate;
         this.state = state;
         this.latitude = latitude;
         this.longitude = longitude;
         this.lastUpdate = lastUpdate;
     }
-
-    public Vehicle(){}
 
     public String getCarLicencePlate() {
         return carLicencePlate;
@@ -59,4 +63,5 @@ public class Vehicle {
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
+
 }
