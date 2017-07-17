@@ -1,4 +1,4 @@
-rootProject.name = "wedriveu"
+rootProject.name = "$artifactId"
 
 include "backoffice"
 include "vehicle"

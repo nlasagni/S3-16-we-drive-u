@@ -4,8 +4,7 @@ sudo: required
 language: java
 jdk:
   - oraclejdk8
-script:
-  - './gradlew clean build'
+  - openjdk8
 
 language: android
 android:
@@ -27,6 +26,9 @@ android:
     - 'android-sdk-preview-license-52d11cd2'
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
+
+script:
+  - './gradlew clean build'
 
 # Notifications settings
 notifications:
