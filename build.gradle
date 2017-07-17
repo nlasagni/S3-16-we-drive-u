@@ -1,13 +1,52 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-group = "com.unibo"
-version = "0.1.0"
+group = projectGroup
+version = projectVersion
+description = projectDescription
 
-allprojects {
 
-    apply plugin: 'idea'
+buildscript {
+
+    ext.android = "com.android.tools.build:gradle:${androidGradleVersion}"
 
     repositories {
         jcenter()
     }
+    dependencies {
+        classpath android
+    }
 }
 
+allprojects {
+    apply plugin: 'idea'
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+}
+
+ext.mobileProjectName = "mobile"
+
+configure(subprojects.findAll()) {
+    if (it.name != mobileProjectName) {
+        apply plugin: 'java'
+        sourceCompatibility = "$jdkVersion"
+        dependencies {
+            compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+            testCompile "junit:junit:$junitVersion"
+        }
+    }
+}
+
+project(":backoffice") {
+    apply plugin: 'scala'
+    dependencies {
+        compile "org.scala-lang:scala-library:$scalaVersion"
+    }
+}
+
+project(":mobile") {
+    apply plugin: 'com.android.application'
+    dependencies {
+        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        testCompile "junit:junit:$junitVersion"
+    }
+}
