@@ -78,7 +78,7 @@ out/
 ### Gradle files
 .gradle/
 build/
-
+mobile/gradle*
 
 ### Intellij
 *.iml
@@ -128,3 +128,9 @@ freeline_project_description.json
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 
+.gradle
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures

@@ -34,6 +34,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
+    packagingOptions {
+        exclude "META-INF/NOTICE"
+        exclude "META-INF/LICENSE"
+        exclude "META-INF/LICENSE.txt"
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -43,10 +49,20 @@ android {
 }
 
 dependencies {
+    //Libraries
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    //Tests
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
+
+    //Android Support
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+
+    //Other
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
 }
