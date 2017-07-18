@@ -10,7 +10,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
- * Created by Marco on 12/07/2017.
+ * @author Marco Baldassarri
+ * @author Nicola Lasagni
+ * @since 18/07/2017
+ *
  */
 public class LoginServiceImpl implements LoginService {
 

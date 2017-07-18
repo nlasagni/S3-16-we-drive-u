@@ -13,8 +13,16 @@ import com.wedriveu.mobile.store.StoreFactory;
  */
 public interface FactoryManager {
 
+    /**
+     * Creates the stores factory.
+     * @return The {@linkplain StoreFactory} created.
+     */
     StoreFactory createStoreFactory();
 
+    /**
+     * Creates the services factory.
+     * @return The {@linkplain ServiceFactory} created.
+     */
     ServiceFactory createServiceFactory();
 
 }
