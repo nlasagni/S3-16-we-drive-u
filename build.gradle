@@ -50,3 +50,17 @@ project(":mobile") {
         testCompile "junit:junit:$junitVersion"
     }
 }
+
+static def filterProjectForJavadoc(subprojects) {
+    return subprojects.grep {it.name != "mobile"}
+}
+
+
+task javadoc(overwrite: true, type: Javadoc) {
+    source filterProjectForJavadoc(subprojects).collect {project -> project.sourceSets.main.allJava }
+    dependsOn filterProjectForJavadoc(subprojects).collect {project -> project.javadoc.source }
+    destinationDir = new File("javadoc")
+    // might need a classpath
+    classpath = files(filterProjectForJavadoc(subprojects)
+            .collect {project -> project.sourceSets.main.compileClasspath})
+}
