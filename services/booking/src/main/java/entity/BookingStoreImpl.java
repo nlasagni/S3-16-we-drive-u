@@ -1,6 +1,9 @@
+package entity;
+
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import utilities.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -103,7 +106,7 @@ public class BookingStoreImpl implements BookingStore {
     private Booking checkBookingList(Booking[] bookings, int bookingId) {
         for (Booking booking : bookings) {
             if(booking.getBookingID() == bookingId) {
-                utils.log("Booking found! -> User: " +
+                utils.log("entity.Booking found! -> User: " +
                         booking.getUsername() +
                         " Vehicle: " +
                         booking.getCarLicencePlate() +
@@ -113,7 +116,7 @@ public class BookingStoreImpl implements BookingStore {
                 return booking;
             }
         }
-        utils.log("Booking not found, retry!");
+        utils.log("entity.Booking not found, retry!");
         return null;
     }
 

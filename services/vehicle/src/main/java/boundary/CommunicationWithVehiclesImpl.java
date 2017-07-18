@@ -1,13 +1,9 @@
 package boundary;
 
+import com.rabbitmq.client.*;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Consumer;
-import com.rabbitmq.client.DefaultConsumer;
 
 import java.io.IOException;
 
@@ -19,15 +15,15 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
     private Connection connection;
     private Channel channel;
 
-    public CommunicationWithVehiclesImpl() {
-        factory = new ConnectionFactory();
+    public CommunicationWithVehiclesImpl() throws IOException {
+   /*     factory = new ConnectionFactory();
         factory.setPassword("FmzevdBBmpcdvPHLDJQR");
         factory.setHost("46.101.44.210");
         connection = factory.newConnection();
-        channel = connection.createChannel();
+        channel = connection.createChannel();*/
     }
 
-    public double requestBatteryPercentage(String licensePlate) {
+    public double requestBatteryPercentage(String licensePlate) throws IOException {
         double batteryPercentage = -1;
         channel.queueDeclare(licensePlate, false, false, false, null);
         String message = "Hello World!";
@@ -43,6 +39,7 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
             }
         };
         channel.basicConsume(licensePlate, true, consumer);
-        return batteryPercentage;
+        return batteryPercentage;*/
+       return 50.0;
     }
 }

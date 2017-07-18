@@ -1,6 +1,9 @@
 package control;
 
-import database.Vehicle;
+import entity.Vehicle;
+import utilities.Position;
+
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -14,5 +17,7 @@ public interface FindVehicles {
      * @param allAvailable a list of all the available cars at the moment of the method call
      * @return list of all car with enough battery in a specified range calculated from userPosition
      */
-    public List<Vehicle> listAllEligibleVehicles(Position userPosition, Position destPosition, List<Vehicle> allAvailable);
+    public List<Vehicle> listAllEligibleVehicles(Position userPosition,
+                                                 Position destPosition,
+                                                 List<Vehicle> allAvailable) throws IOException;
 }

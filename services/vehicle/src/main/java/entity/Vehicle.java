@@ -1,4 +1,7 @@
+package entity;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+import utilities.Position;
 
 import java.util.Date;
 
@@ -8,19 +11,16 @@ import java.util.Date;
 public class Vehicle {
     private String carLicencePlate;
     private String state;
-    private Double latitude;
-    private Double longitude;
+    private Position position;
     private Date lastUpdate;
 
     public Vehicle(@JsonProperty("carLicencePlate")String carLicencePlate,
                    @JsonProperty("state")String state,
-                   @JsonProperty("latitude")Double latitude,
-                   @JsonProperty("longitude")Double longitude,
+                   @JsonProperty("position") Position position,
                    @JsonProperty("lastUpdate")Date lastUpdate) {
         this.carLicencePlate = carLicencePlate;
         this.state = state;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.position = position;
         this.lastUpdate = lastUpdate;
     }
 
@@ -40,22 +40,6 @@ public class Vehicle {
         this.state = state;
     }
 
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
     public Date getLastUpdate() {
         return lastUpdate;
     }
@@ -64,4 +48,11 @@ public class Vehicle {
         this.lastUpdate = lastUpdate;
     }
 
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
 }

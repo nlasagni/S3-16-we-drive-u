@@ -1,9 +1,11 @@
-/**
+package entity; /**
  * Created by Michele on 12/07/2017.
  */
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import utilities.Position;
+import utilities.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,23 +20,19 @@ public class VehicleStoreImpl implements VehicleStore {
     public void mapEntityToJson() {
         Vehicle vehicle = createDummyObject("MACCHINA1",
                         "broken",
-                        10.2,
-                        13.2,
+                        new Position(10.2,13.2),
                         new Date(2017, 11, 30, 12, 37,43));
         Vehicle vehicle2 = createDummyObject("MACCHINA2",
                         "available",
-                        11.2,
-                        14.2,
+                        new Position(11.2,14.2),
                         new Date(2017, 10, 28, 11, 43, 12));
         Vehicle vehicle3 = createDummyObject("MACCHINA3",
                         "busy",
-                        12.2,
-                        15.2,
+                        new Position(15.2,13.2),
                         new Date(2017, 9, 26, 10, 56, 46));
         Vehicle vehicle4 = createDummyObject("MACCHINA4",
                         "recharging",
-                        13.2,
-                        16.2,
+                        new Position(13.2,16.2),
                         new Date(2017, 8, 24, 9, 37, 22));
 
         ArrayList<Vehicle> vehicleListToJSon = new ArrayList<Vehicle>();
@@ -68,10 +66,9 @@ public class VehicleStoreImpl implements VehicleStore {
 
     private Vehicle createDummyObject(String carLicencePlate,
                                       String state,
-                                      Double latitude,
-                                      Double longitude,
+                                      Position position,
                                       Date lastUpdate) {
-        return new Vehicle(carLicencePlate, state, latitude, longitude, lastUpdate);
+        return new Vehicle(carLicencePlate, state,position, lastUpdate);
     }
 
     private void writeJsonVehicleFile(ArrayList<Vehicle> vehicleListToJSon) {
@@ -96,11 +93,11 @@ public class VehicleStoreImpl implements VehicleStore {
     private Vehicle checkVehicleList(Vehicle[] vehicles, String carLicencePlate) {
         for (Vehicle vehicle : vehicles) {
             if(vehicle.getCarLicencePlate().equals(carLicencePlate)){
-                utils.log("Vehicle found! -> " + vehicle.getCarLicencePlate() + " " + vehicle.getState());
+                utils.log("entity.Vehicle found! -> " + vehicle.getCarLicencePlate() + " " + vehicle.getState());
                 return vehicle;
             }
         }
-        utils.log("Vehicle not found, retry!");
+        utils.log("entity.Vehicle not found, retry!");
         return null;
     }
 

@@ -1,26 +1,32 @@
 package control;
 
 import boundary.CommunicationWithVehicles;
-import database.*;
+import boundary.CommunicationWithVehiclesImpl;
+import entity.Vehicle;
+import entity.VehicleStore;
+import entity.VehicleStoreImpl;
+import utilities.Position;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by stefano.bernagozzi on 17/07/2017.
  */
-public class FindVehiclesImpl {
+public class FindVehiclesImpl implements FindVehicles {
     private VehicleStore vehicleStoreReference;
     private CommunicationWithVehicles communicationWithVehicles;
-    private double range = 0.5;
+    private double range = 20;
     private double maximumDistanceToRecharge = 20;
-    private double estimatedKilometersPerPercentage = 20;
+    private double estimatedKilometersPerPercentage = 10;
 
-    public FindVehiclesImpl() {
+    public FindVehiclesImpl() throws IOException {
         vehicleStoreReference = new VehicleStoreImpl();
+        communicationWithVehicles = new CommunicationWithVehiclesImpl();
     }
 
-    public List<Vehicle> listAllEligibleVehicles(Position userPosition, Position destPosition, List<Vehicle> allAvailable) {
+    public List<Vehicle> listAllEligibleVehicles(Position userPosition, Position destPosition, List<Vehicle> allAvailable) throws IOException {
 
         List<Vehicle> eligibles = new ArrayList<>();
         for(Vehicle current: allAvailable) {

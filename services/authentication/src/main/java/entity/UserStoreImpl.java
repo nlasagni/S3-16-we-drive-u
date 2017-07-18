@@ -15,7 +15,7 @@ public class UserStoreImpl implements UserStore {
 
     //FIXME Fix the path where we should saving the database
     private final static String USERS_DATABASE_PATH = "D:\\users.json";
-  //  private Util utils = new Util();
+  //  private utilities.Util utils = new utilities.Util();
   //  private String USERS_DATABASE_PATH = "./data/users.json";
 
     @Override
