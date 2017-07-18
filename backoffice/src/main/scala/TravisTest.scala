@@ -1,12 +1,12 @@
 import com.fasterxml.jackson.databind.ObjectMapper
 
 /**
-  * Created by nicolalasagni on 16/07/2017.
+  * @author Nicola Lasagni
   */
 object TravisTest {
 
   /**
-    * @deprecated
+    * Hello test method
     */
   def hello() = {
     println("Hello World!")

@@ -28,7 +28,10 @@ android:
     - 'google-gdk-license-.+'
 
 script:
-  - './gradlew clean build'
+  - './gradlew clean build javadoc scaladoc'
+after_success:
+  - './gradlew javadoc'
+  - './gradlew scaladoc'
 
 # Notifications settings
 notifications:

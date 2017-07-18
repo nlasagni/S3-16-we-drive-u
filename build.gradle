@@ -23,10 +23,8 @@ allprojects {
     }
 }
 
-ext.mobileProjectName = "mobile"
-
 configure(subprojects.findAll()) {
-    if (it.name != mobileProjectName) {
+    if (it.name != "mobile") {
         apply plugin: 'java'
         sourceCompatibility = "$jdkVersion"
         dependencies {
@@ -38,6 +36,7 @@ configure(subprojects.findAll()) {
 
 project(":backoffice") {
     apply plugin: 'scala'
+    scaladoc.destinationDir = new File("docs/scala")
     dependencies {
         compile "org.scala-lang:scala-library:$scalaVersion"
     }
@@ -51,16 +50,13 @@ project(":mobile") {
     }
 }
 
-static def filterProjectForJavadoc(subprojects) {
-    return subprojects.grep {it.name != "mobile"}
+static def javaDocProjects(subProjects) {
+    return subProjects.grep {it.name != "mobile"}
 }
 
-
 task javadoc(overwrite: true, type: Javadoc) {
-    source filterProjectForJavadoc(subprojects).collect {project -> project.sourceSets.main.allJava }
-    dependsOn filterProjectForJavadoc(subprojects).collect {project -> project.javadoc.source }
-    destinationDir = new File("javadoc")
-    // might need a classpath
-    classpath = files(filterProjectForJavadoc(subprojects)
-            .collect {project -> project.sourceSets.main.compileClasspath})
+    source javaDocProjects(subprojects).collect { project -> project.sourceSets.main.allJava }
+    dependsOn javaDocProjects(subprojects).collect() { project -> project.javadoc.source }
+    destinationDir = new File("docs/java")
+    classpath = files(javaDocProjects(subprojects).collect {project -> project.sourceSets.main.allJava})
 }
