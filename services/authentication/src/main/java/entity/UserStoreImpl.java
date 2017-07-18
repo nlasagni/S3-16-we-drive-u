@@ -1,20 +1,24 @@
 package entity;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
-        import com.fasterxml.jackson.databind.JsonMappingException;
-        import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-        import java.io.File;
-        import java.io.IOException;
-        import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 /**
  * Created by Michele on 12/07/2017.
  */
 public class UserStoreImpl implements UserStore {
 
+    private final static String USERS_DATABASE_PATH = "D:\\users.json";
+  //  private Util utils = new Util();
+  //  private String USERS_DATABASE_PATH = "./data/users.json";
+
     @Override
-    public void mapUsersToJSon() {
-        ObjectMapper mapper = new ObjectMapper();
+    public void mapEntityToJson() {
 
         User user = createDummyObject("Michele","PASSWORD1");
         User user2 = createDummyObject("Stefano","PASSWORD2");
@@ -27,26 +31,7 @@ public class UserStoreImpl implements UserStore {
         userListToJSon.add(user3);
         userListToJSon.add(user4);
 
-
-        try {
-            // Convert object to JSON string and save into a file directly
-            mapper.writeValue(new File("D:\\users.json"), userListToJSon);
-
-            // Convert object to JSON string
-            String jsonInString = mapper.writeValueAsString(userListToJSon);
-            System.out.println(jsonInString);
-
-            // Convert object to JSON string and pretty print
-            jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(userListToJSon);
-            System.out.println(jsonInString);
-
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        writeJSonUsersFile(userListToJSon);
     }
 
     @Override
@@ -54,19 +39,9 @@ public class UserStoreImpl implements UserStore {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            // Convert JSON string from file to Object
-            User[] userListFromJSon= new User[10];
-            userListFromJSon = mapper.readValue(new File("D:\\users.json"), User[].class);
-            for (int i = 0; i < userListFromJSon.length; i++) {
-                User actualUser = userListFromJSon[i];
-                if(actualUser.getUsername().equals(username)) {
-                    System.out.println("Login success! " + "Username: " +actualUser.getUsername() + ", Password: " + actualUser.getPassword());
-                    return actualUser;
-                }
-            }
-            System.out.println("Login failed, retry!");
-            return null;
-
+         //   User[] users= mapper.readValue(new File(getClass().getResource(USERS_DATABASE_PATH).getPath()), User[].class);
+            User[] users= mapper.readValue(new File(USERS_DATABASE_PATH), User[].class);
+            return checkUsersList(users, username);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {
@@ -76,15 +51,44 @@ public class UserStoreImpl implements UserStore {
         }
 
         return null;
-
     }
 
-
     private User createDummyObject(String username, String password) {
+        return new User(username, password);
+    }
 
-        User user = new User(username, password);
-        return user;
+    private void writeJSonUsersFile(ArrayList<User> userListToJSon){
+        try {
+            ObjectMapper mapper = new ObjectMapper();
 
+         //   mapper.writeValue(new File(getClass().getResource(USERS_DATABASE_PATH).getPath()), userListToJSon);
+            mapper.writeValue(new File(USERS_DATABASE_PATH), userListToJSon);
+            String jsonInString = mapper.writeValueAsString(userListToJSon);
+            log(jsonInString);
+            jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(userListToJSon);
+            log(jsonInString);
+        } catch (JsonGenerationException e) {
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private User checkUsersList(User[] users, String username){
+        for (User user : users) {
+            if(user.getUsername().equals(username)) {
+                log("Login success! " + "Username: " + user.getUsername() + ", Password: " + user.getPassword());
+                return user;
+            }
+        }
+        log("Login failed, retry!");
+        return null;
+    }
+
+    private void log(String toLog){
+        System.out.println(toLog);
     }
 
 }

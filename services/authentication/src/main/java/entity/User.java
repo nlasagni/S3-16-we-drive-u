@@ -1,34 +1,27 @@
 package entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by Michele on 12/07/2017.
  */
 public class User {
+
     private String username;
     private String password;
 
-    public User(String username, String password) {
+    public User(@JsonProperty("username") String username,
+                @JsonProperty("password") String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public User() {
     }
 
     public String getUsername() {
         return this.username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
 }

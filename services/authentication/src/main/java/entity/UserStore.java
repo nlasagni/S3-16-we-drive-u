@@ -8,13 +8,12 @@ package entity;
  * @author Michele Donati
  * This inteface models the <em>Users' database domain</em>.
  */
-
 public interface UserStore {
 
     /**
      * Maps an <em>User</em> object in a JSon object.
      */
-    public void mapUsersToJSon();
+    public void mapEntityToJson();
 
     /**
      *
