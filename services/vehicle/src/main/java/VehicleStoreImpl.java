@@ -12,10 +12,10 @@ import java.util.Date;
 
 public class VehicleStoreImpl implements VehicleStore {
 
-    private final static String VEHICLES_DATABASE_PATH = "D:\\vehicles.json";
+    private Util utils = new Util();
 
     @Override
-    public void mapVehiclesToJSon() {
+    public void mapEntityToJson() {
         Vehicle vehicle = createDummyObject("MACCHINA1",
                         "broken",
                         10.2,
@@ -52,7 +52,7 @@ public class VehicleStoreImpl implements VehicleStore {
 
         try {
             Vehicle[] vehicles= new Vehicle[10];
-            vehicles = mapper.readValue(new File(VEHICLES_DATABASE_PATH), Vehicle[].class);
+            vehicles = mapper.readValue(new File(utils.VEHICLES_DATABASE_PATH), Vehicle[].class);
             return checkVehicleList(vehicles, carLicencePlate);
 
         } catch (JsonGenerationException e) {
@@ -78,11 +78,11 @@ public class VehicleStoreImpl implements VehicleStore {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            mapper.writeValue(new File(VEHICLES_DATABASE_PATH), vehicleListToJSon);
+            mapper.writeValue(new File(utils.VEHICLES_DATABASE_PATH), vehicleListToJSon);
             String jsonInString = mapper.writeValueAsString(vehicleListToJSon);
-            log(jsonInString);
+            utils.log(jsonInString);
             jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(vehicleListToJSon);
-            log(jsonInString);
+            utils.log(jsonInString);
 
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -96,16 +96,12 @@ public class VehicleStoreImpl implements VehicleStore {
     private Vehicle checkVehicleList(Vehicle[] vehicles, String carLicencePlate) {
         for (Vehicle vehicle : vehicles) {
             if(vehicle.getCarLicencePlate().equals(carLicencePlate)){
-                log("Vehicle found! -> " + vehicle.getCarLicencePlate() + " " + vehicle.getState());
+                utils.log("Vehicle found! -> " + vehicle.getCarLicencePlate() + " " + vehicle.getState());
                 return vehicle;
             }
         }
-        log("Vehicle not found, retry!");
+        utils.log("Vehicle not found, retry!");
         return null;
-    }
-
-    private void log(String toLog) {
-        System.out.println(toLog);
     }
 
 }

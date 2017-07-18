@@ -11,7 +11,7 @@ public interface VehicleStore {
     /**
      * Maps a <em>Vehicle</em> object in a Json object.
      */
-    public void mapVehiclesToJSon();
+    public void mapEntityToJson();
 
     /**
      *
