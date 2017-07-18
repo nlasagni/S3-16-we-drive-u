@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.login.router.LoginRouter;
 import com.wedriveu.mobile.login.view.LoginView;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Fact
             FragmentTransaction transaction = mFragmentManager.beginTransaction();
             transaction.add(loginViewModel, LoginViewModel.TAG);
 
-            transaction.replace(R.id.login_fragment_container, loginViewFragment, LoginView.TAG);
+            transaction.replace(R.id.fragment_container, loginViewFragment, LoginView.TAG);
             transaction.commit();
         }
     }
@@ -63,5 +64,17 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Fact
     @Override
     public ServiceFactory createServiceFactory() {
         return new ServiceFactoryImpl();
+    }
+
+    @Override
+    public void showProgressDialog() {
+        View progressDialog = findViewById(R.id.progress_dialog);
+        progressDialog.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        View progressDialog = findViewById(R.id.progress_dialog);
+        progressDialog.setVisibility(View.GONE);
     }
 }
