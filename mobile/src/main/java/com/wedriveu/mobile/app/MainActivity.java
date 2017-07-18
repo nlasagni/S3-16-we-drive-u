@@ -1,9 +1,12 @@
 package com.wedriveu.mobile.app;
 
+import android.app.Application;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,14 +16,19 @@ import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.login.view.LoginViewImpl;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModelImpl;
-import com.wedriveu.mobile.service.ServiceFactory;
-import com.wedriveu.mobile.service.ServiceFactoryImpl;
-import com.wedriveu.mobile.store.StoreFactory;
 import com.wedriveu.mobile.store.StoreFactoryImpl;
+import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
+import com.wedriveu.mobile.tripscheduling.view.SchedulingViewImpl;
+import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModel;
+import com.wedriveu.mobile.util.location.LocationManager;
+import com.wedriveu.mobile.util.location.LocationManagerImpl;
 
-public class MainActivity extends AppCompatActivity implements LoginRouter, FactoryManager, ComponentFinder {
+
+public class MainActivity extends AppCompatActivity implements LoginRouter, ComponentFinder {
 
     private FragmentManager mFragmentManager;
+
+    LocationManager mLocationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Fact
 
             transaction.replace(R.id.fragment_container, loginViewFragment, LoginView.TAG);
             transaction.commit();
+            mLocationManager = new LocationManagerImpl(this);
         }
     }
 
@@ -52,18 +61,10 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Fact
 
     @Override
     public void showTripScheduling() {
-        //TODO Login was successful, show the scheduling here.
-        Log.i(MainActivity.class.getSimpleName(), "scheduling fragment");
-    }
-
-    @Override
-    public StoreFactory createStoreFactory() {
-        return new StoreFactoryImpl(getApplication());
-    }
-
-    @Override
-    public ServiceFactory createServiceFactory() {
-        return new ServiceFactoryImpl();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        SchedulingViewImpl schedulingViewFragment = SchedulingViewImpl.newInstance(SchedulingViewModel.TAG);
+        transaction.replace(R.id.fragment_container, schedulingViewFragment, SchedulingView.TAG);
+        transaction.commit();
     }
 
     @Override
@@ -77,4 +78,29 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Fact
         View progressDialog = findViewById(R.id.progress_dialog);
         progressDialog.setVisibility(View.GONE);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mLocationManager.checkSettings();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mLocationManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mLocationManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLocationManager.disableLocationService();
+    }
+
 }

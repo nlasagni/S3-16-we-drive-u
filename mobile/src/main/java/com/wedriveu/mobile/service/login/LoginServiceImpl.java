@@ -30,7 +30,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void login(final String username, final String password, final LoginServiceCallback callback) {
-        Call<Void> loginCall = mLoginServiceApi.login(username, password);
+        callback.onLoginFinished(new User(username, password), null);
+        /*Call<Void> loginCall = mLoginServiceApi.login(username, password);
         loginCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -46,7 +47,7 @@ public class LoginServiceImpl implements LoginService {
                 Log.e(TAG, "Failure on login operation!", t);
                 callback.onLoginFinished(null, t.getLocalizedMessage());
             }
-        });
+        });*/
     }
 
 }

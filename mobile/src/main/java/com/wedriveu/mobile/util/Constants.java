@@ -6,5 +6,6 @@ package com.wedriveu.mobile.util;
 public interface Constants {
 
     String SERVICE_BASE_URL = "http://uniboguys.duckdns.org:8080";
+    String VIEW_MODEL_ID = "viewModelId";
 
 }

@@ -1,4 +1,4 @@
-package com.wedriveu.mobile.login.view;
+package com.wedriveu.mobile.tripscheduling.view;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -11,19 +11,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
+import com.wedriveu.mobile.login.view.LoginViewImpl;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
+import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModel;
 import com.wedriveu.mobile.util.Constants;
 
-public class LoginViewImpl extends Fragment implements LoginView {
+/**
+ * Created by Marco on 18/07/2017.
+ */
+public class SchedulingViewImpl extends Fragment implements SchedulingView{
+    private EditText mAddress;
+    private Button mScheduleButton;
 
-
-
-    private Button mLoginButton;
-    private EditText mUsername;
-    private EditText mPassword;
-
-    public static LoginViewImpl newInstance(String viewModelId) {
-        LoginViewImpl fragment = new LoginViewImpl();
+    public static SchedulingViewImpl newInstance(String viewModelId) {
+        SchedulingViewImpl fragment = new SchedulingViewImpl();
         Bundle arguments = new Bundle();
         arguments.putString(Constants.VIEW_MODEL_ID, viewModelId);
         fragment.setArguments(arguments);
@@ -32,40 +33,40 @@ public class LoginViewImpl extends Fragment implements LoginView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_scheduling_view, container, false);
         setupUIComponents(view);
         renderView();
         return view;
     }
 
     private void setupUIComponents(View view){
-        mUsername = (EditText) view.findViewById(R.id.editTextUsername);
-        mPassword = (EditText) view.findViewById(R.id.editTextPassword);
-        mLoginButton =  (Button) view.findViewById(R.id.loginButton);
+        mAddress = (EditText) view.findViewById(R.id.destinationAddressText);
+        mScheduleButton = (Button) view.findViewById(R.id.scheduleButton);
     }
+
 
     @Override
     public void renderView() {
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
+        mScheduleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login(mUsername.getText().toString(), mPassword.getText().toString());
+                sendAddress(mAddress.getText().toString());
             }
         });
+
     }
 
-    private void login(String username, String password) {
-        LoginViewModel viewModel = getViewModel();
+    private void sendAddress(String address) {
+        SchedulingViewModel viewModel = getViewModel();
         if (viewModel != null) {
-            viewModel.onLoginButtonClick(username, password);
+            viewModel.onSearchVehicleButtonClick(address);
         }
     }
-
-    private LoginViewModel getViewModel() {
+    private SchedulingViewModel getViewModel() {
         ComponentFinder componentFinder = (ComponentFinder) getActivity();
         if (componentFinder != null) {
             String viewModelId = getArguments().getString(Constants.VIEW_MODEL_ID);
-            return (LoginViewModel) componentFinder.getViewModel(viewModelId);
+            return (SchedulingViewModel) componentFinder.getViewModel(viewModelId);
         }
         return null;
     }
@@ -85,5 +86,4 @@ public class LoginViewImpl extends Fragment implements LoginView {
                 .create();
         alertDialog.show();
     }
-
 }
