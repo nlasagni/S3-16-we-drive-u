@@ -1,9 +1,10 @@
-package com.wedriveu.mobile.entity.model;
+package com.wedriveu.mobile.model;
 
 /**
  * Created by Marco on 12/07/2017.
  */
 public class User {
+
     private String username;
     private String password;
 
@@ -27,4 +28,5 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }
