@@ -15,7 +15,8 @@ package com.wedriveu.mobile.login.router;
 public interface LoginRouter {
 
     /**
-     * Method used by the MainActivity to show the Scheduling Fragment in order to let the user choosing a destination address
+     * Method used by the MainActivity to show the Scheduling Fragment
+     * in order to let the user choosing a destination address.
      */
     void showTripScheduling();
 }
