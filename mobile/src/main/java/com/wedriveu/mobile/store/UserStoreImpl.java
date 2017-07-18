@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.mobile.model.User;
 import org.json.JSONObject;
@@ -13,16 +14,16 @@ import java.io.IOException;
 /**
  * Created by Marco on 12/07/2017.
  */
-public class LoginStoreImpl implements LoginStore {
+public class UserStoreImpl implements UserStore {
 
-    private static final String TAG = LoginStoreImpl.class.getSimpleName();
+    private static final String TAG = UserStore.class.getSimpleName();
     private static final String USER_PREFERENCE_NAME = "_userPreferences";
     private static final String USER_PREFERENCE = "user";
 
     private SharedPreferences mSharedPreferences;
     private ObjectMapper mObjectMapper;
 
-    public LoginStoreImpl(Application application) {
+    public UserStoreImpl(Application application) {
         mSharedPreferences = application.getSharedPreferences(USER_PREFERENCE_NAME, Context.MODE_PRIVATE);
         mObjectMapper = new ObjectMapper();
     }
@@ -41,7 +42,14 @@ public class LoginStoreImpl implements LoginStore {
 
     @Override
     public void storeUser(User user) {
-        this.user = user;
+        try {
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            String userJson = mObjectMapper.writeValueAsString(user);
+            editor.putString(USER_PREFERENCE, userJson);
+            editor.apply();
+        } catch (JsonProcessingException e) {
+            Log.e(TAG, "Error occurred while storing user!", e);
+        }
     }
 
 }
