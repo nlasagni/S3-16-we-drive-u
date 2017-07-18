@@ -24,12 +24,6 @@ android {
         exclude "META-INF/LICENSE.txt"
     }
 
-    packagingOptions {
-        exclude "META-INF/NOTICE"
-        exclude "META-INF/LICENSE"
-        exclude "META-INF/LICENSE.txt"
-    }
-
     buildTypes {
         release {
             minifyEnabled false
