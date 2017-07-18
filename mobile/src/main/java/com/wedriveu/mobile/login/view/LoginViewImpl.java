@@ -74,6 +74,7 @@ public class LoginViewImpl extends Fragment implements LoginView {
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setCancelable(false)
                 .setTitle(R.string.common_warning)
+                .setMessage(message)
                 .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
