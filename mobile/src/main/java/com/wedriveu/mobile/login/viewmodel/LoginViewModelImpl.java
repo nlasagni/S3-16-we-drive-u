@@ -36,10 +36,8 @@ public class LoginViewModelImpl extends Fragment implements LoginViewModel, Logi
         mViewId = viewId;
     }
 
-    /*
-    The deprecated method has been chosen because the minTargetVersion is 19.
-    Switch to >=23 in order to use the new onAttach method.
-*/
+    // This deprecated method has been chosen because the minTargetVersion is 19.
+    // Switch to minTargetVersion >= 23 in order to use the new onAttach method.
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

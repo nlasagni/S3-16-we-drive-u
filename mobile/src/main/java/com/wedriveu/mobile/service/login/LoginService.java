@@ -5,8 +5,8 @@ package com.wedriveu.mobile.service.login;
  * This service interacts with the AuthenticationService backend to perform the user login.
  * This service is part of the Model in MVVM pattern.
  *
- * @Author Marco Baldassarri
- * @Since 12/07/2017
+ * @author  Marco Baldassarri, Nicola Lasagni
+ * @since 12/07/2017
  */
 public interface LoginService {
 
