@@ -1,6 +1,6 @@
-package com.wedriveu.mobile.entity.store;
+package com.wedriveu.mobile.store;
 
-import com.wedriveu.mobile.entity.model.User;
+import com.wedriveu.mobile.model.User;
 
 /**
  *

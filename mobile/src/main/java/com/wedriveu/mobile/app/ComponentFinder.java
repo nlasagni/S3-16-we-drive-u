@@ -10,7 +10,7 @@ import android.app.Fragment;
  * @Author Marco Baldassarri
  * @Since 12/07/2017
  */
-public interface Application {
+public interface ComponentFinder {
 
     /**
      *
