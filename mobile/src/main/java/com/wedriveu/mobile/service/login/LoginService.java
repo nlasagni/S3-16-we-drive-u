@@ -18,4 +18,5 @@ public interface LoginService {
      * @param callback method called from the LoginService in order to give the proper result back to the ViewModel
      */
     void login(String username, String password, LoginServiceCallback callback);
+
 }
