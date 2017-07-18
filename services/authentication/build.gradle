@@ -7,6 +7,8 @@ repositories {
     mavenCentral()
 }
 
+evaluationDependsOn(':services:shared')
+
 dependencies {
     testCompile 'junit:junit:4.12'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
@@ -16,4 +18,5 @@ dependencies {
     compile group: 'io.vertx', name: 'vertx-core', version: '3.4.1'
     compile group: 'io.vertx', name: 'vertx-web', version: '3.4.1'
     compile 'io.vertx:vertx-config:3.4.2'
+    compile project(path: ':services:shared')
 }
