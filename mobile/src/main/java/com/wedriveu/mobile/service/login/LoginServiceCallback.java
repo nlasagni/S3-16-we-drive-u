@@ -1,4 +1,4 @@
-package com.wedriveu.mobile.login.service;
+package com.wedriveu.mobile.service.login;
 
 import com.wedriveu.mobile.model.User;
 
