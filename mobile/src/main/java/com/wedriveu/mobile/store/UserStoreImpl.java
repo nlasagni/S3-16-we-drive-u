@@ -23,8 +23,8 @@ public class UserStoreImpl implements UserStore {
     private SharedPreferences mSharedPreferences;
     private ObjectMapper mObjectMapper;
 
-    public UserStoreImpl(Application application) {
-        mSharedPreferences = application.getSharedPreferences(USER_PREFERENCE_NAME, Context.MODE_PRIVATE);
+    public UserStoreImpl(Context context) {
+        mSharedPreferences = context.getSharedPreferences(USER_PREFERENCE_NAME, Context.MODE_PRIVATE);
         mObjectMapper = new ObjectMapper();
     }
 
@@ -32,8 +32,8 @@ public class UserStoreImpl implements UserStore {
     public User getUser() {
         User user = null;
         try {
-            String feedbackJson = mSharedPreferences.getString(USER_PREFERENCE, JSONObject.NULL.toString());
-            user = mObjectMapper.readValue(feedbackJson, User.class);
+            String userJson = mSharedPreferences.getString(USER_PREFERENCE, JSONObject.NULL.toString());
+            user = mObjectMapper.readValue(userJson, User.class);
         } catch (IOException e) {
             Log.e(TAG, "Error occurred while getting user!", e);
         }
