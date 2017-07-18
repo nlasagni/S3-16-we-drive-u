@@ -8,7 +8,7 @@ package com.wedriveu.mobile.login.viewmodel;
  */
 public interface LoginViewModel {
 
-    String LOGIN_VIEW_MODEL_TAG = LoginViewModel.class.getSimpleName();
+    String TAG = LoginViewModel.class.getSimpleName();
 
     /**
      * Method called when the user clicks to the Login button.

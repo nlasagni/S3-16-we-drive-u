@@ -3,32 +3,57 @@ package com.wedriveu.mobile.login.viewmodel;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import com.wedriveu.mobile.R;
-import com.wedriveu.mobile.app.Application;
-import com.wedriveu.mobile.entity.model.User;
-import com.wedriveu.mobile.entity.store.LoginStore;
-import com.wedriveu.mobile.entity.store.LoginStoreImpl;
+import android.text.TextUtils;
+import com.wedriveu.mobile.app.ComponentFinder;
+import com.wedriveu.mobile.app.FactoryManager;
 import com.wedriveu.mobile.login.router.LoginRouter;
-import com.wedriveu.mobile.login.service.LoginService;
-import com.wedriveu.mobile.login.service.LoginServiceCallback;
-import com.wedriveu.mobile.login.service.LoginServiceImpl;
 import com.wedriveu.mobile.login.view.LoginView;
+import com.wedriveu.mobile.model.User;
+import com.wedriveu.mobile.service.ServiceFactory;
+import com.wedriveu.mobile.service.login.LoginService;
+import com.wedriveu.mobile.service.login.LoginServiceCallback;
+import com.wedriveu.mobile.store.StoreFactory;
+import com.wedriveu.mobile.store.UserStore;
 
 /**
  * Created by Marco on 12/07/2017.
  */
 public class LoginViewModelImpl extends Fragment implements LoginViewModel, LoginServiceCallback {
-    private LoginService mLoginService;
-    private LoginRouter mRouter;
-    private LoginStore mLoginStore;
-    private LoginView mLoginView;
 
+    private String mViewId;
+    private LoginService mLoginService;
+    private UserStore mUserStore;
+    private LoginRouter mRouter;
+
+    public static LoginViewModelImpl newInstance(String viewId) {
+        LoginViewModelImpl fragment = new LoginViewModelImpl();
+        fragment.setRetainInstance(true);
+        fragment.setViewId(viewId);
+        return fragment;
+    }
+
+    private void setViewId(String viewId) {
+        mViewId = viewId;
+    }
+
+    /*
+    The deprecated method has been chosen because the minTargetVersion is 19.
+    Switch to >=23 in order to use the new onAttach method.
+*/
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mRouter = (LoginRouter) activity;
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mLoginService = new LoginServiceImpl();
-        mLoginStore = new LoginStoreImpl();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FactoryManager factoryManager = (FactoryManager) getActivity();
+        StoreFactory storeFactory = factoryManager.createStoreFactory();
+        ServiceFactory serviceFactory = factoryManager.createServiceFactory();
+        mUserStore = storeFactory.createUserStore();
+        mLoginService = serviceFactory.createLoginService();
     }
 
     @Override
@@ -36,27 +61,18 @@ public class LoginViewModelImpl extends Fragment implements LoginViewModel, Logi
         mLoginService.login(username, password, this);
     }
 
-
-    /*
-        The deprecated method has been chosen because the minTargetVersion is 19.
-        Switch to >=23 in order to use the new onAttach method.
-    */
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mRouter = (LoginRouter) activity;
-    }
-
-
-    @Override
-    public void onLoginFinished(User user) {
-        if(user == null){
-            mLoginView = (LoginView) ((Application) getActivity()).getView(LoginView.LOGIN_VIEW_TAG);
-            mLoginView.renderError(getString(R.string.login_error_message));
-        } else {
-            mLoginStore.storeUser(user);
-            mRouter.showTripScheduling();
+    public void onLoginFinished(User user, String errorMessage) {
+        ComponentFinder componentFinder = (ComponentFinder) getActivity();
+        if (componentFinder != null) {
+            if (!TextUtils.isEmpty(errorMessage)) {
+                LoginView view = (LoginView) ((ComponentFinder) getActivity()).getView(mViewId);
+                view.renderError(errorMessage);
+            } else {
+                mUserStore.storeUser(user);
+                mRouter.showTripScheduling();
+            }
         }
-
     }
+
 }

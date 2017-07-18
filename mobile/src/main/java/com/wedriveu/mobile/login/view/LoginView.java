@@ -6,7 +6,8 @@ package com.wedriveu.mobile.login.view;
  * @Since 12/07/2017
  */
 public interface LoginView {
-    String LOGIN_VIEW_TAG = LoginView.class.getSimpleName();
+
+    String TAG = LoginView.class.getSimpleName();
 
     /**
      * method called during the View creation. Sets the listeners for the UI components in the LoginView.
@@ -14,7 +15,7 @@ public interface LoginView {
     void renderView();
 
     /**
-     * Method called in case the user credential inputs are wrong
+     * Method called in case the user credential inputs are wrong.
      * @param message the message to show to the user.
      */
     void renderError(String message);
