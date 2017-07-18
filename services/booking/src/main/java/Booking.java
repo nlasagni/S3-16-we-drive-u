@@ -1,102 +1,80 @@
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 /**
  * Created by Michele on 12/07/2017.
  */
 public class Booking {
+
     private int bookingID;
     private Date date;
     private String username;
     private String carLicencePlate;
-    private Double latitudeDestination;
-    private Double longitudeDestination;
-    private Double latitudeSource;
-    private Double longitudeSource;
-    private Boolean isBookingCompleted;
+    private Double destinationLatitude;
+    private Double destinationLongitude;
+    private Double sourceLatitude;
+    private Double sourceLongitude;
+    private String bookingState;
 
-    public Booking(int bookingID, Date date, String username, String carLicencePlate, Double latitudeDestination, Double longitudeDestination, Double latitudeSource, Double longitudeSource, Boolean isBookingCompleted) {
+    public Booking(@JsonProperty("bookingID") int bookingID,
+                   @JsonProperty("date")Date date,
+                   @JsonProperty("username")String username,
+                   @JsonProperty("carLicencePlate")String carLicencePlate,
+                   @JsonProperty("destinationLatitude")Double destinationLatitude,
+                   @JsonProperty("destinationLongitude") Double destinationLongitude,
+                   @JsonProperty("sourceLatitude")Double sourceLatitude,
+                   @JsonProperty("sourceLongitude")Double sourceLongitude,
+                   @JsonProperty("bookingState") String bookingState) {
         this.bookingID = bookingID;
         this.date = date;
         this.username = username;
         this.carLicencePlate = carLicencePlate;
-        this.latitudeDestination = latitudeDestination;
-        this.longitudeDestination = longitudeDestination;
-        this.latitudeSource = latitudeSource;
-        this.longitudeSource = longitudeSource;
-        this.isBookingCompleted = isBookingCompleted;
+        this.destinationLatitude = destinationLatitude;
+        this.destinationLongitude = destinationLongitude;
+        this.sourceLatitude = sourceLatitude;
+        this.sourceLongitude = sourceLongitude;
+        this.bookingState = bookingState;
     }
-
-    public Booking(){}
 
     public int getBookingID() {
         return bookingID;
     }
 
-    public void setBookingID(int bookingID) {
-        this.bookingID = bookingID;
-    }
-
-    public java.util.Date getDate() {
+    public Date getDate() {
         return date;
-    }
-
-    public void setDate(java.util.Date date) {
-        this.date = date;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getCarLicencePlate() {
         return carLicencePlate;
     }
 
-    public void setCarLicencePlate(String carLicencePlate) {
-        this.carLicencePlate = carLicencePlate;
+    public Double getDestinationLatitude() {
+        return destinationLatitude;
     }
 
-    public Double getLatitudeDestination() {
-        return latitudeDestination;
+    public Double getDestinationLongitude() {
+        return destinationLongitude;
     }
 
-    public void setLatitudeDestination(Double latitudeDestination) {
-        this.latitudeDestination = latitudeDestination;
+    public Double getSourceLatitude() {
+        return sourceLatitude;
     }
 
-    public Double getLongitudeDestination() {
-        return longitudeDestination;
+    public Double getSourceLongitude() {
+        return sourceLongitude;
     }
 
-    public void setLongitudeDestination(Double longitudeDestination) {
-        this.longitudeDestination = longitudeDestination;
+    public String getBookingState() {
+        return bookingState;
     }
 
-    public Double getLatitudeSource() {
-        return latitudeSource;
+    public void setBookingState(String bookingState) {
+        this.bookingState = bookingState;
     }
 
-    public void setLatitudeSource(Double latitudeSource) {
-        this.latitudeSource = latitudeSource;
-    }
-
-    public Double getLongitudeSource() {
-        return longitudeSource;
-    }
-
-    public void setLongitudeSource(Double longitudeSource) {
-        this.longitudeSource = longitudeSource;
-    }
-
-    public Boolean getBookingState() {
-        return isBookingCompleted;
-    }
-
-    public void setBookingState(Boolean isBookingCompleted) {
-        this.isBookingCompleted = isBookingCompleted;
-    }
 }
