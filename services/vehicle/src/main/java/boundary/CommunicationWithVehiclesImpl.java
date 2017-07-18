@@ -1,9 +1,14 @@
 package boundary;
 
-import com.rabbitmq.client.*;
+
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Consumer;
+import com.rabbitmq.client.DefaultConsumer;
 
 import java.io.IOException;
 
@@ -24,6 +29,8 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
     }
 
     public double requestBatteryPercentage(String licensePlate) throws IOException {
+        /*
+        }
         double batteryPercentage = -1;
         channel.queueDeclare(licensePlate, false, false, false, null);
         String message = "Hello World!";
