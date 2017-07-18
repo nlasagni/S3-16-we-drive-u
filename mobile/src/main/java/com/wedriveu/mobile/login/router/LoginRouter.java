@@ -1,5 +1,7 @@
 package com.wedriveu.mobile.login.router;
 
+import com.wedriveu.mobile.app.DialogProvider;
+
 /**
  * <p>
  *      LoginRouter is the interface used by the LoginViewModel logic to switch to the next Fragment transaction.
@@ -12,11 +14,12 @@ package com.wedriveu.mobile.login.router;
  * @Author Marco Baldassarri
  * @Since 12/07/2017
  */
-public interface LoginRouter {
+public interface LoginRouter extends DialogProvider {
 
     /**
      * Method used by the MainActivity to show the Scheduling Fragment
      * in order to let the user choosing a destination address.
      */
     void showTripScheduling();
+
 }

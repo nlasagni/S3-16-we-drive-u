@@ -16,4 +16,5 @@ public interface LoginViewModel {
      * @param password the password written by the user in the Login form
      */
     void onLoginButtonClick(String username, String password);
+
 }

@@ -58,11 +58,13 @@ public class LoginViewModelImpl extends Fragment implements LoginViewModel, Logi
 
     @Override
     public void onLoginButtonClick(String username, String password) {
+        mRouter.showProgressDialog();
         mLoginService.login(username, password, this);
     }
 
     @Override
     public void onLoginFinished(User user, String errorMessage) {
+        mRouter.dismissProgressDialog();
         ComponentFinder componentFinder = (ComponentFinder) getActivity();
         if (componentFinder != null) {
             if (!TextUtils.isEmpty(errorMessage)) {
