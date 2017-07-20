@@ -8,7 +8,7 @@ import com.wedriveu.mobile.model.UserLocation;
 public class SchedulingServiceImpl implements SchedulingService {
 
     @Override
-    public void findNearestVehicle(UserLocation userLocation) {
+    public void findNearestVehicle(String address) {
 
     }
 }

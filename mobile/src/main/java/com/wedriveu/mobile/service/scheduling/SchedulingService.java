@@ -7,6 +7,6 @@ import com.wedriveu.mobile.model.UserLocation;
  */
 public interface SchedulingService {
 
-    void findNearestVehicle(UserLocation userLocation);
+    void findNearestVehicle(String address);
 
 }

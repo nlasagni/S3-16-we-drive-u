@@ -9,25 +9,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import com.google.android.gms.location.places.Place;
 import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
-import com.wedriveu.mobile.login.view.LoginViewImpl;
-import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModel;
+import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModelImpl;
 import com.wedriveu.mobile.util.Constants;
 
 /**
  * Created by Marco on 18/07/2017.
  */
-public class SchedulingViewImpl extends Fragment implements SchedulingView{
+public class SchedulingViewImpl extends Fragment implements SchedulingView, View.OnClickListener {
     private EditText mAddress;
     private Button mScheduleButton;
 
-    public static SchedulingViewImpl newInstance(String viewModelId) {
+    public static SchedulingViewImpl newInstance() {
         SchedulingViewImpl fragment = new SchedulingViewImpl();
-        Bundle arguments = new Bundle();
+        /*Bundle arguments = new Bundle();
         arguments.putString(Constants.VIEW_MODEL_ID, viewModelId);
-        fragment.setArguments(arguments);
+        fragment.setArguments(arguments);*/
         return fragment;
     }
 
@@ -44,16 +44,32 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView{
         mScheduleButton = (Button) view.findViewById(R.id.scheduleButton);
     }
 
-
     @Override
     public void renderView() {
-        mScheduleButton.setOnClickListener(new View.OnClickListener() {
+        mScheduleButton.setOnClickListener(this);
+        /*mScheduleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendAddress(mAddress.getText().toString());
-            }
-        });
 
+            }
+        });*/
+        mAddress.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.destinationAddressText) {
+            getAddress();
+        }
+        if(view.getId() == R.id.scheduleButton) {
+            sendAddress(mAddress.getText().toString());
+        }
+    }
+    private void getAddress() {
+        SchedulingViewModel viewModel = getViewModel();
+        if(viewModel != null ){
+            viewModel.startPlaceAutocomplete();
+        }
     }
 
     private void sendAddress(String address) {
@@ -65,14 +81,30 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView{
     private SchedulingViewModel getViewModel() {
         ComponentFinder componentFinder = (ComponentFinder) getActivity();
         if (componentFinder != null) {
-            String viewModelId = getArguments().getString(Constants.VIEW_MODEL_ID);
-            return (SchedulingViewModel) componentFinder.getViewModel(viewModelId);
+            //String viewModelId = getArguments().getString(Constants.VIEW_MODEL_ID);
+            //SchedulingViewModel viewModel = (SchedulingViewModel) componentFinder.getViewModel(SchedulingViewModel.TAG);
+            SchedulingViewModelImpl viewModel = (SchedulingViewModelImpl) componentFinder.getViewModel(SchedulingViewModel.TAG);
+            //return (SchedulingViewModel) componentFinder.getViewModel(SchedulingViewModel.TAG);
+            return viewModel;
         }
         return null;
     }
 
     @Override
     public void renderError(String message) {
+
+        //Status status = PlaceAutocomplete.getStatus(this, data);
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.common_warning)
+                .setMessage(message)
+                .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+
+        /*
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setCancelable(false)
                 .setTitle(R.string.common_warning)
@@ -84,6 +116,13 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView{
                     }
                 })
                 .create();
-        alertDialog.show();
+        alertDialog.show();*/
     }
+
+    @Override
+    public void showSelectedAddress(Place address) {
+        mAddress.setText(address.getAddress());
+    }
+
+
 }

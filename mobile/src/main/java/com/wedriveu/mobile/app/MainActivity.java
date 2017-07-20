@@ -17,18 +17,21 @@ import com.wedriveu.mobile.login.view.LoginViewImpl;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModelImpl;
 import com.wedriveu.mobile.store.StoreFactoryImpl;
+import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingViewImpl;
 import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModel;
+import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModelImpl;
 import com.wedriveu.mobile.util.location.LocationManager;
 import com.wedriveu.mobile.util.location.LocationManagerImpl;
 
 
-public class MainActivity extends AppCompatActivity implements LoginRouter, ComponentFinder {
+public class MainActivity extends AppCompatActivity implements LoginRouter, SchedulingRouter, ComponentFinder {
 
     private FragmentManager mFragmentManager;
 
-    LocationManager mLocationManager;
+    private LocationManager mLocationManager;
+    private SchedulingViewImpl schedulingViewFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +64,10 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Comp
 
     @Override
     public void showTripScheduling() {
+        SchedulingViewModelImpl schedulingViewModel = SchedulingViewModelImpl.newInstance(SchedulingViewModel.TAG);
+        schedulingViewFragment = SchedulingViewImpl.newInstance();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        SchedulingViewImpl schedulingViewFragment = SchedulingViewImpl.newInstance(SchedulingViewModel.TAG);
+        transaction.add(schedulingViewModel, SchedulingViewModel.TAG);
         transaction.replace(R.id.fragment_container, schedulingViewFragment, SchedulingView.TAG);
         transaction.commit();
     }
@@ -89,6 +94,10 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Comp
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mLocationManager.onActivityResult(requestCode, resultCode, data);
+        //Handles address resolution ActivityResult from Google Place Autocomplete Activity
+        if (schedulingViewFragment != null) {
+            schedulingViewFragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -103,4 +112,8 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Comp
         mLocationManager.disableLocationService();
     }
 
+    @Override
+    public void showBooking() {
+
+    }
 }
