@@ -16,8 +16,6 @@ import com.wedriveu.mobile.util.Constants;
 
 public class LoginViewImpl extends Fragment implements LoginView {
 
-
-
     private Button mLoginButton;
     private EditText mUsername;
     private EditText mPassword;

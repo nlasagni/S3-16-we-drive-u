@@ -3,11 +3,20 @@ package com.wedriveu.mobile.tripscheduling.viewmodel;
 import android.view.View;
 
 /**
- * Created by Marco on 18/07/2017.
+ *
+ * <p>
+ *     Represents the View Model for the Scheduling part of the application, based on the pattern MVVM.
+ * </p>
+ * @author Marco Baldassarri
+ * @since 20/07/2017
  */
 public interface SchedulingViewModel {
     String TAG = SchedulingViewModel.class.getSimpleName();
-    void onSearchVehicleButtonClick(String address);
+
+    /**
+     * handles the button click to trigger the vehicle selection process
+     */
+    void onSearchVehicleButtonClick();
     void startPlaceAutocomplete();
 
 }

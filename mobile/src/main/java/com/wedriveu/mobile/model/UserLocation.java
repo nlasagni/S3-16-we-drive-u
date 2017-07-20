@@ -1,51 +1,84 @@
 package com.wedriveu.mobile.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Created by Marco on 18/07/2017.
+ * <p>
+ *     Describes the user location, composed by the position where the user is, and the destination position the user chooses.
+ * </p>
+ *
  */
 public class UserLocation {
 
-    private Long GPSLatitude;
-    private Long GPSLongitude;
-    private Long AddressLatitude;
-    private Long AddressLongitude;
+    private Double GPSLatitude;
+    private Double GPSLongitude;
+    private Double addressLatitude;
+    private Double addressLongitude;
 
-    public UserLocation(Long GPSLatitude, Long GPSLongitude, Long addressLatitude, Long addressLongitude) {
+    public UserLocation(Double GPSLatitude, Double GPSLongitude, Double addressLatitude, Double addressLongitude) {
         this.GPSLatitude = GPSLatitude;
         this.GPSLongitude = GPSLongitude;
-        AddressLatitude = addressLatitude;
-        AddressLongitude = addressLongitude;
+        this.addressLatitude = addressLatitude;
+        this.addressLongitude = addressLongitude;
     }
 
-    public Long getGPSLatitude() {
+    public UserLocation(Double GPSLatitude, Double GPSLongitude) {
+        this.GPSLatitude = GPSLatitude;
+        this.GPSLongitude = GPSLongitude;
+    }
+
+    public UserLocation() {
+    }
+
+    public Double getGPSLatitude() {
         return GPSLatitude;
     }
 
-    public void setGPSLatitude(Long GPSLatitude) {
+    public void setGPSLatitude(Double GPSLatitude) {
         this.GPSLatitude = GPSLatitude;
     }
 
-    public Long getGPSLongitude() {
+    public Double getGPSLongitude() {
         return GPSLongitude;
     }
 
-    public void setGPSLongitude(Long GPSLongitude) {
+    public void setGPSLongitude(Double GPSLongitude) {
         this.GPSLongitude = GPSLongitude;
     }
 
-    public Long getAddressLatitude() {
-        return AddressLatitude;
+    public Double getAddressLatitude() {
+        return addressLatitude;
     }
 
-    public void setAddressLatitude(Long addressLatitude) {
-        AddressLatitude = addressLatitude;
+    public void setAddressLatitude(Double addressLatitude) {
+        this.addressLatitude = addressLatitude;
     }
 
-    public Long getAddressLongitude() {
-        return AddressLongitude;
+    public Double getAddressLongitude() {
+        return addressLongitude;
     }
 
-    public void setAddressLongitude(Long addressLongitude) {
-        AddressLongitude = addressLongitude;
+    public void setAddressLongitude(Double addressLongitude) {
+        this.addressLongitude = addressLongitude;
     }
+
+    public Map<Double, Double> getGPSPosition() {
+        return (Map<Double, Double>) new HashMap<>().put(getGPSLatitude(), getGPSLongitude());
+    }
+
+    public Map<Double, Double> getDestinationPosition() {
+        return (Map<Double, Double>) new HashMap<>().put(getAddressLongitude(), getAddressLongitude());
+    }
+
+    @Override
+    public String toString() {
+        return "UserLocation{" +
+                "GPSLatitude=" + GPSLatitude +
+                ", GPSLongitude=" + GPSLongitude +
+                ", addressLatitude=" + addressLatitude +
+                ", addressLongitude=" + addressLongitude +
+                '}';
+    }
+
 }

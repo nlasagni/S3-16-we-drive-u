@@ -14,7 +14,6 @@ import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModel;
 import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModelImpl;
-import com.wedriveu.mobile.util.Constants;
 
 /**
  * Created by Marco on 18/07/2017.
@@ -24,11 +23,7 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
     private Button mScheduleButton;
 
     public static SchedulingViewImpl newInstance() {
-        SchedulingViewImpl fragment = new SchedulingViewImpl();
-        /*Bundle arguments = new Bundle();
-        arguments.putString(Constants.VIEW_MODEL_ID, viewModelId);
-        fragment.setArguments(arguments);*/
-        return fragment;
+        return new SchedulingViewImpl();
     }
 
     @Override
@@ -62,7 +57,7 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
             getAddress();
         }
         if(view.getId() == R.id.scheduleButton) {
-            sendAddress(mAddress.getText().toString());
+            startVehicleSearch();
         }
     }
     private void getAddress() {
@@ -72,10 +67,10 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
         }
     }
 
-    private void sendAddress(String address) {
+    private void startVehicleSearch() {
         SchedulingViewModel viewModel = getViewModel();
         if (viewModel != null) {
-            viewModel.onSearchVehicleButtonClick(address);
+            viewModel.onSearchVehicleButtonClick();
         }
     }
     private SchedulingViewModel getViewModel() {

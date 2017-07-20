@@ -3,8 +3,8 @@ package com.wedriveu.mobile.login.viewmodel;
 /**
  *
  * Represents the View business logic. Performs the logic tasks connected with the UI elements.
- * @Author Marco Baldassarri
- * @Since 12/07/2017
+ * @author Marco Baldassarri
+ * @since 12/07/2017
  */
 public interface LoginViewModel {
 

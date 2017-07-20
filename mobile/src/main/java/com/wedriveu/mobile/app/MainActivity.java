@@ -16,6 +16,7 @@ import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.login.view.LoginViewImpl;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModelImpl;
+import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.store.StoreFactoryImpl;
 import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
@@ -42,10 +43,8 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
         if (savedInstanceState == null) {
             LoginViewImpl loginViewFragment = LoginViewImpl.newInstance(LoginViewModel.TAG);
             LoginViewModelImpl loginViewModel = LoginViewModelImpl.newInstance(LoginView.TAG);
-
             FragmentTransaction transaction = mFragmentManager.beginTransaction();
             transaction.add(loginViewModel, LoginViewModel.TAG);
-
             transaction.replace(R.id.fragment_container, loginViewFragment, LoginView.TAG);
             transaction.commit();
             mLocationManager = new LocationManagerImpl(this);
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
 
     @Override
     public void showTripScheduling() {
-        SchedulingViewModelImpl schedulingViewModel = SchedulingViewModelImpl.newInstance(SchedulingViewModel.TAG);
+        SchedulingViewModelImpl schedulingViewModel = SchedulingViewModelImpl.newInstance();
         schedulingViewFragment = SchedulingViewImpl.newInstance();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.add(schedulingViewModel, SchedulingViewModel.TAG);
@@ -113,7 +112,9 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     }
 
     @Override
-    public void showBooking() {
-
+    public void showBooking(Vehicle vehicle) {
+        //TODO show booking fragment
+        Log.i("SHOW_BOOKING", vehicle.toString());
     }
+
 }

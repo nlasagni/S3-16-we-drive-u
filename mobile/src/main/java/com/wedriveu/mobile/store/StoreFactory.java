@@ -6,7 +6,7 @@ package com.wedriveu.mobile.store;
  *     Store factory interface
  * </p>
  * @author Nicola Lasagni
- * marco
+ * @author Marco Baldassarri
  * @since 18/07/2017
  */
 public interface StoreFactory {

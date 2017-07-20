@@ -11,8 +11,8 @@ import com.wedriveu.mobile.app.DialogProvider;
  *     a fragment transaction to the Scheduling application component.
  * </p>
  *
- * @Author Marco Baldassarri
- * @Since 12/07/2017
+ * @author Marco Baldassarri
+ * @since 12/07/2017
  */
 public interface LoginRouter extends DialogProvider {
 

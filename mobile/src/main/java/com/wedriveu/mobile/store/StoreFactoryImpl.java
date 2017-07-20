@@ -5,7 +5,6 @@ import android.content.Context;
 
 /**
  * Created by nicolalasagni on 18/07/2017.
- * marco baldassarri
  */
 public class StoreFactoryImpl implements StoreFactory {
 

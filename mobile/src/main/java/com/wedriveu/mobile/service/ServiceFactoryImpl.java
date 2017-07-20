@@ -14,7 +14,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
     private ServiceFactoryImpl() {
     }
 
-    public static ServiceFactory getInstance(){
+    public static ServiceFactory getInstance() {
         if(instance == null){
             instance = new ServiceFactoryImpl();
         }
