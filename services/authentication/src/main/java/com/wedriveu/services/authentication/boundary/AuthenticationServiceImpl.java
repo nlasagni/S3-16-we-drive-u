@@ -24,8 +24,6 @@ import com.wedriveu.services.shared.utilities.Util;
  */
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-	//FIXME Fix the package dependencies for insert all of these constants in shared/Util.java and use it here
-
 	private CredentialsChecker checker = new CredentialsCheckerImpl();
 	private HttpServer server;
 	private Util utils = new Util();
