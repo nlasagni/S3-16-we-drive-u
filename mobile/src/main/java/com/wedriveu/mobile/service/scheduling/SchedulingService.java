@@ -1,8 +1,6 @@
 package com.wedriveu.mobile.service.scheduling;
 
 import com.google.android.gms.location.places.Place;
-import com.wedriveu.mobile.model.UserLocation;
-import com.wedriveu.mobile.service.login.LoginService;
 import com.wedriveu.mobile.util.location.LocationServiceListener;
 
 /**

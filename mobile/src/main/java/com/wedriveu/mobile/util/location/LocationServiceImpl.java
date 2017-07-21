@@ -12,18 +12,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +36,11 @@ public class LocationServiceImpl extends LocationCallback implements LocationSer
     private LocationRequest mLocationRequest;
     private List<LocationServiceListener> mListeners = new ArrayList<>();
     private static LocationServiceImpl instance = null;
+
     private LocationServiceImpl() {
 
     }
+
     private LocationServiceImpl(Activity activity) {
         mActivity = activity;
         mGoogleApiClient = new GoogleApiClient.Builder(mActivity)
@@ -220,4 +215,5 @@ public class LocationServiceImpl extends LocationCallback implements LocationSer
             listener.onLocationAvailable(mLastKnownLocation);
         }
     }
+
 }

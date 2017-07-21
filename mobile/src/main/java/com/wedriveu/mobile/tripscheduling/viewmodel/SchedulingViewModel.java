@@ -1,7 +1,5 @@
 package com.wedriveu.mobile.tripscheduling.viewmodel;
 
-import android.view.View;
-
 /**
  *
  * <p>
@@ -17,6 +15,10 @@ public interface SchedulingViewModel {
      * handles the button click to trigger the vehicle selection process
      */
     void onSearchVehicleButtonClick();
+
+    /**
+     * Shows the user the Google Intent used to fetch the address
+     */
     void startPlaceAutocomplete();
 
 }

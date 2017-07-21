@@ -5,15 +5,12 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
 import com.wedriveu.mobile.app.ComponentFinder;
-
 import com.wedriveu.mobile.login.router.LoginRouter;
 import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.model.User;
-import com.wedriveu.mobile.service.ServiceFactory;
 import com.wedriveu.mobile.service.ServiceFactoryImpl;
 import com.wedriveu.mobile.service.login.LoginService;
 import com.wedriveu.mobile.service.login.LoginServiceCallback;
-import com.wedriveu.mobile.store.StoreFactory;
 import com.wedriveu.mobile.store.StoreFactoryImpl;
 import com.wedriveu.mobile.store.UserStore;
 

@@ -1,9 +1,5 @@
 package com.wedriveu.mobile.model;
 
-import com.google.android.gms.location.places.Place;
-
-import java.net.URL;
-
 /**
  * <p>
  *     Describes a Vehicle
@@ -17,7 +13,6 @@ public class Vehicle {
     private String pictureURL;
     private String arriveAtUserTime;
     private String arriveAtDestinationTime;
-
 
     public Vehicle(String licencePlate,
                    String vehicleName,
@@ -92,4 +87,5 @@ public class Vehicle {
                 ", arriveAtDestinationTime='" + arriveAtDestinationTime + '\'' +
                 '}';
     }
+
 }

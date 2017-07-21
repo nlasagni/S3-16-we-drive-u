@@ -28,9 +28,8 @@ import com.wedriveu.mobile.util.location.LocationServiceImpl;
 public class MainActivity extends AppCompatActivity implements LoginRouter, SchedulingRouter, ComponentFinder {
 
     private FragmentManager mFragmentManager;
-
     private LocationService mLocationService;
-    private SchedulingViewImpl schedulingViewFragment;
+    private SchedulingViewImpl mSchedulingViewFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +61,10 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     @Override
     public void showTripScheduling() {
         SchedulingViewModelImpl schedulingViewModel = SchedulingViewModelImpl.newInstance();
-        schedulingViewFragment = SchedulingViewImpl.newInstance();
+        mSchedulingViewFragment = SchedulingViewImpl.newInstance();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.add(schedulingViewModel, SchedulingViewModel.TAG);
-        transaction.replace(R.id.fragment_container, schedulingViewFragment, SchedulingView.TAG);
+        transaction.replace(R.id.fragment_container, mSchedulingViewFragment, SchedulingView.TAG);
         transaction.commit();
     }
 
@@ -91,10 +90,8 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mLocationService.onActivityResult(requestCode, resultCode, data);
-        //Handles address resolution ActivityResult from Google Place Autocomplete Activity
-        if (schedulingViewFragment != null) {
-            schedulingViewFragment.onActivityResult(requestCode, resultCode, data);
-        }
+        mSchedulingViewFragment.onActivityResult(requestCode, resultCode, data);
+
     }
 
     @Override

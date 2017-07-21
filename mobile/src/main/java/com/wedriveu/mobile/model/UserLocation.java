@@ -1,8 +1,5 @@
 package com.wedriveu.mobile.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * <p>
  *     Describes the user location, composed by the position where the user is, and the destination position the user chooses.

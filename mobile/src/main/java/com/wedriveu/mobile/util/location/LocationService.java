@@ -2,7 +2,6 @@ package com.wedriveu.mobile.util.location;
 
 import android.content.Intent;
 import android.location.Location;
-
 import com.google.android.gms.location.LocationRequest;
 
 /**
@@ -14,7 +13,6 @@ public interface LocationService {
 
     int PERMISSION_REQUEST = 0;
     int CHECK_SETTINGS_REQUEST = 1;
-
     int LOCATION_REQUEST_INTERVAL = 10000;
     int LOCATION_REQUEST_FASTEST_INTERVAL = 5000;
     int LOCATION_REQUEST_PRIORITY = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;

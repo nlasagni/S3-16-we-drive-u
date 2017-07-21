@@ -1,6 +1,5 @@
 package com.wedriveu.mobile.store;
 
-import android.app.Application;
 import android.content.Context;
 
 /**

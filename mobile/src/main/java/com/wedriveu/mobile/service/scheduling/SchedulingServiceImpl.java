@@ -7,7 +7,9 @@ import com.wedriveu.mobile.model.UserLocation;
 import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.service.RetrofitClient;
 import com.wedriveu.mobile.service.scheduling.model.VehicleResponse;
-import retrofit2.*;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Marco on 18/07/2017.
@@ -19,16 +21,12 @@ public class SchedulingServiceImpl implements SchedulingService {
     public SchedulingServiceImpl() {
         userLocation = new UserLocation();
         mSchedulingServiceApi = RetrofitClient.getClient().create(SchedulingServiceApi.class);
-
     }
 
     @Override
     public void findNearestVehicle(Place address, final SchedulingServiceCallback callback) {
         userLocation.setAddressLatitude(address.getLatLng().latitude);
         userLocation.setAddressLongitude(address.getLatLng().longitude);
-        //Vehicle vehicle = new Vehicle("PA02DK", "https://tinyurl.com/y8wfjjnb", "confort and sport", "via cavour, Rome, Italy");
-        Log.i("NETWORK_SCHEDULING", userLocation.toString());
-
         Call<VehicleResponse> loginCall = mSchedulingServiceApi.schedule(userLocation.getUserLatitude(),
                                                               userLocation.getUserLongitude(),
                                                               userLocation.getDestinationLatitude(),
@@ -38,7 +36,6 @@ public class SchedulingServiceImpl implements SchedulingService {
             @Override
             public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
                 if (response.isSuccessful()) {
-                    //TODO Create vehicle
                     final VehicleResponse res = response.body();
                     Vehicle vehicle = new Vehicle(res.getLicencePlate(),
                                                 res.getVehicleName(),
@@ -71,4 +68,5 @@ public class SchedulingServiceImpl implements SchedulingService {
         userLocation.setGPSLongitude(null);
         userLocation.setGPSLongitude(null);
     }
+
 }

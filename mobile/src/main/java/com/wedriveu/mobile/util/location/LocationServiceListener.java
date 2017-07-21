@@ -7,8 +7,15 @@ import android.location.Location;
  */
 public interface LocationServiceListener {
 
+    /**
+     * Method called when the location becomes available
+     * @param location
+     */
     void onLocationAvailable(Location location);
 
+    /**
+     * Method called when the location service is disabled.
+     */
     void onLocationServiceDisabled();
 
 }

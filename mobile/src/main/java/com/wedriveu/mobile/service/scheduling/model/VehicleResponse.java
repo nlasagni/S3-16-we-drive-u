@@ -89,4 +89,5 @@ public class VehicleResponse {
     public void setDestinationPosition(String destinationPosition) {
         this.destinationPosition = destinationPosition;
     }
+
 }

@@ -2,9 +2,7 @@ package com.wedriveu.mobile.service;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-
 import java.util.concurrent.TimeUnit;
-
 import static com.wedriveu.mobile.util.Constants.HTTP_CALL_TIMEOUT;
 import static com.wedriveu.mobile.util.Constants.SERVICE_BASE_URL;
 

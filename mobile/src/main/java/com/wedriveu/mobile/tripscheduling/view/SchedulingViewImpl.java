@@ -19,9 +19,9 @@ import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModelImpl;
  * Created by Marco on 18/07/2017.
  */
 public class SchedulingViewImpl extends Fragment implements SchedulingView, View.OnClickListener {
-    private EditText mAddress;
-    private Button mScheduleButton;
 
+    private EditText mAddressEditText;
+    private Button mScheduleButton;
     public static SchedulingViewImpl newInstance() {
         return new SchedulingViewImpl();
     }
@@ -35,20 +35,14 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
     }
 
     private void setupUIComponents(View view){
-        mAddress = (EditText) view.findViewById(R.id.destinationAddressText);
+        mAddressEditText = (EditText) view.findViewById(R.id.destinationAddressText);
         mScheduleButton = (Button) view.findViewById(R.id.scheduleButton);
     }
 
     @Override
     public void renderView() {
         mScheduleButton.setOnClickListener(this);
-        /*mScheduleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });*/
-        mAddress.setOnClickListener(this);
+        mAddressEditText.setOnClickListener(this);
     }
 
     @Override
@@ -57,9 +51,14 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
             getAddress();
         }
         if(view.getId() == R.id.scheduleButton) {
-            startVehicleSearch();
+            if(mAddressEditText.getText().toString().trim().length() == 0) {
+                renderError(getString(R.string.destination_address_not_filled));
+            } else {
+                startVehicleSearch();
+            }
         }
     }
+
     private void getAddress() {
         SchedulingViewModel viewModel = getViewModel();
         if(viewModel != null ){
@@ -73,13 +72,11 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
             viewModel.onSearchVehicleButtonClick();
         }
     }
+
     private SchedulingViewModel getViewModel() {
         ComponentFinder componentFinder = (ComponentFinder) getActivity();
         if (componentFinder != null) {
-            //String viewModelId = getArguments().getString(Constants.VIEW_MODEL_ID);
-            //SchedulingViewModel viewModel = (SchedulingViewModel) componentFinder.getViewModel(SchedulingViewModel.TAG);
             SchedulingViewModelImpl viewModel = (SchedulingViewModelImpl) componentFinder.getViewModel(SchedulingViewModel.TAG);
-            //return (SchedulingViewModel) componentFinder.getViewModel(SchedulingViewModel.TAG);
             return viewModel;
         }
         return null;
@@ -87,8 +84,6 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
 
     @Override
     public void renderError(String message) {
-
-        //Status status = PlaceAutocomplete.getStatus(this, data);
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.common_warning)
                 .setMessage(message)
@@ -98,26 +93,11 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
                         dialog.dismiss();
                     }
                 }).show();
-
-        /*
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                .setCancelable(false)
-                .setTitle(R.string.common_warning)
-                .setMessage(message)
-                .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
-        alertDialog.show();*/
     }
 
     @Override
     public void showSelectedAddress(Place address) {
-        mAddress.setText(address.getAddress());
+        mAddressEditText.setText(address.getAddress());
     }
-
 
 }

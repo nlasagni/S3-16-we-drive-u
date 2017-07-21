@@ -21,8 +21,6 @@ import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
 import com.wedriveu.mobile.util.Constants;
 import com.wedriveu.mobile.util.location.LocationService;
 import com.wedriveu.mobile.util.location.LocationServiceImpl;
-import com.wedriveu.mobile.util.location.LocationServiceListener;
-
 import static android.app.Activity.RESULT_CANCELED;
 
 /**
@@ -30,21 +28,15 @@ import static android.app.Activity.RESULT_CANCELED;
  */
 public class SchedulingViewModelImpl extends Fragment implements SchedulingViewModel, SchedulingServiceCallback {
 
-    private String mViewId;
     private SchedulingRouter mRouter;
     private SchedulingService mSchedulingService;
     private SchedulingView mSchedulingView;
     private Place mPlace;
 
-
     public static SchedulingViewModelImpl newInstance() {
         SchedulingViewModelImpl fragment = new SchedulingViewModelImpl();
         fragment.setRetainInstance(true);
         return fragment;
-    }
-
-    private void setViewId(String viewId) {
-        mViewId = viewId;
     }
 
     // This deprecated method has been chosen because the minTargetVersion is 19.
@@ -69,17 +61,14 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
         mSchedulingService.findNearestVehicle(mPlace, this);
     }
 
-
     @Override
     public void startPlaceAutocomplete() {
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(getActivity());
             startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
-            // TODO: Handle the error.
             Log.e("PLACE", e.getMessage());
         } catch (GooglePlayServicesNotAvailableException e) {
-            // TODO: Handle the error.
             Log.e("PLACE", e.getMessage());
         }
     }
@@ -89,15 +78,11 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
         if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == getActivity().RESULT_OK) {
                 mPlace = PlaceAutocomplete.getPlace(getActivity(), data);
-                //mSchedulingView = (SchedulingView) getFragmentManager().findFragmentByTag(SchedulingView.TAG);
-
                 mSchedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
-
                 mSchedulingView.showSelectedAddress(mPlace);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                mSchedulingView.renderError(getString(R.string.place_autocomplete_error));
             } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
                 mSchedulingView.renderError(getString(R.string.place_autocomplete_error));
             }
         }
@@ -118,4 +103,5 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
         ComponentFinder componentFinder = getActivity() != null ? (ComponentFinder) getActivity() : null;
         return componentFinder;
     }
+
 }

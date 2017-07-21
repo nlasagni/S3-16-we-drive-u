@@ -27,4 +27,5 @@ public interface SchedulingServiceApi {
                                    @Query("userLongitude") double userLongitude,
                                    @Query("destinationLatitude") double destinationLatitude,
                                    @Query("destinationLongitude") double destinationLongitude);
+
 }
