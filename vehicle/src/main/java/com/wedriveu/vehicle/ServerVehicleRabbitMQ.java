@@ -3,6 +3,7 @@ package com.wedriveu.vehicle;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import com.wedriveu.services.shared.utilities.Position;
 import com.wedriveu.services.shared.utilities.Util;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
@@ -19,9 +20,11 @@ public class ServerVehicleRabbitMQ {
     private Connection connection;
     private Channel channel;
     private String licensePlate;
+    private double battery;
 
-    public ServerVehicleRabbitMQ(String licensePlate) throws IOException {
+    public ServerVehicleRabbitMQ(String licensePlate, double battery) throws IOException {
         this.licensePlate = licensePlate;
+        this.battery = battery;
         factory = new ConnectionFactory();
         factory.setHost("uniboguys.duckdns.org");
         factory.setPassword("FmzevdBBmpcdvPHLDJQR");
@@ -42,7 +45,7 @@ public class ServerVehicleRabbitMQ {
 
                 String response = new String(body, "UTF-8");
                 System.out.println(" [x] Received '" + response + "'");
-                channel.basicPublish("", licensePlate + Util.VEHICLE_TO_SERVICE, null, "100.0".getBytes());
+                channel.basicPublish("", licensePlate + Util.VEHICLE_TO_SERVICE, null, String.valueOf(battery).getBytes());
             }
         };
         channel.basicConsume(licensePlate, true, vehicle);

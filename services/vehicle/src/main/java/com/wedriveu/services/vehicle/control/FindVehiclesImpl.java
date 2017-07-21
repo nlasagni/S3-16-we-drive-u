@@ -2,7 +2,9 @@ package com.wedriveu.services.vehicle.control;
 
 import com.wedriveu.services.vehicle.boundary.CommunicationWithVehicles;
 import com.wedriveu.services.vehicle.boundary.CommunicationWithVehiclesImpl;
-import com.wedriveu.services.vehicle.callback.Callback;
+import com.wedriveu.services.vehicle.callback.FindVehiclesCallback;
+import com.wedriveu.services.vehicle.callback.ListAllEligiblesCallback;
+import com.wedriveu.services.vehicle.callback.WaitForAllCallback;
 import com.wedriveu.services.vehicle.entity.Vehicle;
 import com.wedriveu.services.vehicle.entity.VehicleStore;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
@@ -18,30 +20,44 @@ import java.util.List;
  */
 public class FindVehiclesImpl implements FindVehicles {
 
-    private VehicleStore vehicleStoreReference;
+    //private VehicleStore vehicleStoreReference;
     private CommunicationWithVehicles communicationWithVehicles;
 
     public FindVehiclesImpl() throws IOException {
-        vehicleStoreReference = new VehicleStoreImpl();
+        //vehicleStoreReference = new VehicleStoreImpl();
         communicationWithVehicles = new CommunicationWithVehiclesImpl();
     }
 
-    public List<Vehicle> listAllEligibleVehicles(Position userPosition, Position destPosition, List<Vehicle> allAvailable) throws IOException {
-
+    public void listAllEligibleVehicles(Position userPosition, Position destPosition,
+                                                 List<Vehicle> allAvailable, FindVehiclesCallback callback) throws IOException {
+        CounterVehiclesEligibles counter = new CounterVehiclesEligibles();
         List<Vehicle> eligibles = new ArrayList<>();
         for(Vehicle current: allAvailable) {
-            if((isInRange(userPosition, current.getPosition()))) {
-                communicationWithVehicles.requestBatteryPercentage(current.getCarLicencePlate(), new Callback() {
-                    @Override
-                    public void onRequestBatteryPercentage(double percentage) {
-                        if(estimateBatteryConsumption(userPosition, destPosition, current.getPosition()) < percentage) {
-                            eligibles.add(current);
-                        }
+            if (isInRange(userPosition, current.getPosition())) {
+                counter.addCalled();
+                communicationWithVehicles.requestBatteryPercentage(current.getCarLicencePlate(), percentage -> {
+                    if (estimateBatteryConsumption(userPosition, destPosition, current.getPosition()) < percentage) {
+                        eligibles.add(current);
                     }
+                    counter.addFinished();
                 });
             }
         }
-        return eligibles;
+        new Thread(() -> {
+            try {
+                waitForAll(counter, eligibles, callback);
+            } catch(Exception v) {
+                System.out.println(v);
+            }
+        }).start();
+    }
+
+    private void waitForAll(CounterVehiclesEligibles counter, List<Vehicle> eligibles, FindVehiclesCallback callback) {
+        System.out.println("ending");
+        System.out.println("prima");
+        while(!counter.isFinished()){}
+        System.out.println("dopo");
+        callback.listAllEligiblesVehiclesCallback(eligibles);
     }
 
     private double estimateBatteryConsumption(Position userPosition, Position destPosition, Position vehiclePosition) {

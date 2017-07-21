@@ -11,10 +11,10 @@ import java.util.Date;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        VehicleStoreImpl obj = new VehicleStoreImpl();
+        /*VehicleStoreImpl obj = new VehicleStoreImpl();
         obj.mapEntityToJson();
         Vehicle me;
-        me = obj.getVehicle("MACCHINA1");
+        me = obj.getVehicle("MACCHINA1");*/
         ArrayList<Vehicle> available = new ArrayList<>();
         available.add(new Vehicle("veicolo1",
                 "available",
@@ -22,21 +22,22 @@ public class Main {
                 new Date()));
         available.add(new Vehicle("veicolo2",
                 "available",
-                new Position(400,400),
+                new Position(10,10),
                 new Date()));
         available.add(new Vehicle("veicolo3",
                 "available",
-                new Position(600,600),
+                new Position(10,10),
                 new Date()));
         FindVehicles finder = new FindVehiclesImpl();
-        ArrayList<Vehicle> actual =
-                (ArrayList<Vehicle>) finder.listAllEligibleVehicles(new Position(10,10),
-                        new Position(15,15), available);
-
-        for(Vehicle vehicle: actual){
-            System.out.println(vehicle.getCarLicencePlate());
-        }
-
+        finder.listAllEligibleVehicles(new Position(10,10),
+                new Position(15,15), available,
+                actual -> {
+                    System.out.println("printing vehicles list");
+                    for(Vehicle vehicle: actual){
+                        System.out.println(vehicle.getCarLicencePlate());
+                    }
+                });
+        System.out.println("program ended");
     }
 
 }

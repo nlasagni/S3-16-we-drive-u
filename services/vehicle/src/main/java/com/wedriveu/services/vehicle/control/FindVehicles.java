@@ -1,6 +1,6 @@
 package com.wedriveu.services.vehicle.control;
 
-import com.wedriveu.services.vehicle.callback.Callback;
+import com.wedriveu.services.vehicle.callback.FindVehiclesCallback;
 import com.wedriveu.services.vehicle.entity.Vehicle;
 import com.wedriveu.services.shared.utilities.Position;
 
@@ -19,7 +19,8 @@ public interface FindVehicles {
      * @return list of all car with enough battery in a specified range calculated from userPosition
      */
 
-    public List<Vehicle> listAllEligibleVehicles(Position userPosition,
+    public void listAllEligibleVehicles(Position userPosition,
                                                  Position destPosition,
-                                                 List<Vehicle> allAvailable) throws IOException;
+                                                 List<Vehicle> allAvailable,
+                                                 FindVehiclesCallback callback) throws IOException;
 }

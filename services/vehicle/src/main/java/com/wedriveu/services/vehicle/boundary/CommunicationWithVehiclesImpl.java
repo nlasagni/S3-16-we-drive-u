@@ -8,7 +8,7 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Envelope;
-import com.wedriveu.services.vehicle.callback.Callback;
+import com.wedriveu.services.vehicle.callback.ListAllEligiblesCallback;
 
 import java.io.IOException;
 
@@ -30,9 +30,8 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
         channel = connection.createChannel();
     }
 
-    public void requestBatteryPercentage(final String licensePlate, Callback callback) throws IOException {
-
-        double batteryPercentage = 85;
+    public void requestBatteryPercentage(final String licensePlate, ListAllEligiblesCallback listAllEligiblesCallback) throws IOException {
+        System.out.println(licensePlate);
         channel.queueDeclare(licensePlate, false, false, false, null);
         channel.queueDeclare(licensePlate + Util.VEHICLE_TO_SERVICE,
                 false,
@@ -53,7 +52,7 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
                 String response = new String(body, "UTF-8");
                 Util.log(" [x] Received '" + response + "'");
                 percentage = Double.parseDouble(response);
-                callback.onRequestBatteryPercentage(percentage);
+                listAllEligiblesCallback.onRequestBatteryPercentage(percentage);
 
             }
 
