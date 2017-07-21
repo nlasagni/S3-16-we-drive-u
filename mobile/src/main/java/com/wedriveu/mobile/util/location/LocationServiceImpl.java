@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Created by Nicola Lasagni on 19/07/2016.
  */
-public class LocationManagerImpl extends LocationCallback implements LocationManager,
+public class LocationServiceImpl extends LocationCallback implements LocationService,
                                             GoogleApiClient.ConnectionCallbacks,
                                             GoogleApiClient.OnConnectionFailedListener,
                                             ResultCallback<LocationSettingsResult>,
@@ -41,9 +41,12 @@ public class LocationManagerImpl extends LocationCallback implements LocationMan
     private GoogleApiClient mGoogleApiClient;
     private Location mLastKnownLocation;
     private LocationRequest mLocationRequest;
-    private List<LocationManagerListener> mListeners = new ArrayList<>();
+    private List<LocationServiceListener> mListeners = new ArrayList<>();
+    private static LocationServiceImpl instance = null;
+    private LocationServiceImpl() {
 
-    public LocationManagerImpl(Activity activity) {
+    }
+    private LocationServiceImpl(Activity activity) {
         mActivity = activity;
         mGoogleApiClient = new GoogleApiClient.Builder(mActivity)
                 .addConnectionCallbacks(this)
@@ -51,6 +54,13 @@ public class LocationManagerImpl extends LocationCallback implements LocationMan
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
+    }
+
+    public static LocationService getInstance(Activity activity) {
+        if( instance == null ) {
+            instance = new LocationServiceImpl(activity);
+        }
+        return instance;
     }
 
     @Override
@@ -79,7 +89,7 @@ public class LocationManagerImpl extends LocationCallback implements LocationMan
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == LocationManager.CHECK_SETTINGS_REQUEST) {
+        if (resultCode == Activity.RESULT_OK && requestCode == LocationService.CHECK_SETTINGS_REQUEST) {
             Log.i(TAG, "Settings Change accepted.");
             findLocation();
         } else {
@@ -90,7 +100,7 @@ public class LocationManagerImpl extends LocationCallback implements LocationMan
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == LocationManager.PERMISSION_REQUEST) {
+        if (requestCode == LocationService.PERMISSION_REQUEST) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 findLocation();
             } else {
@@ -100,12 +110,12 @@ public class LocationManagerImpl extends LocationCallback implements LocationMan
     }
 
     @Override
-    public void addLocationListener(LocationManagerListener listener) {
+    public void addLocationListener(LocationServiceListener listener) {
         mListeners.add(listener);
     }
 
     @Override
-    public void removeLocationListener(LocationManagerListener listener) {
+    public void removeLocationListener(LocationServiceListener listener) {
         mListeners.remove(listener);
     }
 
@@ -194,7 +204,7 @@ public class LocationManagerImpl extends LocationCallback implements LocationMan
     }
 
     private void notifyLocationServiceDisabled() {
-        for (LocationManagerListener listener : mListeners) {
+        for (LocationServiceListener listener : mListeners) {
             listener.onLocationServiceDisabled();
         }
     }
@@ -206,7 +216,7 @@ public class LocationManagerImpl extends LocationCallback implements LocationMan
     }
 
     private void notifyLocationAvailable() {
-        for (LocationManagerListener listener : mListeners) {
+        for (LocationServiceListener listener : mListeners) {
             listener.onLocationAvailable(mLastKnownLocation);
         }
     }

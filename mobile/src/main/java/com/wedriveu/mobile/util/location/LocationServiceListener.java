@@ -5,7 +5,7 @@ import android.location.Location;
 /**
  * Created by Nicola Lasagni on 19/07/2016.
  */
-public interface LocationManagerListener {
+public interface LocationServiceListener {
 
     void onLocationAvailable(Location location);
 

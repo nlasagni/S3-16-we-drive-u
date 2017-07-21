@@ -1,6 +1,5 @@
 package com.wedriveu.mobile.app;
 
-import android.app.Application;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -17,21 +16,20 @@ import com.wedriveu.mobile.login.view.LoginViewImpl;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModelImpl;
 import com.wedriveu.mobile.model.Vehicle;
-import com.wedriveu.mobile.store.StoreFactoryImpl;
 import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingViewImpl;
 import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModel;
 import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModelImpl;
-import com.wedriveu.mobile.util.location.LocationManager;
-import com.wedriveu.mobile.util.location.LocationManagerImpl;
+import com.wedriveu.mobile.util.location.LocationService;
+import com.wedriveu.mobile.util.location.LocationServiceImpl;
 
 
 public class MainActivity extends AppCompatActivity implements LoginRouter, SchedulingRouter, ComponentFinder {
 
     private FragmentManager mFragmentManager;
 
-    private LocationManager mLocationManager;
+    private LocationService mLocationService;
     private SchedulingViewImpl schedulingViewFragment;
 
     @Override
@@ -47,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
             transaction.add(loginViewModel, LoginViewModel.TAG);
             transaction.replace(R.id.fragment_container, loginViewFragment, LoginView.TAG);
             transaction.commit();
-            mLocationManager = new LocationManagerImpl(this);
+            mLocationService = LocationServiceImpl.getInstance(this);
         }
     }
 
@@ -86,13 +84,13 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     @Override
     protected void onStart() {
         super.onStart();
-        mLocationManager.checkSettings();
+        mLocationService.checkSettings();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mLocationManager.onActivityResult(requestCode, resultCode, data);
+        mLocationService.onActivityResult(requestCode, resultCode, data);
         //Handles address resolution ActivityResult from Google Place Autocomplete Activity
         if (schedulingViewFragment != null) {
             schedulingViewFragment.onActivityResult(requestCode, resultCode, data);
@@ -102,13 +100,13 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mLocationManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mLocationService.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mLocationManager.disableLocationService();
+        mLocationService.disableLocationService();
     }
 
     @Override

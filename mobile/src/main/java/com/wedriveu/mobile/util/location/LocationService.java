@@ -8,9 +8,9 @@ import com.google.android.gms.location.LocationRequest;
 /**
  * Created by Nicola Lasagni on 19/07/2016.
  */
-public interface LocationManager {
+public interface LocationService {
 
-    String TAG = LocationManager.class.getSimpleName();
+    String TAG = LocationService.class.getSimpleName();
 
     int PERMISSION_REQUEST = 0;
     int CHECK_SETTINGS_REQUEST = 1;
@@ -47,8 +47,8 @@ public interface LocationManager {
      */
     void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults);
 
-    void addLocationListener(LocationManagerListener listener);
+    void addLocationListener(LocationServiceListener listener);
 
-    void removeLocationListener(LocationManagerListener listener);
+    void removeLocationListener(LocationServiceListener listener);
 
 }

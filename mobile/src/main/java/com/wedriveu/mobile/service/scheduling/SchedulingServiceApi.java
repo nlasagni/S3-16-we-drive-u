@@ -1,11 +1,9 @@
 package com.wedriveu.mobile.service.scheduling;
 
+import com.wedriveu.mobile.service.scheduling.model.VehicleResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
 import retrofit2.http.Query;
-
-import java.util.Map;
 
 /**
  * <p>
@@ -18,10 +16,15 @@ public interface SchedulingServiceApi {
 
     /**
      * Retrofit schedule web api interface definition.
-     * @param userPosition
-     * @param destinationPosition
+     * @param userLatitude
+     * @param userLongitude
+     * @param destinationLatitude
+     * @param destinationLongitude
      * @return A Retrofit {@linkplain Call}.
      */
-    @POST("vehicle/findnearest")
-    Call<Void> schedule(@Query("userPosition") Map<Double, Double> userPosition, @Query("destinationPosition") Map<Double, Double> destinationPosition);
+    @GET("vehicle/nearest")
+    Call<VehicleResponse> schedule(@Query("userLatitude") double userLatitude,
+                                   @Query("userLongitude") double userLongitude,
+                                   @Query("destinationLatitude") double destinationLatitude,
+                                   @Query("destinationLongitude") double destinationLongitude);
 }

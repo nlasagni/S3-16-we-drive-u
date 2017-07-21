@@ -19,6 +19,9 @@ import com.wedriveu.mobile.service.scheduling.SchedulingServiceCallback;
 import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
 import com.wedriveu.mobile.util.Constants;
+import com.wedriveu.mobile.util.location.LocationService;
+import com.wedriveu.mobile.util.location.LocationServiceImpl;
+import com.wedriveu.mobile.util.location.LocationServiceListener;
 
 import static android.app.Activity.RESULT_CANCELED;
 
@@ -56,6 +59,8 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSchedulingService = ServiceFactoryImpl.getInstance().createSchedulingService();
+        LocationService mLocationService = LocationServiceImpl.getInstance(getActivity());
+        mLocationService.addLocationListener(mSchedulingService);
     }
 
     @Override

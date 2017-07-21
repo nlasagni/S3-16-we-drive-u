@@ -1,15 +1,12 @@
-package com.wedriveu.mobile.model;
-
-import com.google.android.gms.location.places.Place;
-
-import java.net.URL;
+package com.wedriveu.mobile.service.scheduling.model;
 
 /**
  * <p>
- *     Describes a Vehicle
+ *     Describes the Vehicle as returned from the VehicleService.
+ *     Some of the fields won't be used for the Android Application
  * </p>
  */
-public class Vehicle {
+public class VehicleResponse {
 
     private String licencePlate;
     private String vehicleName;
@@ -17,21 +14,9 @@ public class Vehicle {
     private String pictureURL;
     private String arriveAtUserTime;
     private String arriveAtDestinationTime;
-
-
-    public Vehicle(String licencePlate,
-                   String vehicleName,
-                   String description,
-                   String pictureURL,
-                   String arriveAtUserTime,
-                   String arriveAtDestinationTime) {
-        this.licencePlate = licencePlate;
-        this.vehicleName = vehicleName;
-        this.description = description;
-        this.pictureURL = pictureURL;
-        this.arriveAtUserTime = arriveAtUserTime;
-        this.arriveAtDestinationTime = arriveAtDestinationTime;
-    }
+    private String lastUpdate;
+    private String userPosition;
+    private String destinationPosition;
 
     public String getLicencePlate() {
         return licencePlate;
@@ -81,15 +66,27 @@ public class Vehicle {
         this.arriveAtDestinationTime = arriveAtDestinationTime;
     }
 
-    @Override
-    public String toString() {
-        return "Vehicle{" +
-                "licencePlate='" + licencePlate + '\'' +
-                ", vehicleName='" + vehicleName + '\'' +
-                ", description='" + description + '\'' +
-                ", pictureURL='" + pictureURL + '\'' +
-                ", arriveAtUserTime='" + arriveAtUserTime + '\'' +
-                ", arriveAtDestinationTime='" + arriveAtDestinationTime + '\'' +
-                '}';
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public String getUserPosition() {
+        return userPosition;
+    }
+
+    public void setUserPosition(String userPosition) {
+        this.userPosition = userPosition;
+    }
+
+    public String getDestinationPosition() {
+        return destinationPosition;
+    }
+
+    public void setDestinationPosition(String destinationPosition) {
+        this.destinationPosition = destinationPosition;
     }
 }

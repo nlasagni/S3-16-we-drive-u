@@ -31,7 +31,7 @@ public class UserLocation {
     public UserLocation() {
     }
 
-    public Double getGPSLatitude() {
+    public Double getUserLatitude() {
         return GPSLatitude;
     }
 
@@ -39,7 +39,7 @@ public class UserLocation {
         this.GPSLatitude = GPSLatitude;
     }
 
-    public Double getGPSLongitude() {
+    public Double getUserLongitude() {
         return GPSLongitude;
     }
 
@@ -47,7 +47,7 @@ public class UserLocation {
         this.GPSLongitude = GPSLongitude;
     }
 
-    public Double getAddressLatitude() {
+    public Double getDestinationLatitude() {
         return addressLatitude;
     }
 
@@ -55,20 +55,12 @@ public class UserLocation {
         this.addressLatitude = addressLatitude;
     }
 
-    public Double getAddressLongitude() {
+    public Double getDestinationLongitude() {
         return addressLongitude;
     }
 
     public void setAddressLongitude(Double addressLongitude) {
         this.addressLongitude = addressLongitude;
-    }
-
-    public Map<Double, Double> getGPSPosition() {
-        return (Map<Double, Double>) new HashMap<>().put(getGPSLatitude(), getGPSLongitude());
-    }
-
-    public Map<Double, Double> getDestinationPosition() {
-        return (Map<Double, Double>) new HashMap<>().put(getAddressLongitude(), getAddressLongitude());
     }
 
     @Override
