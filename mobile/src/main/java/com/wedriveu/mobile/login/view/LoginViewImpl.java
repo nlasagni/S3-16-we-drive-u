@@ -30,16 +30,16 @@ public class LoginViewImpl extends Fragment implements LoginView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
         setupUIComponents(view);
         renderView();
         return view;
     }
 
     private void setupUIComponents(View view){
-        mUsername = (EditText) view.findViewById(R.id.editTextUsername);
-        mPassword = (EditText) view.findViewById(R.id.editTextPassword);
-        mLoginButton =  (Button) view.findViewById(R.id.loginButton);
+        mUsername = (EditText) view.findViewById(R.id.username);
+        mPassword = (EditText) view.findViewById(R.id.password);
+        mLoginButton =  (Button) view.findViewById(R.id.login_button);
     }
 
     @Override
