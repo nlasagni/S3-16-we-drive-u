@@ -13,4 +13,5 @@ dependencies {
     compile group: 'com.rabbitmq', name: 'amqp-client', version: '2.3.1'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
     compile project(path: ':services:shared')
+    compile project(path: ':vehicle')
 }

@@ -50,12 +50,8 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
                                        AMQP.BasicProperties properties,
                                        byte[] body) throws IOException {
                 String response = new String(body, "UTF-8");
-                Util.log(" [x] Received '" + response + "'");
-                percentage = Double.parseDouble(response);
-                listAllEligiblesCallback.onRequestBatteryPercentage(percentage);
-
+                listAllEligiblesCallback.onRequestBatteryPercentage(Double.parseDouble(response));
             }
-
         };
         channel.basicConsume(licensePlate + Util.VEHICLE_TO_SERVICE, true, service);
     }

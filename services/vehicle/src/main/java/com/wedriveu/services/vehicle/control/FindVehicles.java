@@ -16,11 +16,11 @@ public interface FindVehicles {
      * @param userPosition the position of the user that need a car
      * @param destPosition the position where the user wants to go
      * @param allAvailable a list of all the available cars at the moment of the method call
-     * @return list of all car with enough battery in a specified range calculated from userPosition
+     * @param callback the callback that returns the list of eligibles vehicles
      */
 
-    public void listAllEligibleVehicles(Position userPosition,
-                                                 Position destPosition,
-                                                 List<Vehicle> allAvailable,
-                                                 FindVehiclesCallback callback) throws IOException;
+    void listAllEligibleVehicles(Position userPosition,
+                                 Position destPosition,
+                                 List<Vehicle> allAvailable,
+                                 FindVehiclesCallback callback) throws IOException;
 }
