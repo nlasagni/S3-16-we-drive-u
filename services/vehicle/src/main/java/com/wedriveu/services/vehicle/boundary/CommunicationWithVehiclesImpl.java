@@ -8,7 +8,7 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Envelope;
-import com.wedriveu.services.vehicle.callback.ListAllEligiblesCallback;
+import com.wedriveu.services.vehicle.callback.RequestCanDoJourneyCallback;
 
 import java.io.IOException;
 
@@ -19,19 +19,19 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
     private ConnectionFactory factory;
     private Connection connection;
     private Channel channel;
-    private double percentage;
-
 
     public CommunicationWithVehiclesImpl() throws IOException {
         factory = new ConnectionFactory();
-        factory.setHost("uniboguys.duckdns.org");
-        factory.setPassword("FmzevdBBmpcdvPHLDJQR");
+        factory.setHost(Util.SERVER_HOST);
+        factory.setPassword(Util.SERVER_PASSWORD);
         connection = factory.newConnection();
         channel = connection.createChannel();
     }
 
-    public void requestBatteryPercentage(final String licensePlate, ListAllEligiblesCallback listAllEligiblesCallback) throws IOException {
-        System.out.println(licensePlate);
+    public void requestCanDoJourney(final String licensePlate,
+                                    double kilometersToDO,
+                                    RequestCanDoJourneyCallback listAllEligiblesCallback) throws IOException {
+        Util.log(licensePlate);
         channel.queueDeclare(licensePlate, false, false, false, null);
         channel.queueDeclare(licensePlate + Util.VEHICLE_TO_SERVICE,
                 false,
@@ -39,8 +39,13 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
                 false,
                 null);
         channel.basicQos(1);
-        channel.basicPublish("", licensePlate, null, Util.REQUEST_BATTERY_PERCENTAGE.getBytes());
-        Util.log(" [x] Sent '" + Util.REQUEST_BATTERY_PERCENTAGE + "'");
+        channel.basicPublish("", licensePlate, null, String.valueOf(kilometersToDO).getBytes());
+        Util.log(" [x] Sent '" +
+                Util.REQUEST_CAN_DO_JOURNEY +
+                "'" +
+                " with " +
+                kilometersToDO +
+                " kilometers to be done");
 
         Consumer service = new DefaultConsumer(channel) {
 
@@ -50,7 +55,7 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
                                        AMQP.BasicProperties properties,
                                        byte[] body) throws IOException {
                 String response = new String(body, "UTF-8");
-                listAllEligiblesCallback.onRequestBatteryPercentage(Double.parseDouble(response));
+                listAllEligiblesCallback.onRequestCanDoJourney(Boolean.parseBoolean(response));
             }
         };
         channel.basicConsume(licensePlate + Util.VEHICLE_TO_SERVICE, true, service);

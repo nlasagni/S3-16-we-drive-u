@@ -4,7 +4,7 @@ public class CounterVehiclesEligibles {
     private int called;
     private int finished;
 
-    public CounterVehiclesEligibles () {
+    public CounterVehiclesEligibles() {
         called = 0;
         finished = 0;
     }
@@ -16,7 +16,9 @@ public class CounterVehiclesEligibles {
     synchronized void addFinished() {
         finished++;
     }
+
     synchronized boolean isFinished() {
         return called == finished;
     }
+
 }

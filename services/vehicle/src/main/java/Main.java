@@ -1,3 +1,4 @@
+import com.wedriveu.services.shared.utilities.Util;
 import com.wedriveu.services.vehicle.control.FindVehicles;
 import com.wedriveu.services.vehicle.control.FindVehiclesImpl;
 import com.wedriveu.services.vehicle.entity.Vehicle;
@@ -28,16 +29,16 @@ public class Main {
                 "available",
                 new Position(10,10),
                 new Date()));
+
         FindVehicles finder = new FindVehiclesImpl();
         finder.listAllEligibleVehicles(new Position(10,10),
                 new Position(15,15), available,
                 actual -> {
-                    System.out.println("printing vehicles list");
+                    Util.log("printing vehicles list");
                     for(Vehicle vehicle: actual){
-                        System.out.println(vehicle.getCarLicencePlate());
+                        Util.log(vehicle.getCarLicencePlate());
                     }
                 });
-        System.out.println("program ended");
     }
 
 }

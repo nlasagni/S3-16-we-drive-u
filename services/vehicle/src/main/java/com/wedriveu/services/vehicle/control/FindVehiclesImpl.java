@@ -30,9 +30,11 @@ public class FindVehiclesImpl implements FindVehicles {
         List<Vehicle> eligibles = new ArrayList<>();
         for(Vehicle current: allAvailable) {
             if (isInRange(userPosition, current.getPosition())) {
+                double kilometersToDO = (userPosition.getDistance(current.getPosition())) +
+                        (userPosition.getDistance(destPosition));
                 counter.addCalled();
-                communicationWithVehicles.requestBatteryPercentage(current.getCarLicencePlate(), percentage -> {
-                    if (estimateBatteryConsumption(userPosition, destPosition, current.getPosition()) < percentage) {
+                communicationWithVehicles.requestCanDoJourney(current.getCarLicencePlate(), kilometersToDO, canDo -> {
+                    if (canDo) {
                         eligibles.add(current);
                     }
                     counter.addFinished();
@@ -47,13 +49,6 @@ public class FindVehiclesImpl implements FindVehicles {
                 v.printStackTrace();
             }
         }).start();
-    }
-
-    private double estimateBatteryConsumption(Position userPosition, Position destPosition, Position vehiclePosition) {
-        return  ( userPosition.getDistance(vehiclePosition)
-                + destPosition.getDistance(userPosition)
-                + Util.MAXIMUM_DISTANCE_TO_RECHARGE )
-                / Util.ESTIMATED_KILOMETERS_PER_PERCENTAGE;
     }
 
     private boolean isInRange(Position userPosition, Position vehiclePosition) {
