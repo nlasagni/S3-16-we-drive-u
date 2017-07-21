@@ -1,8 +1,8 @@
-import control.FindVehicles;
-import control.FindVehiclesImpl;
-import entity.Vehicle;
-import entity.VehicleStoreImpl;
-import utilities.Position;
+import com.wedriveu.services.vehicle.control.FindVehicles;
+import com.wedriveu.services.vehicle.control.FindVehiclesImpl;
+import com.wedriveu.services.vehicle.entity.Vehicle;
+import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
+import com.wedriveu.services.shared.utilities.Position;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,13 +16,26 @@ public class Main {
         Vehicle me;
         me = obj.getVehicle("MACCHINA1");
         ArrayList<Vehicle> available = new ArrayList<>();
-        available.add(new Vehicle("veicolo1", "available", new Position(10,10), new Date()));
-        available.add(new Vehicle("veicolo2", "available", new Position(400,400), new Date()));
-        available.add(new Vehicle("veicolo3", "available", new Position(600,600), new Date()));
+        available.add(new Vehicle("veicolo1",
+                "available",
+                new Position(10,10),
+                new Date()));
+        available.add(new Vehicle("veicolo2",
+                "available",
+                new Position(400,400),
+                new Date()));
+        available.add(new Vehicle("veicolo3",
+                "available",
+                new Position(600,600),
+                new Date()));
         FindVehicles finder = new FindVehiclesImpl();
-        ArrayList<Vehicle> actual = (ArrayList<Vehicle>) finder.
-                listAllEligibleVehicles(new Position(10,10),
-                        new Position(150,15), available);
+        ArrayList<Vehicle> actual =
+                (ArrayList<Vehicle>) finder.listAllEligibleVehicles(new Position(10,10),
+                        new Position(15,15), available);
+
+        for(Vehicle vehicle: actual){
+            System.out.println(vehicle.getCarLicencePlate());
+        }
 
     }
 
