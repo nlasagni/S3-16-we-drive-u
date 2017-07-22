@@ -3,7 +3,8 @@ package com.wedriveu.services.authentication.entity;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.utilities.Util;
+import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.shared.utilities.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,9 +13,6 @@ import java.util.ArrayList;
  * Created by Michele on 12/07/2017.
  */
 public class UserStoreImpl implements UserStore {
-
-    //FIXME Fix the path where we should saving the database
-    private Util utils = new Util();
 
     @Override
     public void mapEntityToJson() {
@@ -38,9 +36,8 @@ public class UserStoreImpl implements UserStore {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-         //   User[] users= mapper.readValue(new File(getClass().getResource(USERS_DATABASE_PATH).getPath()), User[].class);
-            User[] users= mapper.readValue(new File(utils.USERS_DATABASE_PATH), User[].class);
-            return checkUsersList(users, username);
+            User[] users= mapper.readValue(new File(Constants.USERS_DATABASE_PATH), User[].class);
+            return getUserRequestedCheckingUsersList(users, username);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {
@@ -60,11 +57,11 @@ public class UserStoreImpl implements UserStore {
         try {
             ObjectMapper mapper = new ObjectMapper();
 
-            mapper.writeValue(new File(utils.USERS_DATABASE_PATH), userListToJSon);
+            mapper.writeValue(new File(Constants.USERS_DATABASE_PATH), userListToJSon);
             String jsonInString = mapper.writeValueAsString(userListToJSon);
-            log(jsonInString);
+            Log.log(jsonInString);
             jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(userListToJSon);
-            log(jsonInString);
+            Log.log(jsonInString);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {
@@ -74,19 +71,15 @@ public class UserStoreImpl implements UserStore {
         }
     }
 
-    private User checkUsersList(User[] users, String username){
+    private User getUserRequestedCheckingUsersList(User[] users, String username){
         for (User user : users) {
             if(user.getUsername().equals(username)) {
-                log("Login success! " + "Username: " + user.getUsername() + ", Password: " + user.getPassword());
+                Log.log("Login success! " + "Username: " + user.getUsername() + ", Password: " + user.getPassword());
                 return user;
             }
         }
-        log("Login failed, retry!");
+        Log.log("Login failed, retry!");
         return null;
-    }
-
-    private void log(String toLog){
-        System.out.println(toLog);
     }
 
 }

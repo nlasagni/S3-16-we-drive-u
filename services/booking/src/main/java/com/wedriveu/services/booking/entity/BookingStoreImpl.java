@@ -3,7 +3,8 @@ package com.wedriveu.services.booking.entity;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.utilities.Util;
+import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.shared.utilities.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +15,6 @@ import java.util.Date;
  * Created by Michele on 12/07/2017.
  */
 public class BookingStoreImpl implements BookingStore {
-
-    private Util utils = new Util();
 
     @Override
     public void mapEntityToJson() {
@@ -71,8 +70,8 @@ public class BookingStoreImpl implements BookingStore {
 
         try {
             Booking[] bookings= new Booking[10];
-            bookings = mapper.readValue(new File(utils.BOOKINGS_DATABASE_PATH), Booking[].class);
-            return checkBookingList(bookings, bookingId);
+            bookings = mapper.readValue(new File(Constants.BOOKINGS_DATABASE_PATH), Booking[].class);
+            return getBookingRequestedCheckingBookingsList(bookings, bookingId);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {
@@ -88,11 +87,11 @@ public class BookingStoreImpl implements BookingStore {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            mapper.writeValue(new File(utils.BOOKINGS_DATABASE_PATH), bookingListToJSon);
+            mapper.writeValue(new File(Constants.BOOKINGS_DATABASE_PATH), bookingListToJSon);
             String jsonInString = mapper.writeValueAsString(bookingListToJSon);
-            utils.log(jsonInString);
+            Log.log(jsonInString);
             jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bookingListToJSon);
-            utils.log(jsonInString);
+            Log.log(jsonInString);
 
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -103,10 +102,10 @@ public class BookingStoreImpl implements BookingStore {
         }
     }
 
-    private Booking checkBookingList(Booking[] bookings, int bookingId) {
+    private Booking getBookingRequestedCheckingBookingsList(Booking[] bookings, int bookingId) {
         for (Booking booking : bookings) {
             if(booking.getBookingID() == bookingId) {
-                utils.log("com.wedriveu.services.booking.entity.Booking found! -> User: " +
+                Log.log("com.wedriveu.services.booking.entity.Booking found! -> User: " +
                         booking.getUsername() +
                         " Vehicle: " +
                         booking.getCarLicencePlate() +
@@ -116,7 +115,7 @@ public class BookingStoreImpl implements BookingStore {
                 return booking;
             }
         }
-        utils.log("com.wedriveu.services.booking.entity.Booking not found, retry!");
+        Log.log("com.wedriveu.services.booking.entity.Booking not found, retry!");
         return null;
     }
 

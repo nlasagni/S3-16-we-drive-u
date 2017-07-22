@@ -3,11 +3,12 @@ package com.wedriveu.services.vehicle.boundary;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
-import com.wedriveu.services.shared.utilities.Util;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Envelope;
+import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.callback.RequestCanDoJourneyCallback;
 
 import java.io.IOException;
@@ -22,29 +23,29 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
 
     public CommunicationWithVehiclesImpl() throws IOException {
         factory = new ConnectionFactory();
-        factory.setHost(Util.SERVER_HOST);
-        factory.setPassword(Util.SERVER_PASSWORD);
+        factory.setHost(Constants.SERVER_HOST);
+        factory.setPassword(Constants.SERVER_PASSWORD);
         connection = factory.newConnection();
         channel = connection.createChannel();
     }
 
     public void requestCanDoJourney(final String licensePlate,
-                                    double kilometersToDO,
+                                    double kilometersToDo,
                                     RequestCanDoJourneyCallback listAllEligiblesCallback) throws IOException {
-        Util.log(licensePlate);
+        Log.log(licensePlate);
         channel.queueDeclare(licensePlate, false, false, false, null);
-        channel.queueDeclare(licensePlate + Util.VEHICLE_TO_SERVICE,
+        channel.queueDeclare(licensePlate + Constants.VEHICLE_TO_SERVICE,
                 false,
                 false,
                 false,
                 null);
         channel.basicQos(1);
-        channel.basicPublish("", licensePlate, null, String.valueOf(kilometersToDO).getBytes());
-        Util.log(" [x] Sent '" +
-                Util.REQUEST_CAN_DO_JOURNEY +
+        channel.basicPublish("", licensePlate, null, String.valueOf(kilometersToDo).getBytes());
+        Log.log(" [x] Sent '" +
+                Constants.REQUEST_CAN_DO_JOURNEY +
                 "'" +
                 " with " +
-                kilometersToDO +
+                kilometersToDo +
                 " kilometers to be done");
 
         Consumer service = new DefaultConsumer(channel) {
@@ -58,7 +59,7 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
                 listAllEligiblesCallback.onRequestCanDoJourney(Boolean.parseBoolean(response));
             }
         };
-        channel.basicConsume(licensePlate + Util.VEHICLE_TO_SERVICE, true, service);
+        channel.basicConsume(licensePlate + Constants.VEHICLE_TO_SERVICE, true, service);
     }
 
 }

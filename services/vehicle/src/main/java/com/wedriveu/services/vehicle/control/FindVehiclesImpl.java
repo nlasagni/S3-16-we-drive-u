@@ -1,11 +1,11 @@
 package com.wedriveu.services.vehicle.control;
 
+import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.vehicle.boundary.CommunicationWithVehicles;
 import com.wedriveu.services.vehicle.boundary.CommunicationWithVehiclesImpl;
 import com.wedriveu.services.vehicle.callback.FindVehiclesCallback;
 import com.wedriveu.services.vehicle.entity.Vehicle;
 import com.wedriveu.services.shared.utilities.Position;
-import com.wedriveu.services.shared.utilities.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class FindVehiclesImpl implements FindVehicles {
     }
 
     private boolean isInRange(Position userPosition, Position vehiclePosition) {
-        return userPosition.getDistance(vehiclePosition) < Util.RANGE;
+        return userPosition.getDistance(vehiclePosition) < Constants.RANGE;
     }
 
 }

@@ -4,8 +4,9 @@ package com.wedriveu.services.vehicle.entity; /**
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.Position;
-import com.wedriveu.services.shared.utilities.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class VehicleStoreImpl implements VehicleStore {
-
-    private Util utils = new Util();
 
     @Override
     public void mapEntityToJson() {
@@ -49,9 +48,8 @@ public class VehicleStoreImpl implements VehicleStore {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            Vehicle[] vehicles= new Vehicle[10];
-            vehicles = mapper.readValue(new File(utils.VEHICLES_DATABASE_PATH), Vehicle[].class);
-            return checkVehicleList(vehicles, carLicencePlate);
+            Vehicle[] vehicles = mapper.readValue(new File(Constants.VEHICLES_DATABASE_PATH), Vehicle[].class);
+            return getVehicleRequestedCheckingVehiclesList(vehicles, carLicencePlate);
 
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -75,11 +73,11 @@ public class VehicleStoreImpl implements VehicleStore {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            mapper.writeValue(new File(utils.VEHICLES_DATABASE_PATH), vehicleListToJSon);
+            mapper.writeValue(new File(Constants.VEHICLES_DATABASE_PATH), vehicleListToJSon);
             String jsonInString = mapper.writeValueAsString(vehicleListToJSon);
-            utils.log(jsonInString);
+            Log.log(jsonInString);
             jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(vehicleListToJSon);
-            utils.log(jsonInString);
+            Log.log(jsonInString);
 
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -90,14 +88,14 @@ public class VehicleStoreImpl implements VehicleStore {
         }
     }
 
-    private Vehicle checkVehicleList(Vehicle[] vehicles, String carLicencePlate) {
+    private Vehicle getVehicleRequestedCheckingVehiclesList(Vehicle[] vehicles, String carLicencePlate) {
         for (Vehicle vehicle : vehicles) {
             if(vehicle.getCarLicencePlate().equals(carLicencePlate)){
-                utils.log("com.wedriveu.services.vehicle.entity.Vehicle found! -> " + vehicle.getCarLicencePlate() + " " + vehicle.getState());
+                Log.log("com.wedriveu.services.vehicle.entity.Vehicle found! -> " + vehicle.getCarLicencePlate() + " " + vehicle.getState());
                 return vehicle;
             }
         }
-        utils.log("com.wedriveu.services.vehicle.entity.Vehicle not found, retry!");
+        Log.log("com.wedriveu.services.vehicle.entity.Vehicle not found, retry!");
         return null;
     }
 

@@ -15,6 +15,6 @@ public interface CredentialsChecker {
      * @return <strong>True</strong> if the username and the password are associated to a <em>User</em> class into the
      * <em>userStore</em>, <strong>false</strong> otherwise.
      */
-    public boolean confirmCredentials(String username, String password);
+    boolean confirmCredentials(String username, String password);
 
 }

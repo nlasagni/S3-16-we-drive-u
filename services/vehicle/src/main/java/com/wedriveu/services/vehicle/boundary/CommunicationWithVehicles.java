@@ -23,7 +23,7 @@ public interface CommunicationWithVehicles {
      * @param listAllEligiblesCallback Indicates the callback for the asynchronous communication.
      * @throws IOException
      */
-    public void requestCanDoJourney(String licensePlate,
+    void requestCanDoJourney(String licensePlate,
                                     double kilometersToDo,
                                     RequestCanDoJourneyCallback listAllEligiblesCallback) throws IOException;
 

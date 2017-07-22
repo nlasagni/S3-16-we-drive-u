@@ -2,13 +2,12 @@ package com.wedriveu.services.authentication.boundary;
 
 import com.wedriveu.services.authentication.control.CredentialsChecker;
 import com.wedriveu.services.authentication.control.CredentialsCheckerImpl;
+import com.wedriveu.services.shared.utilities.Constants;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.*;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import com.wedriveu.services.shared.utilities.Util;
-
 
 /**
  * Created by ste on 11/07/2017.
@@ -26,15 +25,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	private CredentialsChecker checker = new CredentialsCheckerImpl();
 	private HttpServer server;
-	private Util utils = new Util();
 
 	@Override
 	public void startService() {
 		Vertx vertx = Vertx.vertx();
 		Router router = Router.router(vertx);
-		router.get(utils.USER_LOGIN).handler(this::checkCredentials);
+		router.get(Constants.USER_LOGIN).handler(this::checkCredentials);
 		server = vertx.createHttpServer();
-		server.requestHandler(router::accept).listen(utils.PORT_AUTHENTICATION_SERVICE);
+		server.requestHandler(router::accept).listen(Constants.PORT_AUTHENTICATION_SERVICE);
 	}
 
 	@Override
@@ -46,18 +44,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	public void checkCredentials(RoutingContext routingContext) {
-		String username = routingContext.request().getParam(utils.USERNAME);
-		String password = routingContext.request().getParam(utils.PASSWORD);
+		String username = routingContext.request().getParam(Constants.USERNAME);
+		String password = routingContext.request().getParam(Constants.PASSWORD);
 		HttpServerResponse response = routingContext.response();
 		if (username == null || password == null) {
-			response.setStatusCode(HttpResponseStatus.BAD_REQUEST.code()).end(utils.USERNAME_PASSWORD_MISSING);
+			response.setStatusCode(HttpResponseStatus.BAD_REQUEST.code()).end(Constants.USERNAME_PASSWORD_MISSING);
 		} else {
 			if (checker.confirmCredentials(username, password)) {
-				response.putHeader(utils.CONTENT_TYPE, utils.TEXT_PLAIN)
+				response.putHeader(Constants.CONTENT_TYPE, Constants.TEXT_PLAIN)
 						.setStatusCode(HttpResponseStatus.OK.code())
-						.end(utils.USER_AUTHENTICATED);
+						.end(Constants.USER_AUTHENTICATED);
 			} else {
-				response.setStatusCode(HttpResponseStatus.NOT_FOUND.code()).end(utils.USERNAME_PASSWORD_WRONG);
+				response.setStatusCode(HttpResponseStatus.NOT_FOUND.code()).end(Constants.USERNAME_PASSWORD_WRONG);
 			}
 		}
 	}
