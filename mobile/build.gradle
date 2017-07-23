@@ -52,7 +52,7 @@ dependencies {
     compile "com.android.support:support-v4:${androidSupportLibrarylVersion}"
     //Other
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
 }
 
 task ("javadoc", type: Javadoc) {
