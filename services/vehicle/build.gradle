@@ -1,3 +1,13 @@
 dependencies {
     compile project(path: ':services:shared')
 }
+
+jar {
+    archiveName = "${rootProject.name}-${parent.name}-${this.name}-${rootProject.version}.jar"
+    destinationDir = new File("$releasesFolder/${parent.name}")
+    manifest {
+        attributes 'Implementation-Version': project.version,
+                'Main-Class': 'Main'
+    }
+    from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
+}

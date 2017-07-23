@@ -2,23 +2,34 @@ group = projectGroup
 version = projectVersion
 description = projectDescription
 
-def mobileModule = "mobile"
-
 allprojects {
     apply plugin: 'idea'
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
     repositories {
         jcenter()
         mavenCentral()
     }
 }
 
-configure(subprojects.findAll()) {
+def mobileModule = "mobile"
+
+def filterProjects(String name) {
+    return subprojects.grep {it.name != name}
+}
+
+configure(filterProjects(mobileModule)) {
     if (it.name != mobileModule) {
         apply plugin: 'java'
         apply plugin: 'scala'
         sourceCompatibility = "$jdkVersion"
         javadoc.destinationDir = new File("$docsFolderJava")
         scaladoc.destinationDir = new File("$docsFolderScala")
+
         dependencies {
             testCompile "junit:junit:$junitVersion"
             testCompile "org.scala-lang:scala-library:$scalaVersion"
@@ -30,3 +41,5 @@ configure(subprojects.findAll()) {
         }
     }
 }
+
+

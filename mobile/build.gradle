@@ -61,3 +61,12 @@ task ("javadoc", type: Javadoc) {
     destinationDir = new File("$docsFolderJava")
     failOnError false
 }
+
+def archiveBuildTypes = ["release", "debug"];
+android.applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+        if (variant.buildType.name in archiveBuildTypes) {
+            output.outputFile = new File("${releasesFolder}/${archivesBaseName}-${variant.buildType.name}-${androidVersionName}.apk")
+        }
+    }
+}

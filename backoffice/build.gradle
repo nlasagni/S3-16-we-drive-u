@@ -1,0 +1,9 @@
+jar {
+    archiveName = "${rootProject.name}-${this.name}-${rootProject.version}.jar"
+    destinationDir = new File("$releasesFolder")
+    manifest {
+        attributes 'Implementation-Version': project.version,
+                'Main-Class': 'Test'
+    }
+    from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
+}
