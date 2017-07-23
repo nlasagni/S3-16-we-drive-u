@@ -26,19 +26,15 @@ allprojects {
 configure(subprojects.findAll()) {
     if (it.name != "mobile") {
         apply plugin: 'java'
+        apply plugin: 'scala'
         sourceCompatibility = "$jdkVersion"
+        javadoc.destinationDir = new File("latest-docs/java")
+        scaladoc.destinationDir = new File("latest-docs/scala")
         dependencies {
+            compile "org.scala-lang:scala-library:$scalaVersion"
             compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
             testCompile "junit:junit:$junitVersion"
         }
-    }
-}
-
-project(":backoffice") {
-    apply plugin: 'scala'
-    scaladoc.destinationDir = new File("docs/scala")
-    dependencies {
-        compile "org.scala-lang:scala-library:$scalaVersion"
     }
 }
 
@@ -48,15 +44,4 @@ project(":mobile") {
         compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
         testCompile "junit:junit:$junitVersion"
     }
-}
-
-static def javaDocProjects(subProjects) {
-    return subProjects.grep {it.name != "mobile"}
-}
-
-task javadoc(overwrite: true, type: Javadoc) {
-    source javaDocProjects(subprojects).collect { project -> project.sourceSets.main.allJava }
-    dependsOn javaDocProjects(subprojects).collect() { project -> project.javadoc.source }
-    destinationDir = new File("docs/java")
-    classpath = files(javaDocProjects(subprojects).collect {project -> project.sourceSets.main.allJava})
 }
