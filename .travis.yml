@@ -23,15 +23,13 @@ android:
     - 'google-gdk-license-.+'
 script:
   - './gradlew clean build javadoc scaladoc'
-after_success:
-  - 'bash push-docs.sh'
-#deploy:
- # provider: pages
- # skip_cleanup: true
- # github_token: $GH_TOKEN
- # local_dir: latest-docs
- # on:
-  #  branch: WDU_53_Travis_Setup_Enhancement
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GH_TOKEN
+  local_dir: latest-docs
+  on:
+    branch: master
 notifications:
   email:
     recipients:
