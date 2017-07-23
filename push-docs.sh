@@ -17,7 +17,7 @@ if [ "$TRAVIS_REPO_SLUG" == "nlasagni/S3-16-we-drive-u" ] &&
   git rm -rf ./java
   git rm -rf ./scala
   git rm -rf ./docs
-  cp -Rf $HOME/javadoc-latest ./docs
+  cp -Rf $HOME/latest-docs ./docs
   git add -f .
   git commit -m "Latest docs on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"
   git push -fq origin gh-pages > /dev/null
