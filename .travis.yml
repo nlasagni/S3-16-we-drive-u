@@ -24,7 +24,7 @@ android:
 script:
   - './gradlew clean build javadoc scaladoc'
 after_success:
- - push-docs.sh
+  - 'bash push-docs.sh'
 #deploy:
  # provider: pages
  # skip_cleanup: true
