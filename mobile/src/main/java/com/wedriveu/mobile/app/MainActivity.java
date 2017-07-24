@@ -1,11 +1,11 @@
 package com.wedriveu.mobile.app;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFragmentManager = getFragmentManager();
+        mFragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             LoginViewImpl loginViewFragment = LoginViewImpl.newInstance(LoginViewModel.TAG);
             LoginViewModelImpl loginViewModel = LoginViewModelImpl.newInstance(LoginView.TAG);
