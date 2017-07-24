@@ -39,7 +39,7 @@ deploy:
   github_token: $GH_TOKEN
   local_dir: latest-docs
   on:
-    branch: WDU_53_Travis_Setup_Enhancement
+    branch: master
 notifications:
   email:
     recipients:
