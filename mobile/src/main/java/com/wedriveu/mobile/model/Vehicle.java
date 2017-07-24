@@ -1,9 +1,10 @@
 package com.wedriveu.mobile.model;
 
 /**
- * <p>
- *     Describes a Vehicle
- * </p>
+ * Describes a Vehicle
+ *
+ * @author Marco Baldassarri
+ * @since 12/07/2017
  */
 public class Vehicle {
 

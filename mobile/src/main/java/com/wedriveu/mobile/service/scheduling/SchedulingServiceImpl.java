@@ -3,10 +3,9 @@ package com.wedriveu.mobile.service.scheduling;
 import android.location.Location;
 import android.util.Log;
 import com.google.android.gms.location.places.Place;
-import com.wedriveu.mobile.model.UserLocation;
+import com.wedriveu.mobile.model.SchedulingLocation;
 import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.service.RetrofitClient;
-import com.wedriveu.mobile.service.scheduling.model.VehicleResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,26 +16,26 @@ import retrofit2.Response;
 public class SchedulingServiceImpl implements SchedulingService {
 
     private SchedulingServiceApi mSchedulingServiceApi;
-    private UserLocation userLocation;
+    private SchedulingLocation schedulingLocation;
+
     public SchedulingServiceImpl() {
-        userLocation = new UserLocation();
+        schedulingLocation = new SchedulingLocation();
         mSchedulingServiceApi = RetrofitClient.getClient().create(SchedulingServiceApi.class);
     }
 
     @Override
     public void findNearestVehicle(Place address, final SchedulingServiceCallback callback) {
-        userLocation.setAddressLatitude(address.getLatLng().latitude);
-        userLocation.setAddressLongitude(address.getLatLng().longitude);
-        Call<VehicleResponse> loginCall = mSchedulingServiceApi.schedule(userLocation.getUserLatitude(),
-                                                              userLocation.getUserLongitude(),
-                                                              userLocation.getDestinationLatitude(),
-                                                              userLocation.getDestinationLongitude());
-
-        loginCall.enqueue(new Callback<VehicleResponse>() {
+        schedulingLocation.setDestinationLatitude(address.getLatLng().latitude);
+        schedulingLocation.setDestinationLongitude(address.getLatLng().longitude);
+        Call<Vehicle> schedulingCall = mSchedulingServiceApi.schedule(schedulingLocation.getUserLatitude(),
+                                                              schedulingLocation.getUserLongitude(),
+                                                              schedulingLocation.getDestinationLatitude(),
+                                                              schedulingLocation.getDestinationLongitude());
+        schedulingCall.enqueue(new Callback<Vehicle>() {
             @Override
-            public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
+            public void onResponse(Call<Vehicle> call, Response<Vehicle> response) {
                 if (response.isSuccessful()) {
-                    final VehicleResponse res = response.body();
+                    final Vehicle res = response.body();
                     Vehicle vehicle = new Vehicle(res.getLicencePlate(),
                                                 res.getVehicleName(),
                                                 res.getDescription(),
@@ -50,8 +49,8 @@ public class SchedulingServiceImpl implements SchedulingService {
             }
 
             @Override
-            public void onFailure(Call<VehicleResponse> call, Throwable t) {
-                Log.e(TAG, "Failure on login operation!", t);
+            public void onFailure(Call<Vehicle> call, Throwable t) {
+                Log.e(TAG, "Failure on vehicle scheduling operation!", t);
                 callback.onFindNearestVehicleFinished(null, t.getLocalizedMessage());
             }
         });
@@ -59,14 +58,14 @@ public class SchedulingServiceImpl implements SchedulingService {
 
     @Override
     public void onLocationAvailable(Location location) {
-        userLocation.setGPSLatitude(location.getLatitude());
-        userLocation.setGPSLongitude(location.getLongitude());
+        schedulingLocation.setUserLatitude(location.getLatitude());
+        schedulingLocation.setUserLongitude(location.getLongitude());
     }
 
     @Override
     public void onLocationServiceDisabled() {
-        userLocation.setGPSLongitude(null);
-        userLocation.setGPSLongitude(null);
+        schedulingLocation.setUserLongitude(null);
+        schedulingLocation.setUserLongitude(null);
     }
 
 }

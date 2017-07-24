@@ -91,11 +91,12 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
         super.onActivityResult(requestCode, resultCode, data);
         mLocationService.onActivityResult(requestCode, resultCode, data);
         mSchedulingViewFragment.onActivityResult(requestCode, resultCode, data);
-
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mLocationService.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }

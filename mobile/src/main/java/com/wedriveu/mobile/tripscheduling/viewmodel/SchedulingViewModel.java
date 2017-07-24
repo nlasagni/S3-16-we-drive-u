@@ -2,13 +2,13 @@ package com.wedriveu.mobile.tripscheduling.viewmodel;
 
 /**
  *
- * <p>
- *     Represents the View Model for the Scheduling part of the application, based on the pattern MVVM.
- * </p>
+ * Represents the View Model for the Scheduling part of the application, based on the pattern MVVM.
+ *
  * @author Marco Baldassarri
  * @since 20/07/2017
  */
 public interface SchedulingViewModel {
+
     String TAG = SchedulingViewModel.class.getSimpleName();
 
     /**

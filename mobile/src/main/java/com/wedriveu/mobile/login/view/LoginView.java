@@ -16,7 +16,7 @@ public interface LoginView {
 
     /**
      * Method called in case the user credential inputs are wrong.
-     * @param message the message to show to the user.
+     * @param message The message to show to the user.
      */
     void renderError(String message);
 

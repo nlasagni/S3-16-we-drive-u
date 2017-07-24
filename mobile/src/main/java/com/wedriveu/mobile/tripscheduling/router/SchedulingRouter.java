@@ -4,9 +4,11 @@ import com.wedriveu.mobile.app.DialogProvider;
 import com.wedriveu.mobile.model.Vehicle;
 
 /**
- * <p>
- *     SchedulingRouter is the interface used by the {@linkplain com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModel} logic to switch to the next Fragment transaction.
- * </p>
+ *
+ * SchedulingRouter is the interface used by the
+ * {@linkplain com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModel}
+ * logic to switch to the next Fragment transaction.
+ *
  * @author Marco Baldassarri
  * @since 20/07/2017
  */

@@ -22,6 +22,7 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
 
     private EditText mAddressEditText;
     private Button mScheduleButton;
+
     public static SchedulingViewImpl newInstance() {
         return new SchedulingViewImpl();
     }
@@ -47,15 +48,17 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.destinationAddressText) {
-            getAddress();
-        }
-        if(view.getId() == R.id.scheduleButton) {
-            if(mAddressEditText.getText().toString().trim().length() == 0) {
-                renderError(getString(R.string.destination_address_not_filled));
-            } else {
-                startVehicleSearch();
-            }
+        switch (view.getId()){
+            case R.id.destinationAddressText:
+                getAddress();
+                break;
+            case R.id.scheduleButton:
+                if(mAddressEditText.getText().toString().trim().length() == 0) {
+                    renderError(getString(R.string.destination_address_not_filled));
+                } else {
+                    startVehicleSearch();
+                }
+                break;
         }
     }
 
@@ -76,7 +79,8 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
     private SchedulingViewModel getViewModel() {
         ComponentFinder componentFinder = (ComponentFinder) getActivity();
         if (componentFinder != null) {
-            SchedulingViewModelImpl viewModel = (SchedulingViewModelImpl) componentFinder.getViewModel(SchedulingViewModel.TAG);
+            SchedulingViewModelImpl viewModel =
+                    (SchedulingViewModelImpl) componentFinder.getViewModel(SchedulingViewModel.TAG);
             return viewModel;
         }
         return null;

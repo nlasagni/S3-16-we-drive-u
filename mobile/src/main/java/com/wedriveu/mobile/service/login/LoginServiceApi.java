@@ -6,9 +6,8 @@ import retrofit2.http.Query;
 
 /**
  *
- * <p>
- *     Login service web api interface
- * </p>
+ * Login service web api interface
+ *
  * @author Nicola Lasagni
  * @since 18/07/2017
  */

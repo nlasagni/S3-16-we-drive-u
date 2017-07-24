@@ -5,7 +5,9 @@ import android.location.Location;
 import com.google.android.gms.location.LocationRequest;
 
 /**
- * Created by Nicola Lasagni on 19/07/2016.
+ * Handles the user location based on the phone GPS module.
+ * @author Nicola Lasagni
+ *
  */
 public interface LocationService {
 
@@ -31,20 +33,24 @@ public interface LocationService {
 
     /**
      * This method must be called from the main Activity to handle Settings change.
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode Activity request code
+     * @param resultCode Activity result code
+     * @param data Data to pass to the View Model Fragments in order to handle the view
      */
     void onActivityResult(int requestCode, int resultCode, Intent data);
 
     /**
      * This method must be called from the main Activity to handle requestPermission call.
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
+     * @param requestCode Activity request code
+     * @param permissions Array of user permissions requested by the app
+     * @param grantResults Array of results based on the user permission choices
      */
     void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults);
 
+    /**
+     * Method to add the listener in order to the user location changes
+     * @param listener The listener passed to handle the location changes
+     */
     void addLocationListener(LocationServiceListener listener);
 
     void removeLocationListener(LocationServiceListener listener);

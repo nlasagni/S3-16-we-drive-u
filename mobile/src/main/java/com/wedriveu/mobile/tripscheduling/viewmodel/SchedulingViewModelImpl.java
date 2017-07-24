@@ -64,12 +64,13 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
     @Override
     public void startPlaceAutocomplete() {
         try {
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(getActivity());
+            Intent intent = new PlaceAutocomplete
+                    .IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(getActivity());
             startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
-            Log.e("PLACE", e.getMessage());
+            Log.e("PLACE", "GooglePlayServices not installed", e.getCause());
         } catch (GooglePlayServicesNotAvailableException e) {
-            Log.e("PLACE", e.getMessage());
+            Log.e("PLACE", "GooglePlayServices not installed", e.getCause());
         }
     }
 

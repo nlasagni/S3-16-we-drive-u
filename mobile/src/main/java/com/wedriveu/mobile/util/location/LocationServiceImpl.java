@@ -37,9 +37,7 @@ public class LocationServiceImpl extends LocationCallback implements LocationSer
     private List<LocationServiceListener> mListeners = new ArrayList<>();
     private static LocationServiceImpl instance = null;
 
-    private LocationServiceImpl() {
-
-    }
+    private LocationServiceImpl() { }
 
     private LocationServiceImpl(Activity activity) {
         mActivity = activity;

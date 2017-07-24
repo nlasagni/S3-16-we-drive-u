@@ -9,10 +9,10 @@ import com.wedriveu.mobile.service.scheduling.SchedulingServiceImpl;
  * Created by nicolalasagni on 18/07/2017.
  */
 public class ServiceFactoryImpl implements ServiceFactory {
+
     private static ServiceFactoryImpl instance = null;
 
-    private ServiceFactoryImpl() {
-    }
+    private ServiceFactoryImpl() { }
 
     public static ServiceFactory getInstance() {
         if(instance == null){
