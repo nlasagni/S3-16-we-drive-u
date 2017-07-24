@@ -1,16 +1,21 @@
 #!/usr/bin/expect
 
-spawn sftp $DEPLOY_USER@$DEPLOY_HOST
+set username [lindex $argv 0];
+set password [lindex $argv 1];
+set host [lindex $argv 2];
+set build_number [lindex $argv 3];
+
+spawn sftp $username@$host
 expect "*?assword:*"
-send "$DEPLOY_PASS\n"
+send "$password\n"
 expect "sftp>"
 send "cd duckdns/wedriveu\n"
 expect "sftp>"
-send "mkdir services-deploy-$TRAVIS_BUILD_DIR\n"
+send "mkdir services-deploy-$build_number\n"
 expect "sftp>"
 send "lcd releases/services\n"
 expect "sftp>"
-send "cd services-deploy-$TRAVIS_BUILD_DIR\n"
+send "cd services-deploy-$build_number\n"
 expect "sftp>"
 send "put -r .\n"
 expect "sftp>"
