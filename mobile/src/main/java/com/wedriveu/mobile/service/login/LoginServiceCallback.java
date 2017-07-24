@@ -3,11 +3,9 @@ package com.wedriveu.mobile.service.login;
 import com.wedriveu.mobile.model.User;
 
 /**
- * <p>
- *     LoginServiceCallback
- * </p>
- * @Author Marco Baldassarri, Nicola Lasagni
- * @Since 12/07/2017
+ * LoginServiceCallback
+ * @author Marco Baldassarri, Nicola Lasagni
+ * @since 12/07/2017
  */
 public interface LoginServiceCallback {
 

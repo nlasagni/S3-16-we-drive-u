@@ -4,5 +4,7 @@
     <string name="common_ok">OK</string>
     <string name="we_drive_you_title">We Drive U</string>
     <string name="we_drive_you_slogan">You are just one click far from your destination</string>
-    <string name="login_error_message">Incorrect username or password, please try again</string>
+	<string name="schedule_your_trip">Schedule your trip</string>
+    <string name="place_autocomplete_error">Error calling Google Place API</string>
+	<string name="destination_address_not_filled">Please insert the destination address</string>
 </resources>

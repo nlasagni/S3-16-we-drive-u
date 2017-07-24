@@ -1,6 +1,5 @@
 package com.wedriveu.mobile.store;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -19,7 +18,6 @@ public class UserStoreImpl implements UserStore {
     private static final String TAG = UserStore.class.getSimpleName();
     private static final String USER_PREFERENCE_NAME = "_userPreferences";
     private static final String USER_PREFERENCE = "user";
-
     private SharedPreferences mSharedPreferences;
     private ObjectMapper mObjectMapper;
 

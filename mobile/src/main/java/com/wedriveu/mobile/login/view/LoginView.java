@@ -2,8 +2,8 @@ package com.wedriveu.mobile.login.view;
 
 /**
  * Models the login View of the Android App, it should contain the Fragment with the Login UI components
- * @Author Marco Baldassarri
- * @Since 12/07/2017
+ * @author Marco Baldassarri
+ * @since 12/07/2017
  */
 public interface LoginView {
 
@@ -16,7 +16,8 @@ public interface LoginView {
 
     /**
      * Method called in case the user credential inputs are wrong.
-     * @param message the message to show to the user.
+     * @param message The message to show to the user.
      */
     void renderError(String message);
+
 }

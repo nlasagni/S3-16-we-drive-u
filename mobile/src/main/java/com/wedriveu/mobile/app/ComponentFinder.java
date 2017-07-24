@@ -4,9 +4,8 @@ import android.app.Fragment;
 
 /**
  *
- * <p>
- *     Component finder interface
- * </p>
+ * Component finder interface
+ *
  * @author Marco Baldassarri, Nicola Lasagni
  * @since 12/07/2017
  */

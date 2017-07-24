@@ -12,10 +12,9 @@ import android.widget.EditText;
 import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
+import com.wedriveu.mobile.util.Constants;
 
 public class LoginViewImpl extends Fragment implements LoginView {
-
-    private static final String VIEW_MODEL_ID = "viewModelId";
 
     private Button mLoginButton;
     private EditText mUsername;
@@ -24,7 +23,7 @@ public class LoginViewImpl extends Fragment implements LoginView {
     public static LoginViewImpl newInstance(String viewModelId) {
         LoginViewImpl fragment = new LoginViewImpl();
         Bundle arguments = new Bundle();
-        arguments.putString(VIEW_MODEL_ID, viewModelId);
+        arguments.putString(Constants.VIEW_MODEL_ID, viewModelId);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -63,7 +62,7 @@ public class LoginViewImpl extends Fragment implements LoginView {
     private LoginViewModel getViewModel() {
         ComponentFinder componentFinder = (ComponentFinder) getActivity();
         if (componentFinder != null) {
-            String viewModelId = getArguments().getString(VIEW_MODEL_ID);
+            String viewModelId = getArguments().getString(Constants.VIEW_MODEL_ID);
             return (LoginViewModel) componentFinder.getViewModel(viewModelId);
         }
         return null;

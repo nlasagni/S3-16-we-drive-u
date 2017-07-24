@@ -1,13 +1,11 @@
 package com.wedriveu.mobile.service.login;
 
-import android.content.Context;
 import android.util.Log;
 import com.wedriveu.mobile.model.User;
-import com.wedriveu.mobile.util.Constants;
+import com.wedriveu.mobile.service.RetrofitClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * @author Marco Baldassarri
@@ -22,10 +20,7 @@ public class LoginServiceImpl implements LoginService {
     private LoginServiceApi mLoginServiceApi;
 
     public LoginServiceImpl() {
-        String baseUrl = Constants.SERVICE_BASE_URL;
-        Retrofit.Builder retrofitBuilder = new Retrofit.Builder().baseUrl(baseUrl);
-        Retrofit retrofit = retrofitBuilder.build();
-        mLoginServiceApi = retrofit.create(LoginServiceApi.class);
+        mLoginServiceApi = RetrofitClient.getClient().create(LoginServiceApi.class);
     }
 
     @Override

@@ -3,7 +3,11 @@ package com.wedriveu.mobile.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Created by Marco on 12/07/2017.
+ * Describes a logged user
+ *
+ * @author Marco Baldassarri
+ * @author Nicola Lasagni
+ * @since 12/07/2017
  */
 public class User {
 
@@ -45,4 +49,5 @@ public class User {
     public String toString() {
         return "User: " + username + ", Password: " + password;
     }
+
 }

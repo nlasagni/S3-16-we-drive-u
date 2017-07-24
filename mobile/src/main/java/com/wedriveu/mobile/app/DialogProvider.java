@@ -2,9 +2,8 @@ package com.wedriveu.mobile.app;
 
 /**
  *
- * <p>
- *     Dialog provider interface
- * </p>
+ *Dialog provider interface
+ * 
  * @author Nicola Lasagni
  * @since 18/07/2017
  */
