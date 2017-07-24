@@ -6,6 +6,7 @@ import com.google.android.gms.location.places.Place;
 import com.wedriveu.mobile.model.SchedulingLocation;
 import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.service.RetrofitClient;
+import com.wedriveu.mobile.service.scheduling.model.VehicleResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,15 +28,15 @@ public class SchedulingServiceImpl implements SchedulingService {
     public void findNearestVehicle(Place address, final SchedulingServiceCallback callback) {
         schedulingLocation.setDestinationLatitude(address.getLatLng().latitude);
         schedulingLocation.setDestinationLongitude(address.getLatLng().longitude);
-        Call<Vehicle> schedulingCall = mSchedulingServiceApi.schedule(schedulingLocation.getUserLatitude(),
+        Call<VehicleResponse> schedulingCall = mSchedulingServiceApi.schedule(schedulingLocation.getUserLatitude(),
                                                               schedulingLocation.getUserLongitude(),
                                                               schedulingLocation.getDestinationLatitude(),
                                                               schedulingLocation.getDestinationLongitude());
-        schedulingCall.enqueue(new Callback<Vehicle>() {
+        schedulingCall.enqueue(new Callback<VehicleResponse>() {
             @Override
-            public void onResponse(Call<Vehicle> call, Response<Vehicle> response) {
+            public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
                 if (response.isSuccessful()) {
-                    final Vehicle res = response.body();
+                    final VehicleResponse res = response.body();
                     Vehicle vehicle = new Vehicle(res.getLicencePlate(),
                                                 res.getVehicleName(),
                                                 res.getDescription(),
@@ -49,7 +50,7 @@ public class SchedulingServiceImpl implements SchedulingService {
             }
 
             @Override
-            public void onFailure(Call<Vehicle> call, Throwable t) {
+            public void onFailure(Call<VehicleResponse> call, Throwable t) {
                 Log.e(TAG, "Failure on vehicle scheduling operation!", t);
                 callback.onFindNearestVehicleFinished(null, t.getLocalizedMessage());
             }
