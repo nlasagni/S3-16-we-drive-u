@@ -101,8 +101,6 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
     }
 
     private ComponentFinder getComponentFinder() {
-       /* ComponentFinder componentFinder = getActivity() != null ? (ComponentFinder) getActivity() : null;
-        return componentFinder;*/
         return ((ComponentFinder) getActivity());
     }
 
