@@ -6,7 +6,8 @@ import android.support.v4.app.Fragment;
  *
  * Component finder interface
  *
- * @author Marco Baldassarri, Nicola Lasagni
+ * @author Marco Baldassarri
+ * @author Nicola Lasagni
  * @since 12/07/2017
  */
 public interface ComponentFinder {

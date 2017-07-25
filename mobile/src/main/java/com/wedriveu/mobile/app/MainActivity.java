@@ -27,7 +27,8 @@ import com.wedriveu.mobile.util.location.LocationServiceImpl;
 
 /**
  *
- * @author Marco Balsassarri, Nicola Lasagni
+ * @author Marco Balsassarri
+ * @author Nicola Lasagni
  * @since 4/07/2017
  *
  */
