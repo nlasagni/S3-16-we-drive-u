@@ -23,23 +23,23 @@ def filterProjects(String name) {
 }
 
 configure(filterProjects(mobileModule)) {
-    if (it.name != mobileModule) {
-        apply plugin: 'java'
-        apply plugin: 'scala'
-        sourceCompatibility = "$jdkVersion"
-        javadoc.destinationDir = new File("$docsFolderJava")
-        scaladoc.destinationDir = new File("$docsFolderScala")
+    apply plugin: 'java'
+    apply plugin: 'scala'
+    sourceCompatibility = "$jdkVersion"
+    javadoc.destinationDir = new File("$docsFolderJava")
+    scaladoc.destinationDir = new File("$docsFolderScala")
 
-        dependencies {
-            testCompile "junit:junit:$junitVersion"
-            testCompile "org.scala-lang:scala-library:$scalaVersion"
-            compile "org.scala-lang:scala-library:$scalaVersion"
-            compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-            compile "io.vertx:vertx-core:$vertxVersion"
-            compile "io.vertx:vertx-web:$vertxVersion"
-            compile "io.vertx:vertx-config:$vertxVersion"
-        }
+    dependencies {
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.scala-lang:scala-library:$scalaVersion"
+        compile "org.scala-lang:scala-library:$scalaVersion"
+        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-web:$vertxVersion"
+        compile "io.vertx:vertx-config:$vertxVersion"
     }
 }
+
+defaultTasks 'clean', 'build', 'javadoc', 'scaladoc'
 
 

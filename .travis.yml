@@ -26,7 +26,7 @@ android:
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
 script:
-  - './gradlew clean build javadoc scaladoc'
+  - './gradlew'
 after_success:
   - 'bash deploy-services.sh'
 deploy:
@@ -36,6 +36,16 @@ deploy:
   local_dir: latest-docs
   on:
     branch: master
+deploy:
+  provider: releases
+  api-key: $GH_TOKEN
+  file_glob: true
+  file: releases/*
+  skip_cleanup: true
+  on:
+    repo: nlasagni/S3-16-we-drive-u
+    branch: WDU_53_Travis_Setup_Enhancement
+    tags: false
 notifications:
   email:
     recipients:
