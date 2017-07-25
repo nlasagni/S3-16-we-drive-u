@@ -10,4 +10,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
+    compile project(path: ':services:shared')
 }
