@@ -12,7 +12,6 @@ allprojects {
     }
     repositories {
         jcenter()
-        mavenCentral()
     }
 }
 
@@ -40,6 +39,6 @@ configure(filterProjects(mobileModule)) {
     }
 }
 
-defaultTasks 'clean', 'build', 'javadoc', 'scaladoc'
+defaultTasks 'clean', 'build', 'scaladoc'
 
 
