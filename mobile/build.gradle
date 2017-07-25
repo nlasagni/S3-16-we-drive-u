@@ -66,7 +66,7 @@ def archiveBuildTypes = ["release", "debug"];
 android.applicationVariants.all { variant ->
     variant.outputs.each { output ->
         if (variant.buildType.name in archiveBuildTypes) {
-            output.outputFile = new File("${rootProject.name}-${releasesClientFolder}/${archivesBaseName}-${variant.buildType.name}-${androidVersionName}.apk")
+            output.outputFile = new File("${releasesClientFolder}/${rootProject.name}-${archivesBaseName}-${variant.buildType.name}-${androidVersionName}.apk")
         }
     }
 }
