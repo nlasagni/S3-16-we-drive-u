@@ -4,7 +4,7 @@ dependencies {
 
 jar {
     archiveName = "${rootProject.name}-${parent.name}-${this.name}-${rootProject.version}.jar"
-    destinationDir = new File("$releasesFolder/${parent.name}")
+    destinationDir = new File("$releasesServiceFolder")
     manifest {
         attributes 'Implementation-Version': project.version,
         'Main-Class': 'boundary.AuthenticationServiceImpl'

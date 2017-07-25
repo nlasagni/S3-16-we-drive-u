@@ -1,6 +1,6 @@
 jar {
     archiveName = "${rootProject.name}-${this.name}-${rootProject.version}.jar"
-    destinationDir = new File("$releasesFolder")
+    destinationDir = new File("$releasesClientFolder")
     manifest {
         attributes 'Implementation-Version': project.version,
                 'Main-Class': 'Test'
