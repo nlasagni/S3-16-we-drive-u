@@ -14,7 +14,6 @@ public interface VehicleStore {
     void mapEntityToJson();
 
     /**
-     *
      * @param carLicencePlate Identifies the <em>com.wedriveu.services.vehicle.entity.Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.
      * @return Returns the <em>com.wedriveu.services.vehicle.entity.Vehicle</em>, only if founded.
      */

@@ -14,10 +14,10 @@ public class Vehicle {
     private Position position;
     private Date lastUpdate;
 
-    public Vehicle(@JsonProperty("carLicencePlate")String carLicencePlate,
-                   @JsonProperty("state")String state,
+    public Vehicle(@JsonProperty("carLicencePlate") String carLicencePlate,
+                   @JsonProperty("state") String state,
                    @JsonProperty("position") Position position,
-                   @JsonProperty("lastUpdate")Date lastUpdate) {
+                   @JsonProperty("lastUpdate") Date lastUpdate) {
         this.carLicencePlate = carLicencePlate;
         this.state = state;
         this.position = position;
@@ -55,4 +55,5 @@ public class Vehicle {
     public void setPosition(Position position) {
         this.position = position;
     }
+
 }

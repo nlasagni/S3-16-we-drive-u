@@ -1,7 +1,8 @@
-package com.wedriveu.services.vehicle.callback;
-
+package com.wedriveu.services.vehicle.finder.callback;
 /**
  * Created by Michele on 18/07/2017.
+ *
+ * @author Michele Donati, Stefano Bernagozzi.
  */
 
 /**
