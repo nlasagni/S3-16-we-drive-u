@@ -44,7 +44,8 @@ deploy:
   skip_cleanup: true
   on:
     repo: nlasagni/S3-16-we-drive-u
-    branch: WDU_53_Travis_Setup_Enhancement
+    branches:
+      - WDU_53_Travis_Setup_Enhancement
     tags: false
 notifications:
   email:
