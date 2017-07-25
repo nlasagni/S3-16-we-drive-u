@@ -2,6 +2,7 @@ package com.wedriveu.services.vehicle.entity; /**
  * Created by Michele on 12/07/2017.
  */
 import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.utilities.Constants;
@@ -12,24 +13,25 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class VehicleStoreImpl implements VehicleStore {
 
     @Override
-    public void mapEntityToJson() {
-        Vehicle vehicle = createDummyObject("MACCHINA1",
+    public void createVehiclesFile() {
+        Vehicle vehicle = createVehicle("MACCHINA1",
                         "broken",
                         new Position(10.2,13.2),
                         new Date(2017, 11, 30, 12, 37,43));
-        Vehicle vehicle2 = createDummyObject("MACCHINA2",
+        Vehicle vehicle2 = createVehicle("MACCHINA2",
                         "available",
                         new Position(11.2,14.2),
                         new Date(2017, 10, 28, 11, 43, 12));
-        Vehicle vehicle3 = createDummyObject("MACCHINA3",
+        Vehicle vehicle3 = createVehicle("MACCHINA3",
                         "busy",
                         new Position(15.2,13.2),
                         new Date(2017, 9, 26, 10, 56, 46));
-        Vehicle vehicle4 = createDummyObject("MACCHINA4",
+        Vehicle vehicle4 = createVehicle("MACCHINA4",
                         "recharging",
                         new Position(13.2,16.2),
                         new Date(2017, 8, 24, 9, 37, 22));
@@ -39,59 +41,120 @@ public class VehicleStoreImpl implements VehicleStore {
         vehicleListToJSon.add(vehicle2);
         vehicleListToJSon.add(vehicle3);
         vehicleListToJSon.add(vehicle4);
-
         writeJsonVehicleFile(vehicleListToJSon);
     }
 
     @Override
-    public Vehicle getVehicle(String carLicencePlate) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            Vehicle[] vehicles = mapper.readValue(new File(Constants.VEHICLES_DATABASE_PATH), Vehicle[].class);
-            return getVehicleRequestedCheckingVehiclesList(vehicles, carLicencePlate);
-
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public void addVehicle(Vehicle vehicle) {
+        List<Vehicle> vehicles = getVehicleList();
+        vehicles.add(vehicle);
+        writeJsonVehicleFile((ArrayList<Vehicle>) vehicles);
     }
 
-    private Vehicle createDummyObject(String carLicencePlate,
-                                      String state,
-                                      Position position,
-                                      Date lastUpdate) {
-        return new Vehicle(carLicencePlate, state,position, lastUpdate);
+    @Override
+    public List<Vehicle> getAllAvailableVehicles() {
+        List<Vehicle> vehicles = getVehicleList();
+        List<Vehicle> vehiclesAvailables = new ArrayList<>() ;
+        for(Vehicle vehicle: vehicles){
+            if(vehicle.getState().equals("available")) {
+                vehiclesAvailables.add(vehicle);
+            }
+        }
+        return vehiclesAvailables;
+    }
+
+    @Override
+    public Vehicle getVehicle(String carLicencePlate) {
+        List<Vehicle> vehicles = getVehicleList();
+        return getVehicleRequestedCheckingVehiclesList(vehicles, carLicencePlate);
+    }
+
+    @Override
+    public List<Vehicle> getVehicleList() {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Vehicle> vehicles = readFromVehiclesDb(mapper);
+        return vehicles;
+    }
+
+    @Override
+    public void updateVehicleInVehicleList(String carLicencePlate, String state, Position position, Date lastUpdate) {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Vehicle> vehicles = getVehicleList();
+        for (Vehicle vehicle : vehicles) {
+            if(vehicle.getCarLicencePlate().equals(carLicencePlate)){
+                Log.log("Vehicle found for update");
+                if(!(vehicle.getState().equals(state))) {
+                    vehicle.setState(state);
+                }
+                if(!(vehicle.getPosition().equals(position))) {
+                    vehicle.setPosition(position);
+                }
+                vehicle.setLastUpdate(lastUpdate);
+            }
+        }
+        checkDuplicatesAndWriteOnVehiclesDb(vehicles, mapper);
+    }
+
+    @Override
+    public void deleteVehicleFromDb(String carLicencePlate) {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Vehicle> vehicles = getVehicleList();
+        for (Vehicle vehicle : vehicles) {
+            if(vehicle.getCarLicencePlate().equals(carLicencePlate)){
+                Log.log("Vehicle found for delete");
+                vehicles.remove(vehicle);
+                break;
+            }
+        }
+        checkDuplicatesAndWriteOnVehiclesDb(vehicles, mapper);
+    }
+
+    @Override
+    public void replaceVehicleInDb(String carLicencePlateToDelete, Vehicle replacementVehicle) {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Vehicle> vehicles = getVehicleList();
+        for (Vehicle vehicle : vehicles) {
+            if(vehicle.getCarLicencePlate().equals(carLicencePlateToDelete)){
+                Log.log("Vehicle found for replacement");
+                vehicles.remove(vehicle);
+                vehicles.add(replacementVehicle);
+                break;
+            }
+        }
+        checkDuplicatesAndWriteOnVehiclesDb (vehicles, mapper);
+    }
+
+    @Override
+    public boolean theVehicleIsInTheDb(String carLicensePlate){
+        List<Vehicle> vehicles = getVehicleList();
+        for (Vehicle vehicle : vehicles) {
+            if(vehicle.getCarLicencePlate().equals(carLicensePlate)){
+                Log.log("Vehicle found");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Vehicle createVehicle(String carLicencePlate,
+                                  String state,
+                                  Position position,
+                                  Date lastUpdate) {
+        return new Vehicle(carLicencePlate, state, position, lastUpdate);
     }
 
     private void writeJsonVehicleFile(ArrayList<Vehicle> vehicleListToJSon) {
         ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            mapper.writeValue(new File(Constants.VEHICLES_DATABASE_PATH), vehicleListToJSon);
-            String jsonInString = mapper.writeValueAsString(vehicleListToJSon);
-            Log.log(jsonInString);
-            jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(vehicleListToJSon);
-            Log.log(jsonInString);
-
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        checkDuplicatesAndWriteOnVehiclesDb(vehicleListToJSon, mapper);
     }
 
-    private Vehicle getVehicleRequestedCheckingVehiclesList(Vehicle[] vehicles, String carLicencePlate) {
+    private Vehicle getVehicleRequestedCheckingVehiclesList(List<Vehicle> vehicles, String carLicencePlate) {
         for (Vehicle vehicle : vehicles) {
             if(vehicle.getCarLicencePlate().equals(carLicencePlate)){
-                Log.log("com.wedriveu.services.vehicle.entity.Vehicle found! -> " + vehicle.getCarLicencePlate() + " " + vehicle.getState());
+                Log.log("com.wedriveu.services.vehicle.entity.Vehicle found! -> " +
+                        vehicle.getCarLicencePlate() +
+                        " " +
+                        vehicle.getState());
                 return vehicle;
             }
         }
@@ -99,4 +162,50 @@ public class VehicleStoreImpl implements VehicleStore {
         return null;
     }
 
+    private List<Vehicle> readFromVehiclesDb(ObjectMapper mapper){
+        try {
+            List<Vehicle> vehicles =
+                    mapper.readValue(new File(Constants.VEHICLES_DATABASE_PATH), new TypeReference<List<Vehicle>>(){});
+            return vehicles;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void checkDuplicatesAndWriteOnVehiclesDb(List<Vehicle> vehicles, ObjectMapper mapper) {
+        if(thereAreNotDuplicates(vehicles)) {
+            try {
+                mapper.writeValue(new File(Constants.VEHICLES_DATABASE_PATH), vehicles);
+                String jsonInString = mapper.writeValueAsString(vehicles);
+                Log.log(jsonInString);
+                jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(vehicles);
+                Log.log(jsonInString);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private boolean thereAreNotDuplicates(List<Vehicle> vehicles) {
+        for (int j = 0; j < vehicles.size(); j++) {
+            String currentCarLicencePlate = vehicles.get(j).getCarLicencePlate();
+            for (int i = 0; i < vehicles.size(); i++) {
+                if (j != i
+                        && i < vehicles.size() - 1
+                        && vehicles.get(i).getCarLicencePlate().equals(currentCarLicencePlate)) {
+                    Log.log("There are two duplicates car licence plate: "
+                            + vehicles.get(i).getCarLicencePlate()
+                            + " "
+                            + currentCarLicencePlate);
+                    return false;
+                }
+            }
+        }
+        Log.log("NO DUPLICATES!");
+        return true;
+    }
+
 }
+
+

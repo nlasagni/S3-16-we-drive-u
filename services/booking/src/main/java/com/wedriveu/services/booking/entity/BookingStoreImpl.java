@@ -1,6 +1,7 @@
 package com.wedriveu.services.booking.entity;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.utilities.Constants;
@@ -10,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Michele on 12/07/2017.
@@ -69,8 +71,8 @@ public class BookingStoreImpl implements BookingStore {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            Booking[] bookings= new Booking[10];
-            bookings = mapper.readValue(new File(Constants.BOOKINGS_DATABASE_PATH), Booking[].class);
+            List<Booking> bookings =
+                    mapper.readValue(new File(Constants.BOOKINGS_DATABASE_PATH), new TypeReference<List<Booking>>(){});
             return getBookingRequestedCheckingBookingsList(bookings, bookingId);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -102,7 +104,7 @@ public class BookingStoreImpl implements BookingStore {
         }
     }
 
-    private Booking getBookingRequestedCheckingBookingsList(Booking[] bookings, int bookingId) {
+    private Booking getBookingRequestedCheckingBookingsList(List<Booking> bookings, int bookingId) {
         for (Booking booking : bookings) {
             if(booking.getBookingID() == bookingId) {
                 Log.log("com.wedriveu.services.booking.entity.Booking found! -> User: " +

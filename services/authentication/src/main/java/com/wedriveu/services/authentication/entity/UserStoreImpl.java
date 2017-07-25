@@ -1,6 +1,7 @@
 package com.wedriveu.services.authentication.entity;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.utilities.Constants;
@@ -9,6 +10,8 @@ import com.wedriveu.services.shared.utilities.Log;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Michele on 12/07/2017.
  */
@@ -36,7 +39,8 @@ public class UserStoreImpl implements UserStore {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            User[] users= mapper.readValue(new File(Constants.USERS_DATABASE_PATH), User[].class);
+            List<User> users =
+                    mapper.readValue(new File(Constants.USERS_DATABASE_PATH), new TypeReference<List<User>>(){});
             return getUserRequestedCheckingUsersList(users, username);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -71,10 +75,14 @@ public class UserStoreImpl implements UserStore {
         }
     }
 
-    private User getUserRequestedCheckingUsersList(User[] users, String username){
+    private User getUserRequestedCheckingUsersList(List<User> users, String username){
         for (User user : users) {
             if(user.getUsername().equals(username)) {
-                Log.log("Login success! " + "Username: " + user.getUsername() + ", Password: " + user.getPassword());
+                Log.log("Login success! " +
+                        "Username: " +
+                        user.getUsername() +
+                        ", Password: " +
+                        user.getPassword());
                 return user;
             }
         }
