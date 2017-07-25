@@ -36,6 +36,7 @@
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/black"
                 android:textSize="18sp"
+                android:focusable="false"
                 android:hint="@string/scheduling_address_hint"/>
 
     </LinearLayout>
