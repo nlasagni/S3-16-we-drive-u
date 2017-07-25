@@ -1,10 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- COMMON -->
     <string name="app_name">We Drive U</string>
     <string name="common_warning">Warning</string>
     <string name="common_ok">OK</string>
-    <string name="we_drive_you_title">We Drive U</string>
+    <!-- LOGIN -->
+    <string name="we_drive_you_title">WeDriveU</string>
     <string name="we_drive_you_slogan">You are just one click far from your destination</string>
 	<string name="schedule_your_trip">Schedule your trip</string>
     <string name="place_autocomplete_error">Error calling Google Place API</string>
 	<string name="destination_address_not_filled">Please insert the destination address</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login">LOGIN</string>
+    <string name="login_error_message">Incorrect username or password, please try again</string>
+    <!-- SCHEDULING -->
+    <string name="scheduling_title">Scheduling</string>
+    <string name="scheduling_description">Schedule your trip</string>
+    <string name="scheduling_address_label">Destination</string>
+    <string name="scheduling_address_hint">Type an address</string>
+    <string name="scheduling_arrive_at_label">Arrive at</string>
+    <string name="scheduling_arrive_at_hint">Select time</string>
+    <string name="scheduling_search_vehicle">Search Vehicle</string>
+    <!-- VEHICLE -->
+    <string name="vehicle_title">This vehicle is for you</string>
+    <string name="vehicle_license_plate">License Plate: %s</string>
+    <string name="vehicle_pickup_time">Pickup time: %s</string>
+    <string name="vehicle_arrives_at">Arrives at destination at: %s</string>
+    <string name="vehicle_decline">DECLINE</string>
+    <string name="vehicle_accept">ACCEPT</string>
 </resources>
