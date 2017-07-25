@@ -45,7 +45,8 @@ deploy:
   on:
     repo: nlasagni/S3-16-we-drive-u
     branches:
-      - WDU_53_Travis_Setup_Enhancement
+      only:
+        - WDU_53_Travis_Setup_Enhancement
     tags: false
 notifications:
   email:
