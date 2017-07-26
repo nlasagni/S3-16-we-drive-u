@@ -1,7 +1,9 @@
-rootProject.name = "wedriveu"
+rootProject.name = "$artifactId"
 
 include "backoffice"
 include "vehicle"
 include "mobile"
 include "services:authentication"
 include "services:booking"
+include "services:vehicle"
+include "services:shared"

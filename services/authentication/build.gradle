@@ -1,13 +1,13 @@
-apply plugin: 'java'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
+dependencies {
+    compile project(path: ':services:shared')
 }
 
-dependencies {
-    testCompile 'junit:junit:4.12'
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
+jar {
+    archiveName = "${rootProject.name}-${parent.name}-${this.name}-${rootProject.version}.jar"
+    destinationDir = new File("$releasesServiceFolder")
+    manifest {
+        attributes 'Implementation-Version': project.version,
+        'Main-Class': 'boundary.AuthenticationServiceImpl'
+    }
+    from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
 }
