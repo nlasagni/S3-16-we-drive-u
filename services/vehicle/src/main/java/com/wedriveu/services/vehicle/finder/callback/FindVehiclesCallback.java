@@ -1,6 +1,6 @@
 package com.wedriveu.services.vehicle.finder.callback;
 
-import com.wedriveu.services.vehicle.entity.EligibleVehicle;
+import com.wedriveu.services.vehicle.election.entity.EligibleVehicle;
 
 import java.util.List;
 /**

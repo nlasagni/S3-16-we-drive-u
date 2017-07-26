@@ -29,4 +29,6 @@ public interface Constants {
     String VEHICLE_TO_SERVICE = "ToService";
     String REQUEST_CAN_DO_JOURNEY = "Requesting if journey can be done";
 
+    int FIRST_CHOSEN_ELIGIBLE_VEHICLE = 0;
+
 }
