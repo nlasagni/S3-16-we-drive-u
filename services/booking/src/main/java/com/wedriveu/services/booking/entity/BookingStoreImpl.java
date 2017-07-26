@@ -73,7 +73,7 @@ public class BookingStoreImpl implements BookingStore {
         try {
             List<Booking> bookings =
                     mapper.readValue(new File(Constants.BOOKINGS_DATABASE_PATH), new TypeReference<List<Booking>>(){});
-            return getBookingRequestedCheckingBookingsList(bookings, bookingId);
+            return getRequestedBooking(bookings, bookingId);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {
@@ -104,7 +104,7 @@ public class BookingStoreImpl implements BookingStore {
         }
     }
 
-    private Booking getBookingRequestedCheckingBookingsList(List<Booking> bookings, int bookingId) {
+    private Booking getRequestedBooking(List<Booking> bookings, int bookingId) {
         for (Booking booking : bookings) {
             if(booking.getBookingID() == bookingId) {
                 Log.log("com.wedriveu.services.booking.entity.Booking found! -> User: " +

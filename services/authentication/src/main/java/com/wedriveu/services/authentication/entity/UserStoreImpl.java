@@ -41,7 +41,7 @@ public class UserStoreImpl implements UserStore {
         try {
             List<User> users =
                     mapper.readValue(new File(Constants.USERS_DATABASE_PATH), new TypeReference<List<User>>(){});
-            return getUserRequestedCheckingUsersList(users, username);
+            return getRequestedUuser(users, username);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {
@@ -75,7 +75,7 @@ public class UserStoreImpl implements UserStore {
         }
     }
 
-    private User getUserRequestedCheckingUsersList(List<User> users, String username){
+    private User getRequestedUuser(List<User> users, String username){
         for (User user : users) {
             if(user.getUsername().equals(username)) {
                 Log.log("Login success! " +

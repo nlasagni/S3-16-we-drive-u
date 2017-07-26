@@ -1,9 +1,7 @@
 package com.wedriveu.services.vehicle.entity; /**
  * Created by Michele on 12/07/2017.
  */
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
@@ -66,7 +64,7 @@ public class VehicleStoreImpl implements VehicleStore {
     @Override
     public Vehicle getVehicle(String carLicencePlate) {
         List<Vehicle> vehicles = getVehicleList();
-        return getVehicleRequestedCheckingVehiclesList(vehicles, carLicencePlate);
+        return getRequestedVehicle(vehicles, carLicencePlate);
     }
 
     @Override
@@ -148,7 +146,7 @@ public class VehicleStoreImpl implements VehicleStore {
         checkDuplicatesAndWriteOnVehiclesDb(vehicleListToJSon, mapper);
     }
 
-    private Vehicle getVehicleRequestedCheckingVehiclesList(List<Vehicle> vehicles, String carLicencePlate) {
+    private Vehicle getRequestedVehicle(List<Vehicle> vehicles, String carLicencePlate) {
         for (Vehicle vehicle : vehicles) {
             if(vehicle.getCarLicencePlate().equals(carLicencePlate)){
                 Log.log("com.wedriveu.services.vehicle.entity.Vehicle found! -> " +
@@ -174,7 +172,7 @@ public class VehicleStoreImpl implements VehicleStore {
     }
 
     private void checkDuplicatesAndWriteOnVehiclesDb(List<Vehicle> vehicles, ObjectMapper mapper) {
-        if(thereAreNotDuplicates(vehicles)) {
+        if(thereAreNoDuplicates(vehicles)) {
             try {
                 mapper.writeValue(new File(Constants.VEHICLES_DATABASE_PATH), vehicles);
                 String jsonInString = mapper.writeValueAsString(vehicles);
@@ -187,7 +185,7 @@ public class VehicleStoreImpl implements VehicleStore {
         }
     }
 
-    private boolean thereAreNotDuplicates(List<Vehicle> vehicles) {
+    private boolean thereAreNoDuplicates(List<Vehicle> vehicles) {
         for (int j = 0; j < vehicles.size(); j++) {
             String currentCarLicencePlate = vehicles.get(j).getCarLicencePlate();
             for (int i = 0; i < vehicles.size(); i++) {

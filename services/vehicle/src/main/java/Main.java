@@ -13,33 +13,32 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        VehicleStoreImpl obj = new VehicleStoreImpl();
-        obj.createVehiclesFile();
-        Vehicle me;
-        me = obj.getVehicle("MACCHINA1");
+        VehicleStoreImpl vehicleStore = new VehicleStoreImpl();
+        vehicleStore.createVehiclesFile();
+        Vehicle vehicleToRetrieve = vehicleStore.getVehicle("MACCHINA1");
         try {
-            List<Vehicle> vehiclesAvailable = obj.getAllAvailableVehicles();
+            List<Vehicle> vehiclesAvailable = vehicleStore.getAllAvailableVehicles();
             for(Vehicle vehicle: vehiclesAvailable) {
                 Log.log(vehicle.getCarLicencePlate());
             }
-            obj.addVehicle(new Vehicle("MACCHINA6",
+            vehicleStore.addVehicle(new Vehicle("MACCHINA6",
                     "available",
                     new Position(11.1,11.1),
                     new Date()));
             Thread.sleep(3000);
-            obj.updateVehicleInVehicleList("MACCHINA1",
+            vehicleStore.updateVehicleInVehicleList("MACCHINA1",
                     "recharging",
                     new Position(15.2,18.2),
                     new Date( ));
             Thread.sleep(3000);
-            obj.deleteVehicleFromDb("MACCHINA1");
+            vehicleStore.deleteVehicleFromDb("MACCHINA1");
             Thread.sleep(3000);
             Vehicle dummy =
                     new Vehicle("MACCHINA3",
                             "available",
                             new Position(13.3,13.3),
                             new Date());
-            obj.replaceVehicleInDb("MACCHINA2", dummy);
+            vehicleStore.replaceVehicleInDb("MACCHINA2", dummy);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
