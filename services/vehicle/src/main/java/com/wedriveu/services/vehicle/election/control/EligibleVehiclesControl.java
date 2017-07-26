@@ -1,6 +1,7 @@
 package com.wedriveu.services.vehicle.election.control;
 
 import com.wedriveu.services.vehicle.election.entity.EligibleVehicle;
+import com.wedriveu.services.vehicle.entity.Vehicle;
 
 import java.util.List;
 
@@ -18,6 +19,6 @@ public interface EligibleVehiclesControl {
      *
      * @param vehicleList List of eligible vehicles which can actually drive to the trip destination
      */
-    void chooseBestVehicle(List<EligibleVehicle> vehicleList);
+    Vehicle chooseBestVehicle(List<EligibleVehicle> vehicleList);
 
 }

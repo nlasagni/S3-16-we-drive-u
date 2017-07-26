@@ -2,10 +2,8 @@ apply plugin: 'java'
 apply plugin: 'application'
 mainClassName = 'Main'
 sourceCompatibility = 1.8
-
 repositories {
     jcenter()
-    mavenCentral()
 }
 
 dependencies {
