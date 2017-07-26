@@ -1,6 +1,58 @@
-language: java
+dist: trusty
+sudo: required
+language: android
 jdk:
   - oraclejdk8
+  - openjdk8
+env:
+  global:
+    - secure: Gfdq8TpPdW4LjbHL7rk116L0FxzwczWc8a5/4GUxKBZkqFmMmzQ+EQV5AzpsvTIviYFlOvT6EBL0MgNG5zbU9TmiT/y+FhmuuapKxT+cWZgTZFm7w3Qt3k9dCeMCCceGfSd50q9k8zLLVPKkefSVGhh6J69GODNR5Sujk3wzyqCkQbiWREfy/ucOcEcvHLrl52eIMWq6HgdmWQmNybsGHxYlOQv1CH2aRan29AMlxeeSELjd7He8ZYk04++/7U1p9TtVttfDdfsqPwP8hXM7OJqEaZN/5vHqUESITEml5RNvuSiCup6EcGZnvG59pMfVe/Mhi6S9hGLlgNE8G/RftxgjwsM4DkiVn+vBeUoQSjyJcx1OPT8+qkG2LDI4UcoI/Z/HxNcQmltOK+TuPaPbhW/vLE4qw/Yll1TVshMm9A7mzCpo2AtK5pmDGUm9qfKRSVgvniGdTX+OQNNRKYmfJjgYHugNze8v00iaYlJCEdnddDeqqNDNRj3JeIvNgmoIdPCX/e6oYMjq2AE3hwowgPwSlmVnZiBxpS0JNrxTydPIHBUdUI9qju575BhUplfE439qlCjsF/qUdKft27GvrEYdhtRd5wFcUBJJBUzHJOKX5urpj7pJ3f18q+97lUr2LU1oIusSQcyArpjWsXw1DJ6ZIvDjPTpOfhxdssd6CBM=
+    - secure: XjIlIPDPGwrhBC9gM6H4oeU2oMa/KRNt9g1V9v3WZhZfu32FEpKHs7GyBgDTS9qODYHMBGE0wQ1VpVukdb3nw4/x0ZiXmMjFNtd1lKOqMvvLPWo52vBYv3qDrh0OSH25oGd2maXeT1hz6Sg82f1cSS5zKbr7ppQ4ddP+CQp8FKyJ8uRJuSUYgB76RqN/lIg/xCSGZ3k27RPmCOV4zi6yKF5jyi8A8BpziriM7rEGWfjRUV99kqOwfmDQvJCKJBeBRdiqw8bRr6mrw38xrf5t3rt7RYl/usqdsnmjRiRVTK7b9qUiS505NO1WIszGHol9InFwjLDHm9k7f56FQP2tC1EXQzse9TTSU5OfHRqPQlgYiWSmfP+d0qOnyP8nRyaYDjaMOR9AonrLlt6f9+yXbxECiTWA1qFv8x9nGyWX8ARsp02Enl9zsjYFvcCoFoaqwvbQ4tnsjRb9Hce0TpJVHSxXAKxOfZQsmysztwRpGzf/p5Z85Pqxadk50ohkG+01Am4LMP8+Z7sEoesg2u/JC5X4vA2d6gIvjbiRXXnSqYzhryswA6yfEN+NAG1JEbBJ0YJnLQQEOvFyEQ0tTAQ/lq9/e5wy1SYzoo5LlL9isJd0ukCaUjcJrhOpaEV9RBOPP30ELdqp07lg75pgiMsMkN7u2OV7zkkR/zEC9xuAdk8=
+    - secure: oKhqZwKhXyLduUfnMpuLWmWNxO90OawLmt+0ajYhQ3cXv0XeOWBtoMi8+msSF+aeYCH4XbK6v04c1Gr/SApD+QHBErymqUkL8+9sGdi+SUWjaDzat9SfDrm9q7zZkGL9WjwB092BeT2cgiOKznCKyHk5T3dNH2xGWVpYWtQMgpkRbD9x3GauZyIxhGjZsnO3euBO6fKVBtbNtJFMteG7DPJemUBqNZswMMr2McDsp5KROM5lJeNtFJ2R8FUmlu48Axoi8aSt6Mxyvn4dxTvhlE8M0M4ihNKR4Mi/J709ScYJLbulyiBaa2SYAyVqTfuGitf+qzRkRmFD7+ynKpziIQsjy0gNdCeKuZhPFNwzFiLAqlhkx6j1/cJRoDzCO6PAjDa9A9ClzTDAulpZtzMFwuZSsEpB3leOCQfZXf3q5BOIUSdQ0LP8zvn6ywV3NzlQtut34GavGLKEl0pJRMZBnps9p3xj2eb9+yhwlD4BDPIMTFvrKWgXgWb08fHZMMOuz0lCYZl6f/szR3uCYaovp5BYmOs+YXOD+EW2gsz92lOuIDON829dl1iw/UlNJjWPOpXeFNLaQY+1UyYvqKUy4xBQi0u+Jp4RabJzC4NcnslxsGiLnUBBsUdaGFTwb9QCgqG3glWFVC/Sx7f7k48PAvQxfNS3bgE1J6zQOgpLI8M=
+    - secure: cbkVoIyuQFJmj3Yxap2ESA0dLaI9Y089cC2/aUIRmJFieyTg1zcE/dPs+CtdBSMTiZFt7IIYd4fs/3a/gW2mimXuqODxXws420aTFbvoXHQi5eSlyRSxHT+nLqW6iPoUvHcjwXhdIHwp8i402MpkgiHHDEZo88wvEufFIbAn1lE5ogXAmI6i5KRDAAfuApVqVLsBxqKNi7jtPORNXmqneUGCMrDX1PNoLdrQ7KwCa7NMNHZ7spTRdQ6VIx/5S7yC82cprZ13U1bZhbo5nEmb6yIHkUR2oJrYhddeFv3xNakBzUpTSsBPeV5/LTMJJ3ANvbE8j+9e8O3oumi6kxjQ5UBIvdPXq8Dplnw4STd64v0+bZvj8a88+zMQTHV5tPaZP8W38wxwc44TGM2mwx3MLGY5jx/3krUWp92vJIa7N78prvFadaazt4G5rKChUxMFzHyKi9l3Q6+ZSGtm3QgN95GhG1BzTmA4hBL+urA++E1JO8VP/s66c1QBhLKp+JrrkLQ4y5ZnCRg8d8X4x82DHccri042/48cMtas85P6wUhUovfjSUnSWI3IiEW3RqkTpe1YwVtZWO+VMMLSrJSI+zU/TozUDZdCNNa1DKsxAHyJxM3lreDs7UQ+0PYql8qqOyHmIvFwREigCzto+8BquVwa94SdjoYsXtpvwjVxLuQ=
+    - secure: sqJvcvn4zYDeEUtGeOifsnRr0NnVCjjdnT4jrT2V8Snqf+Ou/2U4HJMkeR3W1mlHh2eI2sz9CK6JK3FLjxWG40YHMcMdL5Fd2sDTLA1ap+fvE0QP7l93LtiVAbgG0hdzScdy/DhMFls2TKZRe0VH9pWa930yqR9tlWbUBdKjKGEfO0mes78mUbkK2Xstdf5e/VoT3R4/fhIsh1leCG1+Kne1asqw7ITOr9dKNd7XkmGkBcHRvRxEqib4eiCIKEvmH+wd3ItJRTn0pe5mM1nggvXUCsWVG/uwySphk6lVU+n4z3QeQM0lXcM+sK5LlbY9Ykc6qx1UBuwRSkmWdoUn52OGJiHqSlUKgKfhpxXsScIH0cDbeuCdlEZBpUDU4iWu2SfJOTRMAaBww2uV4vs+ARb7LuQjD0CVV6XzJVq6yfFeC3mEfhHd/9BpgTCxLJjCiItiD8UQXaqarfG9mC3zCLk/tfZFFu90Zj6KeyljbnHgX4KZjl27MBqKG1G3Z3IEGDlQmKdk4zXFXgvblBOvKt+F90Zp71Z3zHM5eYIk9TjrKww8QyukrOWAV76pekEcki93oy7u4S1Wt8bjmP9y6nDoJjNI3IUKdav83MZBN7TTvVlxwDVgZuI2YhtAAGDkucIouiC1dwAQMYC5+GwHrgU3kT+Zrhiat7q1lggi1Kc=
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-25.0.3
+    - android-25
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-22
+    - sys-img-armeabi-v7a-android-19
+  licenses:
+    - 'android-sdk-preview-license-52d11cd2'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
 script:
-  - './gradlew clean build'
-
+  - './gradlew'
+after_success:
+  - 'bash deploy-services.sh'
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GH_TOKEN
+  local_dir: latest-docs
+  on:
+    branch: master
+deploy:
+  provider: releases
+  api-key: $GH_TOKEN
+  file_glob: true
+  file:
+   - "releases/services/*"
+   - "releases/clients/*"
+  skip_cleanup: true
+  on:
+    repo: nlasagni/S3-16-we-drive-u
+    tags: true
+notifications:
+  email:
+    recipients:
+      - marco.baldassarri2@studio.unibo.it
+      - michele.donati5@studio.unibo.it
+      - nicola.lasagni@gmail.com
+      - stefano.bernagozzi@studio.unibo.it
+    on_success: never
+    on_failure: always

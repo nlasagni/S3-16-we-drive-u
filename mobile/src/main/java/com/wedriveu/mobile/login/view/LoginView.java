@@ -10,7 +10,7 @@ public interface LoginView {
     String TAG = LoginView.class.getSimpleName();
 
     /**
-     * method called during the View creation. Sets the listeners for the UI components in the LoginView.
+     * Method called during the View creation. Sets the listeners for the UI components in the LoginView.
      */
     void renderView();
 

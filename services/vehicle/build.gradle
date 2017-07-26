@@ -1,17 +1,16 @@
 apply plugin: 'java'
-
-sourceCompatibility = 1.8
-
-repositories {
-    jcenter()
-    mavenCentral()
-}
-
 dependencies {
-    testCompile 'junit:junit:4.12'
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    compile group: 'com.rabbitmq', name: 'amqp-client', version: '2.3.1'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
     compile project(path: ':services:shared')
     compile project(path: ':vehicle')
+    compile group: 'com.rabbitmq', name: 'amqp-client', version: '2.3.1'
+}
+
+jar {
+    archiveName = "${rootProject.name}-${parent.name}-${this.name}-${rootProject.version}.jar"
+    destinationDir = new File("$releasesServiceFolder")
+    manifest {
+        attributes 'Implementation-Version': project.version,
+                'Main-Class': 'Main'
+    }
+    from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
 }

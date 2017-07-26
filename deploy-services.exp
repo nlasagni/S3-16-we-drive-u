@@ -1,0 +1,25 @@
+#!/usr/bin/expect
+
+set username [lindex $argv 0];
+set password [lindex $argv 1];
+set host [lindex $argv 2];
+set build_number [lindex $argv 3];
+
+spawn sftp $username@$host
+expect "*Are you sure you want to continue connecting (yes/no)?*"
+send "yes\n"
+expect "*?assword:*"
+send "$password\n"
+expect "sftp>"
+send "cd wedriveu\n"
+expect "sftp>"
+send "mkdir services-deploy-$build_number\n"
+expect "sftp>"
+send "lcd releases/services\n"
+expect "sftp>"
+send "cd services-deploy-$build_number\n"
+expect "sftp>"
+send "put -r .\n"
+expect "sftp>"
+send "exit\n"
+interact
