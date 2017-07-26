@@ -1,17 +1,10 @@
 package com.wedriveu.services.vehicle.finder.callback;
 /**
- * Created by Michele on 18/07/2017.
+ *
+ * This interface models the callback for the request of the journey to all the vehicles in the range of user.
  *
  * @author Michele Donati, Stefano Bernagozzi.
- * @author Michele Donati, Stefano Bernagozzi.
- */
-
-/**
- * @author Michele Donati, Stefano Bernagozzi.
- */
-
-/**
- * This interface models the callback for the request of the journey to all the vehicles in the range of user.
+ *
  */
 public interface RequestCanDoJourneyCallback {
     /**
