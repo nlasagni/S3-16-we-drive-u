@@ -1,14 +1,17 @@
-package com.wedriveu.services.vehicle.control;
+package com.wedriveu.services.vehicle.finder.control;
 
-import com.wedriveu.services.vehicle.callback.FindVehiclesCallback;
-import com.wedriveu.services.vehicle.entity.Vehicle;
 import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.services.vehicle.entity.Vehicle;
+import com.wedriveu.services.vehicle.finder.callback.FindVehiclesCallback;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
  * Created by stefano.bernagozzi on 18/07/2017.
+ *
+ * @author Michele Donati, Stefano Bernagozzi.
+ * @author Michele Donati, Stefano Bernagozzi.
  */
 
 /**
