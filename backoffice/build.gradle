@@ -3,7 +3,7 @@ jar {
     destinationDir = new File("$releasesClientFolder")
     manifest {
         attributes 'Implementation-Version': project.version,
-                'Main-Class': 'Test'
+                'Main-Class': 'Main'
     }
     from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
 }
