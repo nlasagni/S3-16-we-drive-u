@@ -47,20 +47,18 @@ dependencies {
     //Libraries
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //Tests
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     testCompile "junit:junit:$junitVersion"
     //Android Support
-    compile "com.android.support:appcompat-v7:${androidSupportLibrarylVersion}"
-    compile "com.android.support:support-v4:${androidSupportLibrarylVersion}"
+    compile "com.android.support:appcompat-v7:$androidSupportLibrarylVersion"
+    compile "com.android.support:support-v4:$androidSupportLibrarylVersion"
     //Location
-    compile 'com.google.android.gms:play-services-location:11.0.2'
-    compile 'com.google.android.gms:play-services-places:11.0.2'
+    compile "com.google.android.gms:play-services-location:$playServicesVersion"
+    compile "com.google.android.gms:play-services-places:$playServicesVersion"
     //Other
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    compile 'com.squareup.retrofit2:converter-jackson:2.3.0'
+    compile "com.squareup.retrofit2:converter-jackson:$jacksonConverterVersion"
+    compile "com.github.bumptech.glide:glide:$glideVersion"
 }
 
 task ("javadoc", type: Javadoc) {
