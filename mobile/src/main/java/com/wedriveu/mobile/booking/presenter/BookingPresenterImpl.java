@@ -1,41 +1,61 @@
 package com.wedriveu.mobile.booking.presenter;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import com.wedriveu.mobile.app.ComponentFinder;
+import com.wedriveu.mobile.booking.presenter.model.BookingPresentationModel;
 import com.wedriveu.mobile.booking.view.BookingView;
+import com.wedriveu.mobile.model.Vehicle;
+import com.wedriveu.mobile.store.StoreFactoryImpl;
+import com.wedriveu.mobile.store.VehicleStore;
 
 /**
  * @author Nicola Lasagni on 29/07/2017.
  */
 public class BookingPresenterImpl extends Fragment implements BookingPresenter {
 
-    private String mViewId;
+    private static final int RENDER_DELAY = 200;
 
-    public static BookingPresenterImpl newInstance(String viewId) {
+    private VehicleStore mVehicleStore;
+
+    public static BookingPresenterImpl newInstance() {
         BookingPresenterImpl fragment = new BookingPresenterImpl();
         fragment.setRetainInstance(true);
-        fragment.setViewId(viewId);
         return fragment;
-    }
-
-    private void setViewId(String viewId) {
-        mViewId = viewId;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        renderContent();
+        mVehicleStore = StoreFactoryImpl.getInstance().createVehicleStore(getContext());
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                renderContent();
+            }
+        }, RENDER_DELAY);
     }
 
     private void renderContent() {
         BookingView view = getBookingView();
         if (view != null) {
-            //TODO Fill the presentation model to be rendered from the view
-            view.renderView(null);
+            Vehicle vehicle = mVehicleStore.getVehicle();
+            view.renderView(createPresentationModel(vehicle));
         }
+    }
+
+    private BookingPresentationModel createPresentationModel(Vehicle vehicle) {
+        BookingPresentationModel presentationModel = new BookingPresentationModel();
+        presentationModel.setVehicleName(vehicle.getVehicleName());
+        presentationModel.setLicensePlate(vehicle.getLicencePlate());
+        presentationModel.setDescription(vehicle.getDescription());
+        presentationModel.setImageUrl(vehicle.getPictureURL());
+        presentationModel.setPickUpTime(vehicle.getArriveAtUserTime());
+        presentationModel.setArriveTime(vehicle.getArriveAtDestinationTime());
+        return presentationModel;
     }
 
     @Override
@@ -52,7 +72,7 @@ public class BookingPresenterImpl extends Fragment implements BookingPresenter {
         BookingView view = null;
         ComponentFinder componentFinder = (ComponentFinder) getActivity();
         if (componentFinder != null) {
-            view = (BookingView) componentFinder.getView(mViewId);
+            view = (BookingView) componentFinder.getView(BookingView.ID);
         }
         return view;
     }

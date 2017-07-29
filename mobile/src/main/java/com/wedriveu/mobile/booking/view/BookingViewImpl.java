@@ -3,6 +3,8 @@ package com.wedriveu.mobile.booking.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,6 @@ import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.booking.presenter.BookingPresenter;
 import com.wedriveu.mobile.booking.presenter.model.BookingPresentationModel;
-import com.wedriveu.mobile.util.Constants;
 
 /**
  * Created by nicolalasagni on 29/07/2017.
@@ -30,14 +31,6 @@ public class BookingViewImpl extends Fragment implements BookingView {
     private TextView mVehicleArriveTime;
     private Button mAcceptButton;
     private Button mDeclineButton;
-
-    public static BookingViewImpl newInstance(String presenterId) {
-        BookingViewImpl fragment = new BookingViewImpl();
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.VIEW_MODEL_ID, presenterId);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
 
     @Nullable
     @Override
@@ -92,9 +85,10 @@ public class BookingViewImpl extends Fragment implements BookingView {
 
     @Override
     public void renderView(BookingPresentationModel presentationModel) {
+        setActionBarTitle();
         if (presentationModel != null) {
             mVehicleName.setText(presentationModel.getVehicleName());
-            mVehicleName.setText(presentationModel.getLicensePlate());
+            mVehicleLicensePlate.setText(presentationModel.getLicensePlate());
             mVehicleDescription.setText(presentationModel.getDescription());
             mVehiclePickUpTime.setText(presentationModel.getPickUpTime());
             mVehicleArriveTime.setText(presentationModel.getArriveTime());
@@ -102,12 +96,18 @@ public class BookingViewImpl extends Fragment implements BookingView {
         }
     }
 
+    private void setActionBarTitle() {
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.vehicle_title);
+        }
+    }
+
     private BookingPresenter getPresenter() {
         BookingPresenter presenter = null;
         ComponentFinder componentFinder = (ComponentFinder) getActivity();
         if (componentFinder != null) {
-            String presenterId = getArguments().getString(Constants.VIEW_MODEL_ID);
-            presenter = (BookingPresenter) componentFinder.getViewModel(presenterId);
+            presenter = (BookingPresenter) componentFinder.getViewModel(BookingPresenter.ID);
         }
         return presenter;
     }
