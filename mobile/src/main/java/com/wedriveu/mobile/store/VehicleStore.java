@@ -21,4 +21,9 @@ public interface VehicleStore {
      */
     void storeVehicle(Vehicle vehicle);
 
+    /**
+     * Empties the store.
+     */
+    void clear();
+
 }

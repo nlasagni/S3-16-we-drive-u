@@ -39,6 +39,14 @@ public class VehicleStoreTest {
         assertTrue(storedVehicle != null && storedVehicle.getLicencePlate().equals(vehicle.getLicencePlate()));
     }
 
+    @Test
+    public void clear() throws Exception {
+        Vehicle vehicle = createDummyVehicle();
+        mVehicleStore.storeVehicle(vehicle);
+        mVehicleStore.clear();
+        assertTrue(mVehicleStore.getVehicle() == null);
+    }
+
     private Vehicle createDummyVehicle() {
         Vehicle vehicle =
                 new Vehicle(DUMMY_VEHICLE_LICENSE_PLATE,
