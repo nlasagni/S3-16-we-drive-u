@@ -58,11 +58,9 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:11.0.2'
     compile 'com.google.android.gms:play-services-places:11.0.2'
     //Other
-    //Other
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile 'com.squareup.retrofit2:converter-jackson:2.3.0'
-    compile 'javax.inject:javax.inject:1'
 }
 
 task ("javadoc", type: Javadoc) {
@@ -72,11 +70,13 @@ task ("javadoc", type: Javadoc) {
     failOnError false
 }
 
-def archiveBuildTypes = ["release", "debug"];
+def archiveBuildTypes = ["release", "debug"]
 android.applicationVariants.all { variant ->
     variant.outputs.each { output ->
         if (variant.buildType.name in archiveBuildTypes) {
-            output.outputFile = new File("${releasesClientFolder}/${rootProject.name}-${archivesBaseName}-${variant.buildType.name}-${androidVersionName}.apk")
+            def apkFileName = "${archivesBaseName}-${variant.buildType.name}-${rootProject.version}.apk"
+            def apk = output.outputFile
+            output.outputFile = new File(apk.parentFile, apkFileName)
         }
     }
 }
