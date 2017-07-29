@@ -7,6 +7,8 @@ import com.wedriveu.mobile.booking.presenter.model.BookingPresentationModel;
  */
 public interface BookingView {
 
+    String ID = BookingView.class.getSimpleName();
+
     void renderView(BookingPresentationModel presentationModel);
 
 }

@@ -5,6 +5,8 @@ package com.wedriveu.mobile.booking.presenter;
  */
 public interface BookingPresenter {
 
+    String ID = BookingPresenter.class.getSimpleName();
+
     void onAcceptButtonClick();
 
     void onDeclineButtonClick();
