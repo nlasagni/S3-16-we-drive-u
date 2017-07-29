@@ -43,7 +43,7 @@ public class BookingViewImpl extends Fragment implements BookingView {
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_vehicle, container, false);
+        mView = inflater.inflate(R.layout.fragment_booking, container, false);
         setupViewComponents();
         setupListeners();
         return mView;

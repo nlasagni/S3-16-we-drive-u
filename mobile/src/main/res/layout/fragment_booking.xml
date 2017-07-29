@@ -58,12 +58,11 @@
                 android:padding="40dp">
 
             <TextView
-                    android:id="@+id/title"
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:text="MINI COOPER"/>
+                    android:textSize="14sp"/>
 
             <TextView
                     android:id="@+id/license_plate"
