@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.booking.presenter.BookingPresenter;
@@ -91,7 +92,14 @@ public class BookingViewImpl extends Fragment implements BookingView {
 
     @Override
     public void renderView(BookingPresentationModel presentationModel) {
-        //TODO Render BookingPresentationModel data
+        if (presentationModel != null) {
+            mVehicleName.setText(presentationModel.getVehicleName());
+            mVehicleName.setText(presentationModel.getLicensePlate());
+            mVehicleDescription.setText(presentationModel.getDescription());
+            mVehiclePickUpTime.setText(presentationModel.getPickUpTime());
+            mVehicleArriveTime.setText(presentationModel.getArriveTime());
+            Glide.with(this).load(presentationModel.getImageUrl()).into(mVehicleImage);
+        }
     }
 
     private BookingPresenter getPresenter() {
