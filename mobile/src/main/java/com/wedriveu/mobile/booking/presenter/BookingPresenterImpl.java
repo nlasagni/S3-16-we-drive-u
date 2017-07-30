@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.booking.presenter.model.BookingPresentationModel;
 import com.wedriveu.mobile.booking.view.BookingView;
@@ -50,11 +51,11 @@ public class BookingPresenterImpl extends Fragment implements BookingPresenter {
     private BookingPresentationModel createPresentationModel(Vehicle vehicle) {
         BookingPresentationModel presentationModel = new BookingPresentationModel();
         presentationModel.setVehicleName(vehicle.getVehicleName());
-        presentationModel.setLicensePlate(vehicle.getLicencePlate());
+        presentationModel.setLicensePlate(getString(R.string.vehicle_license_plate, vehicle.getLicencePlate()));
         presentationModel.setDescription(vehicle.getDescription());
         presentationModel.setImageUrl(vehicle.getPictureURL());
-        presentationModel.setPickUpTime(vehicle.getArriveAtUserTime());
-        presentationModel.setArriveTime(vehicle.getArriveAtDestinationTime());
+        presentationModel.setPickUpTime(getString(R.string.vehicle_pickup_time, vehicle.getArriveAtUserTime()));
+        presentationModel.setArriveTime(getString(R.string.vehicle_arrives_at, vehicle.getArriveAtDestinationTime()));
         return presentationModel;
     }
 
