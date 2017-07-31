@@ -1,12 +1,19 @@
 package com.wedriveu.services.shared.entity;
 
 /**
- * Created by nicolalasagni on 31/07/2017.
+ * @author Nicola Lasagni on 31/07/2017.
  */
 public interface EntityStoreStrategy<T> {
 
+    /**
+     * Gets an instance of {@linkplain T} from the store.
+     * @return an instance of {@linkplain T}.
+     */
     T get();
 
+    /**
+     * Store an instance of {@linkplain T} into the store.
+     */
     void store(T entity);
 
 }
