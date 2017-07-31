@@ -14,7 +14,7 @@ import java.util.concurrent.TimeoutException;
 public class Main {
 
     public static void main(String[] args) throws IOException, TimeoutException {
-        VehicleStoreImpl vehicleStore = new VehicleStoreImpl();
+    /*    VehicleStoreImpl vehicleStore = new VehicleStoreImpl();
         vehicleStore.createVehiclesFile();
         Vehicle vehicleToRetrieve = vehicleStore.getVehicle("MACCHINA1");
         try {
@@ -42,7 +42,7 @@ public class Main {
             vehicleStore.replaceVehicleInDb("MACCHINA2", dummy);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         ArrayList<Vehicle> available = new ArrayList<>();
         available.add(new Vehicle("veicolo1",
                 "available",

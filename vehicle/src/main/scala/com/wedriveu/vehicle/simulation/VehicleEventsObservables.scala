@@ -5,7 +5,13 @@ import rx.lang.scala.Observable
 /**
   * Created by Michele on 28/07/2017.
   */
+
+/** This models the Observables that generates the events captured by vehicles. */
 trait VehicleEventsObservables {
+  /** This is the Observable for the event: battery drain.
+    *
+    * @return Returns the Observable object.
+    */
   def batteryDrainObservable(): Observable[String]
 }
 
