@@ -1,5 +1,7 @@
 package com.wedriveu.services.booking.entity;
 
+import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
+import com.wedriveu.services.shared.entity.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.services.shared.utilities.Constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +27,9 @@ public class BookingStoreTest {
 
     @Before
     public void setUp() throws Exception {
-        bookingStore = new BookingStoreImpl();
+        EntityListStoreStrategy<Booking> storeStrategy =
+                new JsonFileEntityListStoreStrategyImpl<>(Booking.class, Constants.BOOKINGS_DATABASE_PATH);
+        bookingStore = new BookingStoreImpl(storeStrategy);
         bookings = createBookings();
     }
 
@@ -50,9 +54,11 @@ public class BookingStoreTest {
     public void updateBookingStatus() throws Exception {
         Booking booking = bookings.get(0);
         bookingStore.addBooking(booking);
-        bookingStore.updateBookingStatus(booking.getBookingID(), Booking.STATUS_COMPLETED);
+        boolean updateResult = bookingStore.updateBookingStatus(booking.getBookingID(), Booking.STATUS_COMPLETED);
         Booking storedBooking = bookingStore.getBooking(booking.getBookingID());
-        assertTrue(storedBooking != null && storedBooking.getBookingState().equals(Booking.STATUS_COMPLETED));
+        assertTrue(updateResult &&
+                storedBooking != null &&
+                storedBooking.getBookingState().equals(Booking.STATUS_COMPLETED));
     }
 
     @Test
@@ -61,6 +67,12 @@ public class BookingStoreTest {
         bookings.forEach(booking -> bookingStore.addBooking(booking));
         List<Booking> storedBookings = bookingStore.getBookingsByDate(bookings.get(0).getDate(), date);
         assertTrue(storedBookings != null && storedBookings.size() == BOOKING_COUNT);
+    }
+
+    @Test
+    public void clear() throws Exception {
+        bookingStore.clear();
+        assertTrue(bookingStore.getBooking(0) == null);
     }
 
     private List<Booking> createBookings() {

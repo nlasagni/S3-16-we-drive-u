@@ -13,8 +13,8 @@ import java.util.List;
 public interface BookingStore {
 
     /**
-     * Adds a booking to the store.
-     * @param booking The booking to be added to the store.
+     * Adds a booking to the storeEntities.
+     * @param booking The booking to be added to the storeEntities.
      * @return A boolean indicating the success or the failure of this operation.
      */
     boolean addBooking(Booking booking);
@@ -43,5 +43,10 @@ public interface BookingStore {
      * @return The {@linkplain List<Booking>} inside the range of specified dates.
      */
     List<Booking> getBookingsByDate(Date fromDate, Date toDate);
+
+    /**
+     * Clears the {@linkplain BookingStore}.
+     */
+    void clear();
 
 }
