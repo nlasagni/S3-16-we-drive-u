@@ -1,9 +1,11 @@
 package com.wedriveu.mobile.login.view;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,20 +32,26 @@ public class LoginViewImpl extends Fragment implements LoginView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
         setupUIComponents(view);
-        renderView();
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        renderView();
+    }
+
     private void setupUIComponents(View view){
-        mUsername = (EditText) view.findViewById(R.id.editTextUsername);
-        mPassword = (EditText) view.findViewById(R.id.editTextPassword);
-        mLoginButton =  (Button) view.findViewById(R.id.loginButton);
+        mUsername = (EditText) view.findViewById(R.id.username);
+        mPassword = (EditText) view.findViewById(R.id.password);
+        mLoginButton =  (Button) view.findViewById(R.id.login_button);
     }
 
     @Override
     public void renderView() {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.we_drive_you_title);
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,8 +1,8 @@
 package com.wedriveu.mobile.login.viewmodel;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.login.router.LoginRouter;

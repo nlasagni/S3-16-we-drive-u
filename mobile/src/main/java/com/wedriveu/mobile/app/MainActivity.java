@@ -1,11 +1,11 @@
 package com.wedriveu.mobile.app;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -21,22 +21,28 @@ import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingViewImpl;
 import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModel;
 import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModelImpl;
+import com.wedriveu.mobile.util.Constants;
 import com.wedriveu.mobile.util.location.LocationService;
 import com.wedriveu.mobile.util.location.LocationServiceImpl;
 
-
+/**
+ *
+ * @author Marco Balsassarri
+ * @author Nicola Lasagni
+ * @since 4/07/2017
+ *
+ */
 public class MainActivity extends AppCompatActivity implements LoginRouter, SchedulingRouter, ComponentFinder {
 
     private FragmentManager mFragmentManager;
     private LocationService mLocationService;
-    private SchedulingViewImpl mSchedulingViewFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFragmentManager = getFragmentManager();
+        mFragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             LoginViewImpl loginViewFragment = LoginViewImpl.newInstance(LoginViewModel.TAG);
             LoginViewModelImpl loginViewModel = LoginViewModelImpl.newInstance(LoginView.TAG);
@@ -61,10 +67,9 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     @Override
     public void showTripScheduling() {
         SchedulingViewModelImpl schedulingViewModel = SchedulingViewModelImpl.newInstance();
-        mSchedulingViewFragment = SchedulingViewImpl.newInstance();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.add(schedulingViewModel, SchedulingViewModel.TAG);
-        transaction.replace(R.id.fragment_container, mSchedulingViewFragment, SchedulingView.TAG);
+        transaction.replace(R.id.fragment_container, SchedulingViewImpl.newInstance(), SchedulingView.TAG);
         transaction.commit();
     }
 
@@ -89,8 +94,12 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mLocationService.onActivityResult(requestCode, resultCode, data);
-        mSchedulingViewFragment.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            Fragment viewModel = getViewModel(SchedulingViewModel.TAG);
+            viewModel.onActivityResult(requestCode, resultCode, data);
+        } else {
+            mLocationService.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override

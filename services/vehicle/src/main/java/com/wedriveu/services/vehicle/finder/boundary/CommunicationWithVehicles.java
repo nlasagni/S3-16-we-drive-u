@@ -1,10 +1,14 @@
-package com.wedriveu.services.vehicle.boundary;
+package com.wedriveu.services.vehicle.finder.boundary;
 
-import com.wedriveu.services.vehicle.callback.RequestCanDoJourneyCallback;
+
+import com.wedriveu.services.vehicle.finder.callback.RequestCanDoJourneyCallback;
 
 import java.io.IOException;
 /**
  * Created by stefano.bernagozzi on 17/07/2017.
+ *
+ * @author Michele Donati, Stefano Bernagozzi.
+ * @author Michele Donati, Stefano Bernagozzi.
  */
 
 /**
@@ -24,7 +28,7 @@ public interface CommunicationWithVehicles {
      * @throws IOException
      */
     void requestCanDoJourney(String licensePlate,
-                                    double kilometersToDo,
-                                    RequestCanDoJourneyCallback listAllEligiblesCallback) throws IOException;
+                             double kilometersToDo,
+                             RequestCanDoJourneyCallback listAllEligiblesCallback) throws IOException;
 
 }

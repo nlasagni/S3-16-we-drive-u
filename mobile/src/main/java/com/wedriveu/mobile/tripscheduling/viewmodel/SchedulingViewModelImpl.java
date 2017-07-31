@@ -1,9 +1,9 @@
 package com.wedriveu.mobile.tripscheduling.viewmodel;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -21,6 +21,7 @@ import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
 import com.wedriveu.mobile.util.Constants;
 import com.wedriveu.mobile.util.location.LocationService;
 import com.wedriveu.mobile.util.location.LocationServiceImpl;
+
 import static android.app.Activity.RESULT_CANCELED;
 
 /**
@@ -66,26 +67,22 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
         try {
             Intent intent = new PlaceAutocomplete
                     .IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(getActivity());
-            startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
-        } catch (GooglePlayServicesRepairableException e) {
-            Log.e("PLACE", "GooglePlayServices not installed", e.getCause());
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Log.e("PLACE", "GooglePlayServices not installed", e.getCause());
+            getActivity().startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            Log.e(SchedulingViewModel.TAG, "GooglePlayServices not installed", e);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == getActivity().RESULT_OK) {
-                mPlace = PlaceAutocomplete.getPlace(getActivity(), data);
-                mSchedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
-                mSchedulingView.showSelectedAddress(mPlace);
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-               mSchedulingView.renderError(getString(R.string.place_autocomplete_error));
-            } else if (resultCode == RESULT_CANCELED) {
-                mSchedulingView.renderError(getString(R.string.place_autocomplete_error));
-            }
+        if (resultCode == Activity.RESULT_OK) {
+            mPlace = PlaceAutocomplete.getPlace(getActivity(), data);
+            mSchedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
+            mSchedulingView.showSelectedAddress(mPlace);
+        } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+           mSchedulingView.renderError(getString(R.string.place_autocomplete_error));
+        } else if (resultCode == RESULT_CANCELED) {
+            mSchedulingView.renderError(getString(R.string.place_autocomplete_error));
         }
     }
 
