@@ -13,7 +13,8 @@ public interface EntityStoreStrategy<T> {
 
     /**
      * Store an instance of {@linkplain T} into the store.
+     * @return A boolean indicating the success or the failure of this operation.
      */
-    void store(T entity);
+    boolean store(T entity);
 
 }
