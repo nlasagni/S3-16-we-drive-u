@@ -21,7 +21,7 @@ public class Booking {
     private Double destinationLongitude;
     private Double sourceLatitude;
     private Double sourceLongitude;
-    private String bookingState;
+    private String bookingStatus;
 
     public Booking(@JsonProperty("bookingID") int bookingID,
                    @JsonProperty("date")Date date,
@@ -31,7 +31,7 @@ public class Booking {
                    @JsonProperty("destinationLongitude") Double destinationLongitude,
                    @JsonProperty("sourceLatitude")Double sourceLatitude,
                    @JsonProperty("sourceLongitude")Double sourceLongitude,
-                   @JsonProperty("bookingState") String bookingState) {
+                   @JsonProperty("bookingStatus") String bookingStatus) {
         this.bookingID = bookingID;
         this.date = date;
         this.username = username;
@@ -40,7 +40,7 @@ public class Booking {
         this.destinationLongitude = destinationLongitude;
         this.sourceLatitude = sourceLatitude;
         this.sourceLongitude = sourceLongitude;
-        this.bookingState = bookingState;
+        this.bookingStatus = bookingStatus;
     }
 
     public int getBookingID() {
@@ -75,12 +75,12 @@ public class Booking {
         return sourceLongitude;
     }
 
-    public String getBookingState() {
-        return bookingState;
+    public String getBookingStatus() {
+        return bookingStatus;
     }
 
-    public void setBookingState(String bookingState) {
-        this.bookingState = bookingState;
+    public void setBookingStatus(String bookingStatus) {
+        this.bookingStatus = bookingStatus;
     }
 
 }

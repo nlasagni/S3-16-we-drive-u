@@ -70,7 +70,7 @@ public class BookingStoreImpl implements BookingStore {
                 IntStream.range(0, bookings.size()).forEach(i -> {
                     Booking booking = bookings.get(i);
                     if (booking.getBookingID() == bookingId) {
-                        booking.setBookingState(bookingStatus);
+                        booking.setBookingStatus(bookingStatus);
                     }
                 });
             }

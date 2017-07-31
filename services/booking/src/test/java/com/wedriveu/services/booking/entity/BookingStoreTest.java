@@ -58,7 +58,7 @@ public class BookingStoreTest {
         Booking storedBooking = bookingStore.getBooking(booking.getBookingID());
         assertTrue(updateResult &&
                 storedBooking != null &&
-                storedBooking.getBookingState().equals(Booking.STATUS_COMPLETED));
+                storedBooking.getBookingStatus().equals(Booking.STATUS_COMPLETED));
     }
 
     @Test
