@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertTrue;
@@ -45,10 +46,10 @@ public class BookingStoreTest {
     public void getBooking() throws Exception {
         Booking booking = bookings.get(0);
         boolean result = bookingStore.addBooking(booking);
-        Booking storedBooking = bookingStore.getBooking(booking.getId());
+        Optional<Booking> storedBooking = bookingStore.getBooking(booking.getId());
         assertTrue(result &&
-                storedBooking != null &&
-                storedBooking.getId() == booking.getId());
+                storedBooking.isPresent() &&
+                storedBooking.get().getId() == booking.getId());
     }
 
     @Test
@@ -56,10 +57,10 @@ public class BookingStoreTest {
         Booking booking = bookings.get(0);
         bookingStore.addBooking(booking);
         boolean updateResult = bookingStore.updateBookingStatus(booking.getId(), Booking.STATUS_COMPLETED);
-        Booking storedBooking = bookingStore.getBooking(booking.getId());
+        Optional<Booking> storedBooking = bookingStore.getBooking(booking.getId());
         assertTrue(updateResult &&
-                storedBooking != null &&
-                storedBooking.getBookingStatus().equals(Booking.STATUS_COMPLETED));
+                storedBooking.isPresent() &&
+                storedBooking.get().getBookingStatus().equals(Booking.STATUS_COMPLETED));
     }
 
     @Test
@@ -73,7 +74,7 @@ public class BookingStoreTest {
     @Test
     public void clear() throws Exception {
         bookingStore.clear();
-        assertTrue(bookingStore.getBooking(0) == null);
+        assertTrue(!bookingStore.getBooking(0).isPresent());
     }
 
     private List<Booking> createBookings() {

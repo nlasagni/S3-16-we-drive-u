@@ -2,6 +2,7 @@ package com.wedriveu.services.booking.entity;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Michele Donati
@@ -20,9 +21,9 @@ public interface BookingStore {
     /**
      *
      * @param bookingId Identifies the <em>com.wedriveu.services.booking.entity.Booking</em>'s <em>ID</em> that must be retreived.
-     * @return Returns the <em>com.wedriveu.services.booking.entity.Booking</em>, only if founded.
+     * @return Returns the {@linkplain Booking} with the provided id, only if found.
      */
-    Booking getBooking(int bookingId);
+    Optional<Booking> getBooking(int bookingId);
 
     /**
      * Updates the status of a {@linkplain Booking}.
@@ -38,7 +39,7 @@ public interface BookingStore {
      *
      * @param fromDate Starting date of the range.
      * @param toDate End date of the range.
-     * @return The {@linkplain List<Booking>} inside the range of specified dates.
+     * @return All the {@linkplain Booking}s inside the range of specified dates.
      */
     List<Booking> getBookingsByDate(Date fromDate, Date toDate);
 
