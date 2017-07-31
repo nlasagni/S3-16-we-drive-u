@@ -53,7 +53,7 @@ public class BookingStoreImpl implements BookingStore {
             List<Booking> bookings = storeStrategy.getEntities();
             Optional<Booking> booking = Optional.empty();
             if (bookings != null) {
-                booking = bookings.stream().filter(b -> b.getBookingID() == bookingId).findFirst();
+                booking = bookings.stream().filter(b -> b.getId() == bookingId).findFirst();
             }
             return booking.orElse(null);
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class BookingStoreImpl implements BookingStore {
             if (bookings != null && !bookings.isEmpty()) {
                 IntStream.range(0, bookings.size()).forEach(i -> {
                     Booking booking = bookings.get(i);
-                    if (booking.getBookingID() == bookingId) {
+                    if (booking.getId() == bookingId) {
                         booking.setBookingStatus(bookingStatus);
                     }
                 });

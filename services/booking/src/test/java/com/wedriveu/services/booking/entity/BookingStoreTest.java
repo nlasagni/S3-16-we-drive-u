@@ -3,6 +3,7 @@ package com.wedriveu.services.booking.entity;
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
 import com.wedriveu.services.shared.entity.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.shared.utilities.Position;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,25 +38,25 @@ public class BookingStoreTest {
     public void addBooking() throws Exception {
         Booking booking = bookings.get(0);
         boolean result = bookingStore.addBooking(booking);
-        assertTrue(result && bookingStore.getBooking(booking.getBookingID()) != null);
+        assertTrue(result && bookingStore.getBooking(booking.getId()) != null);
     }
 
     @Test
     public void getBooking() throws Exception {
         Booking booking = bookings.get(0);
         boolean result = bookingStore.addBooking(booking);
-        Booking storedBooking = bookingStore.getBooking(booking.getBookingID());
+        Booking storedBooking = bookingStore.getBooking(booking.getId());
         assertTrue(result &&
                 storedBooking != null &&
-                storedBooking.getBookingID() == booking.getBookingID());
+                storedBooking.getId() == booking.getId());
     }
 
     @Test
     public void updateBookingStatus() throws Exception {
         Booking booking = bookings.get(0);
         bookingStore.addBooking(booking);
-        boolean updateResult = bookingStore.updateBookingStatus(booking.getBookingID(), Booking.STATUS_COMPLETED);
-        Booking storedBooking = bookingStore.getBooking(booking.getBookingID());
+        boolean updateResult = bookingStore.updateBookingStatus(booking.getId(), Booking.STATUS_COMPLETED);
+        Booking storedBooking = bookingStore.getBooking(booking.getId());
         assertTrue(updateResult &&
                 storedBooking != null &&
                 storedBooking.getBookingStatus().equals(Booking.STATUS_COMPLETED));
@@ -88,10 +89,8 @@ public class BookingStoreTest {
                 new Date(),
                 USERNAME + id,
                 LICENSE_PLATE + id,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
+                new Position(0.0, 0.0),
+                new Position(0.0, 0.0),
                 status);
     }
 
