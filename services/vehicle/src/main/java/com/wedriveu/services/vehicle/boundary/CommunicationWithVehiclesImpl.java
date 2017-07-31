@@ -12,6 +12,7 @@ import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.callback.RequestCanDoJourneyCallback;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Stefano Bernagozzi on 17/07/2017.
@@ -21,7 +22,7 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
     private Connection connection;
     private Channel channel;
 
-    public CommunicationWithVehiclesImpl() throws IOException {
+    public CommunicationWithVehiclesImpl() throws IOException, TimeoutException {
         factory = new ConnectionFactory();
         factory.setHost(Constants.SERVER_HOST);
         factory.setPassword(Constants.SERVER_PASSWORD);
@@ -39,7 +40,7 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
                 false,
                 false,
                 null);
-        channel.basicQos(1);
+        channel.basicQos(10);
         channel.basicPublish("", licensePlate, null, String.valueOf(kilometersToDo).getBytes());
         Log.log(" [x] Sent '" +
                 Constants.REQUEST_CAN_DO_JOURNEY +
