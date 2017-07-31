@@ -1,6 +1,9 @@
 package com.wedriveu.services.vehicle.control;
 
 import com.wedriveu.services.vehicle.entity.Vehicle;
+import com.wedriveu.services.vehicle.finder.control.FindVehicles;
+import com.wedriveu.services.vehicle.finder.control.FindVehiclesImpl;
+
 import org.junit.Before;
 import org.junit.Test;
 import com.wedriveu.services.shared.utilities.Position;

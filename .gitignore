@@ -127,10 +127,7 @@ freeline_project_description.json
 ### Other
 # Google Services (e.g. APIs or Firebase)
 google-services.json
+latest-docs
+releases
 
-.gradle
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/build
 /captures

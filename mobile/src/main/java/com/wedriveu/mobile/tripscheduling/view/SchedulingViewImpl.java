@@ -1,9 +1,11 @@
 package com.wedriveu.mobile.tripscheduling.view;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +23,7 @@ import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModelImpl;
 public class SchedulingViewImpl extends Fragment implements SchedulingView, View.OnClickListener {
 
     private EditText mAddressEditText;
-    private Button mScheduleButton;
+    private Button mSearchVehicleButton;
 
     public static SchedulingViewImpl newInstance() {
         return new SchedulingViewImpl();
@@ -29,30 +31,36 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_scheduling_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_scheduling, container, false);
         setupUIComponents(view);
-        renderView();
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        renderView();
+    }
+
     private void setupUIComponents(View view){
-        mAddressEditText = (EditText) view.findViewById(R.id.destinationAddressText);
-        mScheduleButton = (Button) view.findViewById(R.id.scheduleButton);
+        mAddressEditText = (EditText) view.findViewById(R.id.address);
+        mSearchVehicleButton = (Button) view.findViewById(R.id.search_vehicle_button);
     }
 
     @Override
     public void renderView() {
-        mScheduleButton.setOnClickListener(this);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.scheduling_title);
+        mSearchVehicleButton.setOnClickListener(this);
         mAddressEditText.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.destinationAddressText:
+            case R.id.address:
                 getAddress();
                 break;
-            case R.id.scheduleButton:
+            case R.id.search_vehicle_button:
                 if(mAddressEditText.getText().toString().trim().length() == 0) {
                     renderError(getString(R.string.destination_address_not_filled));
                 } else {
@@ -79,9 +87,7 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
     private SchedulingViewModel getViewModel() {
         ComponentFinder componentFinder = (ComponentFinder) getActivity();
         if (componentFinder != null) {
-            SchedulingViewModelImpl viewModel =
-                    (SchedulingViewModelImpl) componentFinder.getViewModel(SchedulingViewModel.TAG);
-            return viewModel;
+            return (SchedulingViewModelImpl) componentFinder.getViewModel(SchedulingViewModel.TAG);
         }
         return null;
     }

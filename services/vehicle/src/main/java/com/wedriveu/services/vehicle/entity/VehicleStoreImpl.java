@@ -1,21 +1,23 @@
-package com.wedriveu.services.vehicle.entity; /**
+package com.wedriveu.services.vehicle.entity;
+
+/**
  * Created by Michele on 12/07/2017.
  */
+import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.Position;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class VehicleStoreImpl implements VehicleStore {
 
     @Override
+
     public void createVehiclesFile() {
         Vehicle vehicle = createVehicle("MACCHINA1",
                         "broken",
@@ -134,10 +136,12 @@ public class VehicleStoreImpl implements VehicleStore {
         return false;
     }
 
+
     private Vehicle createVehicle(String carLicencePlate,
                                   String state,
                                   Position position,
                                   Date lastUpdate) {
+
         return new Vehicle(carLicencePlate, state, position, lastUpdate);
     }
 
@@ -148,6 +152,7 @@ public class VehicleStoreImpl implements VehicleStore {
 
     private Vehicle getRequestedVehicle(List<Vehicle> vehicles, String carLicencePlate) {
         for (Vehicle vehicle : vehicles) {
+
             if(vehicle.getCarLicencePlate().equals(carLicencePlate)){
                 Log.log("com.wedriveu.services.vehicle.entity.Vehicle found! -> " +
                         vehicle.getCarLicencePlate() +

@@ -7,7 +7,7 @@ import io.vertx.ext.web.RoutingContext;
  */
 
 /**
- * @Author Michele Donati
+ * @author Michele Donati
  */
 public interface AuthenticationService {
 
