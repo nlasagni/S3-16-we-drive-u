@@ -13,11 +13,6 @@ import java.util.List;
 public interface BookingStore {
 
     /**
-     * Maps a <em>com.wedriveu.services.booking.entity.Booking</em> object in a JSon object.
-     */
-    void mapEntityToJson();
-
-    /**
      * Adds a booking to the store.
      * @param booking The booking to be added to the store.
      * @return A boolean indicating the success or the failure of this operation.
