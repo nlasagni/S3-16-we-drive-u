@@ -6,7 +6,14 @@ import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 /**
   * Created by Michele on 31/07/2017.
   */
-class VehicleBehaviours (vehicle: SelfDrivingVehicle) {
+
+/** This is the vehicle behaviours models capturing different events. */
+trait VehicleBehaviours {
+  /** This models the behaviour of the vehicle's battery draining. */
+  def drainBattery() : Unit
+}
+
+class VehicleBehavioursImpl(vehicle: SelfDrivingVehicle) extends VehicleBehaviours {
    var notRecharging: Boolean = true
    val zeroBattery: Double = 0.0
    val batteryThreshold: Double = 20.0

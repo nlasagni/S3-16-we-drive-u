@@ -8,10 +8,22 @@ import com.wedriveu.vehicle.simulation.{VehicleEventsObservables, VehicleEventsO
 /**
   * Created by Michele on 28/07/2017.
   */
-class VehicleControl(license: String, state: String, position: Position, battery: Double) {
+
+/** This models the control part of the vehicle. */
+trait VehicleControl {
+  /** This starts the engine of the vehicle, initializing the communication and rxScala infrastructures. */
+  def startVehicleEngine(): Unit
+
+  /** This is usefull to get the vehicle for retrieve vehicle informations.
+    *
+    * @return Returns the instance of the vehicle.
+    */
+  def getVehicle(): SelfDrivingVehicle
+}
+class VehicleControlImpl(license: String, state: String, position: Position, battery: Double) extends VehicleControl {
   val vehicleGiven : SelfDrivingVehicle = new SelfDrivingVehicle(license, state, position, battery)
   val vehicleEventsObservables: VehicleEventsObservables = new VehicleEventsObservablesImpl
-  val vehicleBehaviours: VehicleBehaviours = new VehicleBehaviours(vehicleGiven)
+  val vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(vehicleGiven)
   val received: String = " [x] Received '"
   val awaiting: String = " [x] Awaiting requests"
   var kilometersToDo: Double = .0

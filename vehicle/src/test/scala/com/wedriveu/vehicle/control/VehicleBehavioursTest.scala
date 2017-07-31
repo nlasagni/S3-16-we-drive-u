@@ -10,29 +10,43 @@ import org.scalatest.{BeforeAndAfterEach, FunSuite}
   * Created by Michele on 31/07/2017.
   */
 class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
-  var selfDrivingVehicle: SelfDrivingVehicle = null
-  var battery: Double = 100.0
+  var vehicleControl: VehicleControl = null
+  val maxBattery: Double = 100.0
+  val licenseFirstTest: String = "veicolo1"
+  val stateFirstTest: String = "available"
+  val licenseSecondTest: String = "veicolo"
+  val stateSecondTest: String = "available"
+  val latitude: Double = 10.0
+  val longitude: Double = 10.0
+  val timeToSleep: Int = 3000
+  val nVehicles: Int = 3
+  val minorBound: Int = 30
+  val maxBound: Int = 101
 
   override def beforeEach() {
-    selfDrivingVehicle = new SelfDrivingVehicle("veicolo1", "available", new Position(10.0, 10.0), battery)
+    vehicleControl =
+      new VehicleControlImpl(licenseFirstTest, stateFirstTest, new Position(latitude, longitude), maxBattery)
   }
 
   test("The battery after 3 seconds should be less than 100.0") {
-    selfDrivingVehicle.startVehicleControl()
-    Thread.sleep(3000)
-    assert(selfDrivingVehicle.getBattery() < battery && selfDrivingVehicle.getBattery() != 100.0)
+    vehicleControl.startVehicleEngine()
+    Thread.sleep(timeToSleep)
+    assert(vehicleControl.getVehicle().battery < maxBattery)
   }
 
   test("The battery af all vehicles, after 3 seconds, should be less than intial values") {
-    var nVehicles: Int = 3
-    var vehicles: Array[SelfDrivingVehicle] = new Array[SelfDrivingVehicle](nVehicles)
+    var vehicles: Array[VehicleControl] = new Array[VehicleControl](nVehicles)
     var a = 0
     for (a <- 0 until vehicles.length) {
-      var randomBattery: Double = ThreadLocalRandom.current().nextDouble(30, 100 + 1)
-      vehicles(a) = new SelfDrivingVehicle("veicolo" + (a+1), "available", new Position(10.0, 10.0), randomBattery)
-      vehicles(a).startVehicleControl()
-      Thread.sleep(3000)
-      assert(vehicles(a).getBattery() < randomBattery)
+      var randomBattery: Double = ThreadLocalRandom.current().nextDouble(minorBound, maxBound)
+      vehicles(a) =
+        new VehicleControlImpl(licenseSecondTest + (a+1),
+          stateSecondTest,
+          new Position(latitude, longitude),
+          randomBattery)
+      vehicles(a).startVehicleEngine()
+      Thread.sleep(timeToSleep)
+      assert(vehicles(a).getVehicle().battery < randomBattery)
     }
   }
 
