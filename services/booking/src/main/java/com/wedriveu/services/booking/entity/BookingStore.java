@@ -1,6 +1,4 @@
-package com.wedriveu.services.booking.entity; /**
- * Created by Michele on 12/07/2017.
- */
+package com.wedriveu.services.booking.entity;
 
 import java.util.Date;
 import java.util.List;
@@ -8,7 +6,7 @@ import java.util.List;
 /**
  * @author Michele Donati
  * @author Nicola Lasagni
- * This inteface models the <em>com.wedriveu.services.booking.entity.Booking' database domain</em>.
+ * This inteface models the <em>com.wedriveu.services.booking.entity.Booking' database store</em>.
  */
 public interface BookingStore {
 
