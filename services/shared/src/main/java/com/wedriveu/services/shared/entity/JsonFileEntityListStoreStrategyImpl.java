@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by nicolalasagni on 31/07/2017.
+ * @author Nicola Lasagni on 31/07/2017.
  */
 public class JsonFileEntityListStoreStrategyImpl<T> implements EntityListStoreStrategy<T> {
 

@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by nicolalasagni on 31/07/2017.
+ * @author Nicola Lasagni on 31/07/2017.
  */
 public class EntityListStoreStrategyTest {
 
@@ -32,6 +32,16 @@ public class EntityListStoreStrategyTest {
         stringEntityStoreStrategy.storeEntities(entities);
         List<String> storedEntities = stringEntityStoreStrategy.getEntities();
         assertTrue(storedEntities != null && storedEntities.size() == entities.size());
+    }
+
+    @Test
+    public void clear() throws Exception {
+        List<String> storedEntities = null;
+        try {
+            stringEntityStoreStrategy.clear();
+            storedEntities = stringEntityStoreStrategy.getEntities();
+        } catch (Exception e) {}
+        assertTrue(storedEntities == null);
     }
 
     private List<String> createEntities() {
