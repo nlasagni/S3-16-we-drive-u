@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,11 +16,20 @@ public class JsonFileEntityListStoreStrategyImpl<T> implements EntityListStoreSt
     private Class<T> entityClass;
     private File file;
     private ObjectMapper objectMapper;
+    private String fileName;
 
     public JsonFileEntityListStoreStrategyImpl(Class<T> entityClass, String fileName) throws IOException {
         this.entityClass = entityClass;
-        this.file = new File(fileName);
+        this.fileName = fileName;
         this.objectMapper = new ObjectMapper();
+        initStore();
+    }
+
+    private void initStore() throws IOException {
+        File file = new File(fileName);
+        file.createNewFile();
+        this.file = file;
+        storeEntities(new ArrayList<>());
     }
 
     @Override
@@ -36,6 +46,7 @@ public class JsonFileEntityListStoreStrategyImpl<T> implements EntityListStoreSt
     @Override
     public void clear() throws IOException  {
         file.delete();
+        initStore();
     }
 
 }
