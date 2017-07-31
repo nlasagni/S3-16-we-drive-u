@@ -2,7 +2,6 @@ package com.wedriveu.services.booking.entity;
 
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
 import com.wedriveu.services.shared.entity.JsonFileEntityListStoreStrategyImpl;
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Position;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +21,7 @@ public class BookingStoreTest {
     private static final int BOOKING_COUNT = 3;
     private static final String USERNAME = "username";
     private static final String LICENSE_PLATE = "licensePlate";
+    private static final String DATABASE_FILE_NAME = BookingStoreTest.class.getSimpleName() + ".json";
 
     private BookingStore bookingStore;
     private List<Booking> bookings;
@@ -29,7 +29,7 @@ public class BookingStoreTest {
     @Before
     public void setUp() throws Exception {
         EntityListStoreStrategy<Booking> storeStrategy =
-                new JsonFileEntityListStoreStrategyImpl<>(Booking.class, Constants.BOOKINGS_DATABASE_PATH);
+                new JsonFileEntityListStoreStrategyImpl<>(Booking.class, DATABASE_FILE_NAME);
         bookingStore = new BookingStoreImpl(storeStrategy);
         bookings = createBookings();
     }

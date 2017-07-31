@@ -1,12 +1,14 @@
 package com.wedriveu.services.shared.utilities;
 
 /**
- * Created by Michele on 22/07/2017.
+ * @author Michele on 22/07/2017.
+ * @author Nicola Lasagni on 31/07/2017
  */
 public interface Constants {
+
     String USERS_DATABASE_PATH = "services/authentication/databaseFile/users.json";
-    String BOOKINGS_DATABASE_PATH = "services/booking/src/main/resources/bookings.json";
     String VEHICLES_DATABASE_PATH = "services/vehicle/src/test/resources/vehicles.json";
+    String BOOKING_DATABASE_FILE_NAME = "bookings.json";
 
     String USER_LOGIN = "/user/login";
     String USERNAME = "username";

@@ -13,29 +13,31 @@ import java.util.List;
  */
 public class JsonFileEntityListStoreStrategyImpl<T> implements EntityListStoreStrategy<T> {
 
+    private static final String STORE_FOLDER = "store";
+
     private Class<T> entityClass;
     private File file;
     private ObjectMapper objectMapper;
     private String fileName;
 
-    public JsonFileEntityListStoreStrategyImpl(Class<T> entityClass, String fileName) throws IOException {
+    public JsonFileEntityListStoreStrategyImpl(Class<T> entityClass, String fileName) throws Exception {
         this.entityClass = entityClass;
         this.fileName = fileName;
         this.objectMapper = new ObjectMapper();
         initStore();
     }
 
-    private void initStore() throws IOException {
-        File file = new File(fileName);
+    private void initStore() throws Exception {
+        new File(STORE_FOLDER).mkdir();
+        file = new File(STORE_FOLDER + File.separator + fileName);
         file.createNewFile();
-        this.file = file;
         storeEntities(new ArrayList<>());
     }
 
     @Override
     public List<T> getEntities() throws IOException {
-        JavaType stringCollection = objectMapper.getTypeFactory().constructCollectionType(List.class, entityClass);
-        return objectMapper.readValue(file, stringCollection);
+        JavaType collectionType = objectMapper.getTypeFactory().constructCollectionType(List.class, entityClass);
+        return objectMapper.readValue(file, collectionType);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class JsonFileEntityListStoreStrategyImpl<T> implements EntityListStoreSt
     }
 
     @Override
-    public void clear() throws IOException  {
+    public void clear() throws Exception  {
         file.delete();
         initStore();
     }

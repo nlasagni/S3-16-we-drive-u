@@ -17,13 +17,14 @@ public class EntityListStoreStrategyTest {
 
     private static final int ENTITY_COUNT = 5;
     private static final String ENTITY = "entity";
+    private static final String DATABASE_FILE_NAME = EntityListStoreStrategyTest.class.getSimpleName() + ".json";
 
     private EntityListStoreStrategy<String> stringEntityStoreStrategy;
     private List<String> entities;
 
     @Before
     public void setUp() throws Exception {
-        stringEntityStoreStrategy = new JsonFileEntityListStoreStrategyImpl<>(String.class, Constants.BOOKINGS_DATABASE_PATH);
+        stringEntityStoreStrategy = new JsonFileEntityListStoreStrategyImpl<>(String.class, DATABASE_FILE_NAME);
         entities = createEntities();
     }
 
@@ -36,12 +37,8 @@ public class EntityListStoreStrategyTest {
 
     @Test
     public void clear() throws Exception {
-        List<String> storedEntities = null;
-        try {
-            stringEntityStoreStrategy.clear();
-            storedEntities = stringEntityStoreStrategy.getEntities();
-        } catch (Exception e) {}
-        assertTrue(storedEntities == null);
+        stringEntityStoreStrategy.clear();
+        assertTrue(stringEntityStoreStrategy.getEntities().isEmpty());
     }
 
     private List<String> createEntities() {
