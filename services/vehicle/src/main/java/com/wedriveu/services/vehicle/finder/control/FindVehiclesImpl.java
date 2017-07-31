@@ -1,6 +1,7 @@
 package com.wedriveu.services.vehicle.finder.control;
 
 import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.vehicle.entity.Vehicle;
 import com.wedriveu.services.shared.utilities.Position;
 import com.wedriveu.services.vehicle.election.entity.EligibleVehicle;
 import com.wedriveu.services.vehicle.entity.Vehicle;
@@ -10,6 +11,7 @@ import com.wedriveu.services.vehicle.finder.callback.FindVehiclesCallback;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by stefano.bernagozzi on 17/07/2017.
@@ -18,7 +20,7 @@ public class FindVehiclesImpl implements FindVehicles {
 
     private CommunicationWithVehicles communicationWithVehicles;
 
-    public FindVehiclesImpl() throws IOException {
+    public FindVehiclesImpl() throws IOException, TimeoutException {
         communicationWithVehicles = new CommunicationWithVehiclesImpl();
     }
 

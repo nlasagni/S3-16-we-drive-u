@@ -32,7 +32,8 @@ public class Position {
     }
 
     public double getDistance(Position position) {
-        return Math.sqrt(Math.pow(this.latitude - position.getLatitude(), 2) + Math.pow(this.longitude - position.getLongitude(), 2));
+        return Math.sqrt(Math.pow(this.latitude - position.getLatitude(), 2)
+                + Math.pow(this.longitude - position.getLongitude(), 2));
     }
 
 }
