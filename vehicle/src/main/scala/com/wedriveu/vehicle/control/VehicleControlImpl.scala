@@ -40,7 +40,7 @@ class VehicleControlImpl(license: String, state: String, position: Position, bat
             executeBehaviour(vehicleBehaviours.drainBattery)
           })
           while (true) {
-            createConsumer()
+            registerConsumer()
           }
         }finally{
           if (connection != null) {
@@ -68,7 +68,7 @@ class VehicleControlImpl(license: String, state: String, position: Position, bat
     Log.log(awaiting)
   }
 
-  private def createConsumer(): Unit = {
+  private def registerConsumer(): Unit = {
     val vehicle: Consumer = new DefaultConsumer(channel) {
       override def handleDelivery(consumerTag: String,
                                   envelope: Envelope,
