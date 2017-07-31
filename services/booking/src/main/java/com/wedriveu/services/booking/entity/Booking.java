@@ -9,6 +9,10 @@ import java.util.Date;
  */
 public class Booking {
 
+    public static final String STATUS_STARTED = "started";
+    public static final String STATUS_PROCESSING = "processing";
+    public static final String STATUS_COMPLETED = "completed";
+
     private int bookingID;
     private Date date;
     private String username;
