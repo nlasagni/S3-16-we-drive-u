@@ -48,18 +48,18 @@ public class BookingStoreImpl implements BookingStore {
     }
 
     @Override
-    public Booking getBooking(int bookingId) {
+    public Optional<Booking> getBooking(int bookingId) {
         try {
             List<Booking> bookings = storeStrategy.getEntities();
             Optional<Booking> booking = Optional.empty();
             if (bookings != null) {
                 booking = bookings.stream().filter(b -> b.getId() == bookingId).findFirst();
             }
-            return booking.orElse(null);
+            return booking;
         } catch (Exception e) {
             Log.error(TAG, GET_ERROR, e);
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -92,7 +92,7 @@ public class BookingStoreImpl implements BookingStore {
         } catch (Exception e) {
             Log.error(TAG, GET_BY_DATE_ERROR, e);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
