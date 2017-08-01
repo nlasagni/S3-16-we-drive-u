@@ -1,10 +1,8 @@
 package com.wedriveu.vehicle.control
 
-import javax.print.attribute.standard.Destination
-
 import com.rabbitmq.client._
-import com.wedriveu.services.shared.utilities.{Constants, Log, Position}
-import com.wedriveu.vehicle.entity.SelfDrivingVehicle
+import com.wedriveu.services.shared.utilities.{Constants, Log}
+import com.wedriveu.vehicle.entity.{Position, SelfDrivingVehicle}
 import com.wedriveu.vehicle.simulation.{VehicleEventsObservables, VehicleEventsObservablesImpl}
 
 /**

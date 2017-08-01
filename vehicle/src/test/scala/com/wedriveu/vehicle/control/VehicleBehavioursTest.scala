@@ -2,8 +2,7 @@ package com.wedriveu.vehicle.control
 
 import java.util.concurrent.ThreadLocalRandom
 
-import com.wedriveu.services.shared.utilities.{Log, Position}
-import com.wedriveu.vehicle.entity.SelfDrivingVehicle
+import com.wedriveu.vehicle.entity.Position
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
 
 /**
@@ -23,8 +22,12 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   val minorBound: Int = 30
   val maxBound: Int = 101
 
+  //These two variables indicate the bounds for the random latitude and longitude calculation. The variation estimated
+  //for containing the distance in 50 - 100 kilometers is like this (from 10.0,10.0 to 11.0,11.0 results in thousands
+  //of kilometers).
   val minorBoundPosition: Double = 9.9999979899999
   val maxBoundPosition: Double = 10.01111111111111
+
   var randomLatitudeUser: Double = .0
   var randomLongitudeUser: Double = .0
   var randomLatitudeDestination: Double = .0
@@ -50,8 +53,8 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     vehicleControl.changePositionUponBooking(new Position(randomLatitudeUser, randomLongitudeUser),
       new Position(randomLatitudeDestination,randomLongitudeDestination ))
     Thread.sleep(timeToSleep)
-    assert(vehicleControl.getVehicle().position.getLatitude == randomLatitudeDestination)
-    assert(vehicleControl.getVehicle().position.getLongitude == randomLongitudeDestination)
+    assert(vehicleControl.getVehicle().position.latitude == randomLatitudeDestination)
+    assert(vehicleControl.getVehicle().position.longitude == randomLongitudeDestination)
   }
 
   test("The vehicle position, after a random destination position input, should be equals to it") {
@@ -60,7 +63,8 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     var vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle())
     vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination,randomLongitudeDestination))
     Thread.sleep(timeToSleep)
-    assert(vehicleControl.getVehicle().position.getLatitude == randomLatitudeDestination)
-    assert(vehicleControl.getVehicle().position.getLongitude == randomLongitudeDestination)
+    assert(vehicleControl.getVehicle().position.latitude == randomLatitudeDestination)
+    assert(vehicleControl.getVehicle().position.longitude == randomLongitudeDestination)
   }
+
 }

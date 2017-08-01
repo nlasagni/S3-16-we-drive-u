@@ -1,7 +1,7 @@
 package com.wedriveu.vehicle.control
 
-import com.wedriveu.services.shared.utilities.{Log, Position}
-import com.wedriveu.vehicle.entity.SelfDrivingVehicle
+import com.wedriveu.services.shared.utilities.Log
+import com.wedriveu.vehicle.entity.{Position, SelfDrivingVehicle}
 
 /**
   * @author Michele Donati on 31/07/2017.
@@ -35,6 +35,8 @@ class VehicleBehavioursImpl(vehicle: SelfDrivingVehicle) extends VehicleBehaviou
    val batteryToConsume: Double = 1.0
    val newPositionIsTheSame: String = "The position given is the same, the vehicle doesn't move"
    val conversionInMillis: Int = 3600 * 1000
+   val timeOfJourney: Long = 0.0.asInstanceOf[Long]
+   val timeStep: Long = 1000.0.asInstanceOf[Long]
 
    override def drainBattery() = {
     if(vehicle.battery <= zeroBattery){
@@ -58,19 +60,21 @@ class VehicleBehavioursImpl(vehicle: SelfDrivingVehicle) extends VehicleBehaviou
     }
   }
 
+  //This algorithm calculates the distance in Km between the points, then estimates the journey time and calculates
+  //the coordinates reached during the journey.
   override def movementAndPositionChange(position: Position): Unit = {
     if (vehicle.position.equals(position)) {
       Log.log(newPositionIsTheSame)
     }
     else {
-      var distanceInKm: Double = vehicle.position.getDistanceInKm(position)
-      var estimatedJourneyTimeInMilliseconds: Long =
+      val distanceInKm: Double = vehicle.position.getDistanceInKm(position)
+      val estimatedJourneyTimeInMilliseconds: Long =
         ((distanceInKm / vehicle.speed) * conversionInMillis).asInstanceOf[Long]
-      var deltaLat: Double = position.getLatitude - vehicle.position.getLatitude
-      var deltaLon: Double = position.getLongitude - vehicle.position.getLongitude
-      for(a <- 0.0.asInstanceOf[Long] to estimatedJourneyTimeInMilliseconds by 1000.0.asInstanceOf[Long]) {
-        calculateMovement(a, estimatedJourneyTimeInMilliseconds, deltaLat, deltaLon)
-        if((a + 1000.0.asInstanceOf[Long]) > estimatedJourneyTimeInMilliseconds) {
+      val deltaLat: Double = position.latitude - vehicle.position.latitude
+      val deltaLon: Double = position.longitude - vehicle.position.longitude
+      for(time <- timeOfJourney to estimatedJourneyTimeInMilliseconds by timeStep) {
+        calculateMovement(time, estimatedJourneyTimeInMilliseconds, deltaLat, deltaLon)
+        if((time + timeStep) > estimatedJourneyTimeInMilliseconds) {
           calculateMovement(estimatedJourneyTimeInMilliseconds, estimatedJourneyTimeInMilliseconds, deltaLat, deltaLon)
         }
       }
@@ -82,13 +86,13 @@ class VehicleBehavioursImpl(vehicle: SelfDrivingVehicle) extends VehicleBehaviou
     movementAndPositionChange(destinationPosition)
   }
 
-  private def calculateMovement(a: Long,
-                                estimatedJourneyTimeInSeconds: Long,
+  private def calculateMovement(time: Long,
+                                estimatedJourneyTimeInMilliseconds: Long,
                                 deltaLat: Double,
                                 deltaLon: Double): Unit = {
-    var t0_1: Double = a / estimatedJourneyTimeInSeconds
-    var latInter: Double = vehicle.position.getLatitude + deltaLat * t0_1
-    var lonInter: Double = vehicle.position.getLongitude + deltaLon * t0_1
+    val elapsedTime: Double = time / estimatedJourneyTimeInMilliseconds
+    var latInter: Double = vehicle.position.latitude + deltaLat * elapsedTime
+    var lonInter: Double = vehicle.position.longitude + deltaLon * elapsedTime
     vehicle.position = new Position(latInter, lonInter)
   }
 
