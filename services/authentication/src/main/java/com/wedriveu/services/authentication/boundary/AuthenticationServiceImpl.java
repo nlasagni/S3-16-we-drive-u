@@ -5,7 +5,8 @@ import com.wedriveu.services.authentication.control.CredentialsCheckerImpl;
 import com.wedriveu.services.shared.utilities.Constants;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Vertx;
-import io.vertx.core.http.*;
+import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 

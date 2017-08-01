@@ -1,6 +1,6 @@
 dependencies {
     compile project(path: ':services:shared')
-    compile project(path: ':vehicle')
+    testCompile project(path: ':vehicle')
     compile group: 'com.rabbitmq', name: 'amqp-client', version: '2.3.1'
 }
 

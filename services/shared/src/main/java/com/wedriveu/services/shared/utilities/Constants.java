@@ -4,7 +4,8 @@ package com.wedriveu.services.shared.utilities;
  * Created by Michele on 22/07/2017.
  */
 public interface Constants {
-    String USERS_DATABASE_PATH = "services/authentication/databaseFile/users.json";
+
+    String USERS_DATABASE_FILENAME = "users.json";
     String BOOKINGS_DATABASE_PATH = "services/booking/databaseFile/bookings.json";
     String VEHICLES_DATABASE_PATH = "services/vehicle/src/test/resources/vehicles.json";
 
