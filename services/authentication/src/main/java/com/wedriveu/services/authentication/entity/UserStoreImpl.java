@@ -17,6 +17,16 @@ import java.util.List;
  */
 public class UserStoreImpl implements UserStore {
 
+    private static final String STORE_FOLDER = "store";
+
+    private File file;
+
+    public UserStoreImpl() throws IOException {
+        new File(STORE_FOLDER).mkdir();
+        file = new File(STORE_FOLDER + File.separator + Constants.USERS_DATABASE_FILENAME);
+        file.createNewFile();
+    }
+
     @Override
     public void mapEntityToJson() {
 
@@ -40,7 +50,7 @@ public class UserStoreImpl implements UserStore {
 
         try {
             List<User> users =
-                    mapper.readValue(new File(Constants.USERS_DATABASE_PATH), new TypeReference<List<User>>(){});
+                    mapper.readValue(file, new TypeReference<List<User>>(){});
             return getRequestedUuser(users, username);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -61,7 +71,7 @@ public class UserStoreImpl implements UserStore {
         try {
             ObjectMapper mapper = new ObjectMapper();
 
-            mapper.writeValue(new File(Constants.USERS_DATABASE_PATH), userListToJSon);
+            mapper.writeValue(file, userListToJSon);
             String jsonInString = mapper.writeValueAsString(userListToJSon);
             Log.log(jsonInString);
             jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(userListToJSon);
