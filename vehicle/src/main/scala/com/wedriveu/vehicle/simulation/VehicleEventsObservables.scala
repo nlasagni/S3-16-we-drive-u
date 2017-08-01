@@ -4,13 +4,6 @@ import com.wedriveu.services.shared.utilities.Position
 import rx.lang.scala.Observable
 import java.util.concurrent.ThreadLocalRandom
 
-import com.wedriveu.vehicle.app.Main.{maxBoundPosition,
-  minorBoundPosition,
-  randomLatitudeDestination,
-  randomLongitudeDestination}
-
-import scala.util.control.Breaks
-
 /**
   * Created by Michele on 28/07/2017.
   */
@@ -33,6 +26,8 @@ trait VehicleEventsObservables {
 
 class VehicleEventsObservablesImpl extends VehicleEventsObservables {
 
+  val minorBoundPosition: Double = 9.9999979899999
+  val maxBoundPosition: Double = 10.01111111111111
   var randomLatitudeDestination: Double = .0
   var randomLongitudeDestination: Double = .0
 
