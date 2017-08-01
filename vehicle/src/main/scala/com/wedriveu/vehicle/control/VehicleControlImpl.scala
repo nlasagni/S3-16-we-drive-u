@@ -1,17 +1,17 @@
 package com.wedriveu.vehicle.control
 
 import com.rabbitmq.client._
-import com.wedriveu.services.shared.utilities.{Constants, Log, Position}
-import com.wedriveu.vehicle.entity.SelfDrivingVehicle
+import com.wedriveu.services.shared.utilities.{Constants, Log}
+import com.wedriveu.vehicle.entity.{Position, SelfDrivingVehicle}
 import com.wedriveu.vehicle.simulation.{VehicleEventsObservables, VehicleEventsObservablesImpl}
 
 /**
-  * Created by Michele on 28/07/2017.
+  * @author Michele Donati on 28/07/2017.
   */
 
 /** This models the control part of the vehicle. */
 trait VehicleControl {
-  /** This starts the engine of the vehicle, initializing the communication and rxScala infrastructures. */
+  /** This starts the engine of the vehicle, initializing the communication infrastructure. */
   def startVehicleEngine(): Unit
 
   /** This is usefull to get the vehicle for retrieve vehicle informations.
@@ -19,7 +19,22 @@ trait VehicleControl {
     * @return Returns the instance of the vehicle.
     */
   def getVehicle(): SelfDrivingVehicle
+
+  /** This method permits, at configurator will, to pick up Drain Battery events. */
+  def subscribeToDrainBatteryEvents(): Unit
+
+  /** This methos permits, at configurator will, to pick up Movement and Position changes events.*/
+  def subscribeToMovementAndChangePositionEvents(): Unit
+
+  /** This method should be called when a booking request arrive from the service.
+    *
+    * @param userPosition Indicates the user position.
+    * @param destinationPosition Indicates the destination position for the user.
+    */
+  def changePositionUponBooking(userPosition: Position, destinationPosition: Position): Unit
+
 }
+
 class VehicleControlImpl(license: String, state: String, position: Position, battery: Double) extends VehicleControl {
   val vehicleGiven : SelfDrivingVehicle = new SelfDrivingVehicle(license, state, position, battery)
   val vehicleEventsObservables: VehicleEventsObservables = new VehicleEventsObservablesImpl
@@ -35,10 +50,6 @@ class VehicleControlImpl(license: String, state: String, position: Position, bat
       override def run(): Unit = {
         configureRabbitMq()
         try {
-          vehicleEventsObservables.batteryDrainObservable().subscribe(event => {
-            //Scala kills strategy pattern, i can simply pass a function as a parameter
-            executeBehaviour(vehicleBehaviours.drainBattery)
-          })
           while (true) {
             registerConsumer()
           }
@@ -88,5 +99,28 @@ class VehicleControlImpl(license: String, state: String, position: Position, bat
 
   private def executeBehaviour(callback:() => Unit) = callback()
 
+  private def executeBehaviour(callback:(Position) => Unit, position: Position) = callback(position)
+
+  private def executeBehaviour(callback:(Position, Position) => Unit,
+                               position1: Position,
+                               position2: Position) = callback(position1,position2 )
+
   def getVehicle() = vehicleGiven
+
+  def subscribeToDrainBatteryEvents(): Unit = {
+      vehicleEventsObservables.batteryDrainObservable().subscribe(event => {
+        executeBehaviour(vehicleBehaviours.drainBattery)
+      })
+  }
+
+  def subscribeToMovementAndChangePositionEvents(): Unit = {
+    vehicleEventsObservables.movementAndChangePositionObservable().subscribe(event => {
+      executeBehaviour(vehicleBehaviours.movementAndPositionChange, event)
+    })
+  }
+
+  def changePositionUponBooking(userPosition: Position, destinationPosition: Position): Unit = {
+    executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition)
+  }
+
 }
