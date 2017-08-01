@@ -10,7 +10,8 @@ public class Position {
     private double latitude;
     private double longitude;
 
-    public Position(@JsonProperty("latitude")double latitude,@JsonProperty("longitude") double longitude){
+    public Position(@JsonProperty("latitude") double latitude,
+                    @JsonProperty("longitude") double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }

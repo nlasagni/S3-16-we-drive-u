@@ -1,46 +1,47 @@
 package com.wedriveu.services.booking.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wedriveu.services.shared.utilities.Position;
 
 import java.util.Date;
 
 /**
- * Created by Michele on 12/07/2017.
+ * @author Michele on 12/07/2017.
+ * @author Nicola Lasagni on 31/07/2017
  */
+
 public class Booking {
 
-    private int bookingID;
+    public static final String STATUS_STARTED = "started";
+    public static final String STATUS_PROCESSING = "processing";
+    public static final String STATUS_COMPLETED = "completed";
+
+    private int id;
     private Date date;
     private String username;
-    private String carLicencePlate;
-    private Double destinationLatitude;
-    private Double destinationLongitude;
-    private Double sourceLatitude;
-    private Double sourceLongitude;
-    private String bookingState;
+    private String vehicleLicensePlate;
+    private Position userPosition;
+    private Position destinationPosition;
+    private String bookingStatus;
 
-    public Booking(@JsonProperty("bookingID") int bookingID,
-                   @JsonProperty("date")Date date,
-                   @JsonProperty("username")String username,
-                   @JsonProperty("carLicencePlate")String carLicencePlate,
-                   @JsonProperty("destinationLatitude")Double destinationLatitude,
-                   @JsonProperty("destinationLongitude") Double destinationLongitude,
-                   @JsonProperty("sourceLatitude")Double sourceLatitude,
-                   @JsonProperty("sourceLongitude")Double sourceLongitude,
-                   @JsonProperty("bookingState") String bookingState) {
-        this.bookingID = bookingID;
+    public Booking(@JsonProperty("id") int id,
+                   @JsonProperty("date") Date date,
+                   @JsonProperty("username") String username,
+                   @JsonProperty("vehicleLicensePlate") String vehicleLicensePlate,
+                   @JsonProperty("userPosition") Position userPosition,
+                   @JsonProperty("destinationPosition") Position destinationPosition,
+                   @JsonProperty("bookingStatus") String bookingStatus) {
+        this.id = id;
         this.date = date;
         this.username = username;
-        this.carLicencePlate = carLicencePlate;
-        this.destinationLatitude = destinationLatitude;
-        this.destinationLongitude = destinationLongitude;
-        this.sourceLatitude = sourceLatitude;
-        this.sourceLongitude = sourceLongitude;
-        this.bookingState = bookingState;
+        this.vehicleLicensePlate = vehicleLicensePlate;
+        this.userPosition = userPosition;
+        this.destinationPosition = destinationPosition;
+        this.bookingStatus = bookingStatus;
     }
 
-    public int getBookingID() {
-        return bookingID;
+    public int getId() {
+        return id;
     }
 
     public Date getDate() {
@@ -51,32 +52,32 @@ public class Booking {
         return username;
     }
 
-    public String getCarLicencePlate() {
-        return carLicencePlate;
+    public String getVehicleLicensePlate() {
+        return vehicleLicensePlate;
     }
 
-    public Double getDestinationLatitude() {
-        return destinationLatitude;
+    public Position getUserPosition() {
+        return userPosition;
     }
 
-    public Double getDestinationLongitude() {
-        return destinationLongitude;
+    public void setUserPosition(Position userPosition) {
+        this.userPosition = userPosition;
     }
 
-    public Double getSourceLatitude() {
-        return sourceLatitude;
+    public Position getDestinationPosition() {
+        return destinationPosition;
     }
 
-    public Double getSourceLongitude() {
-        return sourceLongitude;
+    public void setDestinationPosition(Position destinationPosition) {
+        this.destinationPosition = destinationPosition;
     }
 
-    public String getBookingState() {
-        return bookingState;
+    public String getBookingStatus() {
+        return bookingStatus;
     }
 
-    public void setBookingState(String bookingState) {
-        this.bookingState = bookingState;
+    public void setBookingStatus(String bookingStatus) {
+        this.bookingStatus = bookingStatus;
     }
 
 }
