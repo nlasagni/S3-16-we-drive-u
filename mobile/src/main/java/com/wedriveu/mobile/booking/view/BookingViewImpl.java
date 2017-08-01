@@ -18,7 +18,7 @@ import com.wedriveu.mobile.booking.presenter.BookingPresenter;
 import com.wedriveu.mobile.booking.presenter.model.BookingPresentationModel;
 
 /**
- * Created by nicolalasagni on 29/07/2017.
+ * @author Nicola Lasagni on 29/07/2017.
  */
 public class BookingViewImpl extends Fragment implements BookingView {
 
