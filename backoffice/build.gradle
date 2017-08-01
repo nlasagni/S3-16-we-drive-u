@@ -1,13 +1,9 @@
-apply plugin: 'java'
-apply plugin: 'scala'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testCompile 'junit:junit:4.12'
-    compile 'org.scala-lang:scala-library:2.12.2'
+jar {
+    archiveName = "${rootProject.name}-${this.name}-${rootProject.version}.jar"
+    destinationDir = new File("$releasesClientFolder")
+    manifest {
+        attributes 'Implementation-Version': project.version,
+                'Main-Class': 'Main'
+    }
+    from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
 }
