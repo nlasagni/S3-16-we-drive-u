@@ -46,7 +46,7 @@ public class LoginViewModelImpl extends Fragment implements LoginViewModel, Logi
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mUserStore = StoreFactoryImpl.getInstance(getActivity()).createUserStore();
+        mUserStore = StoreFactoryImpl.getInstance().createUserStore(getContext());
         mLoginService = ServiceFactoryImpl.getInstance().createLoginService();
     }
 

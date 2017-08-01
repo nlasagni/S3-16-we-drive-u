@@ -47,22 +47,21 @@ dependencies {
     //Libraries
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //Tests
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$androidTestEspressoVersion") {
         exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    }
     testCompile "junit:junit:$junitVersion"
     //Android Support
-    compile "com.android.support:appcompat-v7:${androidSupportLibrarylVersion}"
-    compile "com.android.support:support-v4:${androidSupportLibrarylVersion}"
+    compile "com.android.support:appcompat-v7:$androidSupportLibrarylVersion"
+    compile "com.android.support:support-v4:$androidSupportLibrarylVersion"
     //Location
-    compile 'com.google.android.gms:play-services-location:11.0.2'
-    compile 'com.google.android.gms:play-services-places:11.0.2'
-    //Other
+    compile "com.google.android.gms:play-services-location:$androidPlayServicesVersion"
+    compile "com.google.android.gms:play-services-places:$androidPlayServicesVersion"
     //Other
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    compile 'com.squareup.retrofit2:converter-jackson:2.3.0'
-    compile 'javax.inject:javax.inject:1'
+    compile "com.squareup.retrofit2:converter-jackson:$jacksonConverterVersion"
+    compile "com.github.bumptech.glide:glide:$androidGlideVersion"
 }
 
 task ("javadoc", type: Javadoc) {
@@ -72,11 +71,13 @@ task ("javadoc", type: Javadoc) {
     failOnError false
 }
 
-def archiveBuildTypes = ["release", "debug"];
+def archiveBuildTypes = ["release", "debug"]
 android.applicationVariants.all { variant ->
     variant.outputs.each { output ->
         if (variant.buildType.name in archiveBuildTypes) {
-            output.outputFile = new File("${releasesClientFolder}/${rootProject.name}-${archivesBaseName}-${variant.buildType.name}-${androidVersionName}.apk")
+            def apkFileName = "${archivesBaseName}-${variant.buildType.name}-${rootProject.version}.apk"
+            def apk = output.outputFile
+            output.outputFile = new File(apk.parentFile, apkFileName)
         }
     }
 }

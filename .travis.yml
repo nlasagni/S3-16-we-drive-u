@@ -43,6 +43,7 @@ deploy:
   file:
    - "releases/services/*"
    - "releases/clients/*"
+   - "mobile/build/outputs/apk/*"
   skip_cleanup: true
   on:
     repo: nlasagni/S3-16-we-drive-u
