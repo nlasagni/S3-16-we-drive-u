@@ -31,4 +31,6 @@ public interface Constants {
 
     int FIRST_CHOSEN_ELIGIBLE_VEHICLE = 0;
 
+    double VEHICLE_AVERAGE_SPEED = 50.0;
+
 }
