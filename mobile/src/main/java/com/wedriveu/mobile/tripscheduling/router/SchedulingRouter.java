@@ -10,14 +10,14 @@ import com.wedriveu.mobile.model.Vehicle;
  * logic to switch to the next Fragment transaction.
  *
  * @author Marco Baldassarri
+ * @author Nicola Lasagni
  * @since 20/07/2017
  */
 public interface SchedulingRouter extends DialogProvider {
 
     /**
-     * Shows the Booking fragment with the data returned by the {@linkplain com.wedriveu.mobile.service.scheduling.SchedulingService}
-     * * @param vehicle The vehicle object
+     * Shows the Booking confirmation to the user
      */
-    void showBooking(Vehicle vehicle);
+    void showBooking();
 
 }

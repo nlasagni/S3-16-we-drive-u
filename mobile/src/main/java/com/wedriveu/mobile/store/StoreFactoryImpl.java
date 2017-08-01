@@ -7,27 +7,25 @@ import android.content.Context;
  */
 public class StoreFactoryImpl implements StoreFactory {
 
-    private Context mContext;
-
     private static StoreFactoryImpl instance = null;
 
-    private StoreFactoryImpl() {
-    }
+    private StoreFactoryImpl() {}
 
-    private StoreFactoryImpl(Context context) {
-        mContext = context;
-    }
-
-    public static StoreFactoryImpl getInstance(Context context) {
+    public static StoreFactoryImpl getInstance() {
         if(instance == null) {
-            instance = new StoreFactoryImpl(context);
+            instance = new StoreFactoryImpl();
         }
         return instance;
     }
 
     @Override
-    public UserStore createUserStore() {
-        return new UserStoreImpl(mContext);
+    public UserStore createUserStore(Context context) {
+        return new UserStoreImpl(context);
+    }
+
+    @Override
+    public VehicleStore createVehicleStore(Context context) {
+        return new VehicleStoreImpl(context);
     }
 
 }

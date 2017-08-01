@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'scala'
 
 sourceCompatibility = 1.8
 
@@ -9,7 +10,11 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:4.12'
+    compile 'org.scala-lang:scala-library:2.12.3'
+    testCompile "org.scala-lang:scala-library:2.12.3"
+    testCompile group: 'org.scalatest', name: 'scalatest_2.12', version: '3.0.1'
+    compile 'io.reactivex:rxscala_2.12:0.26.5'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
-    compile group: 'com.rabbitmq', name: 'amqp-client', version: '2.3.1'
+    compile group: 'com.rabbitmq', name: 'amqp-client', version: '4.0.2'
     compile project(path: ':services:shared')
 }

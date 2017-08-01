@@ -16,6 +16,8 @@ import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.service.ServiceFactoryImpl;
 import com.wedriveu.mobile.service.scheduling.SchedulingService;
 import com.wedriveu.mobile.service.scheduling.SchedulingServiceCallback;
+import com.wedriveu.mobile.store.StoreFactoryImpl;
+import com.wedriveu.mobile.store.VehicleStore;
 import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
 import com.wedriveu.mobile.util.Constants;
@@ -25,13 +27,15 @@ import com.wedriveu.mobile.util.location.LocationServiceImpl;
 import static android.app.Activity.RESULT_CANCELED;
 
 /**
- * Created by Marco on 18/07/2017.
+ * @author Marco on 18/07/2017.
+ * @author Nicola Lasagni on 29/07/2017
  */
 public class SchedulingViewModelImpl extends Fragment implements SchedulingViewModel, SchedulingServiceCallback {
 
     private SchedulingRouter mRouter;
     private SchedulingService mSchedulingService;
     private SchedulingView mSchedulingView;
+    private VehicleStore mVehicleStore;
     private Place mPlace;
 
     public static SchedulingViewModelImpl newInstance() {
@@ -53,6 +57,7 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
         super.onActivityCreated(savedInstanceState);
         mSchedulingService = ServiceFactoryImpl.getInstance().createSchedulingService();
         LocationService mLocationService = LocationServiceImpl.getInstance(getActivity());
+        mVehicleStore = StoreFactoryImpl.getInstance().createVehicleStore(getContext());
         mLocationService.addLocationListener(mSchedulingService);
     }
 
@@ -93,7 +98,8 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
             mSchedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
             mSchedulingView.renderError(errorMessage);
         } else {
-            mRouter.showBooking(vehicle);
+            mVehicleStore.storeVehicle(vehicle);
+            mRouter.showBooking();
         }
     }
 

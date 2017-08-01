@@ -7,15 +7,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import com.wedriveu.mobile.R;
+import com.wedriveu.mobile.booking.presenter.BookingPresenter;
+import com.wedriveu.mobile.booking.presenter.BookingPresenterImpl;
+import com.wedriveu.mobile.booking.view.BookingView;
+import com.wedriveu.mobile.booking.view.BookingViewImpl;
 import com.wedriveu.mobile.login.router.LoginRouter;
 import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.login.view.LoginViewImpl;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModelImpl;
-import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingViewImpl;
@@ -117,9 +119,12 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     }
 
     @Override
-    public void showBooking(Vehicle vehicle) {
+    public void showBooking() {
         //TODO show booking fragment
-        Log.i("SHOW_BOOKING", vehicle.toString());
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.add(BookingPresenterImpl.newInstance(), BookingPresenter.ID);
+        transaction.replace(R.id.fragment_container, new BookingViewImpl(), BookingView.ID);
+        transaction.commit();
     }
 
 }
