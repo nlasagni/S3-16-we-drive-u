@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * This interface models the search of the eligibles vehicles with calculations from user
  */
-public interface FindVehicles {
+public interface VehicleFinder {
     /**
      * Get only vehicles that can take the user to the specified destination
      * @param userPosition the position of the user that need a car

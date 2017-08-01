@@ -15,11 +15,11 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by stefano.bernagozzi on 17/07/2017.
  */
-public class FindVehiclesImpl implements FindVehicles {
+public class VehicleFinderImpl implements VehicleFinder {
 
     private CommunicationWithVehicles communicationWithVehicles;
 
-    public FindVehiclesImpl() throws IOException, TimeoutException {
+    public VehicleFinderImpl() throws IOException, TimeoutException {
         communicationWithVehicles = new CommunicationWithVehiclesImpl();
     }
 

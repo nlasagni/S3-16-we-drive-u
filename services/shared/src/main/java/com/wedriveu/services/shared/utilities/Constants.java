@@ -3,6 +3,7 @@ package com.wedriveu.services.shared.utilities;
 /**
  * @author Michele on 22/07/2017.
  * @author Nicola Lasagni on 31/07/2017
+ * @author Marco Baldassarri on 1/08/2017
  */
 public interface Constants {
 
@@ -34,4 +35,23 @@ public interface Constants {
 
     int FIRST_CHOSEN_ELIGIBLE_VEHICLE = 0;
 
+
+
+    // Services RabbitMQ
+    String QUEUE_BASE_NAME = "service";
+    String QUEUE_NAME_JSON_KEY = "queue";
+    //Exchanges
+    String VEHICLE_SERVICE_EXCHANGE = "vehicle";
+
+    // Vehicle Service RabbitMQ
+    String VEHICLE_SERVICE_EVENT_BUS = "service.vehicle.eventbus";
+    String CONSUMER_VEHICLE_SERVICE = "vehicle-service";
+    String ROUTING_KEY_VEHICLE = "vehicle.nearest.%s";
+
+
+    String USER_LATITUDE = "user-latitude";
+    String USER_LONGITUDE = "user-longitude";
+    String DESTINATION_LATITUDE = "destination-latitude";
+    String DESTINATION_LONGITUDE = "destination-longitude";
+    String USER_USERNAME = "user-username";
 }

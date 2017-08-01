@@ -5,8 +5,8 @@ import com.wedriveu.services.shared.utilities.Position;
 import com.wedriveu.services.vehicle.election.control.EligibleVehiclesControlImpl;
 import com.wedriveu.services.vehicle.entity.Vehicle;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
-import com.wedriveu.services.vehicle.finder.control.FindVehicles;
-import com.wedriveu.services.vehicle.finder.control.FindVehiclesImpl;
+import com.wedriveu.services.vehicle.finder.control.VehicleFinder;
+import com.wedriveu.services.vehicle.finder.control.VehicleFinderImpl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,7 +59,7 @@ public class Main {
                 new Position(10, 10),
                 new Date()));
 
-        FindVehicles finder = new FindVehiclesImpl();
+        VehicleFinder finder = new VehicleFinderImpl();
         finder.listAllEligibleVehicles( new Position(43.158873, 13.720088),
                 new Position(42.960979, 13.874647),
                 available,
