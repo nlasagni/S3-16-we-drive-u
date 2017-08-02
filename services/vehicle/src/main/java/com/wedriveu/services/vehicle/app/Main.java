@@ -2,6 +2,7 @@ package com.wedriveu.services.vehicle.app;
 
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.services.vehicle.consumers.nearest.NearestConsumerImpl;
 import com.wedriveu.services.vehicle.election.control.EligibleVehiclesControlImpl;
 import com.wedriveu.services.vehicle.entity.Vehicle;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeoutException;
 public class Main {
 
     public static void main(String[] args) throws IOException, TimeoutException {
-        VehicleStoreImpl vehicleStore = new VehicleStoreImpl();
+       /* VehicleStoreImpl vehicleStore = new VehicleStoreImpl();
         vehicleStore.createVehiclesFile();
         Vehicle vehicleToRetrieve = vehicleStore.getVehicle("MACCHINA1");
         try {
@@ -64,6 +65,9 @@ public class Main {
                 new Position(42.960979, 13.874647),
                 available,
                 new EligibleVehiclesControlImpl());
+    }*/
+
+        new NearestConsumerImpl().startVehicleService();
     }
 
 }

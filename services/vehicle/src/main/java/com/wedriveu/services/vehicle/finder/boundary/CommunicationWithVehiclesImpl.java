@@ -18,8 +18,8 @@ public class CommunicationWithVehiclesImpl implements CommunicationWithVehicles 
 
     public CommunicationWithVehiclesImpl() throws IOException, TimeoutException {
         factory = new ConnectionFactory();
-        factory.setHost(Constants.SERVER_HOST);
-        factory.setPassword(Constants.SERVER_PASSWORD);
+        factory.setHost(Constants.RABBITMQ_SERVER_HOST);
+        factory.setPassword(Constants.RABBITMQ_SERVER_PASSWORD);
         connection = factory.newConnection();
         channel = connection.createChannel();
     }

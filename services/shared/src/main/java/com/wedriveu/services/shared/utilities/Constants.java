@@ -22,8 +22,10 @@ public interface Constants {
     String TEXT_PLAIN = "text/plain";
     int PORT_AUTHENTICATION_SERVICE = 8080;
 
-    String SERVER_HOST = "uniboguys.duckdns.org";
-    String SERVER_PASSWORD = "FmzevdBBmpcdvPHLDJQR";
+    String RABBITMQ_SERVER_HOST = "uniboguys.duckdns.org";
+    String RABBITMQ_SERVER_PASSWORD = "FmzevdBBmpcdvPHLDJQR";
+    int RABBITMQ_SERVER_PORT = 5672;
+    int RABBITMQ_SERVER_TIMEOUT = 60;
     String UTF = "UTF-8";
 
 

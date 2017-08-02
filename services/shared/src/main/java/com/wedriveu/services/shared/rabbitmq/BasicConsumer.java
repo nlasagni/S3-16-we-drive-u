@@ -29,7 +29,7 @@ public abstract class BasicConsumer {
         this.vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
 
-        client = RabbitMQClient.getInstance().getRabbitMQClient();
+        client = RabbitMQClientConfig.getInstance().getRabbitMQClient();
     }
 
     public void start(Handler<AsyncResult<Void>> handler) throws java.io.IOException, TimeoutException {
