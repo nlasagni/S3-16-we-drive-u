@@ -2,6 +2,7 @@ package com.wedriveu.services.vehicle.entity;
 
 /**
  * Created by Michele on 12/07/2017.
+ * Marco
  */
 import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -9,15 +10,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.services.vehicle.app.Messages;
+import io.vertx.core.AbstractVerticle;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class VehicleStoreImpl implements VehicleStore {
+import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonObject;
+
+public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
+
+    private EventBus eventBus;
+    @Override
+    public void start() throws Exception {
+        this.eventBus = vertx.eventBus();
+        eventBus.consumer(Messages.Store.AVAILABLE_REQUEST, this::getAllAvailableVehicles);
+    }
 
     @Override
-
     public void createVehiclesFile() {
         Vehicle vehicle = createVehicle("MACCHINA1",
                         "broken",
@@ -52,15 +66,17 @@ public class VehicleStoreImpl implements VehicleStore {
     }
 
     @Override
-    public List<Vehicle> getAllAvailableVehicles() {
+    public void getAllAvailableVehicles(Message message) {
         List<Vehicle> vehicles = getVehicleList();
-        List<Vehicle> vehiclesAvailables = new ArrayList<>() ;
+        List<Vehicle> availableVehicles = new ArrayList<>() ;
         for(Vehicle vehicle: vehicles){
             if(vehicle.getState().equals("available")) {
-                vehiclesAvailables.add(vehicle);
+                availableVehicles.add(vehicle);
             }
         }
-        return vehiclesAvailables;
+        JsonObject json = new JsonObject();
+        json.put(Messages.Manager.AVAILABLE_VEHICLES, availableVehicles);
+        eventBus.send(Messages.Store.AVAILABLE_COMPLETED, json);
     }
 
     @Override

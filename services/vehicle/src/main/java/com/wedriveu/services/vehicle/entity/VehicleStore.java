@@ -3,12 +3,14 @@ package com.wedriveu.services.vehicle.entity; /**
  */
 
 import com.wedriveu.services.shared.utilities.Position;
+import io.vertx.core.eventbus.Message;
 
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author Michele Donati
+ * @author Marco Baldassarri
  * This inteface models the <em>com.wedriveu.services.vehicle.entity.Vehicle' database domain</em>.
  */
 public interface VehicleStore {
@@ -24,11 +26,8 @@ public interface VehicleStore {
      */
     void addVehicle(Vehicle vehicle);
 
-    /**
-     *
-     * @return Returns the list of all available vehicles.
-     */
-    List<Vehicle> getAllAvailableVehicles();
+
+    void getAllAvailableVehicles(Message message);
 
     /**
      * @param carLicencePlate Identifies the <em>com.wedriveu.services.vehicle.entity.Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.

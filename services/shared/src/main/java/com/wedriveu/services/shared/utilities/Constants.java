@@ -42,6 +42,7 @@ public interface Constants {
     String QUEUE_NAME_JSON_KEY = "queue";
     //Exchanges
     String VEHICLE_SERVICE_EXCHANGE = "vehicle";
+    String DEPLOY_ERROR = "VERTICLE_DEPLOY_ERROR";
 
     // Vehicle Service RabbitMQ
     String VEHICLE_SERVICE_EVENT_BUS = "service.vehicle.eventbus";
@@ -49,6 +50,7 @@ public interface Constants {
     String ROUTING_KEY_VEHICLE = "vehicle.nearest.%s";
 
 
+    String AVAILABLE_VEHICLES = "available-vehicles";
     String USER_LATITUDE = "user-latitude";
     String USER_LONGITUDE = "user-longitude";
     String DESTINATION_LATITUDE = "destination-latitude";
