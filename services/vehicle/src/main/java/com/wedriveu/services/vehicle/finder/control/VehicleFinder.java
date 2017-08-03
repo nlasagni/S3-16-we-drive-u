@@ -29,9 +29,9 @@ public interface VehicleFinder {
      * @param allAvailable a list of all the available cars at the moment of the method call
      * @param callback the callback that returns the list of eligibles vehicles
      */
-    void listAllEligibleVehicles(Position userPosition,
+/*    void listAllEligibleVehicles(Position userPosition,
                                  Position destPosition,
                                  List<Vehicle> allAvailable,
-                                 FindVehiclesCallback callback) throws IOException;
+                                 FindVehiclesCallback callback) throws IOException;*/
 
 }

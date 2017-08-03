@@ -1,4 +1,4 @@
-package com.wedriveu.services.vehicle.consumers.nearest;
+package com.wedriveu.services.vehicle.app;
 
 /**
  * Created by Marco on 02/08/2017.

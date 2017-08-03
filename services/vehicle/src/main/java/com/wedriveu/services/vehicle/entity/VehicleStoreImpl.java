@@ -20,6 +20,7 @@ import java.util.Date;
 
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
@@ -28,7 +29,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     @Override
     public void start() throws Exception {
         this.eventBus = vertx.eventBus();
-        eventBus.consumer(Messages.Store.AVAILABLE_REQUEST, this::getAllAvailableVehicles);
+        eventBus.consumer(Messages.AvailableControl.AVAILABLE_REQUEST, this::getAllAvailableVehicles);
     }
 
     @Override
@@ -68,15 +69,15 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     @Override
     public void getAllAvailableVehicles(Message message) {
         List<Vehicle> vehicles = getVehicleList();
-        List<Vehicle> availableVehicles = new ArrayList<>() ;
+        JsonArray jsonArray = new JsonArray();
         for(Vehicle vehicle: vehicles){
             if(vehicle.getState().equals("available")) {
-                availableVehicles.add(vehicle);
+                JsonObject obj = new JsonObject();
+                obj.mapFrom(vehicle);
+                jsonArray.add(obj);
             }
         }
-        JsonObject json = new JsonObject();
-        json.put(Messages.Manager.AVAILABLE_VEHICLES, availableVehicles);
-        eventBus.send(Messages.Store.AVAILABLE_COMPLETED, json);
+        eventBus.send(Messages.AvailableControl.AVAILABLE_COMPLETED, jsonArray);
     }
 
     @Override

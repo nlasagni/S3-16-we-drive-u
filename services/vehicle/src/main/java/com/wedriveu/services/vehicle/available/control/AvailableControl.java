@@ -1,4 +1,4 @@
-package com.wedriveu.services.vehicle.consumers.nearest.manager;
+package com.wedriveu.services.vehicle.available.control;
 
 import io.vertx.core.eventbus.Message;
 
@@ -9,7 +9,7 @@ import java.util.concurrent.TimeoutException;
  * @author Marco Baldassarri
  * @since 02/08/2017
  */
-public interface Manager {
+public interface AvailableControl {
 
     void requestAvailableVehicles(Message message);
     void availableVehiclesCompleted(Message message);

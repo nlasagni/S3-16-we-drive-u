@@ -10,17 +10,15 @@ public interface Messages {
         String AVAILABLE = "consumer.available";
     }
 
-    interface Store {
-        String AVAILABLE_REQUEST = "store.available";
-        String AVAILABLE_COMPLETED = "store.available.completed";
+    interface AvailableControl {
+        String AVAILABLE_REQUEST = "control.available";
+        String AVAILABLE_COMPLETED = "control.available.completed";
+        String DATA_TO_VEHICLE = "control.data.to.vehicle";
     }
 
-    interface Manager {
 
-        String AVAILABLE_VEHICLES = "manager.available.vehicles";
-    }
-
-    interface Finder {
-        String USER_DATA = "finder.user.data";
+    interface FinderConsumer {
+        String DISTANCE_TO_USER = "finder.distance.to.user";
+        String TRIP_DISTANCE =  "finder.distance.trip";
     }
 }

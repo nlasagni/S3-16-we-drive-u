@@ -1,9 +1,11 @@
-package com.wedriveu.services.vehicle.consumers.nearest;
+package com.wedriveu.services.vehicle.finder.boundary;
 
 import com.wedriveu.services.shared.rabbitmq.BasicConsumer;
 import com.wedriveu.services.shared.utilities.Constants;
-import com.wedriveu.services.vehicle.consumers.nearest.manager.ManagerImpl;
 import com.wedriveu.services.vehicle.app.Messages;
+import com.wedriveu.services.vehicle.app.UserData;
+import com.wedriveu.services.vehicle.app.UserDataFactoryA;
+import com.wedriveu.services.vehicle.available.control.AvailableControlImpl;
 import com.wedriveu.services.vehicle.entity.Vehicle;
 import io.vertx.core.json.JsonObject;
 
@@ -14,11 +16,17 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by Marco on 30/07/2017.
  */
-public class NearestConsumerImpl extends BasicConsumer implements NearestConsumer {
+public class FinderConsumerImpl extends BasicConsumer implements FinderConsumer {
     ArrayList<Vehicle> available;
 
+    private String userLat;
+    private String userLon;
+    private String destinationLat;
+    private String destinationLon;
+    private String username;
 
-    public NearestConsumerImpl() {
+
+    public FinderConsumerImpl() {
         super(Constants.CONSUMER_VEHICLE_SERVICE);
     }
 
@@ -32,27 +40,23 @@ public class NearestConsumerImpl extends BasicConsumer implements NearestConsume
 
 
     @Override
-    public void startVehicleService() throws IOException, TimeoutException {
-        //createVehicles();
-        setupRequests();
-    }
-
-    private void setupRequests() throws IOException, TimeoutException {
-        BasicConsumer consumer = new NearestConsumerImpl();
+    public void startFinderConsumer() throws IOException, TimeoutException {
+        BasicConsumer consumer = new FinderConsumerImpl();
         consumer.start(onStart -> {
             consumer.declareQueue(onQueue -> {
                 if (onQueue.succeeded()) {
                     consumer.bindQueueToExchange(Constants.VEHICLE_SERVICE_EXCHANGE,
-                            Constants.ROUTING_KEY_VEHICLE, onBind -> {
-                        if (onBind.succeeded()) {
-                            consumer.registerConsumer(Constants.VEHICLE_SERVICE_EVENT_BUS);
-                            consumer.basicConsume(Constants.VEHICLE_SERVICE_EVENT_BUS);
-                        }
-                    });
+                            Constants.ROUTING_KEY_CAN_DRIVE_RESPONSE, onBind -> {
+                                if (onBind.succeeded()) {
+                                    consumer.registerConsumer(Constants.EVENT_BUS_FINDER_ADDRESS);
+                                    consumer.basicConsume(Constants.EVENT_BUS_FINDER_ADDRESS);
+                                }
+                            });
                 }
             });
         });
     }
+
 
     @Override
     public void stopVehicleService() {
@@ -62,14 +66,9 @@ public class NearestConsumerImpl extends BasicConsumer implements NearestConsume
     @Override
     public void registerConsumer(String eventBus) {
         vertx.eventBus().consumer(eventBus, msg -> {
-            JsonObject json = (JsonObject) msg.body();
-            searchAvailableVehicles(json);
-        });
-    }
-
-    private void searchAvailableVehicles(JsonObject json) {
-        vertx.deployVerticle(new ManagerImpl(), managerDeployed -> {
-            eventBus.send(Messages.NearestConsumer.AVAILABLE, json);
+            vertx.deployVerticle(new AvailableControlImpl(), managerDeployed -> {
+                vertx.eventBus().send(Messages.NearestConsumer.AVAILABLE, msg.body());
+            });
         });
     }
 

@@ -62,7 +62,7 @@ public abstract class BasicConsumer {
     public void bindQueueToExchange(String exchangeName,
                                     String baseRoutingKey,
                                     Handler<AsyncResult<Void>> handler) {
-        // es vehicle.nearest.%s
+        // i.e. vehicle.nearest.%s
         baseRoutingKey =  name.isEmpty() ? String.format(baseRoutingKey, name) : baseRoutingKey;
         client.queueBind(queueName,
                 exchangeName,

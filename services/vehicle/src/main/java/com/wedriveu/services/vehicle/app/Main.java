@@ -1,17 +1,8 @@
 package com.wedriveu.services.vehicle.app;
 
-import com.wedriveu.services.shared.utilities.Log;
-import com.wedriveu.services.shared.utilities.Position;
-import com.wedriveu.services.vehicle.consumers.nearest.NearestConsumerImpl;
-import com.wedriveu.services.vehicle.election.control.EligibleVehiclesControlImpl;
-import com.wedriveu.services.vehicle.entity.Vehicle;
-import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
-import com.wedriveu.services.vehicle.finder.control.VehicleFinder;
-import com.wedriveu.services.vehicle.finder.control.VehicleFinderImpl;
+import com.wedriveu.services.vehicle.available.boundary.nearest.NearestConsumerImpl;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 public class Main {

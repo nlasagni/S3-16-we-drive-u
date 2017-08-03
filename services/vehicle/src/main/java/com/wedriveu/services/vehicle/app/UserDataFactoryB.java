@@ -1,17 +1,18 @@
-package com.wedriveu.services.vehicle.consumers.nearest;
+package com.wedriveu.services.vehicle.app;
 
 /**
  * Created by Marco on 02/08/2017.
  */
-public class UserDataFactoryA implements UserDataFactory {
+public class UserDataFactoryB implements UserDataFactory {
 
     //via sacchi 3, Cesena
     private static final String USER_LATITUDE = "44.139761";
     private static final String USER_LONGITUDE = "12.243219";
 
-    private static final String DEST_LATITUDE = "42.960979";
-    private static final String DEST_LONGITUDE = "13.874647";
-    private static final String USER = "userA";
+    //milano stazione
+    private static final String DEST_LATITUDE = "45.485888";
+    private static final String DEST_LONGITUDE = "9.204283";
+    private static final String USER = "userB";
 
     @SuppressWarnings("Duplicates")
     @Override
@@ -24,4 +25,5 @@ public class UserDataFactoryA implements UserDataFactory {
         userData.setUsername(USER);
         return userData;
     }
+
 }

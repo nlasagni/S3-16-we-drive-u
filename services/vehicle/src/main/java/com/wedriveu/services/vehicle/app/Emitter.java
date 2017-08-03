@@ -1,4 +1,5 @@
-package com.wedriveu.services.vehicle.consumers.nearest;
+/*
+package com.wedriveu.services.vehicle.app;
 
 import com.wedriveu.services.shared.rabbitmq.RabbitMQClientConfig;
 import com.wedriveu.services.shared.utilities.Constants;
@@ -7,36 +8,32 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
-import org.junit.Before;
-import org.junit.Test;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
-public class NearestConsumerImplTest {
+*/
+/**
+ * Created by Marco on 03/08/2017.
+ *//*
 
+public class Emitter {
 
     private static final String STARTED = "Started RabbitQM client";
     private static final String DECLARED_EXCHANGE = "Declared exchange ";
     private static final String EXCHANGE_TYPE = "direct";
-    private static final String EXCHANGE_DECLARED = Constants.VEHICLE_SERVICE_EXCHANGE + " DECLARED";
+    private static final String EXCHANGE_DECLARED = Constants.VEHICLE_SERVICE_EXCHANGE + " exchange declared";
     private static RabbitMQClient client;
+    private static String TAG = Emitter.class.getSimpleName();
 
-    private static String TAG = NearestConsumerImplTest.class.getSimpleName();
-
-
-    @Test
-    public void startVehicleService() throws Exception {
-    }
-
-    @Before
-    public void setUp() throws Exception {
+    public static void main(String[] args) throws IOException, TimeoutException {
         client = RabbitMQClientConfig.getInstance().getRabbitMQClient();
         client.start(onStartCompleted -> {
                     if (onStartCompleted.succeeded()) {
-
                         Log.info(TAG, STARTED);
                         declareExchanges(onDeclareCompleted -> {
                             if (onDeclareCompleted.succeeded()) {
-                                Log.info(TAG, DECLARED_EXCHANGE + Constants.VEHICLE_SERVICE_EXCHANGE);
+                                Log.info(TAG, EXCHANGE_DECLARED);
                                 UserData userDataA = new UserDataFactoryA().getUserData();
                                 publishToConsumer(Constants.VEHICLE_SERVICE_EXCHANGE, Constants.ROUTING_KEY_VEHICLE, userDataA);
                             } else {
@@ -55,9 +52,7 @@ public class NearestConsumerImplTest {
                 EXCHANGE_TYPE,
                 false,
                 false,
-                onDeclare -> {
-                    Log.info(TAG, EXCHANGE_DECLARED);
-                });
+                handler);
     }
 
     private static void publishToConsumer(String exchangeName,
@@ -78,3 +73,4 @@ public class NearestConsumerImplTest {
     }
 
 }
+*/

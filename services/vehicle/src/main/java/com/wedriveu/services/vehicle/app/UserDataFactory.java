@@ -1,4 +1,4 @@
-package com.wedriveu.services.vehicle.consumers.nearest;
+package com.wedriveu.services.vehicle.app;
 
 /**
  * @author Marco Baldassarri

@@ -37,7 +37,11 @@ public interface Constants {
 
     int FIRST_CHOSEN_ELIGIBLE_VEHICLE = 0;
 
-
+    // Vehicle Jackson parameters
+    String CAR_LICENCE_PLATE = "carLicencePlate";
+    String STATE = "state";
+    String POSITION = "position";
+    String LAST_UPDATE = "lastUpdate";
 
     // Services RabbitMQ
     String QUEUE_BASE_NAME = "service";
@@ -47,9 +51,14 @@ public interface Constants {
     String DEPLOY_ERROR = "VERTICLE_DEPLOY_ERROR";
 
     // Vehicle Service RabbitMQ
-    String VEHICLE_SERVICE_EVENT_BUS = "service.vehicle.eventbus";
-    String CONSUMER_VEHICLE_SERVICE = "vehicle-service";
+    String EVENT_BUS_AVAILABLE_ADDRESS = "service.vehicle.eventbus";
+    String EVENT_BUS_FINDER_ADDRESS = "finder.vehicle.eventbus";
+    String CONSUMER_VEHICLE_SERVICE = "vehicle-service-consumer";
     String ROUTING_KEY_VEHICLE = "vehicle.nearest.%s";
+    String ROUTING_KEY_CAN_DRIVE = "vehicle.request.candrive.%s";
+    String ROUTING_KEY_CAN_DRIVE_RESPONSE = "vehicle.response.candrive";
+
+
 
 
     String AVAILABLE_VEHICLES = "available-vehicles";
@@ -58,4 +67,5 @@ public interface Constants {
     String DESTINATION_LATITUDE = "destination-latitude";
     String DESTINATION_LONGITUDE = "destination-longitude";
     String USER_USERNAME = "user-username";
+
 }
