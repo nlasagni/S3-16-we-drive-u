@@ -29,17 +29,24 @@ trait VehicleConfiguratorView {
     val speedTextField: JTextField = new JTextField("50")
     speedTextField.setEditable(false)
     val breakLabel: JLabel = new JLabel("Can Break?")
-    val yesCommand: String = "yes"
-    val checkBoxYes: JCheckBox = new JCheckBox(yesCommand)
-    val noCommand: String = "no"
-    val checkBoxNo: JCheckBox = new JCheckBox(noCommand)
+    val yesCommandBreak: String = "yes"
+    val checkBoxYesBreak: JCheckBox = new JCheckBox(yesCommandBreak)
+    val noCommandBreak: String = "no"
+    val checkBoxNoBreak: JCheckBox = new JCheckBox(noCommandBreak)
+    val stolenLabel: JLabel = new JLabel("Can be stolen?")
+    val yesCommandStolen: String = "yes."
+    val checkBoxYesStolen: JCheckBox = new JCheckBox(yesCommandStolen)
+    val noCommandStolen: String = "no."
+    val checkBoxNoStolen: JCheckBox = new JCheckBox(noCommandStolen)
     val startCommand: String = "Start Vehicle"
     val startButton: JButton =  new JButton(startCommand)
     setSize(200,250)
     setResizable(false)
     startButton.addActionListener(this)
-    checkBoxYes.addActionListener(this)
-    checkBoxNo.addActionListener(this)
+    checkBoxYesBreak.addActionListener(this)
+    checkBoxNoBreak.addActionListener(this)
+    checkBoxYesStolen.addActionListener(this)
+    checkBoxNoStolen.addActionListener(this)
 
     val groupLayout: GroupLayout = new GroupLayout(panel)
     panel.setLayout(groupLayout)
@@ -58,8 +65,13 @@ trait VehicleConfiguratorView {
                   .addComponent(speedTextField))
               .addComponent(breakLabel)
               .addGroup(groupLayout.createSequentialGroup()
-                   .addComponent(checkBoxYes)
-                   .addComponent(checkBoxNo)
+                   .addComponent(checkBoxYesBreak)
+                   .addComponent(checkBoxNoBreak)
+              )
+              .addComponent(stolenLabel)
+              .addGroup(groupLayout.createSequentialGroup()
+                .addComponent(checkBoxYesStolen)
+                .addComponent(checkBoxNoStolen)
               )
               .addComponent(startButton)
       )
@@ -76,8 +88,12 @@ trait VehicleConfiguratorView {
               .addComponent(speedTextField))
         .addComponent(breakLabel)
         .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-              .addComponent(checkBoxYes)
-              .addComponent(checkBoxNo))
+              .addComponent(checkBoxYesBreak)
+              .addComponent(checkBoxNoBreak))
+        .addComponent(stolenLabel)
+        .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+          .addComponent(checkBoxYesStolen)
+          .addComponent(checkBoxNoStolen))
         .addComponent(startButton)
     )
 
@@ -100,20 +116,32 @@ trait VehicleConfiguratorView {
           "Battery not correctly setted error",
           JOptionPane.ERROR_MESSAGE)
       }
-      else if(!checkBoxYes.isSelected && !checkBoxNo.isSelected){
+      else if(!checkBoxYesBreak.isSelected && !checkBoxNoBreak.isSelected){
         JOptionPane.showMessageDialog(this,
           "At least one option of 'Can Break?' checkbox should be selected.",
           "Break events not selected error",
           JOptionPane.ERROR_MESSAGE)
       }
+      else if(!checkBoxYesStolen.isSelected && !checkBoxNoStolen.isSelected){
+        JOptionPane.showMessageDialog(this,
+          "At least one option of 'Can be Stolen?' checkbox should be selected.",
+          "Stolen events not selected error",
+          JOptionPane.ERROR_MESSAGE)
+      }
       else {
-        new VehicleCreator(batteryTextField.getText.toDouble, checkBoxYes.isSelected, checkBoxNo.isSelected)
+        new VehicleCreator(batteryTextField.getText.toDouble, checkBoxYesBreak.isSelected, checkBoxNoBreak.isSelected)
       }
-      case command if command == yesCommand => if(checkBoxNo.isSelected) {
-        checkBoxNo.setSelected(false)
+      case command if command == yesCommandBreak => if(checkBoxNoBreak.isSelected) {
+        checkBoxNoBreak.setSelected(false)
       }
-      case command if command == noCommand => if(checkBoxYes.isSelected) {
-        checkBoxYes.setSelected(false)
+      case command if command == noCommandBreak => if(checkBoxYesBreak.isSelected) {
+        checkBoxYesBreak.setSelected(false)
+      }
+      case command if command == yesCommandStolen => if(checkBoxNoStolen.isSelected) {
+        checkBoxNoStolen.setSelected(false)
+      }
+      case command if command == noCommandStolen => if(checkBoxYesStolen.isSelected) {
+        checkBoxYesStolen.setSelected(false)
       }
       case _ => println("No Command Found")
     }
