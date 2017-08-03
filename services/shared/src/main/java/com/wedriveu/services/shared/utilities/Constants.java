@@ -25,7 +25,6 @@ public interface Constants {
     String SERVER_PASSWORD = "FmzevdBBmpcdvPHLDJQR";
     String UTF = "UTF-8";
 
-
     double RANGE = 20;
     double MAXIMUM_DISTANCE_TO_RECHARGE = 20;
     double ESTIMATED_KILOMETERS_PER_PERCENTAGE = 10;
