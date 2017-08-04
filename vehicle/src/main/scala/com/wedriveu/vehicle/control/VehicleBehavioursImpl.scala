@@ -56,8 +56,8 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle) extends Vehi
         //This will be set to True when the vehicle recharges
         notRecharging = false
       }
-      Log.log("Battery of " + selfDrivingVehicle.plate + " = " + selfDrivingVehicle.battery.toString)
-  }
+      //TODO stampare il valore della batteria nella ui del stop vehicle
+   }
 
   //This algorithm calculates the distance in Km between the points, then estimates the journey time and calculates
   //the coordinates reached during the journey.
