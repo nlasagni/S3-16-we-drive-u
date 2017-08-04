@@ -33,7 +33,7 @@ public class AvailableControlImpl extends AbstractVerticle implements AvailableC
     public void start() throws Exception {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.NearestConsumer.AVAILABLE, this::requestAvailableVehicles);
-        eventBus.consumer(Messages.AvailableControl.AVAILABLE_COMPLETED, this::availableVehiclesCompleted);
+        eventBus.consumer(Messages.VehicleStore.AVAILABLE_COMPLETED, this::availableVehiclesCompleted);
     }
 
     @Override

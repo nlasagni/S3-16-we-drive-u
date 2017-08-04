@@ -42,10 +42,14 @@ public interface Constants {
     String STATE = "state";
     String POSITION = "position";
     String LAST_UPDATE = "lastUpdate";
+    String ELECTED_VEHICLE = "elected-vehicle";
+    String PICK_UP_TIME = "pickup-time";
+    String ARRIVE_AT_DESTINATION_TIME = "arrive-destination-time";
 
     // Services RabbitMQ
     String QUEUE_BASE_NAME = "service";
     String QUEUE_NAME_JSON_KEY = "queue";
+
     //Exchanges
     String VEHICLE_SERVICE_EXCHANGE = "vehicle";
     String DEPLOY_ERROR = "VERTICLE_DEPLOY_ERROR";
@@ -55,10 +59,9 @@ public interface Constants {
     String EVENT_BUS_FINDER_ADDRESS = "finder.vehicle.eventbus";
     String CONSUMER_VEHICLE_SERVICE = "vehicle-service-consumer";
     String ROUTING_KEY_VEHICLE = "vehicle.nearest.%s";
+    String ROUTING_KEY_VEHICLE_RESPONSE = "vehicle.response.nearest.%s";
     String ROUTING_KEY_CAN_DRIVE = "vehicle.request.candrive.%s";
     String ROUTING_KEY_CAN_DRIVE_RESPONSE = "vehicle.response.candrive";
-
-
 
 
     String AVAILABLE_VEHICLES = "available-vehicles";
@@ -67,5 +70,7 @@ public interface Constants {
     String DESTINATION_LATITUDE = "destination-latitude";
     String DESTINATION_LONGITUDE = "destination-longitude";
     String USER_USERNAME = "user-username";
+
+    String TRIP_DISTANCE =  "trip-distance";
 
 }

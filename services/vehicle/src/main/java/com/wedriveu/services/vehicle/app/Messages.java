@@ -12,13 +12,25 @@ public interface Messages {
 
     interface AvailableControl {
         String AVAILABLE_REQUEST = "control.available";
-        String AVAILABLE_COMPLETED = "control.available.completed";
+
         String DATA_TO_VEHICLE = "control.data.to.vehicle";
     }
 
 
     interface FinderConsumer {
-        String DISTANCE_TO_USER = "finder.distance.to.user";
-        String TRIP_DISTANCE =  "finder.distance.trip";
+
+        String VEHICLE_RESPONSE = "finder.vehicle.response";
     }
+
+    interface VehicleElection {
+        String GET_VEHICLE = "election.vehicle.request";
+    }
+
+    interface VehicleStore {
+        String AVAILABLE_COMPLETED = "store.available.completed";
+        String GET_VEHICLE_COMPLETED = "store.get.vehicle.completed";
+
+    }
+
+
 }

@@ -6,6 +6,7 @@ import com.wedriveu.services.vehicle.app.Messages;
 import com.wedriveu.services.vehicle.app.UserData;
 import com.wedriveu.services.vehicle.app.UserDataFactoryA;
 import com.wedriveu.services.vehicle.available.control.AvailableControlImpl;
+import com.wedriveu.services.vehicle.election.boundary.VehicleElection;
 import com.wedriveu.services.vehicle.entity.Vehicle;
 import io.vertx.core.json.JsonObject;
 
@@ -66,8 +67,8 @@ public class FinderConsumerImpl extends BasicConsumer implements FinderConsumer 
     @Override
     public void registerConsumer(String eventBus) {
         vertx.eventBus().consumer(eventBus, msg -> {
-            vertx.deployVerticle(new AvailableControlImpl(), managerDeployed -> {
-                vertx.eventBus().send(Messages.NearestConsumer.AVAILABLE, msg.body());
+            vertx.deployVerticle(new VehicleElection(), electionDeployed -> {
+                vertx.eventBus().send(Messages.FinderConsumer.VEHICLE_RESPONSE, msg.body());
             });
         });
     }

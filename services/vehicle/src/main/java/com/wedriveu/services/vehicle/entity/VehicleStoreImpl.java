@@ -30,6 +30,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     public void start() throws Exception {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.AvailableControl.AVAILABLE_REQUEST, this::getAllAvailableVehicles);
+        eventBus.consumer(Messages.VehicleElection.GET_VEHICLE, this::getVehicle);
     }
 
     @Override
@@ -66,6 +67,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         writeJsonVehicleFile((ArrayList<Vehicle>) vehicles);
     }
 
+    //1
     @Override
     public void getAllAvailableVehicles(Message message) {
         List<Vehicle> vehicles = getVehicleList();
@@ -77,13 +79,18 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
                 jsonArray.add(obj);
             }
         }
-        eventBus.send(Messages.AvailableControl.AVAILABLE_COMPLETED, jsonArray);
+        eventBus.send(Messages.VehicleStore.AVAILABLE_COMPLETED, jsonArray);
     }
 
+    //2
     @Override
-    public Vehicle getVehicle(String carLicencePlate) {
+    public void getVehicle(Message message) {
         List<Vehicle> vehicles = getVehicleList();
-        return getRequestedVehicle(vehicles, carLicencePlate);
+        JsonObject object  = (JsonObject) message.body();
+        String carLicencePlate = object.getString(Constants.CAR_LICENCE_PLATE);
+
+        Vehicle vehicle = getRequestedVehicle(vehicles, carLicencePlate);
+        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED, new JsonObject().put(Constants.ELECTED_VEHICLE, vehicle));
     }
 
     @Override

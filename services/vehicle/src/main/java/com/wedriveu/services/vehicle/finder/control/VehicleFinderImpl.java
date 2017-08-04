@@ -113,7 +113,7 @@ public class VehicleFinderImpl extends AbstractVerticle implements VehicleFinder
     private void publishToConsumer(String exchangeName,
                                           String routingKey,
                                           int index) {
-        client.basicPublish(exchangeName, routingKey, getDistances(index), onPublish -> {
+        client.basicPublish(exchangeName, routingKey, getDataToVehicle(index), onPublish -> {
             if (onPublish.succeeded()) {
                 Log.info(TAG,  MESSAGE_PUBLISHED_LOG + exchangeName);
             } else {
@@ -122,16 +122,20 @@ public class VehicleFinderImpl extends AbstractVerticle implements VehicleFinder
         });
     }
 
-    public JsonObject getDistances(int index) {
+    public JsonObject getDataToVehicle(int index) {
         Position vehiclePosition = availableVehicles.getJsonObject(index)
                                                     .getJsonObject(POSITION)
                                                     .mapTo(Position.class);
         double distanceToUser = userPosition.getDistanceInKm(vehiclePosition);
         double tripDistance = (distanceToUser) + (userPosition.getDistanceInKm(destPosition));
-        JsonObject distances = new JsonObject();
-        distances.put(Messages.FinderConsumer.DISTANCE_TO_USER, distanceToUser);
-        distances.put(Messages.FinderConsumer.TRIP_DISTANCE, tripDistance);
-        return distances;
+        JsonObject dataToVehicle = new JsonObject();
+        dataToVehicle.put(Constants.TRIP_DISTANCE, tripDistance);
+        /*
+        the username is sent because if vehicle election asks to retreive it once vehicle data arrived,
+        another username (from a new booking request) could be set in the meanwhile, creating data inconsistency
+        * */
+        dataToVehicle.put(Constants.USER_USERNAME, username);
+        return dataToVehicle;
     }
 
     public VehicleFinderImpl() throws IOException, TimeoutException {

@@ -89,6 +89,7 @@ public abstract class BasicConsumer {
                 Log.error(tag, onRegistered.cause().getMessage(), onRegistered.cause());
             }
         });
+
     }
 
 

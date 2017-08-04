@@ -30,10 +30,9 @@ public interface VehicleStore {
     void getAllAvailableVehicles(Message message);
 
     /**
-     * @param carLicencePlate Identifies the <em>com.wedriveu.services.vehicle.entity.Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.
-     * @return Returns the <em>com.wedriveu.services.vehicle.entity.Vehicle</em>, only if founded.
+     * @param message Identifies the <em>com.wedriveu.services.vehicle.entity.Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.
      */
-    Vehicle getVehicle(String carLicencePlate);
+    void getVehicle(Message message);
 
     /**
      *
