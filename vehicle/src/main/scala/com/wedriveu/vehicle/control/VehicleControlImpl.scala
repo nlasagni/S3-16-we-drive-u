@@ -20,9 +20,6 @@ trait VehicleControl {
     */
   def getVehicle(): SelfDrivingVehicle
 
-  /** This method permits, at configurator will, to pick up Drain Battery events. */
-  def subscribeToDrainBatteryEvents(): Unit
-
   /** This methos permits, at configurator will, to pick up Movement and Position changes events.*/
   def subscribeToMovementAndChangePositionEvents(): Unit
 
@@ -106,12 +103,6 @@ class VehicleControlImpl(license: String, state: String, position: Position, bat
                                position2: Position) = callback(position1,position2 )
 
   def getVehicle() = vehicleGiven
-
-  def subscribeToDrainBatteryEvents(): Unit = {
-      vehicleEventsObservables.batteryDrainObservable().subscribe(event => {
-        executeBehaviour(vehicleBehaviours.drainBattery)
-      })
-  }
 
   def subscribeToMovementAndChangePositionEvents(): Unit = {
     vehicleEventsObservables.movementAndChangePositionObservable().subscribe(event => {
