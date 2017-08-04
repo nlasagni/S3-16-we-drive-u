@@ -37,7 +37,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
 
   override def beforeEach() {
     vehicleControl =
-      new VehicleControlImpl(licenseFirstTest, stateFirstTest, new Position(latitude, longitude), maxBattery)
+      new VehicleControlImpl(licenseFirstTest, stateFirstTest, new Position(latitude, longitude), maxBattery, null)
   }
 
   test("The vehicle position, after a random user position input, should be equals to it." +
@@ -57,7 +57,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   test("The vehicle position, after a random destination position input, should be equals to it") {
     randomLatitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
     randomLongitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
-    var vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle())
+    var vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), null)
     vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination,randomLongitudeDestination))
     Thread.sleep(timeToSleep)
     assert(vehicleControl.getVehicle().position.latitude == randomLatitudeDestination)

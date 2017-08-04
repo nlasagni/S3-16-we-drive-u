@@ -1,6 +1,7 @@
 package com.wedriveu.vehicle.control
 
-import com.wedriveu.services.shared.utilities.{Log}
+import com.wedriveu.services.shared.utilities.Log
+import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.{Position, SelfDrivingVehicle}
 
 /**
@@ -24,7 +25,7 @@ trait VehicleBehaviours {
 
 }
 
-class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle) extends VehicleBehaviours {
+class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: VehicleStopView) extends VehicleBehaviours {
    val zeroBattery: Double = 0.0
    val batteryThreshold: Double = 20.0
    val stateRecharging: String = "recharging"
@@ -50,18 +51,22 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle) extends Vehi
       else {
         // Depends on vehicle speed
         selfDrivingVehicle.battery -= batteryToConsume
+        stopUi.writeMessageLog("Battery value = %" + selfDrivingVehicle.battery)
       }
       if(selfDrivingVehicle.battery <= batteryThreshold && notRecharging) {
         selfDrivingVehicle.state = stateRecharging
         //This will be set to True when the vehicle recharges
         notRecharging = false
       }
-      //TODO stampare il valore della batteria nella ui del stop vehicle
+
    }
 
   //This algorithm calculates the distance in Km between the points, then estimates the journey time and calculates
   //the coordinates reached during the journey.
   override def movementAndPositionChange(position: Position): Unit = {
+    if(!checkVehicleIsNotBroken()){
+      return
+    }
     if (selfDrivingVehicle.position.equals(position)) {
       Log.log(newPositionIsTheSame)
     }
@@ -94,6 +99,9 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle) extends Vehi
                                 estimatedJourneyTimeInSeconds: Long,
                                 deltaLat: Double,
                                 deltaLon: Double): Unit = {
+    if(!checkVehicleIsNotBroken()){
+      return
+    }
     val elapsedTime: Double = time.asInstanceOf[Double] / estimatedJourneyTimeInSeconds
     var latInter: Double = selfDrivingVehicle.position.latitude + deltaLat * elapsedTime
     var lonInter: Double = selfDrivingVehicle.position.longitude + deltaLon * elapsedTime
@@ -101,6 +109,20 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle) extends Vehi
     if(time != 0.0 && ((time / timePassedForBattery)%1) == 0.0) {
       drainBattery()
       timePassedForBattery += timeStepBatteryConsumed
+    }
+    stopUi.writeMessageLog("New Position = " + latInter + " , " + lonInter)
+  }
+
+  private def checkVehicleIsNotBroken(): Boolean = {
+    if (selfDrivingVehicle.state.equals("broken")) {
+      stopUi.writeMessageLog("Vehicle is broken. His position is: "
+        + selfDrivingVehicle.position.latitude
+        + ", "
+        + selfDrivingVehicle.position.longitude)
+      false
+    }
+    else {
+      true
     }
   }
 
