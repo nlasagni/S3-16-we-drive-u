@@ -47,7 +47,7 @@ public interface Constants {
     String ARRIVE_AT_DESTINATION_TIME = "arrive-destination-time";
 
     // Services RabbitMQ
-    String QUEUE_BASE_NAME = "service";
+    String SERVICE_QUEUE_BASE_NAME = "service";
     String QUEUE_NAME_JSON_KEY = "queue";
 
     //Exchanges
@@ -57,11 +57,11 @@ public interface Constants {
     // Vehicle Service RabbitMQ
     String EVENT_BUS_AVAILABLE_ADDRESS = "service.vehicle.eventbus";
     String EVENT_BUS_FINDER_ADDRESS = "finder.vehicle.eventbus";
-    String CONSUMER_VEHICLE_SERVICE = "vehicle-service-consumer";
+    String CONSUMER_VEHICLE_SERVICE = "vehicle";
     String ROUTING_KEY_VEHICLE = "vehicle.nearest.%s";
     String ROUTING_KEY_VEHICLE_RESPONSE = "vehicle.response.nearest.%s";
     String ROUTING_KEY_CAN_DRIVE = "vehicle.request.candrive.%s";
-    String ROUTING_KEY_CAN_DRIVE_RESPONSE = "vehicle.response.candrive";
+    String ROUTING_KEY_CAN_DRIVE_RESPONSE = "vehicle.response.candrive.%s";
 
 
     String AVAILABLE_VEHICLES = "available-vehicles";
@@ -70,7 +70,10 @@ public interface Constants {
     String DESTINATION_LATITUDE = "destination-latitude";
     String DESTINATION_LONGITUDE = "destination-longitude";
     String USER_USERNAME = "user-username";
+    String ELIGIBLE = "eligible";
+    String ELIGIBLE_VEHICLE_LIST = "eligible-vehicle-list";
 
     String TRIP_DISTANCE =  "trip-distance";
-
+    String DISTANCE_TO_USER = "distance-to-user";
+    String VEHICLE_SPEED = "speed";
 }

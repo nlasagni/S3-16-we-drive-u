@@ -1,17 +1,15 @@
 package com.wedriveu.services.vehicle.entity;
 
-/**
- * Created by Michele on 12/07/2017.
- * Marco
- */
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.services.shared.utilities.PositionUtils;
 import com.wedriveu.services.vehicle.app.Messages;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
@@ -23,15 +21,26 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.wedriveu.services.shared.utilities.Constants.USER_LATITUDE;
+import static com.wedriveu.services.shared.utilities.Constants.USER_LONGITUDE;
+import static io.vertx.core.json.JsonObject.mapFrom;
+
+/**
+ * Created by Michele on 12/07/2017.
+ * Marco
+ */
+
 public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     private EventBus eventBus;
 
     @Override
-    public void start() throws Exception {
+    public void start(Future<Void> future) throws Exception {
         this.eventBus = vertx.eventBus();
-        eventBus.consumer(Messages.AvailableControl.AVAILABLE_REQUEST, this::getAllAvailableVehicles);
+        eventBus.consumer(Messages.NearestControl.AVAILABLE_REQUEST, this::getAllAvailableVehiclesInRange);
         eventBus.consumer(Messages.VehicleElection.GET_VEHICLE, this::getVehicle);
+        createVehiclesFile();
+        future.complete();
     }
 
     @Override
@@ -70,14 +79,16 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     //1
     @Override
-    public void getAllAvailableVehicles(Message message) {
+    public void getAllAvailableVehiclesInRange(Message message) {
+        JsonObject userData = new JsonObject();
+        Position userPosition = new Position();
+        userPosition.setLatitude(Double.parseDouble(userData.getString(USER_LATITUDE)));
+        userPosition.setLongitude(Double.parseDouble(userData.getString(USER_LONGITUDE)));
         List<Vehicle> vehicles = getVehicleList();
         JsonArray jsonArray = new JsonArray();
         for (Vehicle vehicle : vehicles) {
-            if (vehicle.getState().equals("available")) {
-                JsonObject obj = new JsonObject();
-                obj.mapFrom(vehicle);
-                jsonArray.add(obj);
+            if (vehicle.getState().equals("available") && PositionUtils.isInRange(userPosition, vehicle.getPosition())) {
+                jsonArray.add(mapFrom(vehicle));
             }
         }
         eventBus.send(Messages.VehicleStore.AVAILABLE_COMPLETED, jsonArray);

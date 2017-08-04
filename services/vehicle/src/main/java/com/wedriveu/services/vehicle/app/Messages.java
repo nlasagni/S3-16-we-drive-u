@@ -6,11 +6,11 @@ package com.wedriveu.services.vehicle.app;
  */
 public interface Messages {
 
-    interface NearestConsumer {
+    interface UserNearestConsumer {
         String AVAILABLE = "consumer.available";
     }
 
-    interface AvailableControl {
+    interface NearestControl {
         String AVAILABLE_REQUEST = "control.available";
 
         String DATA_TO_VEHICLE = "control.data.to.vehicle";

@@ -2,10 +2,7 @@ package com.wedriveu.services.shared.rabbitmq;
 
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
 
 import java.util.concurrent.TimeoutException;
@@ -13,26 +10,29 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by nicolalasagni on 29/07/2017.
  */
-public abstract class BasicConsumer {
+public abstract class VerticleConsumer extends AbstractVerticle {
 
     protected String tag;
     protected String queueName;
-    protected Vertx vertx;
+
     protected io.vertx.rabbitmq.RabbitMQClient client;
     protected String name;
     protected EventBus eventBus;
 
-    public BasicConsumer(String name) {
+    public VerticleConsumer(String name) {
         this.name = name;
-        this.tag = name;
-        this.queueName = Constants.QUEUE_BASE_NAME + "-" + name;
-        this.vertx = Vertx.vertx();
-        eventBus = vertx.eventBus();
-
-        client = RabbitMQClientConfig.getInstance().getRabbitMQClient();
     }
 
-    public void start(Handler<AsyncResult<Void>> handler) throws java.io.IOException, TimeoutException {
+    @Override
+    public void start() throws Exception {
+
+        this.tag = name;
+        this.queueName = Constants.SERVICE_QUEUE_BASE_NAME + "." + name;
+        eventBus = vertx.eventBus();
+        client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
+    }
+
+    public void startConsumer(Handler<AsyncResult<Void>> handler) throws java.io.IOException, TimeoutException {
         client.start(onStartCompleted -> {
             if (onStartCompleted.succeeded()) {
                 Log.info(tag, "RabbitMQ client started");
@@ -42,6 +42,9 @@ public abstract class BasicConsumer {
                 handler.handle(Future.failedFuture(onStartCompleted.cause().getMessage()));
             }
         });
+
+
+
     }
 
     public void declareQueue(Handler<AsyncResult<Void>> handler) {

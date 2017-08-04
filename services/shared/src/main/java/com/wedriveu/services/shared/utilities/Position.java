@@ -4,11 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by Michele on 17/07/2017.
+ * marco
  */
 public class Position {
-
+    @JsonProperty
     private double latitude;
+    @JsonProperty
     private double longitude;
+
+    public Position() {
+    }
 
     public Position(@JsonProperty("latitude") double latitude,
                     @JsonProperty("longitude") double longitude) {
@@ -38,11 +43,5 @@ public class Position {
                 + Math.pow(this.longitude - position.getLongitude(), 2));
     }
 
-    public double getDistanceInKm(Position position) {
-        double earthRadius = 6372.795477598;
-        return earthRadius * Math.acos(Math.sin(this.latitude) * Math.sin(position.getLatitude())
-                            + Math.cos(this.latitude) * Math.cos(position.getLatitude())
-                            * Math.cos(this.longitude - position.getLongitude()));
-    }
 
 }

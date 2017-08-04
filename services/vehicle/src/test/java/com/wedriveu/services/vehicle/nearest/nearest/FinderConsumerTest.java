@@ -1,10 +1,11 @@
 package com.wedriveu.services.vehicle.nearest.nearest;
 
-import com.wedriveu.services.shared.rabbitmq.RabbitMQClientConfig;
+import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 import org.junit.Before;
@@ -21,34 +22,6 @@ public class FinderConsumerTest {
     private static RabbitMQClient client;
 
     private static String TAG = FinderConsumerTest.class.getSimpleName();
-
-
-    @Test
-    public void startVehicleService() throws Exception {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        client = RabbitMQClientConfig.getInstance().getRabbitMQClient();
-        client.start(onStartCompleted -> {
-                    if (onStartCompleted.succeeded()) {
-
-                        Log.info(TAG, STARTED);
-                        declareExchanges(onDeclareCompleted -> {
-                            if (onDeclareCompleted.succeeded()) {
-                                Log.info(TAG, DECLARED_EXCHANGE + Constants.VEHICLE_SERVICE_EXCHANGE);
-                                UserData userDataA = new UserDataFactoryA().getUserData();
-                                publishToConsumer(Constants.VEHICLE_SERVICE_EXCHANGE, Constants.ROUTING_KEY_VEHICLE, userDataA);
-                            } else {
-                                Log.error(TAG, onDeclareCompleted.cause().getMessage(), onDeclareCompleted.cause());
-                            }
-                        });
-                    } else {
-                        Log.error(TAG, onStartCompleted.cause().getMessage(), onStartCompleted.cause());
-                    }
-                }
-        );
-    }
 
     private static void declareExchanges(Handler<AsyncResult<Void>> handler) {
         client.exchangeDeclare(Constants.VEHICLE_SERVICE_EXCHANGE,
@@ -75,6 +48,33 @@ public class FinderConsumerTest {
                 Log.error(TAG, onPublish.cause().getMessage(), onPublish.cause());
             }
         });
+    }
+
+    @Test
+    public void startVehicleService() throws Exception {
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        client = RabbitMQConfig.getInstance(Vertx.vertx()).getRabbitMQClient();
+        client.start(onStartCompleted -> {
+                    if (onStartCompleted.succeeded()) {
+
+                        Log.info(TAG, STARTED);
+                        declareExchanges(onDeclareCompleted -> {
+                            if (onDeclareCompleted.succeeded()) {
+                                Log.info(TAG, DECLARED_EXCHANGE + Constants.VEHICLE_SERVICE_EXCHANGE);
+                                UserData userDataA = new UserDataFactoryA().getUserData();
+                                publishToConsumer(Constants.VEHICLE_SERVICE_EXCHANGE, Constants.ROUTING_KEY_VEHICLE, userDataA);
+                            } else {
+                                Log.error(TAG, onDeclareCompleted.cause().getMessage(), onDeclareCompleted.cause());
+                            }
+                        });
+                    } else {
+                        Log.error(TAG, onStartCompleted.cause().getMessage(), onStartCompleted.cause());
+                    }
+                }
+        );
     }
 
 }

@@ -1,11 +1,10 @@
 package com.wedriveu.services.vehicle.app;
 
-import com.wedriveu.services.vehicle.nearest.boundary.available.UserConsumer;
+import com.wedriveu.services.vehicle.nearest.boundary.nearest.VehicleNearestConsumer;
 import com.wedriveu.services.vehicle.nearest.control.Manager;
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 
-public class Main extends AbstractVerticle {
+public class Main {
 
     private static Vertx vertx;
 
@@ -14,7 +13,7 @@ public class Main extends AbstractVerticle {
         vehicleStore.createVehiclesFile();
         Vehicle vehicleToRetrieve = vehicleStore.getVehicle("MACCHINA1");
         try {
-            List<Vehicle> vehiclesAvailable = vehicleStore.getAllAvailableVehicles();
+            List<Vehicle> vehiclesAvailable = vehicleStore.getAllAvailableVehiclesInRange();
             for(Vehicle vehicle: vehiclesAvailable) {
                 Log.log(vehicle.getCarLicencePlate());
             }
@@ -60,10 +59,14 @@ public class Main extends AbstractVerticle {
                 new EligibleVehiclesControlImpl());
     }*/
 
+        // TODO: delete this after developing vehicle registration
 
+        //new UserNearestConsumer().startUserConsumer();
+
+        vertx = Vertx.vertx();
         vertx.deployVerticle(new Manager(), completed -> {
             if (completed.succeeded()) {
-                new UserConsumer().startUserConsumer();
+                vertx.deployVerticle(new VehicleNearestConsumer());
             }
         });
 

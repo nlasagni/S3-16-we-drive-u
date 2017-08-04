@@ -24,7 +24,7 @@ public interface VehicleStore {
     void addVehicle(Vehicle vehicle);
 
 
-    void getAllAvailableVehicles(Message message);
+    void getAllAvailableVehiclesInRange(Message message);
 
     /**
      * @param message Identifies the <em>com.wedriveu.services.vehicle.entity.Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.

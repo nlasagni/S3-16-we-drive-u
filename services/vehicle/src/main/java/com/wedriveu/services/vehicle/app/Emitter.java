@@ -28,7 +28,7 @@ public class Emitter {
 
     public static void main(String[] args) throws IOException, TimeoutException {
         client = RabbitMQClientConfig.getInstance().getRabbitMQClient();
-        client.start(onStartCompleted -> {
+        client.startConsumer(onStartCompleted -> {
                     if (onStartCompleted.succeeded()) {
                         Log.info(TAG, STARTED);
                         declareExchanges(onDeclareCompleted -> {

@@ -1,7 +1,9 @@
 package com.wedriveu.services.vehicle.nearest.control;
 
+import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
 import com.wedriveu.services.vehicle.nearest.boundary.election.VehicleElection;
+import com.wedriveu.services.vehicle.nearest.boundary.finder.VehicleFinder;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -18,11 +20,12 @@ public class Manager extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
-        List<Future> futures = new ArrayList<>();
 
+        List<Future> futures = new ArrayList<>();
         Future controlFuture = Future.future();
         vertx.deployVerticle(new ControlImpl(), controlFuture.completer());
         futures.add(controlFuture);
+
 
         Future electionFuture = Future.future();
         vertx.deployVerticle(new VehicleElection(), electionFuture.completer());
@@ -31,6 +34,10 @@ public class Manager extends AbstractVerticle {
         Future storeFuture = Future.future();
         vertx.deployVerticle(new VehicleStoreImpl(), storeFuture.completer());
         futures.add(storeFuture);
+
+/*        Future finderFuture = Future.future();
+        vertx.deployVerticle(new VehicleFinder(), finderFuture.completer());
+        futures.add(finderFuture);*/
 
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {

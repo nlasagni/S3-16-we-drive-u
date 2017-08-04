@@ -1,11 +1,12 @@
 package com.wedriveu.services.vehicle.nearest.boundary.election;
 
-import com.wedriveu.services.shared.rabbitmq.RabbitMQClientConfig;
+import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.app.Messages;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -28,12 +29,10 @@ public class VehicleElection extends AbstractVerticle {
 
 
     @Override
-    public void start() throws Exception {
-
-
+    public void start(Future<Void> future) throws Exception {
         vertx.eventBus().consumer(Messages.FinderConsumer.VEHICLE_RESPONSE, this::retreiveVehicle);
         vertx.eventBus().consumer(Messages.VehicleStore.GET_VEHICLE_COMPLETED, this::sendVehicleToUser);
-
+        future.complete();
     }
 
     private void retreiveVehicle(Message message) {
@@ -44,7 +43,7 @@ public class VehicleElection extends AbstractVerticle {
 
         JsonObject dataToUser = (JsonObject) message.body();
 
-        client = RabbitMQClientConfig.getInstance().getRabbitMQClient();
+        client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
         client.start(onStartCompleted -> {
                     if (onStartCompleted.succeeded()) {
                         Log.info(TAG, STARTED);
