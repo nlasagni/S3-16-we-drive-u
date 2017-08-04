@@ -15,13 +15,15 @@ class VehicleCreator(battery: Double, doBreak: Boolean, doNotBreak: Boolean) {
   val initialLatitude: Double = 44.1454528
   val initialLongitude: Double = 12.2474513
   val initialPosition: Position = new Position(initialLatitude, initialLongitude)
+  val bitsOfPlate: Int = 128
+  val integersToString: Int = 32
 
   val newVehicle: VehicleControl = new VehicleControlImpl(randomPlate, initialState, initialPosition, battery)
   newVehicle.startVehicleEngine()
   newVehicle.subscribeToMovementAndChangePositionEvents()
 
   private def randomLicensePlateGenerator(): String = {
-    new BigInteger(128, randomNumber).toString(32)
+    new BigInteger(bitsOfPlate, randomNumber).toString(integersToString)
   }
 
 }

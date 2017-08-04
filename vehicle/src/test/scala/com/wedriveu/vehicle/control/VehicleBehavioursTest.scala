@@ -51,6 +51,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     Thread.sleep(timeToSleep)
     assert(vehicleControl.getVehicle().position.latitude == randomLatitudeDestination)
     assert(vehicleControl.getVehicle().position.longitude == randomLongitudeDestination)
+    assert(vehicleControl.getVehicle().battery < maxBattery)
   }
 
   test("The vehicle position, after a random destination position input, should be equals to it") {
@@ -61,6 +62,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     Thread.sleep(timeToSleep)
     assert(vehicleControl.getVehicle().position.latitude == randomLatitudeDestination)
     assert(vehicleControl.getVehicle().position.longitude == randomLongitudeDestination)
+    assert(vehicleControl.getVehicle().battery < maxBattery)
   }
 
 }

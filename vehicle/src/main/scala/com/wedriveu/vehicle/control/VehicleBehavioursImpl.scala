@@ -28,21 +28,22 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle) extends Vehi
    val zeroBattery: Double = 0.0
    val batteryThreshold: Double = 20.0
    val stateRecharging: String = "recharging"
+   // This value indicates the battery consumed after 100 seconds of the vehicle journey. In 100 seconds, the vehicle,
+   // with an average speed of 50Km/h travels 1,4 km. The consume is 1% of battery per 10 Km, so the consume estimated
+   // is 0.14%.
    val batteryToConsume: Double = 0.14
    val newPositionIsTheSame: String = "The position given is the same, the vehicle doesn't move"
-   val timeOfJourney: Long = 0.0.asInstanceOf[Long]
-   val timeStep: Long = 10.0.asInstanceOf[Long]
+   val timeOfJourney: Long = 0
+   val timeStep: Long = 10
    val timeStepBatteryConsumed: Double = 100.0
    val conversionInSeconds: Double = 3600.0
 
+   var deltaLat: Double = .0
+   var deltaLon: Double = .0
    var notRecharging: Boolean = true
    var timePassedForBattery: Double = .0
 
    private def drainBattery(): Unit = {
-    if(selfDrivingVehicle.battery <= zeroBattery){
-      Log.log("Battery of " + selfDrivingVehicle.plate + " = " + selfDrivingVehicle.battery.toString)
-    }
-    else{
       if((selfDrivingVehicle.battery-batteryToConsume) <= zeroBattery) {
         selfDrivingVehicle.battery = zeroBattery
       }
@@ -54,10 +55,8 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle) extends Vehi
         selfDrivingVehicle.state = stateRecharging
         //This will be set to True when the vehicle recharges
         notRecharging = false
-        Log.log("Vehicle " + selfDrivingVehicle.plate + " state changed to: " + selfDrivingVehicle.state)
       }
       Log.log("Battery of " + selfDrivingVehicle.plate + " = " + selfDrivingVehicle.battery.toString)
-    }
   }
 
   //This algorithm calculates the distance in Km between the points, then estimates the journey time and calculates
@@ -74,12 +73,13 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle) extends Vehi
         ((distanceInKm / selfDrivingVehicle.speed) * conversionInSeconds).asInstanceOf[Long]
       Log.log("Time in seconds is:" + estimatedJourneyTimeInSeconds)
       for(time <- timeOfJourney to estimatedJourneyTimeInSeconds by timeStep) {
-        val deltaLat: Double = position.latitude - selfDrivingVehicle.position.latitude
-        val deltaLon: Double = position.longitude - selfDrivingVehicle.position.longitude
+        deltaLat = position.latitude - selfDrivingVehicle.position.latitude
+        deltaLon = position.longitude - selfDrivingVehicle.position.longitude
         calculateMovement(time, estimatedJourneyTimeInSeconds, deltaLat, deltaLon)
         if((time + timeStep) > estimatedJourneyTimeInSeconds) {
+          deltaLat = position.latitude - selfDrivingVehicle.position.latitude
+          deltaLon = position.longitude - selfDrivingVehicle.position.longitude
           calculateMovement(estimatedJourneyTimeInSeconds, estimatedJourneyTimeInSeconds, deltaLat, deltaLon)
-          Log.log("Final position should be: " + position.latitude + " , " + position.longitude)
         }
       }
     }
@@ -102,10 +102,6 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle) extends Vehi
       drainBattery()
       timePassedForBattery += timeStepBatteryConsumed
     }
-    Log.log("New Position is: "
-      + selfDrivingVehicle.position.latitude
-      + " , "
-      + selfDrivingVehicle.position.longitude)
   }
 
 }
