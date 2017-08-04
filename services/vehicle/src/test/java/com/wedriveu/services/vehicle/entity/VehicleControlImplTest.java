@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Michele on 25/07/2017.
  */
-public class VehicleAvailableControlImplTest {
+public class VehicleControlImplTest {
 
     @Before
     public void setUp() throws Exception {

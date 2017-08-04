@@ -1,13 +1,15 @@
 package com.wedriveu.services.vehicle.app;
 
-import com.wedriveu.services.vehicle.available.boundary.nearest.NearestConsumerImpl;
+import com.wedriveu.services.vehicle.nearest.boundary.available.UserConsumer;
+import com.wedriveu.services.vehicle.nearest.control.Manager;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Vertx;
 
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+public class Main extends AbstractVerticle {
 
-public class Main {
+    private static Vertx vertx;
 
-    public static void main(String[] args) throws IOException, TimeoutException {
+    public static void main(String[] args) throws Exception {
        /* VehicleStoreImpl vehicleStore = new VehicleStoreImpl();
         vehicleStore.createVehiclesFile();
         Vehicle vehicleToRetrieve = vehicleStore.getVehicle("MACCHINA1");
@@ -58,7 +60,14 @@ public class Main {
                 new EligibleVehiclesControlImpl());
     }*/
 
-        new NearestConsumerImpl().startVehicleService();
+
+        vertx.deployVerticle(new Manager(), completed -> {
+            if (completed.succeeded()) {
+                new UserConsumer().startUserConsumer();
+            }
+        });
+
     }
+
 
 }

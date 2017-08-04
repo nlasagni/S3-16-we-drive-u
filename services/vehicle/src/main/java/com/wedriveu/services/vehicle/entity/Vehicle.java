@@ -2,6 +2,7 @@ package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wedriveu.services.shared.utilities.Position;
+
 import java.util.Date;
 
 import static com.wedriveu.services.shared.utilities.Constants.*;

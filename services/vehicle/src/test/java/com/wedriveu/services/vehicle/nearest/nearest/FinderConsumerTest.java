@@ -1,4 +1,4 @@
-package com.wedriveu.services.vehicle.available.nearest;
+package com.wedriveu.services.vehicle.nearest.nearest;
 
 import com.wedriveu.services.shared.rabbitmq.RabbitMQClientConfig;
 import com.wedriveu.services.shared.utilities.Constants;
@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class FinderConsumerImplTest {
+public class FinderConsumerTest {
 
 
     private static final String STARTED = "Started RabbitQM client";
@@ -20,7 +20,7 @@ public class FinderConsumerImplTest {
     private static final String EXCHANGE_DECLARED = Constants.VEHICLE_SERVICE_EXCHANGE + " DECLARED";
     private static RabbitMQClient client;
 
-    private static String TAG = FinderConsumerImplTest.class.getSimpleName();
+    private static String TAG = FinderConsumerTest.class.getSimpleName();
 
 
     @Test

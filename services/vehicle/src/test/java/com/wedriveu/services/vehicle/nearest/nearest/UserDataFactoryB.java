@@ -1,4 +1,4 @@
-package com.wedriveu.services.vehicle.available.nearest;
+package com.wedriveu.services.vehicle.nearest.nearest;
 
 /**
  * Created by Marco on 02/08/2017.

@@ -1,8 +1,8 @@
 package com.wedriveu.services.vehicle.control;
 
 import com.wedriveu.services.vehicle.entity.Vehicle;
-import com.wedriveu.services.vehicle.finder.control.VehicleFinder;
-import com.wedriveu.services.vehicle.finder.control.VehicleFinderImpl;
+import com.wedriveu.services.vehicle.nearest.available.boundary.finder.control.VehicleFinderControl;
+import com.wedriveu.services.vehicle.nearest.boundary.finder.VehicleFinderImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class VehicleFinderImplTest {
 
     @Test
     public void listAllEligibleVehiclesOneItem() throws Exception {
-        VehicleFinder finder = new VehicleFinderImpl();
+        VehicleFinderControl finder = new VehicleFinderImpl();
         finder.listAllEligibleVehicles(new Position(10,10),
                 new Position(150,15), available, actual -> {
             assertTrue(actual.size() == 2);
@@ -43,7 +43,7 @@ public class VehicleFinderImplTest {
 
     @Test
     public void listAllEligibleVehiclesNoItem() throws Exception {
-        VehicleFinder finder = new VehicleFinderImpl();
+        VehicleFinderControl finder = new VehicleFinderImpl();
         finder.listAllEligibleVehicles(new Position(10000,10000),
                 new Position(10000,10000), available, actual -> {
             assertTrue(actual.isEmpty());
