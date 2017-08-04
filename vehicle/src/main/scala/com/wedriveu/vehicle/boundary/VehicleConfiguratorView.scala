@@ -6,12 +6,15 @@ import javax.swing._
 import com.wedriveu.vehicle.entity.VehicleCreator
 
 /**
-  * Created by Michele on 02/08/2017.
+  * @author Michele Donati 02/08/2017.
   */
-trait VehicleConfiguratorView {
 
+/** This trait models the UI of the vehicles configurator file.*/
+trait VehicleConfiguratorView {
+  /** This method renders the frame visible.*/
   def render(): Unit
 
+  /** This method does the shutdown of the system.*/
   def close(): Unit
 
 }
@@ -19,7 +22,18 @@ trait VehicleConfiguratorView {
  class VehicleConfiguratorViewImpl()
     extends JFrame("Vehicle Simulator") with VehicleConfiguratorView with ActionListener {
 
+    val valueUnderZero: Double = 0.0
+    val valueOverOneHundred: Double = 100.0
+    val errorInBatteryValueMessage: String = "Battery value should be setted between 0 and 100."
+    val errorInBatteryValueMessageTitle: String = "Battery not correctly setted error"
+    val errorInCanBreakMessage: String = "At least one option of 'Can Break?' checkbox should be selected."
+    val errorInCanBreakMessageTitle: String = "Break events not selected error"
+    val errorInCanStolenMessage: String = "At least one option of 'Can be Stolen?' checkbox should be selected."
+    val errorInCanStolenMessageTitle: String = "Stolen events not selected error"
+    val notCommandFoundError: String = "No Command Found"
+
     setLocationRelativeTo(null)
+    var vehiclesCounter: Int = 1
     val panel: JPanel = new JPanel()
     val parametersLabel: JLabel = new JLabel("Configuration Parameters")
     val batteryLabel: JLabel = new JLabel("Battery (%):")
@@ -109,27 +123,30 @@ trait VehicleConfiguratorView {
 
     override def actionPerformed(e: ActionEvent): Unit = e.getActionCommand match {
       case command if command == startCommand => if(batteryTextField.getText.isEmpty
-        || ((batteryTextField.getText.toDouble) < 0.0)
-        || ((batteryTextField.getText.toDouble) > 100.0) ){
-        JOptionPane.showMessageDialog(this,
-          "Battery value should be setted between 0 and 100.",
-          "Battery not correctly setted error",
+        || ((batteryTextField.getText.toDouble) < valueUnderZero)
+        || ((batteryTextField.getText.toDouble) > valueOverOneHundred) ){
+        JOptionPane.showMessageDialog(this, errorInBatteryValueMessage,
+          errorInBatteryValueMessageTitle,
           JOptionPane.ERROR_MESSAGE)
       }
       else if(!checkBoxYesBreak.isSelected && !checkBoxNoBreak.isSelected){
         JOptionPane.showMessageDialog(this,
-          "At least one option of 'Can Break?' checkbox should be selected.",
-          "Break events not selected error",
+          errorInCanBreakMessage,
+          errorInCanBreakMessageTitle,
           JOptionPane.ERROR_MESSAGE)
       }
       else if(!checkBoxYesStolen.isSelected && !checkBoxNoStolen.isSelected){
         JOptionPane.showMessageDialog(this,
-          "At least one option of 'Can be Stolen?' checkbox should be selected.",
-          "Stolen events not selected error",
+          errorInCanStolenMessage,
+          errorInCanStolenMessageTitle,
           JOptionPane.ERROR_MESSAGE)
       }
       else {
-        new VehicleCreator(batteryTextField.getText.toDouble, checkBoxYesBreak.isSelected, checkBoxNoBreak.isSelected)
+        new VehicleCreator(batteryTextField.getText.toDouble,
+          checkBoxYesBreak.isSelected,
+          checkBoxNoBreak.isSelected,
+          vehiclesCounter)
+        vehiclesCounter += 1
       }
       case command if command == yesCommandBreak => if(checkBoxNoBreak.isSelected) {
         checkBoxNoBreak.setSelected(false)
@@ -143,7 +160,7 @@ trait VehicleConfiguratorView {
       case command if command == noCommandStolen => if(checkBoxYesStolen.isSelected) {
         checkBoxYesStolen.setSelected(false)
       }
-      case _ => println("No Command Found")
+      case _ => println(notCommandFoundError)
     }
 
 }
