@@ -26,10 +26,10 @@ trait VehicleConfiguratorView {
     val valueOverOneHundred: Double = 100.0
     val speedMinorBound : Double = 20.0
     val speedMaxBound: Double = 100.0
-    val errorInSpeedValueMessage: String = "Speed value should be setted between 20 and 100 Km/h"
-    val errorInSpeedValueMessageTitle: String = "Speed not correctly setted error"
-    val errorInBatteryValueMessage: String = "Battery value should be setted between 0 and 100."
-    val errorInBatteryValueMessageTitle: String = "Battery not correctly setted error"
+    val errorInSpeedValueMessage: String = "Speed value should be set between 20 and 100 Km/h"
+    val errorInSpeedValueMessageTitle: String = "Speed not correctly set error"
+    val errorInBatteryValueMessage: String = "Battery value should be set between 0 and 100."
+    val errorInBatteryValueMessageTitle: String = "Battery not correctly set error"
     val errorInCanBreakMessage: String = "At least one option of 'Can Break?' checkbox should be selected."
     val errorInCanBreakMessageTitle: String = "Break events not selected error"
     val errorInCanStolenMessage: String = "At least one option of 'Can be Stolen?' checkbox should be selected."
