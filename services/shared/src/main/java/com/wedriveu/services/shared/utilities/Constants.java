@@ -7,6 +7,32 @@ package com.wedriveu.services.shared.utilities;
  */
 public interface Constants {
 
+    interface EventBusMessage {
+
+        interface Service {
+            String START = "service.start";
+            String STOP = "service.stop";
+        }
+
+    }
+
+    interface RabbitMQ {
+
+        interface ConfigKey {
+            String HOST = "host";
+            String PASSWORD = "password";
+        }
+        interface Exchanges {
+            String USER = "user";
+        }
+        interface RoutingKey {
+            String LOGIN = "user.request.login";
+        }
+
+    }
+
+    String UTF8_ENCODING = "UTF-8";
+
     String USERS_DATABASE_FILENAME = "users.json";
     String BOOKINGS_DATABASE_PATH = "services/booking/databaseFile/bookings.json";
     String VEHICLES_DATABASE_PATH = "services/vehicle/src/test/resources/vehicles.json";
