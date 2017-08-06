@@ -1,10 +1,10 @@
-package com.wedriveu.vehicle.entity
+package com.wedriveu.vehicle.control
 
 import java.math.BigInteger
 import java.security.SecureRandom
 
 import com.wedriveu.vehicle.boundary.{VehicleStopView, VehicleStopViewImpl}
-import com.wedriveu.vehicle.control.{VehicleControl, VehicleControlImpl}
+import com.wedriveu.vehicle.entity.Position
 
 /**
   * Created by Michele on 02/08/2017.

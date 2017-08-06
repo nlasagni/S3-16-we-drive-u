@@ -3,7 +3,7 @@ package com.wedriveu.vehicle.boundary
 import java.awt.event.{ActionEvent, ActionListener, WindowAdapter, WindowEvent}
 import javax.swing._
 
-import com.wedriveu.vehicle.entity.VehicleCreator
+import com.wedriveu.vehicle.control.VehicleCreator
 
 /**
   * @author Michele Donati 02/08/2017.
