@@ -1,30 +1,23 @@
 package com.wedriveu.services.authentication.boundary;
 
-import io.vertx.ext.web.RoutingContext;
-
-/**
- * Created by Michele on 17/07/2017.
- */
+import com.wedriveu.shared.model.LoginRequest;
+import com.wedriveu.shared.model.LoginResponse;
 
 /**
  * @author Michele Donati
+ * @author Nicola Lasagni on 04/08/2017
+ *
+ * This interface represents the Boundary of the Authentication micro-service.
+ * It allows users to login into the WeDriveU system through its API.
  */
 public interface AuthenticationService {
 
     /**
-     *  This method starts the service.
-     */
-    void startService();
-
-    /**
-     * This method stops the service.
-     */
-    void stopService();
-
-    /**
      * This method checks the credentials from user's input.
-     * @param routingContext Represents the context for the handling of a request in Vert.x-Web.
+     * @param loginRequest The request with which check the credentials.
+     * @return A {@linkplain LoginResponse} as a result of this check operation.
+     * @throws IllegalStateException If the service has not been started yet or if it has been stopped.
      */
-    void checkCredentials(RoutingContext routingContext);
+    LoginResponse checkCredentials(LoginRequest loginRequest) throws IllegalStateException;
 
 }
