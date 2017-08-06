@@ -2,6 +2,7 @@ package com.wedriveu.vehicle.control
 
 import com.rabbitmq.client._
 import com.wedriveu.services.shared.utilities.{Constants, Log}
+import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.{Position, SelfDrivingVehicle}
 import com.wedriveu.vehicle.simulation.{VehicleEventsObservables, VehicleEventsObservablesImpl}
 
@@ -32,15 +33,22 @@ trait VehicleControl {
 
 }
 
-class VehicleControlImpl(license: String, state: String, position: Position, battery: Double) extends VehicleControl {
-  val vehicleGiven : SelfDrivingVehicle = new SelfDrivingVehicle(license, state, position, battery)
+class VehicleControlImpl(license: String,
+                         state: String,
+                         position: Position,
+                         battery: Double,
+                         speed: Double,
+                         stopUi: VehicleStopView) extends VehicleControl {
+  val vehicleGiven : SelfDrivingVehicle = new SelfDrivingVehicle(license, state, position, battery, speed)
   val vehicleEventsObservables: VehicleEventsObservables = new VehicleEventsObservablesImpl
-  val vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(vehicleGiven)
+  val vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(vehicleGiven, stopUi)
   val received: String = " [x] Received '"
   val awaiting: String = " [x] Awaiting requests"
   var kilometersToDo: Double = .0
   var connection: Connection = null
   var channel: Channel = null
+
+  stopUi.setVehicleAssociated(this)
 
   def startVehicleEngine(): Unit = {
     new Thread(new Runnable {
