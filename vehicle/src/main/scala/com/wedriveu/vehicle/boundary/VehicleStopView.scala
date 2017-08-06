@@ -4,6 +4,7 @@ import java.awt.event.{ActionEvent, ActionListener}
 import javax.swing._
 
 import com.wedriveu.vehicle.control.VehicleControl
+import com.wedriveu.vehicle.shared.VehicleConstants
 
 /**
   * @author Michele Donati on 04/08/2017.
@@ -35,7 +36,7 @@ class VehicleStopViewImpl(vehicleIdentifier: Int)
   extends JFrame("Vehicle " + vehicleIdentifier) with VehicleStopView with ActionListener {
 
   val notCommandFoundError: String = "No Command Found"
-  val stateBroken: String = "broken"
+  val forceBrokenStatus: String = "Vehicle forced to be broken. Vehicle state is: "
 
   setDefaultCloseOperation(0)
   var vehicleAssociated: VehicleControl = null
@@ -87,8 +88,9 @@ class VehicleStopViewImpl(vehicleIdentifier: Int)
 
   override def actionPerformed(e: ActionEvent): Unit = e.getActionCommand match {
     case command if command == stopCommand =>
-      vehicleAssociated.getVehicle().state = stateBroken
-      //TODO Avviso il sistema che sono broken, nel senso che non viene più visto dal sistema (System.exit(0))
+      vehicleAssociated.getVehicle().state = VehicleConstants.stateBroken
+      writeMessageLog(forceBrokenStatus + vehicleAssociated.getVehicle().state)
+      //TODO Advice the system that i'm broken, no more seen by the system (System.exit(0))
 
     case _ => println(notCommandFoundError)
   }

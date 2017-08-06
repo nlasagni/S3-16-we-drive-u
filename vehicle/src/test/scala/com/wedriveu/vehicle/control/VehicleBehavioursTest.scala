@@ -11,6 +11,7 @@ import org.scalatest.{BeforeAndAfterEach, FunSuite}
 class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   var vehicleControl: VehicleControl = null
   val maxBattery: Double = 100.0
+  val speedTest: Double = 50.0
   val licenseFirstTest: String = "veicolo1"
   val stateFirstTest: String = "available"
   val licenseSecondTest: String = "veicolo"
@@ -37,7 +38,12 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
 
   override def beforeEach() {
     vehicleControl =
-      new VehicleControlImpl(licenseFirstTest, stateFirstTest, new Position(latitude, longitude), maxBattery, null)
+      new VehicleControlImpl(licenseFirstTest,
+        stateFirstTest,
+        new Position(latitude, longitude),
+        maxBattery,
+        speedTest,
+        null)
   }
 
   test("The vehicle position, after a random user position input, should be equals to it." +

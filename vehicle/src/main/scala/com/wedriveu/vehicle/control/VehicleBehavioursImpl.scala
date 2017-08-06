@@ -3,6 +3,7 @@ package com.wedriveu.vehicle.control
 import com.wedriveu.services.shared.utilities.Log
 import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.{Position, SelfDrivingVehicle}
+import com.wedriveu.vehicle.shared.VehicleConstants
 
 /**
   * @author Michele Donati on 31/07/2017.
@@ -28,21 +29,26 @@ trait VehicleBehaviours {
 class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: VehicleStopView) extends VehicleBehaviours {
    val zeroBattery: Double = 0.0
    val batteryThreshold: Double = 20.0
-   val stateRecharging: String = "recharging"
-   // This value indicates the battery consumed after 100 seconds of the vehicle journey. In 100 seconds, the vehicle,
-   // with an average speed of 50Km/h travels 1,4 km. The consume is 1% of battery per 10 Km, so the consume estimated
-   // is 0.14%.
-   val batteryToConsume: Double = 0.14
+   // This value is given by the mathematical transformation of the speed in Km/h to Km/10s
+   val kilometersInTenSecondsGivenSpeed: Double = selfDrivingVehicle.speed / 360
+   // This value indicates the battery consumed after 10 seconds of the vehicle journey. The vehicle consumes 1% of
+   // battery every 10Km.
+   val batteryToConsume: Double = kilometersInTenSecondsGivenSpeed / 10
    val newPositionIsTheSame: String = "The position given is the same, the vehicle doesn't move"
    val timeOfJourney: Long = 0
    val timeStep: Long = 10
-   val timeStepBatteryConsumed: Double = 100.0
    val conversionInSeconds: Double = 3600.0
+   val batteryValueLog: String = "Battery value = %"
+   val distanceInKmLog: String = "Distance in Km is:"
+   val timeInSecondsLog: String = "Time in seconds is:"
+   val newPositionLog: String = "New Position = "
+   val commaLog: String = " , "
+   val stateBroken: String = "broken"
+   val stateBrokenLog: String = "Vehicle is broken. His position is: "
 
    var deltaLat: Double = .0
    var deltaLon: Double = .0
    var notRecharging: Boolean = true
-   var timePassedForBattery: Double = .0
 
    private def drainBattery(): Unit = {
       if((selfDrivingVehicle.battery-batteryToConsume) <= zeroBattery) {
@@ -51,14 +57,13 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
       else {
         // Depends on vehicle speed
         selfDrivingVehicle.battery -= batteryToConsume
-        stopUi.writeMessageLog("Battery value = %" + selfDrivingVehicle.battery)
+        stopUi.writeMessageLog(batteryValueLog + selfDrivingVehicle.battery)
       }
       if(selfDrivingVehicle.battery <= batteryThreshold && notRecharging) {
-        selfDrivingVehicle.state = stateRecharging
+        selfDrivingVehicle.state = VehicleConstants.stateRecharging
         //This will be set to True when the vehicle recharges
         notRecharging = false
       }
-
    }
 
   //This algorithm calculates the distance in Km between the points, then estimates the journey time and calculates
@@ -71,12 +76,11 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
       Log.log(newPositionIsTheSame)
     }
     else {
-      timePassedForBattery = timeStepBatteryConsumed
       val distanceInKm: Double = selfDrivingVehicle.position.getDistanceInKm(position)
-      Log.log("Distance in Km is:" + distanceInKm)
+      stopUi.writeMessageLog(distanceInKmLog + distanceInKm)
       val estimatedJourneyTimeInSeconds: Long =
         ((distanceInKm / selfDrivingVehicle.speed) * conversionInSeconds).asInstanceOf[Long]
-      Log.log("Time in seconds is:" + estimatedJourneyTimeInSeconds)
+      stopUi.writeMessageLog(timeInSecondsLog + estimatedJourneyTimeInSeconds)
       for(time <- timeOfJourney to estimatedJourneyTimeInSeconds by timeStep) {
         deltaLat = position.latitude - selfDrivingVehicle.position.latitude
         deltaLon = position.longitude - selfDrivingVehicle.position.longitude
@@ -106,18 +110,15 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
     var latInter: Double = selfDrivingVehicle.position.latitude + deltaLat * elapsedTime
     var lonInter: Double = selfDrivingVehicle.position.longitude + deltaLon * elapsedTime
     selfDrivingVehicle.position = new Position(latInter, lonInter)
-    if(time != 0.0 && ((time / timePassedForBattery)%1) == 0.0) {
-      drainBattery()
-      timePassedForBattery += timeStepBatteryConsumed
-    }
-    stopUi.writeMessageLog("New Position = " + latInter + " , " + lonInter)
+    drainBattery()
+    stopUi.writeMessageLog(newPositionLog + latInter + commaLog + lonInter)
   }
 
   private def checkVehicleIsNotBroken(): Boolean = {
-    if (selfDrivingVehicle.state.equals("broken")) {
-      stopUi.writeMessageLog("Vehicle is broken. His position is: "
+    if (selfDrivingVehicle.state.equals(stateBroken)) {
+      stopUi.writeMessageLog(stateBrokenLog
         + selfDrivingVehicle.position.latitude
-        + ", "
+        + commaLog
         + selfDrivingVehicle.position.longitude)
       false
     }

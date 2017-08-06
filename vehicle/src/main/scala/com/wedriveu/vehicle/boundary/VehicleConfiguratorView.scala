@@ -24,6 +24,10 @@ trait VehicleConfiguratorView {
 
     val valueUnderZero: Double = 0.0
     val valueOverOneHundred: Double = 100.0
+    val speedMinorBound : Double = 20.0
+    val speedMaxBound: Double = 100.0
+    val errorInSpeedValueMessage: String = "Speed value should be setted between 20 and 100 Km/h"
+    val errorInSpeedValueMessageTitle: String = "Speed not correctly setted error"
     val errorInBatteryValueMessage: String = "Battery value should be setted between 0 and 100."
     val errorInBatteryValueMessageTitle: String = "Battery not correctly setted error"
     val errorInCanBreakMessage: String = "At least one option of 'Can Break?' checkbox should be selected."
@@ -40,8 +44,8 @@ trait VehicleConfiguratorView {
     val batteryTextField: JTextField = new JTextField()
     batteryTextField.setEditable(true)
     val speedLabel: JLabel = new JLabel("Average speed (Km/h):")
-    val speedTextField: JTextField = new JTextField("50")
-    speedTextField.setEditable(false)
+    val speedTextField: JTextField = new JTextField()
+    speedTextField.setEditable(true)
     val breakLabel: JLabel = new JLabel("Can Break?")
     val yesCommandBreak: String = "yes"
     val checkBoxYesBreak: JCheckBox = new JCheckBox(yesCommandBreak)
@@ -129,6 +133,13 @@ trait VehicleConfiguratorView {
           errorInBatteryValueMessageTitle,
           JOptionPane.ERROR_MESSAGE)
       }
+      else if(speedTextField.getText.isEmpty
+        || ((speedTextField.getText.toDouble) < speedMinorBound)
+        || ((speedTextField.getText.toDouble) > speedMaxBound)) {
+        JOptionPane.showMessageDialog(this, errorInSpeedValueMessage,
+          errorInSpeedValueMessageTitle,
+          JOptionPane.ERROR_MESSAGE)
+      }
       else if(!checkBoxYesBreak.isSelected && !checkBoxNoBreak.isSelected){
         JOptionPane.showMessageDialog(this,
           errorInCanBreakMessage,
@@ -142,7 +153,8 @@ trait VehicleConfiguratorView {
           JOptionPane.ERROR_MESSAGE)
       }
       else {
-        new VehicleCreator(batteryTextField.getText.toDouble,
+        new VehicleCreator(speedTextField.getText.toDouble,
+          batteryTextField.getText.toDouble,
           checkBoxYesBreak.isSelected,
           checkBoxNoBreak.isSelected,
           vehiclesCounter)

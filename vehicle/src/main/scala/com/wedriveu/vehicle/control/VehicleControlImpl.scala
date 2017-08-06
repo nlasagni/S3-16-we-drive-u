@@ -33,9 +33,13 @@ trait VehicleControl {
 
 }
 
-class VehicleControlImpl(license: String, state: String, position: Position, battery: Double, stopUi: VehicleStopView)
-  extends VehicleControl {
-  val vehicleGiven : SelfDrivingVehicle = new SelfDrivingVehicle(license, state, position, battery)
+class VehicleControlImpl(license: String,
+                         state: String,
+                         position: Position,
+                         battery: Double,
+                         speed: Double,
+                         stopUi: VehicleStopView) extends VehicleControl {
+  val vehicleGiven : SelfDrivingVehicle = new SelfDrivingVehicle(license, state, position, battery, speed)
   val vehicleEventsObservables: VehicleEventsObservables = new VehicleEventsObservablesImpl
   val vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(vehicleGiven, stopUi)
   val received: String = " [x] Received '"
