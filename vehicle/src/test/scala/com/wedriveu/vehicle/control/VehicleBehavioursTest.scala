@@ -21,7 +21,6 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   val nVehicles: Int = 3
   val minorBound: Int = 30
   val maxBound: Int = 101
-  val timeToSleep: Int = 5000
 
   //These two variables indicate the bounds for the random latitude and longitude calculation. The variation estimated
   //for containing the distance in 50 - 100 kilometers is like this (from 10.0,10.0 to 11.0,11.0 results in thousands
