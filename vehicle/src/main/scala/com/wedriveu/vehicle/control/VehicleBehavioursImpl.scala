@@ -1,11 +1,9 @@
 package com.wedriveu.vehicle.control
 
-import com.wedriveu.services.shared.utilities.Log
 import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.{Position, SelfDrivingVehicle}
 import com.wedriveu.vehicle.shared.VehicleConstants
-import com.wedriveu.vehicle.simulation
-import com.wedriveu.vehicle.simulation.{RechargingLatched, RechargingLatchedThread}
+import com.wedriveu.vehicle.simulation.{RechargingLatchManager, RechargingLatchManagerImpl}
 
 import scala.util.control.Breaks._
 
@@ -68,12 +66,12 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
    val startRechargeProcessLog: String = "Started the recharge process, 10 seconds until finish..."
    val endRechargeProcessLog: String = "Ended recharge process. Vehicle battery percentage = "
    val errorRechargeProcessLog: String = "Error in the recharge process, vehicle status = "
-   val rechargingLatch: RechargingLatched = new RechargingLatchedThread
 
    var deltaLat: Double = .0
    var deltaLon: Double = .0
    var userOnBoard: Boolean = false
    var debugging: Boolean = false
+   var rechargingLatchManager: RechargingLatchManager = null
 
   //This algorithm calculates the distance in Km between the points, then estimates the journey time and calculates
   //the coordinates reached during the journey.
@@ -193,7 +191,8 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
 
   private def simulateRecharging(): Unit = {
     stopUi.writeMessageLog(startRechargeProcessLog)
-    rechargingLatch.performRechargeSimulatorTask(selfDrivingVehicle)
+    rechargingLatchManager = new RechargingLatchManagerImpl(selfDrivingVehicle)
+    rechargingLatchManager.startLatchedThread()
     if(selfDrivingVehicle.battery < VehicleConstants.maxBatteryValue) {
       stopUi.writeMessageLog(errorRechargeProcessLog + selfDrivingVehicle.getSate())
     }
