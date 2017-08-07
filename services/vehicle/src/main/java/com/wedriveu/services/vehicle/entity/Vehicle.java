@@ -7,10 +7,10 @@ import java.util.Date;
 
 import static com.wedriveu.services.shared.utilities.Constants.*;
 
-
 /**
- * Created by Michele on 12/07/2017.
- * marco
+ * @author Marco Baldassarri
+ * @author Michele
+ * @since 02/08/2017
  */
 public class Vehicle {
 

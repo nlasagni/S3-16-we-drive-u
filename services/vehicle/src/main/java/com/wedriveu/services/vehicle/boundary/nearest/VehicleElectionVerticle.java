@@ -1,9 +1,9 @@
-package com.wedriveu.services.vehicle.nearest.boundary.election;
+package com.wedriveu.services.vehicle.boundary.nearest;
 
 import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
-import com.wedriveu.services.vehicle.app.Messages;
+import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -12,37 +12,33 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
-import static com.wedriveu.services.shared.utilities.Constants.USER_USERNAME;
+import static com.wedriveu.services.shared.utilities.Constants.BODY;
+import static com.wedriveu.services.shared.utilities.Constants.USERNAME;
 
 /**
- * Created by Marco on 04/08/2017.
+ * This Verticle uses RabbitMQ Vertx.x library to publish the chosen vehicle to the client.
+ *
+ * @author Marco Baldassarri
+ * @since 4/08/2017
  */
-public class VehicleElection extends AbstractVerticle {
+public class VehicleElectionVerticle extends AbstractVerticle {
 
-
-    private static final String STARTED = "Started RabbitMQ publisher for user response";
+    private static final String STARTED = Constants.STARTED + "for user response";
     private static final String EXCHANGE_TYPE = "direct";
     private static final String EXCHANGE_DECLARED_LOG = Constants.VEHICLE_SERVICE_EXCHANGE + " exchange declared";
     private static final String MESSAGE_PUBLISHED_LOG = "Publisher sent message to ";
     private static RabbitMQClient client;
-    private static String TAG = VehicleElection.class.getSimpleName();
-
+    private static String TAG = VehicleElectionVerticle.class.getSimpleName();
 
     @Override
     public void start(Future<Void> future) throws Exception {
-        vertx.eventBus().consumer(Messages.FinderConsumer.VEHICLE_RESPONSE, this::retreiveVehicle);
         vertx.eventBus().consumer(Messages.VehicleStore.GET_VEHICLE_COMPLETED, this::sendVehicleToUser);
         future.complete();
     }
 
-    private void retreiveVehicle(Message message) {
-        vertx.eventBus().send(Messages.VehicleElection.GET_VEHICLE, message.body());
-    }
-
     private void sendVehicleToUser(Message message) {
-
-        JsonObject dataToUser = (JsonObject) message.body();
-
+        JsonObject dataToUser = new JsonObject();
+        dataToUser.put(BODY, ((JsonObject) message.body()).encode());
         client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
         client.start(onStartCompleted -> {
                     if (onStartCompleted.succeeded()) {
@@ -52,7 +48,7 @@ public class VehicleElection extends AbstractVerticle {
                                 Log.info(TAG, EXCHANGE_DECLARED_LOG);
                                 publishToConsumer(Constants.VEHICLE_SERVICE_EXCHANGE,
                                         String.format(Constants.ROUTING_KEY_VEHICLE_RESPONSE,
-                                                dataToUser.getString(USER_USERNAME)), dataToUser);
+                                                dataToUser.getString(USERNAME)), dataToUser);
                             } else {
                                 Log.error(TAG, onDeclareCompleted.cause().getMessage(), onDeclareCompleted.cause());
                             }
@@ -63,7 +59,6 @@ public class VehicleElection extends AbstractVerticle {
                 }
         );
     }
-
 
     private void declareExchanges(Handler<AsyncResult<Void>> handler) {
         client.exchangeDeclare(Constants.VEHICLE_SERVICE_EXCHANGE,
@@ -79,6 +74,7 @@ public class VehicleElection extends AbstractVerticle {
         client.basicPublish(exchangeName, routingKey, dataToUser, onPublish -> {
             if (onPublish.succeeded()) {
                 Log.info(TAG, MESSAGE_PUBLISHED_LOG + exchangeName);
+                Log.info("DATA_TO_USER_FINAL", dataToUser.encodePrettily());
             } else {
                 Log.error(TAG, onPublish.cause().getMessage(), onPublish.cause());
             }

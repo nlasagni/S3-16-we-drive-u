@@ -9,7 +9,7 @@ public class Log {
 
     private static final String ERROR = "[ERROR] %s %s";
 
-    public static void log(String toLog){
+    public static void log(String toLog) {
         System.out.println(toLog);
     }
 

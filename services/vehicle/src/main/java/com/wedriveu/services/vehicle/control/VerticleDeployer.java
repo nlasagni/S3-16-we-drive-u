@@ -1,9 +1,7 @@
-package com.wedriveu.services.vehicle.nearest.control;
+package com.wedriveu.services.vehicle.control;
 
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.vehicle.boundary.nearest.VehicleElectionVerticle;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
-import com.wedriveu.services.vehicle.nearest.boundary.election.VehicleElection;
-import com.wedriveu.services.vehicle.nearest.boundary.finder.VehicleFinder;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -12,32 +10,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Deploys the whole verticle collection once. This has been created in order to avoid deploying the same verticles
+ * Deploys the whole Verticle collection once. This has been created in order to avoid deploying the same Verticles
  * multiple times at each user vehicle request.
- * Created by Marco on 04/08/2017.
+ *
+ * @author Marco Baldassarri
+ * @since 04/08/2017
  */
-public class Manager extends AbstractVerticle {
+public class VerticleDeployer extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
 
         List<Future> futures = new ArrayList<>();
         Future controlFuture = Future.future();
-        vertx.deployVerticle(new ControlImpl(), controlFuture.completer());
+        vertx.deployVerticle(new NearestControl(), controlFuture.completer());
         futures.add(controlFuture);
 
-
         Future electionFuture = Future.future();
-        vertx.deployVerticle(new VehicleElection(), electionFuture.completer());
+        vertx.deployVerticle(new VehicleElectionVerticle(), electionFuture.completer());
         futures.add(electionFuture);
 
         Future storeFuture = Future.future();
         vertx.deployVerticle(new VehicleStoreImpl(), storeFuture.completer());
         futures.add(storeFuture);
-
-/*        Future finderFuture = Future.future();
-        vertx.deployVerticle(new VehicleFinder(), finderFuture.completer());
-        futures.add(finderFuture);*/
 
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {
@@ -46,8 +41,6 @@ public class Manager extends AbstractVerticle {
                 startFuture.fail(completed.cause());
             }
         });
-
-
     }
 
 }

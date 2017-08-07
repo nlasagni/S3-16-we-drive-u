@@ -1,4 +1,4 @@
-package com.wedriveu.services.vehicle.entity;
+package com.wedriveu.services.shared.rabbitmq.nearest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,26 +9,20 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
  */
 public class VehicleResponse {
 
-
-
     @JsonProperty(CAR_LICENCE_PLATE)
     private String licencePlate;
 
     @JsonProperty(ELIGIBLE)
     private boolean eligible;
 
-    @JsonProperty(USER_USERNAME)
+    @JsonProperty(USERNAME)
     private String username;
 
     @JsonProperty(DISTANCE_TO_USER)
-    private String distanceToUser;
-
-    @JsonProperty(TRIP_DISTANCE)
-    private double tripDistance;
+    private double distanceToUser;
 
     @JsonProperty(VEHICLE_SPEED)
     private double vehicleSpeed;
-
 
 
     public double getVehicleSpeed() {
@@ -39,20 +33,12 @@ public class VehicleResponse {
         this.vehicleSpeed = vehicleSpeed;
     }
 
-    public String getDistanceToUser() {
+    public double getDistanceToUser() {
         return distanceToUser;
     }
 
-    public void setDistanceToUser(String distanceToUser) {
+    public void setDistanceToUser(double distanceToUser) {
         this.distanceToUser = distanceToUser;
-    }
-
-    public double getTripDistance() {
-        return tripDistance;
-    }
-
-    public void setTripDistance(double tripDistance) {
-        this.tripDistance = tripDistance;
     }
 
     public String getUsername() {
@@ -77,6 +63,17 @@ public class VehicleResponse {
 
     public void setEligible(boolean eligible) {
         this.eligible = eligible;
+    }
+
+    @Override
+    public String toString() {
+        return "VehicleResponse{" +
+                "licencePlate='" + licencePlate + '\'' +
+                ", eligible=" + eligible +
+                ", username='" + username + '\'' +
+                ", distanceToUser=" + distanceToUser +
+                ", vehicleSpeed=" + vehicleSpeed +
+                '}';
     }
 
 }

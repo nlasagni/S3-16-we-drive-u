@@ -25,7 +25,6 @@ public interface Constants {
     String RABBITMQ_SERVER_HOST = "uniboguys.duckdns.org";
     String RABBITMQ_SERVER_PASSWORD = "FmzevdBBmpcdvPHLDJQR";
     int RABBITMQ_SERVER_PORT = 5672;
-    int RABBITMQ_SERVER_TIMEOUT = 60;
     String UTF = "UTF-8";
 
 
@@ -33,18 +32,12 @@ public interface Constants {
     double MAXIMUM_DISTANCE_TO_RECHARGE = 20;
     double ESTIMATED_KILOMETERS_PER_PERCENTAGE = 10;
     String VEHICLE_TO_SERVICE = "ToService";
-    String REQUEST_CAN_DO_JOURNEY = "Requesting if journey can be done";
-
-    int FIRST_CHOSEN_ELIGIBLE_VEHICLE = 0;
 
     // Vehicle Jackson parameters
     String CAR_LICENCE_PLATE = "carLicencePlate";
     String STATE = "state";
     String POSITION = "position";
     String LAST_UPDATE = "lastUpdate";
-    String ELECTED_VEHICLE = "elected-vehicle";
-    String PICK_UP_TIME = "pickup-time";
-    String ARRIVE_AT_DESTINATION_TIME = "arrive-destination-time";
 
     // Services RabbitMQ
     String SERVICE_QUEUE_BASE_NAME = "service";
@@ -58,22 +51,24 @@ public interface Constants {
     String EVENT_BUS_AVAILABLE_ADDRESS = "service.vehicle.eventbus";
     String EVENT_BUS_FINDER_ADDRESS = "finder.vehicle.eventbus";
     String CONSUMER_VEHICLE_SERVICE = "vehicle";
-    String ROUTING_KEY_VEHICLE = "vehicle.nearest.%s";
+    String ROUTING_KEY_VEHICLE_REQUEST = "vehicle.request.nearest";
     String ROUTING_KEY_VEHICLE_RESPONSE = "vehicle.response.nearest.%s";
     String ROUTING_KEY_CAN_DRIVE = "vehicle.request.candrive.%s";
     String ROUTING_KEY_CAN_DRIVE_RESPONSE = "vehicle.response.candrive.%s";
 
 
-    String AVAILABLE_VEHICLES = "available-vehicles";
-    String USER_LATITUDE = "user-latitude";
-    String USER_LONGITUDE = "user-longitude";
-    String DESTINATION_LATITUDE = "destination-latitude";
-    String DESTINATION_LONGITUDE = "destination-longitude";
-    String USER_USERNAME = "user-username";
+    String BODY = "body";
+    String USER_POSITION = "userPosition";
+    String DESTINATION_POSITION = "destinationPosition";
     String ELIGIBLE = "eligible";
-    String ELIGIBLE_VEHICLE_LIST = "eligible-vehicle-list";
-
-    String TRIP_DISTANCE =  "trip-distance";
-    String DISTANCE_TO_USER = "distance-to-user";
+    String STATUS_AVAILABLE = "available";
+    String ELIGIBLE_VEHICLE_LIST = "eligibleVehicleList";
+    String TRIP_DISTANCE = "tripDistance";
+    String DISTANCE_TO_USER = "distanceToUser";
     String VEHICLE_SPEED = "speed";
+
+    String MESSAGE_PUBLISHED_LOG = "Publisher sent message to ";
+    String EXCHANGE_TYPE = "direct";
+    String STARTED = "Started RabbitMQ publisher for ";
+    int ZERO = 0;
 }

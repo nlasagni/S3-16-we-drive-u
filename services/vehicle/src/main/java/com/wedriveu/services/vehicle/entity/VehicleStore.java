@@ -7,9 +7,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * This inteface models the <em>com.wedriveu.services.vehicle.entity.Vehicle' database domain</em>.
+ *
  * @author Michele Donati
  * @author Marco Baldassarri
- * This inteface models the <em>com.wedriveu.services.vehicle.entity.Vehicle' database domain</em>.
  */
 public interface VehicleStore {
 

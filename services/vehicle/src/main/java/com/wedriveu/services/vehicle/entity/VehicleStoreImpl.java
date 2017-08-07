@@ -6,13 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.Position;
-import com.wedriveu.services.shared.utilities.PositionUtils;
-import com.wedriveu.services.vehicle.app.Messages;
+import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import java.io.File;
@@ -21,9 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.wedriveu.services.shared.utilities.Constants.USER_LATITUDE;
-import static com.wedriveu.services.shared.utilities.Constants.USER_LONGITUDE;
-import static io.vertx.core.json.JsonObject.mapFrom;
+import static com.wedriveu.services.shared.utilities.Constants.STATUS_AVAILABLE;
 
 /**
  * Created by Michele on 12/07/2017.
@@ -38,7 +35,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     public void start(Future<Void> future) throws Exception {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.NearestControl.AVAILABLE_REQUEST, this::getAllAvailableVehiclesInRange);
-        eventBus.consumer(Messages.VehicleElection.GET_VEHICLE, this::getVehicle);
+        eventBus.consumer(Messages.NearestControl.GET_VEHICLE, this::getVehicle);
         createVehiclesFile();
         future.complete();
     }
@@ -77,37 +74,32 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         writeJsonVehicleFile((ArrayList<Vehicle>) vehicles);
     }
 
-    //1
+
     @Override
     public void getAllAvailableVehiclesInRange(Message message) {
-        JsonObject userData = new JsonObject();
-        Position userPosition = new Position();
-        userPosition.setLatitude(Double.parseDouble(userData.getString(USER_LATITUDE)));
-        userPosition.setLongitude(Double.parseDouble(userData.getString(USER_LONGITUDE)));
+        UserRequest userData = ((JsonObject) message.body()).mapTo(UserRequest.class);
+        Position userPosition = userData.getUserPosition();
         List<Vehicle> vehicles = getVehicleList();
-        JsonArray jsonArray = new JsonArray();
+        List<Vehicle> availableVehicles = new ArrayList<>(vehicles.size());
         for (Vehicle vehicle : vehicles) {
-            if (vehicle.getState().equals("available") && PositionUtils.isInRange(userPosition, vehicle.getPosition())) {
-                jsonArray.add(mapFrom(vehicle));
+            // && PositionUtils.isInRange(userPosition, vehicle.getPosition())
+            if (vehicle.getState().equals(STATUS_AVAILABLE)) {
+                availableVehicles.add(vehicle);
             }
         }
-        eventBus.send(Messages.VehicleStore.AVAILABLE_COMPLETED, jsonArray);
+        userData.setVehicleList(availableVehicles);
+
+        eventBus.send(Messages.VehicleStore.AVAILABLE_COMPLETED, new JsonObject().mapFrom(userData));
     }
 
-    //2
+
     @Override
     public void getVehicle(Message message) {
         List<Vehicle> vehicles = getVehicleList();
         JsonObject vehicleData = (JsonObject) message.body();
         String carLicencePlate = vehicleData.getString(Constants.CAR_LICENCE_PLATE);
-        /*
-        after this the object should contain vehicle, pickuptime, arriveatdestinationtime, username
-        * */
-
-        Vehicle vehicle = getRequestedVehicle(vehicles, carLicencePlate);
-        vehicleData.remove(Constants.CAR_LICENCE_PLATE);
-        vehicleData.put(Constants.ELECTED_VEHICLE, vehicle);
-        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED, vehicleData);
+        JsonObject response = vehicleData.mapFrom(getRequestedVehicle(vehicles, carLicencePlate));
+        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED, response);
     }
 
     @Override

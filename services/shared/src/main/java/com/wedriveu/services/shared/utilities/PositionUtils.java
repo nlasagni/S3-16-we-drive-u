@@ -1,7 +1,5 @@
 package com.wedriveu.services.shared.utilities;
 
-import java.util.List;
-
 /**
  * Created by Marco on 04/08/2017.
  */
