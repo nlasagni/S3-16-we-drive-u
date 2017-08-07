@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import com.wedriveu.services.shared.entity.*;
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
+import com.wedriveu.services.shared.entity.VehicleCounter;
 import com.wedriveu.services.shared.utilities.Log;
+
 
 /**
  * @author Stefano Bernagozzi
@@ -85,5 +88,16 @@ public class AnalyticsStoreImpl implements AnalyticsStore{
         } catch (Exception e) {
             Log.error(TAG, CLEAR_ERROR, e);
         }
+    }
+
+    @Override
+    public VehicleCounter getVehicleCounter() {
+        try {
+            VehiclesCounterAlgorithm vehiclesCounterAlgorithm = new VehiclesCounterAlgorithm();
+            return vehiclesCounterAlgorithm.vehicleCounter(storeStrategy.getEntities());
+        } catch (Exception e) {
+            Log.error(TAG, CLEAR_ERROR, e);
+        }
+        return null;
     }
 }
