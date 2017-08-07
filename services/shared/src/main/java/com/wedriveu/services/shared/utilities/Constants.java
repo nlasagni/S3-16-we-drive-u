@@ -34,7 +34,7 @@ public interface Constants {
     String VEHICLE_TO_SERVICE = "ToService";
 
     // Vehicle Jackson parameters
-    String CAR_LICENCE_PLATE = "carLicencePlate";
+    String CAR_LICENCE_PLATE = "licencePlate";
     String STATE = "state";
     String POSITION = "position";
     String LAST_UPDATE = "lastUpdate";
@@ -51,8 +51,8 @@ public interface Constants {
     String EVENT_BUS_AVAILABLE_ADDRESS = "service.vehicle.eventbus";
     String EVENT_BUS_FINDER_ADDRESS = "finder.vehicle.eventbus";
     String CONSUMER_VEHICLE_SERVICE = "vehicle";
-    String ROUTING_KEY_VEHICLE_REQUEST = "vehicle.request.nearest";
-    String ROUTING_KEY_VEHICLE_RESPONSE = "vehicle.response.nearest.%s";
+    String ROUTING_KEY_VEHICLE_REQUEST = "vehicle.request.com.wedriveu.services.shared.rabbitmq.nearest";
+    String ROUTING_KEY_VEHICLE_RESPONSE = "vehicle.response.com.wedriveu.services.shared.rabbitmq.nearest.%s";
     String ROUTING_KEY_CAN_DRIVE = "vehicle.request.candrive.%s";
     String ROUTING_KEY_CAN_DRIVE_RESPONSE = "vehicle.response.candrive.%s";
 
@@ -60,12 +60,9 @@ public interface Constants {
     String BODY = "body";
     String USER_POSITION = "userPosition";
     String DESTINATION_POSITION = "destinationPosition";
-    String ELIGIBLE = "eligible";
     String STATUS_AVAILABLE = "available";
     String ELIGIBLE_VEHICLE_LIST = "eligibleVehicleList";
     String TRIP_DISTANCE = "tripDistance";
-    String DISTANCE_TO_USER = "distanceToUser";
-    String VEHICLE_SPEED = "speed";
 
     String MESSAGE_PUBLISHED_LOG = "Publisher sent message to ";
     String EXCHANGE_TYPE = "direct";

@@ -4,7 +4,6 @@ import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponse;
 import com.wedriveu.services.shared.utilities.Constants;
-import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.Position;
 import com.wedriveu.services.shared.utilities.PositionUtils;
 import com.wedriveu.services.vehicle.entity.Vehicle;
@@ -34,10 +33,7 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
  */
 public class VehicleFinderVerticle extends VerticleConsumer {
 
-    private static final String STARTED = Constants.STARTED + " eligible vehicle request";
-    private static final String EXCHANGE_DECLARED_LOG = Constants.VEHICLE_SERVICE_EXCHANGE + " exchange declared";
     private static RabbitMQClient client;
-    private static String TAG = VehicleFinderVerticle.class.getSimpleName();
     private String username;
     private List<Vehicle> availableVehicles;
     private Position userPosition;
@@ -60,7 +56,13 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     private void sendDataToVehicle(Message message) {
         prepareData((JsonObject) message.body());
         startVehicleCommunication();
-        startFinderConsumer();
+        try {
+            startFinderConsumer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 
     private void prepareData(JsonObject body) {
@@ -76,25 +78,22 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
         client.start(onStartCompleted -> {
                     if (onStartCompleted.succeeded()) {
-                        Log.info(TAG, STARTED);
                         declareExchanges(onDeclareCompleted -> {
                             if (onDeclareCompleted.succeeded()) {
-                                Log.info(TAG, EXCHANGE_DECLARED_LOG);
-                                for (int index = ZERO; index < availableVehicles.size(); index++) {
-                                    publishToConsumer(Constants.VEHICLE_SERVICE_EXCHANGE,
-                                            String.format(Constants.ROUTING_KEY_CAN_DRIVE,
-                                                    availableVehicles.get(index).getCarLicencePlate()),
-                                            index);
-                                }
-                            } else {
-                                Log.error(TAG, onDeclareCompleted.cause().getMessage(), onDeclareCompleted.cause());
+                                publishToMultipleRoutingKeys();
                             }
                         });
-                    } else {
-                        Log.error(TAG, onStartCompleted.cause().getMessage(), onStartCompleted.cause());
                     }
                 }
         );
+    }
+
+    private void publishToMultipleRoutingKeys() {
+        for (int index = ZERO; index < availableVehicles.size(); index++) {
+            publishToConsumer(Constants.VEHICLE_SERVICE_EXCHANGE,
+                    String.format(Constants.ROUTING_KEY_CAN_DRIVE,
+                            availableVehicles.get(index).getCarLicencePlate()), index);
+        }
     }
 
     private void declareExchanges(Handler<AsyncResult<Void>> handler) {
@@ -108,16 +107,9 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     private void publishToConsumer(String exchangeName,
                                    String routingKey,
                                    int index) {
-
         JsonObject requestJson = new JsonObject();
         requestJson.put(BODY, getRequestObject(index).encode());
-        client.basicPublish(exchangeName, routingKey, requestJson, onPublish -> {
-            if (onPublish.succeeded()) {
-                Log.info(TAG, MESSAGE_PUBLISHED_LOG + exchangeName);
-            } else {
-                Log.error(TAG, onPublish.cause().getMessage(), onPublish.cause());
-            }
-        });
+        client.basicPublish(exchangeName, routingKey, requestJson, null);
     }
 
     private JsonObject getRequestObject(int index) {
@@ -129,26 +121,10 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     }
 
 
-    private void startFinderConsumer() {
-        try {
-            startConsumer(onStart -> {
-                declareQueue(onQueue -> {
-                    if (onQueue.succeeded()) {
-                        bindQueueToExchange(Constants.VEHICLE_SERVICE_EXCHANGE,
-                                String.format(Constants.ROUTING_KEY_CAN_DRIVE_RESPONSE, username), onBind -> {
-                                    if (onBind.succeeded()) {
-                                        registerConsumer(Constants.EVENT_BUS_FINDER_ADDRESS);
-                                        basicConsume(Constants.EVENT_BUS_FINDER_ADDRESS);
-                                    }
-                                });
-                    }
-                });
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        }
+    private void startFinderConsumer() throws IOException, TimeoutException {
+        startConsumer(VEHICLE_SERVICE_EXCHANGE,
+                String.format(ROUTING_KEY_CAN_DRIVE_RESPONSE, username),
+                EVENT_BUS_FINDER_ADDRESS);
     }
 
     @Override

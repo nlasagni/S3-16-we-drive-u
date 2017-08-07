@@ -1,19 +1,12 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
-import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
-import com.wedriveu.services.shared.utilities.Constants;
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
-import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-import io.vertx.rabbitmq.RabbitMQClient;
 
-import static com.wedriveu.services.shared.utilities.Constants.BODY;
-import static com.wedriveu.services.shared.utilities.Constants.USERNAME;
+import static com.wedriveu.services.shared.utilities.Constants.*;
 
 /**
  * This Verticle uses RabbitMQ Vertx.x library to publish the chosen vehicle to the client.
@@ -21,64 +14,20 @@ import static com.wedriveu.services.shared.utilities.Constants.USERNAME;
  * @author Marco Baldassarri
  * @since 4/08/2017
  */
-public class VehicleElectionVerticle extends AbstractVerticle {
-
-    private static final String STARTED = Constants.STARTED + "for user response";
-    private static final String EXCHANGE_TYPE = "direct";
-    private static final String EXCHANGE_DECLARED_LOG = Constants.VEHICLE_SERVICE_EXCHANGE + " exchange declared";
-    private static final String MESSAGE_PUBLISHED_LOG = "Publisher sent message to ";
-    private static RabbitMQClient client;
-    private static String TAG = VehicleElectionVerticle.class.getSimpleName();
+public class VehicleElectionVerticle extends VerticlePublisher {
 
     @Override
     public void start(Future<Void> future) throws Exception {
+        super.start(future);
         vertx.eventBus().consumer(Messages.VehicleStore.GET_VEHICLE_COMPLETED, this::sendVehicleToUser);
-        future.complete();
     }
 
     private void sendVehicleToUser(Message message) {
         JsonObject dataToUser = new JsonObject();
         dataToUser.put(BODY, ((JsonObject) message.body()).encode());
-        client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
-        client.start(onStartCompleted -> {
-                    if (onStartCompleted.succeeded()) {
-                        Log.info(TAG, STARTED);
-                        declareExchanges(onDeclareCompleted -> {
-                            if (onDeclareCompleted.succeeded()) {
-                                Log.info(TAG, EXCHANGE_DECLARED_LOG);
-                                publishToConsumer(Constants.VEHICLE_SERVICE_EXCHANGE,
-                                        String.format(Constants.ROUTING_KEY_VEHICLE_RESPONSE,
-                                                dataToUser.getString(USERNAME)), dataToUser);
-                            } else {
-                                Log.error(TAG, onDeclareCompleted.cause().getMessage(), onDeclareCompleted.cause());
-                            }
-                        });
-                    } else {
-                        Log.error(TAG, onStartCompleted.cause().getMessage(), onStartCompleted.cause());
-                    }
-                }
-        );
-    }
-
-    private void declareExchanges(Handler<AsyncResult<Void>> handler) {
-        client.exchangeDeclare(Constants.VEHICLE_SERVICE_EXCHANGE,
-                EXCHANGE_TYPE,
-                false,
-                false,
-                handler);
-    }
-
-    private void publishToConsumer(String exchangeName,
-                                   String routingKey,
-                                   JsonObject dataToUser) {
-        client.basicPublish(exchangeName, routingKey, dataToUser, onPublish -> {
-            if (onPublish.succeeded()) {
-                Log.info(TAG, MESSAGE_PUBLISHED_LOG + exchangeName);
-                Log.info("DATA_TO_USER_FINAL", dataToUser.encodePrettily());
-            } else {
-                Log.error(TAG, onPublish.cause().getMessage(), onPublish.cause());
-            }
-        });
+        publish(VEHICLE_SERVICE_EXCHANGE,
+                String.format(ROUTING_KEY_VEHICLE_RESPONSE, dataToUser.getString(USERNAME)),
+                dataToUser);
     }
 
 }

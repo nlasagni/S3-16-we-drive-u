@@ -1,6 +1,5 @@
 package com.wedriveu.services.shared.entity;
 
-import com.wedriveu.services.shared.utilities.Constants;
 import org.junit.Before;
 import org.junit.Test;
 

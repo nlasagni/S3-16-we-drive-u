@@ -14,6 +14,10 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
  */
 public class Vehicle {
 
+    public static final String STATUS_STARTED = "started";
+    public static final String STATUS_PROCESSING = "processing";
+    public static final String STATUS_COMPLETED = "completed";
+
     @JsonProperty(CAR_LICENCE_PLATE)
     private String carLicencePlate;
     @JsonProperty(STATE)
@@ -23,10 +27,10 @@ public class Vehicle {
     @JsonProperty(LAST_UPDATE)
     private Date lastUpdate;
 
-    public Vehicle(@JsonProperty(CAR_LICENCE_PLATE) String carLicencePlate,
-                   @JsonProperty(STATE) String state,
-                   @JsonProperty(POSITION) Position position,
-                   @JsonProperty(LAST_UPDATE) Date lastUpdate) {
+    public Vehicle(String carLicencePlate,
+                   String state,
+                   Position position,
+                   Date lastUpdate) {
         this.carLicencePlate = carLicencePlate;
         this.state = state;
         this.position = position;

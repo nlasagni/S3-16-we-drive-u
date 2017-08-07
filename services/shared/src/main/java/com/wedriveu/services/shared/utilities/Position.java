@@ -15,8 +15,8 @@ public class Position {
     public Position() {
     }
 
-    public Position(@JsonProperty("latitude") double latitude,
-                    @JsonProperty("longitude") double longitude) {
+    public Position(double latitude,
+                    double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }

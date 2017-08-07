@@ -2,8 +2,6 @@ package com.wedriveu.services.vehicle.control;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponse;
-import com.wedriveu.services.shared.utilities.Constants;
-import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.AbstractVerticle;
@@ -44,7 +42,6 @@ public class NearestControl extends AbstractVerticle {
 
     private void handleVehicleResponses(Message message) {
         JsonArray eligibleVehicles = (JsonArray) message.body();
-        Log.info("ELIGIBLE_VEHICLES", eligibleVehicles.encodePrettily());
         responseList = new ArrayList<>(eligibleVehicles.size());
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -54,7 +51,6 @@ public class NearestControl extends AbstractVerticle {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.info("RESPONSE_LIST", responseList.toString());
         vertx.eventBus().send(Messages.NearestControl.GET_VEHICLE, getBestVehicle(responseList));
     }
 
@@ -62,7 +58,6 @@ public class NearestControl extends AbstractVerticle {
         responseList.sort(Comparator.comparing(v ->
                 v.getDistanceToUser() / v.getVehicleSpeed()
         ));
-        Log.info("CHOSEN", responseList.get(FIRST_CHOSEN_ELIGIBLE_VEHICLE).toString());
         VehicleResponse chosen = responseList.get(ZERO);
         JsonObject bestVehicleJson = new JsonObject();
         bestVehicleJson.put(USERNAME, chosen.getUsername());
@@ -73,12 +68,9 @@ public class NearestControl extends AbstractVerticle {
 
     private void availableVehiclesCompleted(Message message) {
         JsonObject userData = (JsonObject) message.body();
-        Log.info("USER_CONSUMER_DATA", userData.encodePrettily());
         vertx.deployVerticle(new VehicleFinderVerticle(), completed -> {
             if (completed.succeeded()) {
                 this.eventBus.send(Messages.NearestControl.DATA_TO_VEHICLE, userData);
-            } else {
-                Log.error(Constants.DEPLOY_ERROR, VehicleFinderVerticle.class.getSimpleName(), completed.cause());
             }
         });
     }

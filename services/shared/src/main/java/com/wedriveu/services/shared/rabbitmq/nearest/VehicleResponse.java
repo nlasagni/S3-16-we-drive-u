@@ -2,26 +2,24 @@ package com.wedriveu.services.shared.rabbitmq.nearest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
-
 /**
  * Created by Marco on 04/08/2017.
  */
 public class VehicleResponse {
 
-    @JsonProperty(CAR_LICENCE_PLATE)
+    @JsonProperty
     private String licencePlate;
 
-    @JsonProperty(ELIGIBLE)
+    @JsonProperty
     private boolean eligible;
 
-    @JsonProperty(USERNAME)
+    @JsonProperty
     private String username;
 
-    @JsonProperty(DISTANCE_TO_USER)
+    @JsonProperty
     private double distanceToUser;
 
-    @JsonProperty(VEHICLE_SPEED)
+    @JsonProperty
     private double vehicleSpeed;
 
 
