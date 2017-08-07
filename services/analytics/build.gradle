@@ -1,5 +1,15 @@
-apply plugin: 'java'
 apply plugin: 'scala'
+apply plugin: 'java'
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala', 'src/main/java']
+        }
+        java {
+            srcDirs = []
+        }
+    }
+}
 
 dependencies {
     compile project(path: ':services:shared')
