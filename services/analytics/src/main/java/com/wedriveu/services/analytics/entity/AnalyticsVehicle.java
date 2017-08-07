@@ -1,5 +1,8 @@
 package com.wedriveu.services.analytics.entity;
 
+/**
+ * @Author Stefano Bernagozzi.
+ */
 public class AnalyticsVehicle {
 
     private String licensePlate;
