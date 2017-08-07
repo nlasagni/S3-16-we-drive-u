@@ -4,18 +4,19 @@ import java.util.concurrent.locks.{Condition, ReentrantLock}
 
 
 /**
-  * Created by Michele on 28/07/2017.
+  * @author Michele Donati on 28/07/2017.
   */
+
 class SelfDrivingVehicle(var plate: String,
                          private var state: String,
                          var position: Position,
                          var battery: Double,
-                         var speed: Double) {
+                         var speed: Double){
 
   val mutex: ReentrantLock = new ReentrantLock()
   val barrier: Condition = mutex.newCondition()
 
-  def getState(): String = {
+  def getSate(): String = {
     try {
       mutex.lock()
       return state
@@ -38,5 +39,7 @@ class SelfDrivingVehicle(var plate: String,
   }
 
 }
+
+
 
 
