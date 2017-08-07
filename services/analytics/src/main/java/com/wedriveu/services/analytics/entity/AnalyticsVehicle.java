@@ -3,7 +3,7 @@ package com.wedriveu.services.analytics.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * @Author Stefano Bernagozzi.
+ * @author Stefano Bernagozzi.
  */
 public class AnalyticsVehicle {
 

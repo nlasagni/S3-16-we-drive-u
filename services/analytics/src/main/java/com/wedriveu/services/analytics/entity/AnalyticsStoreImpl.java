@@ -9,7 +9,7 @@ import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
 import com.wedriveu.services.shared.utilities.Log;
 
 /**
- * @Author Stefano Bernagozzi
+ * @author Stefano Bernagozzi
  */
 
 public class AnalyticsStoreImpl implements AnalyticsStore{

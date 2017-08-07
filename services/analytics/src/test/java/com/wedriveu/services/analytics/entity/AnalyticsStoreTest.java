@@ -12,7 +12,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 /**
- * @Author Stefano Bernagozzi
+ * @author Stefano Bernagozzi
  */
 
 

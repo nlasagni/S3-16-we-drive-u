@@ -7,7 +7,7 @@ jar {
     destinationDir = new File("$releasesServiceFolder")
     manifest {
         attributes 'Implementation-Version': project.version,
-        'Main-Class': 'com.wedriveu.services.authentication.Main'
+        'Main-Class': 'com.wedriveu.services.analytics.Main'
     }
     from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
 }

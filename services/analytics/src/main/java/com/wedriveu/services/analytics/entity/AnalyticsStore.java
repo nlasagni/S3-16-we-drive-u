@@ -36,7 +36,6 @@ public interface AnalyticsStore {
      * clear the database
      */
     void clear();
-
 }
 
 
