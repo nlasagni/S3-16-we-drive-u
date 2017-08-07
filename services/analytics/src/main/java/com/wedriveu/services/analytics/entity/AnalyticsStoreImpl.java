@@ -46,16 +46,12 @@ public class AnalyticsStoreImpl implements AnalyticsStore{
         }
         try {
             List<AnalyticsVehicle> vehicles = storeStrategy.getEntities();
-            Optional<AnalyticsVehicle> emptyVehicle = Optional.empty();
             if (vehicles == null) {
                 vehicles = new ArrayList<>();
             }
-            if (vehicles.stream().filter(b -> b.getLicensePlate().equals(licensePlate)).findFirst() != emptyVehicle) {
-                vehicles.add(new AnalyticsVehicle(licensePlate, status));
-                storeStrategy.storeEntities(vehicles);
-                return true;
-            }
-            return false;
+            vehicles.add(new AnalyticsVehicle(licensePlate, status));
+            storeStrategy.storeEntities(vehicles);
+            return true;
         } catch (Exception e) {
             Log.error(TAG, ADD_ERROR, e);
         }
