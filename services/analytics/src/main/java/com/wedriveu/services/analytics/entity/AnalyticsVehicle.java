@@ -1,6 +1,7 @@
 package com.wedriveu.services.analytics.entity;
 
 public class AnalyticsVehicle {
+
     private String licensePlate;
     private String status;
 
@@ -20,4 +21,5 @@ public class AnalyticsVehicle {
     public String getStatus() {
         return status;
     }
+
 }
