@@ -2,15 +2,15 @@ package com.wedriveu.vehicle.control
 
 import java.util.concurrent.ThreadLocalRandom
 
+import com.wedriveu.vehicle.boundary.VehicleStopViewImpl
 import com.wedriveu.vehicle.entity.Position
+import com.wedriveu.vehicle.shared.VehicleConstants
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
 
 /**
   * Created by Michele on 31/07/2017.
   */
 class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
-  var vehicleControl: VehicleControl = null
-  val maxBattery: Double = 100.0
   val speedTest: Double = 50.0
   val licenseFirstTest: String = "veicolo1"
   val stateFirstTest: String = "available"
@@ -18,10 +18,10 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   val stateSecondTest: String = "available"
   val latitude: Double = 44.1454528
   val longitude: Double = 12.2474513
-  val timeToSleep: Int = 5000
   val nVehicles: Int = 3
   val minorBound: Int = 30
   val maxBound: Int = 101
+  val timeToSleep: Int = 5000
 
   //These two variables indicate the bounds for the random latitude and longitude calculation. The variation estimated
   //for containing the distance in 50 - 100 kilometers is like this (from 10.0,10.0 to 11.0,11.0 results in thousands
@@ -36,39 +36,44 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   var randomLatitudeDestination: Double = .0
   var randomLongitudeDestination: Double = .0
 
-  override def beforeEach() {
-    vehicleControl =
+  override def beforeEach() {}
+
+  test("The vehicle position, after a random destination position input, should be equals to it") {
+    val vehicleControl: VehicleControl =
       new VehicleControlImpl(licenseFirstTest,
         stateFirstTest,
         new Position(latitude, longitude),
-        maxBattery,
+        VehicleConstants.maxBatteryValue,
         speedTest,
-        null)
-  }
-
-  test("The vehicle position, after a random user position input, should be equals to it." +
-    "After that, the vehicle position, after a random destination position input, should be equals to id") {
-    randomLatitudeUser = ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
-    randomLongitudeUser = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
+        new VehicleStopViewImpl(1),
+        true)
+    val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), true)
     randomLatitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
     randomLongitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
-    vehicleControl.changePositionUponBooking(new Position(randomLatitudeUser, randomLongitudeUser),
-      new Position(randomLatitudeDestination,randomLongitudeDestination ))
-    Thread.sleep(timeToSleep)
-    assert(vehicleControl.getVehicle().position.latitude == randomLatitudeDestination)
-    assert(vehicleControl.getVehicle().position.longitude == randomLongitudeDestination)
-    assert(vehicleControl.getVehicle().battery < maxBattery)
-  }
-
-  test("The vehicle position, after a random destination position input, should be equals to it") {
-    randomLatitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
-    randomLongitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
-    var vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), null)
     vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination,randomLongitudeDestination))
-    Thread.sleep(timeToSleep)
-    assert(vehicleControl.getVehicle().position.latitude == randomLatitudeDestination)
-    assert(vehicleControl.getVehicle().position.longitude == randomLongitudeDestination)
-    assert(vehicleControl.getVehicle().battery < maxBattery)
+    while(!(vehicleBehaviours.getDebuggingVar())){}
+      assert(vehicleControl.getVehicle().position.latitude == randomLatitudeDestination
+        && vehicleControl.getVehicle().position.longitude == randomLongitudeDestination
+        && vehicleControl.getVehicle().battery < VehicleConstants.maxBatteryValue)
+  }
+
+  test("The vehicle battery, after 10 seconds of recharging must be 100.0") {
+    val vehicleControl: VehicleControl =
+      new VehicleControlImpl(licenseFirstTest,
+        stateFirstTest,
+        new Position(latitude, longitude),
+        VehicleConstants.maxBatteryValue,
+        speedTest,
+        new VehicleStopViewImpl(1),
+        false)
+    val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), false)
+    randomLatitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
+    randomLongitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
+    vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination,randomLongitudeDestination))
+    vehicleBehaviours.goToRecharge()
+    while(!(vehicleBehaviours.getDebuggingVar())){}
+    assert(vehicleControl.getVehicle().battery == VehicleConstants.maxBatteryValue)
+    assert(vehicleControl.getVehicle().getSate().equals(VehicleConstants.stateAvailable))
   }
 
 }
