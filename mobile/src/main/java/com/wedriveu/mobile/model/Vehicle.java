@@ -1,5 +1,7 @@
 package com.wedriveu.mobile.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Describes a Vehicle
  *
@@ -15,12 +17,12 @@ public class Vehicle {
     private String arriveAtUserTime;
     private String arriveAtDestinationTime;
 
-    public Vehicle(String licencePlate,
-                   String vehicleName,
-                   String description,
-                   String pictureURL,
-                   String arriveAtUserTime,
-                   String arriveAtDestinationTime) {
+    public Vehicle(@JsonProperty("licencePlate") String licencePlate,
+                   @JsonProperty("vehicleName") String vehicleName,
+                   @JsonProperty("description") String description,
+                   @JsonProperty("pictureURL") String pictureURL,
+                   @JsonProperty("arriveAtUserTime") String arriveAtUserTime,
+                   @JsonProperty("arriveAtDestinationTime") String arriveAtDestinationTime) {
         this.licencePlate = licencePlate;
         this.vehicleName = vehicleName;
         this.description = description;

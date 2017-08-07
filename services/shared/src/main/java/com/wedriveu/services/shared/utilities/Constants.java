@@ -1,13 +1,15 @@
 package com.wedriveu.services.shared.utilities;
 
 /**
- * Created by Michele on 22/07/2017.
+ * @author Michele on 22/07/2017.
+ * @author Nicola Lasagni on 31/07/2017
  */
 public interface Constants {
 
     String USERS_DATABASE_FILENAME = "users.json";
     String BOOKINGS_DATABASE_PATH = "services/booking/databaseFile/bookings.json";
     String VEHICLES_DATABASE_PATH = "services/vehicle/src/test/resources/vehicles.json";
+    String BOOKING_DATABASE_FILE_NAME = "bookings.json";
 
     String USER_LOGIN = "/user/login";
     String USERNAME = "username";
@@ -22,7 +24,6 @@ public interface Constants {
     String SERVER_HOST = "uniboguys.duckdns.org";
     String SERVER_PASSWORD = "FmzevdBBmpcdvPHLDJQR";
     String UTF = "UTF-8";
-
 
     double RANGE = 20;
     double MAXIMUM_DISTANCE_TO_RECHARGE = 20;

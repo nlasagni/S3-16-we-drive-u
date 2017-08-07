@@ -129,6 +129,7 @@ freeline_project_description.json
 google-services.json
 latest-docs
 releases
-*.json
 store
+*.json
+
 /captures

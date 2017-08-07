@@ -1,145 +1,107 @@
 package com.wedriveu.services.booking.entity;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
 import com.wedriveu.services.shared.utilities.Log;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Created by Michele on 12/07/2017.
  */
 public class BookingStoreImpl implements BookingStore {
 
-    @Override
-    public void mapEntityToJson() {
-        Booking booking1 = createDummyObject(1,
-                 new Date(2017, 12, 29, 11, 23, 34),
-                "Nicola",
-                "MACCHINA1",
-                20.0,
-                12.1,
-                30.0,
-                31.1,
-                "started");
-        Booking booking2 = createDummyObject(2,
-                new Date(2017, 11, 28, 10, 22, 33),
-                "Marco",
-                "MACCHINA2",
-                19.9,
-                11.0,
-                29.9,
-                30.0,
-                "processing");
-        Booking booking3 = createDummyObject(3,
-                new Date(2017, 10, 27, 9, 21, 32),
-                "Stefano",
-                "MACCHINA3",
-                18.8,
-                10.9,
-                28.8,
-                29.9,
-                "complete");
-        Booking booking4 = createDummyObject(4,
-                new Date(2017, 9, 26, 8, 20, 31),
-                "Michele",
-                "MACCHINA4",
-                17.7,
-                9.8,
-                27.7,
-                28.8,
-                "complete");
+    private static final String TAG = BookingStoreImpl.class.getSimpleName();
+    private static final String ADD_ERROR = "Error while adding booking";
+    private static final String GET_ERROR = "Error while getting booking";
+    private static final String GET_BY_DATE_ERROR = "Error while getting bookings by date";
+    private static final String UPDATE_ERROR = "Error while updating booking";
+    private static final String CLEAR_ERROR = "Error while clearing store";
 
-        ArrayList<Booking> bookingListToJSon = new ArrayList<Booking>();
-        bookingListToJSon.add(booking1);
-        bookingListToJSon.add(booking2);
-        bookingListToJSon.add(booking3);
-        bookingListToJSon.add(booking4);
+    private EntityListStoreStrategy<Booking> storeStrategy;
 
-        writeJsonBookingsFile(bookingListToJSon);
+    public BookingStoreImpl(EntityListStoreStrategy<Booking> storeStrategy) {
+        this.storeStrategy = storeStrategy;
     }
 
     @Override
-    public Booking getBooking(int bookingId) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            List<Booking> bookings =
-                    mapper.readValue(new File(Constants.BOOKINGS_DATABASE_PATH), new TypeReference<List<Booking>>(){});
-            return getRequestedBooking(bookings, bookingId);
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public boolean addBooking(Booking booking) {
+        if (booking == null) {
+            return false;
         }
-
-        return null;
-    }
-
-    private void writeJsonBookingsFile(ArrayList<Booking> bookingListToJSon) {
-        ObjectMapper mapper = new ObjectMapper();
-
         try {
-            mapper.writeValue(new File(Constants.BOOKINGS_DATABASE_PATH), bookingListToJSon);
-            String jsonInString = mapper.writeValueAsString(bookingListToJSon);
-            Log.log(jsonInString);
-            jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bookingListToJSon);
-            Log.log(jsonInString);
-
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Booking getRequestedBooking(List<Booking> bookings, int bookingId) {
-        for (Booking booking : bookings) {
-            if(booking.getBookingID() == bookingId) {
-                Log.log("com.wedriveu.services.booking.entity.Booking found! -> User: " +
-                        booking.getUsername() +
-                        " Vehicle: " +
-                        booking.getCarLicencePlate() +
-                        " done in date: " +
-                        booking.getDate().toString());
-
-                return booking;
+            List<Booking> bookings = storeStrategy.getEntities();
+            if (bookings == null) {
+                bookings = new ArrayList<>();
             }
+            bookings.add(booking);
+            storeStrategy.storeEntities(bookings);
+            return true;
+        } catch (Exception e) {
+            Log.error(TAG, ADD_ERROR, e);
         }
-        Log.log("com.wedriveu.services.booking.entity.Booking not found, retry!");
-        return null;
+        return false;
     }
 
-    public Booking createDummyObject(int bookingID,
-                                     Date date,
-                                     String username,
-                                     String carLicencePlate,
-                                     Double latitudeDestination,
-                                     Double longitudeDestination,
-                                     Double latitudeSource,
-                                     Double longitudeSource,
-                                     String bookingState){
-        return new Booking(bookingID,
-                date,
-                username,
-                carLicencePlate,
-                latitudeDestination,
-                longitudeDestination,
-                latitudeSource,
-                longitudeSource,
-                bookingState);
+    @Override
+    public Optional<Booking> getBooking(int bookingId) {
+        try {
+            List<Booking> bookings = storeStrategy.getEntities();
+            Optional<Booking> booking = Optional.empty();
+            if (bookings != null) {
+                booking = bookings.stream().filter(b -> b.getId() == bookingId).findFirst();
+            }
+            return booking;
+        } catch (Exception e) {
+            Log.error(TAG, GET_ERROR, e);
+        }
+        return Optional.empty();
     }
 
+    @Override
+    public boolean updateBookingStatus(int bookingId, String bookingStatus) {
+        try {
+            List<Booking> bookings = storeStrategy.getEntities();
+            if (bookings != null && !bookings.isEmpty()) {
+                IntStream.range(0, bookings.size()).forEach(i -> {
+                    Booking booking = bookings.get(i);
+                    if (booking.getId() == bookingId) {
+                        booking.setBookingStatus(bookingStatus);
+                    }
+                });
+            }
+            storeStrategy.storeEntities(bookings);
+            return true;
+        } catch (Exception e) {
+            Log.error(TAG, UPDATE_ERROR, e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<Booking> getBookingsByDate(Date fromDate, Date toDate) {
+        try {
+            List<Booking> bookings = storeStrategy.getEntities();
+            return bookings.stream()
+                    .filter(b -> b.getDate().getTime() >= fromDate.getTime() && b.getDate().getTime() <= toDate.getTime())
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            Log.error(TAG, GET_BY_DATE_ERROR, e);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void clear() {
+        try {
+            storeStrategy.clear();
+        } catch (Exception e) {
+            Log.error(TAG, CLEAR_ERROR, e);
+        }
+    }
 
 }
