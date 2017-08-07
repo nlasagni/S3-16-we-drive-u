@@ -88,9 +88,9 @@ class VehicleStopViewImpl(vehicleIdentifier: Int)
 
   override def actionPerformed(e: ActionEvent): Unit = e.getActionCommand match {
     case command if command == stopCommand =>
-      vehicleAssociated.getVehicle().state = VehicleConstants.stateBroken
-      writeMessageLog(forceBrokenStatus + vehicleAssociated.getVehicle().state)
-      //TODO Advice the system that i'm broken, no more seen by the system (System.exit(0))
+      vehicleAssociated.getVehicle().setState(VehicleConstants.stateBroken)
+      writeMessageLog(forceBrokenStatus + vehicleAssociated.getVehicle().getSate())
+      //TODO Advice the service that i'm broken, no more seen by the system (System.exit(0))
 
     case _ => println(notCommandFoundError)
   }
