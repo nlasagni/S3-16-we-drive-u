@@ -18,7 +18,7 @@ class SelfDrivingVehicle(var plate: String,
   val mutex: ReentrantLock = new ReentrantLock()
   val barrier: Condition = mutex.newCondition()
 
-  def getSate(): String = {
+  def getState(): String = {
     try {
       mutex.lock()
       return state
