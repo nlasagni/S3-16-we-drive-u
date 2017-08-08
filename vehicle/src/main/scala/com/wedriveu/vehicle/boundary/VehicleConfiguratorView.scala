@@ -156,7 +156,7 @@ trait VehicleConfiguratorView {
         new VehicleCreator(speedTextField.getText.toDouble,
           batteryTextField.getText.toDouble,
           checkBoxYesBreak.isSelected,
-          checkBoxNoBreak.isSelected,
+          checkBoxYesStolen.isSelected,
           vehiclesCounter)
         vehiclesCounter += 1
       }

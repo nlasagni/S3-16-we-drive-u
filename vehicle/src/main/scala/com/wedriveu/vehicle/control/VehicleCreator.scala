@@ -10,7 +10,7 @@ import com.wedriveu.vehicle.shared.VehicleConstants
 /**
   * @author Michele Donati on 02/08/2017.
   */
-class VehicleCreator(speed: Double, battery: Double, doBreak: Boolean, doNotBreak: Boolean, vehiclesCounter: Int) {
+class VehicleCreator(speed: Double, battery: Double, doBreak: Boolean, doStolen: Boolean, vehiclesCounter: Int) {
   val randomNumber: SecureRandom = new SecureRandom()
   val randomPlate: String = randomLicensePlateGenerator()
   val initialState: String = VehicleConstants.stateAvailable
@@ -27,6 +27,12 @@ class VehicleCreator(speed: Double, battery: Double, doBreak: Boolean, doNotBrea
     new VehicleControlImpl(randomPlate, initialState, initialPosition, battery, speed, stopUi, false)
   newVehicle.startVehicleEngine()
   newVehicle.subscribeToMovementAndChangePositionEvents()
+  if(doBreak) {
+    newVehicle.subscribeToBrokenEvents()
+  }
+  if(doStolen) {
+    newVehicle.subscribeToStolenEvents()
+  }
 
   private def randomLicensePlateGenerator(): String = {
     new BigInteger(bitsOfPlate, randomNumber).toString(integersToString)

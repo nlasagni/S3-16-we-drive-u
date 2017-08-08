@@ -22,8 +22,14 @@ trait VehicleControl {
     */
   def getVehicle(): SelfDrivingVehicle
 
-  /** This methos permits, at configurator will, to pick up Movement and Position changes events.*/
+  /** This method permits, at configurator will, to pick up Movement and Position changes events.*/
   def subscribeToMovementAndChangePositionEvents(): Unit
+
+  /** This method permits, at configurator will, to pick up Vehicle Broken events. */
+  def subscribeToBrokenEvents(): Unit
+
+  /** This method permits, at configurator will, to pick up Vehicle Stolen events. */
+  def subscribeToStolenEvents(): Unit
 
   /** This method should be called when a booking request arrive from the service.
     *
@@ -114,18 +120,31 @@ class VehicleControlImpl(license: String,
 
   def getVehicle() = vehicleGiven
 
-  def subscribeToMovementAndChangePositionEvents(): Unit = {
+  override def subscribeToMovementAndChangePositionEvents(): Unit = {
     vehicleEventsObservables.movementAndChangePositionObservable().subscribe(event => {
       if(!(vehicleGiven.getSate().equals(VehicleConstants.stateRecharging))
         || !(vehicleGiven.getSate().equals(VehicleConstants.stateBroken))) {
         executeBehaviour(vehicleBehaviours.movementAndPositionChange, event)
         if (!(vehicleGiven.getSate().equals(VehicleConstants.stateRecharging))
           && !(vehicleGiven.getSate().equals(VehicleConstants.stateBroken))
+          && !(vehicleGiven.getSate().equals(VehicleConstants.stateStolen))
           && !vehicleBehaviours.isUserOnBoard()
           && !debugVar) {
-          vehicleBehaviours.goToRecharge()
+          executeBehaviour(vehicleBehaviours.goToRecharge)
         }
       }
+    })
+  }
+
+  override def subscribeToBrokenEvents(): Unit = {
+    vehicleEventsObservables.brokenEventObservable().subscribe(event => {
+      executeBehaviour(vehicleBehaviours.checkVehicleAndSetItBroken)
+    })
+  }
+
+  override def subscribeToStolenEvents(): Unit = {
+    vehicleEventsObservables.stolenEventObservable().subscribe(event => {
+      executeBehaviour(vehicleBehaviours.setVehicleStolen)
     })
   }
 
