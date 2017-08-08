@@ -68,8 +68,10 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
                 return
               }
               //This event will be triggered by a server instruction
-              randomLatitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
-              randomLongitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
+              randomLatitudeDestination =
+                ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
+              randomLongitudeDestination =
+                ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
               Log.log(positionToReachLog + randomLatitudeDestination + " , " + randomLongitudeDestination)
               subscriber.onNext(new Position(randomLatitudeDestination, randomLongitudeDestination ))
               Thread.sleep(1500000) //this is temporary
@@ -90,10 +92,7 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
                 subscriber.onCompleted()
                 return
               }
-              val randomNumber = new scala.util.Random
-              val result = startBrokenRange + randomNumber.nextInt(( endBrokenRange - startBrokenRange) + 1);
-              Thread.sleep(result*oneSecondInMillis)
-              Log.log(vehicleBrokenLog)
+              calculateRandomNumber(startBrokenRange, endBrokenRange, vehicleBrokenLog)
               subscriber.onNext(brokenEventLog)
             }
           }
@@ -112,16 +111,20 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
                 subscriber.onCompleted()
                 return
               }
-              val randomNumber = new scala.util.Random
-              val result = startStolenRange + randomNumber.nextInt(( endStolenRange - startStolenRange) + 1);
-              Thread.sleep(result*oneSecondInMillis)
-              Log.log(vehicleStolenLog)
+              calculateRandomNumber(startStolenRange, endStolenRange, vehicleStolenLog)
               subscriber.onNext(stolenEventLog)
             }
           }
         }).start()
       }
     )
+  }
+
+  private def calculateRandomNumber(startRange: Int, endRange: Int, vehicleLog: String): Unit = {
+    val randomNumber = new scala.util.Random
+    val result = startRange + randomNumber.nextInt(( endRange - startRange) + 1);
+    Thread.sleep(result*oneSecondInMillis)
+    Log.log(vehicleLog)
   }
 
 }

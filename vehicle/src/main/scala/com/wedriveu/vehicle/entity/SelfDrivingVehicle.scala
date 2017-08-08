@@ -21,11 +21,10 @@ class SelfDrivingVehicle(var plate: String,
   def getState(): String = {
     try {
       mutex.lock()
-      return state
+      state
     }
     finally {
-      barrier.signalAll()
-      mutex.unlock()
+      releaseLock()
     }
   }
 
@@ -35,41 +34,40 @@ class SelfDrivingVehicle(var plate: String,
       state = newState
     }
     finally {
-      barrier.signalAll()
-      mutex.unlock()
+      releaseLock()
     }
   }
 
   def checkVehicleIsStolenAndSetBroken(): Boolean = {
     mutex.lock()
     if(state.equals(VehicleConstants.stateStolen)){
-      barrier.signalAll()
-      mutex.unlock()
-      return false
+      releaseLock()
+      false
     }
     else {
       state = VehicleConstants.stateBroken
-      barrier.signalAll()
-      mutex.unlock()
-      return true
+      releaseLock()
+      true
     }
   }
 
   def checkVehicleIsBrokenOrStolenAndSetRecharging(): Boolean = {
     mutex.lock()
-    if((state.equals(VehicleConstants.stateBroken)) || (state.equals(VehicleConstants.stateStolen))) {
-      barrier.signalAll()
-      mutex.unlock()
-      return false
+    if(state.equals(VehicleConstants.stateBroken) || state.equals(VehicleConstants.stateStolen)) {
+      releaseLock()
+      false
     }
     else {
       state = VehicleConstants.stateRecharging
-      barrier.signalAll()
-      mutex.unlock()
-      return true
+      releaseLock()
+      true
     }
   }
 
+  private def releaseLock(): Unit = {
+    barrier.signalAll()
+    mutex.unlock()
+  }
 }
 
 
