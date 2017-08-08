@@ -1,4 +1,4 @@
-package com.wedriveu.services.booking.entity;
+package com.wedriveu.services.shared.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wedriveu.services.shared.utilities.Position;
