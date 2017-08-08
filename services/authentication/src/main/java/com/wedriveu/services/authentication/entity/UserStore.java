@@ -4,6 +4,8 @@ package com.wedriveu.services.authentication.entity;
  * Created by Michele on 12/07/2017.
  */
 
+import com.wedriveu.services.shared.entity.User;
+
 /**
  * @author Michele Donati
  * This inteface models the <em>Users' database domain</em>.
