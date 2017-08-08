@@ -20,7 +20,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import static com.wedriveu.services.shared.utilities.Constants.CAR_LICENCE_PLATE;
+import static com.wedriveu.services.shared.utilities.Constants.REGISTER_RESULT;
 import static com.wedriveu.services.shared.utilities.Constants.STATUS_AVAILABLE;
 
 /**
@@ -71,11 +74,21 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     @Override
     public void addVehicle(Message message) {
-        Vehicle vehicle = ((JsonObject) message.body()).mapTo(Vehicle.class);
+        JsonObject vehicleRequesterJson = (JsonObject) message.body();
+        Vehicle vehicleRequester = vehicleRequesterJson.mapTo(Vehicle.class);
         List<Vehicle> vehicles = getVehicleList();
-        vehicles.add(vehicle);
-        writeJsonVehicleFile((ArrayList<Vehicle>) vehicles);
-        eventBus.send(Messages.VehicleStore.REGISTER_VEHICLE_COMPLETED, null);
+        JsonObject responseJson = new JsonObject();
+        responseJson.put(CAR_LICENCE_PLATE, vehicleRequesterJson.getValue(CAR_LICENCE_PLATE));
+        Optional existingVehicle = vehicles.stream().filter(x -> x.equals(vehicleRequester)).findFirst();
+        if(existingVehicle.isPresent()) {
+            responseJson.put(REGISTER_RESULT, false);
+        } else {
+            responseJson.put(REGISTER_RESULT, true);
+            vehicles.add(vehicleRequester);
+            writeJsonVehicleFile((ArrayList<Vehicle>) vehicles);
+        }
+        eventBus.send(Messages.VehicleStore.REGISTER_VEHICLE_COMPLETED, responseJson);
+
     }
 
 
