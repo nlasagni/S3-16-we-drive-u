@@ -122,12 +122,12 @@ class VehicleControlImpl(license: String,
 
   override def subscribeToMovementAndChangePositionEvents(): Unit = {
     vehicleEventsObservables.movementAndChangePositionObservable().subscribe(event => {
-      if(!(vehicleGiven.getSate().equals(VehicleConstants.stateRecharging))
-        || !(vehicleGiven.getSate().equals(VehicleConstants.stateBroken))) {
+      if(!(vehicleGiven.getState().equals(VehicleConstants.stateRecharging))
+        || !(vehicleGiven.getState().equals(VehicleConstants.stateBroken))) {
         executeBehaviour(vehicleBehaviours.movementAndPositionChange, event)
-        if (!(vehicleGiven.getSate().equals(VehicleConstants.stateRecharging))
-          && !(vehicleGiven.getSate().equals(VehicleConstants.stateBroken))
-          && !(vehicleGiven.getSate().equals(VehicleConstants.stateStolen))
+        if (!(vehicleGiven.getState().equals(VehicleConstants.stateRecharging))
+          && !(vehicleGiven.getState().equals(VehicleConstants.stateBroken))
+          && !(vehicleGiven.getState().equals(VehicleConstants.stateStolen))
           && !vehicleBehaviours.isUserOnBoard()
           && !debugVar) {
           executeBehaviour(vehicleBehaviours.goToRecharge)

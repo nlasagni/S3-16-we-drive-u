@@ -74,7 +74,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     vehicleBehaviours.goToRecharge()
     while(!(vehicleBehaviours.getDebuggingVar())){}
     assert(vehicleControl.getVehicle().battery == VehicleConstants.maxBatteryValue)
-    assert(vehicleControl.getVehicle().getSate().equals(VehicleConstants.stateAvailable))
+    assert(vehicleControl.getVehicle().getState().equals(VehicleConstants.stateAvailable))
   }
 
   test("The vehicle state should be broken when the broken event arrives") {
@@ -89,7 +89,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), true)
     vehicleControl.subscribeToBrokenEvents()
     Thread.sleep(17000)
-    assert(vehicleControl.getVehicle().getSate().equals(VehicleConstants.stateBroken))
+    assert(vehicleControl.getVehicle().getState().equals(VehicleConstants.stateBroken))
   }
 
   test("The vehicle state should be stolen when the stolen event arrives") {
@@ -104,6 +104,6 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), true)
     vehicleControl.subscribeToStolenEvents()
     Thread.sleep(18000)
-    assert(vehicleControl.getVehicle().getSate().equals(VehicleConstants.stateStolen))
+    assert(vehicleControl.getVehicle().getState().equals(VehicleConstants.stateStolen))
   }
 }

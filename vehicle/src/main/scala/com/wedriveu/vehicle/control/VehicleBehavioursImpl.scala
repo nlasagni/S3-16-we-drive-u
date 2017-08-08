@@ -124,7 +124,7 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
   }
 
   private def checkVehicleIsBrokenOrStolen(): Boolean = {
-    if(selfDrivingVehicle.getSate().equals(VehicleConstants.stateStolen)){
+    if(selfDrivingVehicle.getState().equals(VehicleConstants.stateStolen)){
       stopUi.writeMessageLog(stateStolenLog
         + selfDrivingVehicle.position.latitude
         + commaLog
@@ -132,7 +132,7 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
       //TODO Here i will notify the service that i'm stolen
       true
     }
-    else if (selfDrivingVehicle.getSate().equals(VehicleConstants.stateBroken)) {
+    else if (selfDrivingVehicle.getState().equals(VehicleConstants.stateBroken)) {
       stopUi.writeMessageLog(stateBrokenLog
         + selfDrivingVehicle.position.latitude
         + commaLog
@@ -222,7 +222,7 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
     rechargingLatchManager = new RechargingLatchManagerImpl(selfDrivingVehicle)
     rechargingLatchManager.startLatchedThread()
     if(selfDrivingVehicle.battery < VehicleConstants.maxBatteryValue) {
-      stopUi.writeMessageLog(errorRechargeProcessLog + selfDrivingVehicle.getSate())
+      stopUi.writeMessageLog(errorRechargeProcessLog + selfDrivingVehicle.getState())
     }
     else {
       stopUi.writeMessageLog(endRechargeProcessLog + selfDrivingVehicle.battery)

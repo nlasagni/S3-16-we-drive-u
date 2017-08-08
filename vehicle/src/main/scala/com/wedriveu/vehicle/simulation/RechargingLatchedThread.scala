@@ -15,7 +15,7 @@ class RechargingLatchedThread(selfDrivingVehicle: SelfDrivingVehicle, countdownL
   override def run(): Unit = {
     for(i <- 0 until 10 by 1){
       try {
-        if(!selfDrivingVehicle.getSate().equals(VehicleConstants.stateBroken)) {
+        if(!selfDrivingVehicle.getState().equals(VehicleConstants.stateBroken)) {
           Thread.sleep(oneSecondInMillis)
         }
         else {
