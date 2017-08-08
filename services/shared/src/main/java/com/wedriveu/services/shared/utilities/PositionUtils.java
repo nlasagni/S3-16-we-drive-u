@@ -1,5 +1,7 @@
 package com.wedriveu.services.shared.utilities;
 
+import com.wedriveu.shared.util.Constants;
+
 /**
  * @author Marco Baldassarri
  * @since 04/08/2017.

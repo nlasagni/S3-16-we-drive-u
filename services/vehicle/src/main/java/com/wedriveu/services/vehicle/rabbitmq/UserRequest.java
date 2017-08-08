@@ -6,7 +6,7 @@ import com.wedriveu.services.shared.entity.Vehicle;
 
 import java.util.List;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.shared.util.Constants.*;
 
 /**
  * Represents the data the client sends when requesting the best vehicle to book as well as the list of available

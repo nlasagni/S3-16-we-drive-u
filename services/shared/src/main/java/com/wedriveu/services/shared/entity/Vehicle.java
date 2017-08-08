@@ -5,7 +5,7 @@ import com.wedriveu.services.shared.utilities.Position;
 
 import java.util.Date;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.shared.util.Constants.*;
 
 /**
  * @author Marco Baldassarri

@@ -1,7 +1,8 @@
 package com.wedriveu.vehicle.control
 
 import com.rabbitmq.client._
-import com.wedriveu.services.shared.utilities.{Constants, Log}
+import com.wedriveu.services.shared.utilities.Log
+import com.wedriveu.shared.util.Constants
 import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.{Position, SelfDrivingVehicle}
 import com.wedriveu.vehicle.shared.VehicleConstants

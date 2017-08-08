@@ -17,7 +17,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.shared.util.Constants.CAR_LICENCE_PLATE;
+import static com.wedriveu.shared.util.Constants.USERNAME;
+import static com.wedriveu.shared.util.Constants.ZERO;
+
 
 /**
  * This Controller serves all the interaction requests with the
