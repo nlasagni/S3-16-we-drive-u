@@ -2,6 +2,8 @@ package com.wedriveu.vehicle.entity
 
 import java.util.concurrent.locks.{Condition, ReentrantLock}
 
+import com.wedriveu.vehicle.shared.VehicleConstants
+
 
 /**
   * @author Michele Donati on 28/07/2017.
@@ -16,14 +18,13 @@ class SelfDrivingVehicle(var plate: String,
   val mutex: ReentrantLock = new ReentrantLock()
   val barrier: Condition = mutex.newCondition()
 
-  def getSate(): String = {
+  def getState(): String = {
     try {
       mutex.lock()
-      return state
+      state
     }
     finally {
-      barrier.signalAll()
-      mutex.unlock()
+      releaseLock()
     }
   }
 
@@ -33,11 +34,40 @@ class SelfDrivingVehicle(var plate: String,
       state = newState
     }
     finally {
-      barrier.signalAll()
-      mutex.unlock()
+      releaseLock()
     }
   }
 
+  def checkVehicleIsStolenAndSetBroken(): Boolean = {
+    mutex.lock()
+    if(state.equals(VehicleConstants.stateStolen)){
+      releaseLock()
+      false
+    }
+    else {
+      state = VehicleConstants.stateBroken
+      releaseLock()
+      true
+    }
+  }
+
+  def checkVehicleIsBrokenOrStolenAndSetRecharging(): Boolean = {
+    mutex.lock()
+    if(state.equals(VehicleConstants.stateBroken) || state.equals(VehicleConstants.stateStolen)) {
+      releaseLock()
+      false
+    }
+    else {
+      state = VehicleConstants.stateRecharging
+      releaseLock()
+      true
+    }
+  }
+
+  private def releaseLock(): Unit = {
+    barrier.signalAll()
+    mutex.unlock()
+  }
 }
 
 

@@ -40,6 +40,12 @@ trait VehicleBehaviours {
     * @return True if the user is on board, False otherwise.
     */
   def isUserOnBoard(): Boolean
+
+  /** This method checks the vehicle's state, and if it isn't Stolen, sets it to Broken. */
+  def checkVehicleAndSetItBroken(): Unit
+
+  /** This method sets the vehicle status to Stolen. This state has priority over Broken status. */
+  def setVehicleStolen(): Unit
 }
 
 class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: VehicleStopView,var debugVar:Boolean)
@@ -61,11 +67,16 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
    val newPositionLog: String = "New Position = "
    val commaLog: String = " , "
    val stateBrokenLog: String = "Vehicle is broken. His position is: "
+   val stateStolenLog: String = "Vehicle is stolen. His position is: "
    val needRechargingLog: String = "Need recharging, next recharging station is at coordinates: "
    val arrivedToRechargeLog: String = "Arrived to recharging station, proceed with the recharge."
    val startRechargeProcessLog: String = "Started the recharge process, 10 seconds until finish..."
    val endRechargeProcessLog: String = "Ended recharge process. Vehicle battery percentage = "
    val errorRechargeProcessLog: String = "Error in the recharge process, vehicle status = "
+   val vehicleSetToBrokenLog: String = "Vehicle is broken, please sends substitute"
+   val vehicleIsAlreadyStolenLog: String = "The vehicle is stolen actually, but it is also broken"
+   val vehicleSetToStolenLog: String = "Vehicle is stolen, please contacts authorities"
+   val cantRechargeLog: String = "Can't recharge, vehicle is broken/stolen."
 
    var deltaLat: Double = .0
    var deltaLon: Double = .0
@@ -75,8 +86,9 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
 
   //This algorithm calculates the distance in Km between the points, then estimates the journey time and calculates
   //the coordinates reached during the journey.
+  // The Thread.sleep in the method is useful to render the simulation real and for testing observables.
   override def movementAndPositionChange(position: Position): Unit = {
-    if(checkVehicleIsBroken()){
+    if(checkVehicleIsBrokenOrStolen()){
       return
     }
     else {
@@ -88,14 +100,17 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
 
       breakable {
         for (time <- timeOfJourney to estimatedJourneyTimeInSeconds by timeStep) {
-          if (checkVehicleIsBroken()) {
+          if (checkVehicleIsBrokenOrStolen()) {
             break()
+          }
+          if(!debugVar){
+            Thread.sleep(500)
           }
           deltaLat = position.latitude - selfDrivingVehicle.position.latitude
           deltaLon = position.longitude - selfDrivingVehicle.position.longitude
           calculateMovement(time, estimatedJourneyTimeInSeconds, deltaLat, deltaLon)
           if ((time + timeStep) > estimatedJourneyTimeInSeconds) {
-            if (checkVehicleIsBroken()) {
+            if (checkVehicleIsBrokenOrStolen()) {
               break()
             }
             deltaLat = position.latitude - selfDrivingVehicle.position.latitude
@@ -108,8 +123,16 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
     }
   }
 
-  private def checkVehicleIsBroken(): Boolean = {
-    if (selfDrivingVehicle.getSate().equals(VehicleConstants.stateBroken)) {
+  private def checkVehicleIsBrokenOrStolen(): Boolean = {
+    if(selfDrivingVehicle.getState().equals(VehicleConstants.stateStolen)){
+      stopUi.writeMessageLog(stateStolenLog
+        + selfDrivingVehicle.position.latitude
+        + commaLog
+        + selfDrivingVehicle.position.longitude)
+      //TODO Here i will notify the service that i'm stolen
+      true
+    }
+    else if (selfDrivingVehicle.getState().equals(VehicleConstants.stateBroken)) {
       stopUi.writeMessageLog(stateBrokenLog
         + selfDrivingVehicle.position.latitude
         + commaLog
@@ -161,32 +184,37 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
   // then sends the vehicle there and awaits its recharging.
    override def goToRecharge(): Unit = {
     debugging = false
-    selfDrivingVehicle.setState(VehicleConstants.stateRecharging)
-    //TODO Here i will notify the service that i'm going to recharge
-    val randomNumber1 : Double = Math.random()
-    val randomNumber2 : Double = Math.random()
-    val distance : Double = 20.0 * Math.sqrt(randomNumber1)
-    val bearing: Double = 2 * Math.PI * randomNumber2
-    val newLatitude: Double =
-      Math.asin(Math.sin(selfDrivingVehicle.position.latitude)
-        * Math.cos(distance/VehicleConstants.earthRadiusInKm)
-        + Math.cos(selfDrivingVehicle.position.latitude)
-        * Math.sin(distance/VehicleConstants.earthRadiusInKm)
-        * Math.cos(bearing))
-    val newLongitude: Double =
-      selfDrivingVehicle.position.longitude
+    val canRecharge: Boolean = selfDrivingVehicle.checkVehicleIsBrokenOrStolenAndSetRecharging()
+    if (canRecharge) {
+      //TODO Here i will notify the service that i'm going to recharge
+      val randomNumber1 : Double = Math.random()
+      val randomNumber2 : Double = Math.random()
+      val distance : Double = 20.0 * Math.sqrt(randomNumber1)
+      val bearing: Double = 2 * Math.PI * randomNumber2
+      val newLatitude: Double =
+        Math.asin(Math.sin(selfDrivingVehicle.position.latitude)
+          * Math.cos(distance/VehicleConstants.earthRadiusInKm)
+          + Math.cos(selfDrivingVehicle.position.latitude)
+          * Math.sin(distance/VehicleConstants.earthRadiusInKm)
+          * Math.cos(bearing))
+      val newLongitude: Double =
+        selfDrivingVehicle.position.longitude
       + Math.atan2(Math.sin(bearing)
         *Math.sin(distance/VehicleConstants.earthRadiusInKm)
         *Math.cos(selfDrivingVehicle.position.latitude),
-      Math.cos(distance/VehicleConstants.earthRadiusInKm)
-        -Math.sin(selfDrivingVehicle.position.latitude)
-        *Math.sin(newLatitude))
-    stopUi.writeMessageLog(needRechargingLog + newLatitude + commaLog + newLongitude)
-    movementAndPositionChange(new Position(newLatitude, newLongitude))
-    stopUi.writeMessageLog(arrivedToRechargeLog)
-    simulateRecharging()
-    debugging = true
-    //TODO At the end i will set the state available (if not broken during the process) and notify the service
+        Math.cos(distance/VehicleConstants.earthRadiusInKm)
+          -Math.sin(selfDrivingVehicle.position.latitude)
+          *Math.sin(newLatitude))
+      stopUi.writeMessageLog(needRechargingLog + newLatitude + commaLog + newLongitude)
+      movementAndPositionChange(new Position(newLatitude, newLongitude))
+      stopUi.writeMessageLog(arrivedToRechargeLog)
+      simulateRecharging()
+      debugging = true
+      //TODO At the end i will set the state available (if not broken during the process) and notify the service
+    }
+    else {
+      stopUi.writeMessageLog(cantRechargeLog)
+    }
   }
 
   private def simulateRecharging(): Unit = {
@@ -194,7 +222,7 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
     rechargingLatchManager = new RechargingLatchManagerImpl(selfDrivingVehicle)
     rechargingLatchManager.startLatchedThread()
     if(selfDrivingVehicle.battery < VehicleConstants.maxBatteryValue) {
-      stopUi.writeMessageLog(errorRechargeProcessLog + selfDrivingVehicle.getSate())
+      stopUi.writeMessageLog(errorRechargeProcessLog + selfDrivingVehicle.getState())
     }
     else {
       stopUi.writeMessageLog(endRechargeProcessLog + selfDrivingVehicle.battery)
@@ -204,6 +232,21 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
   override def getDebuggingVar(): Boolean = debugging
 
   override def isUserOnBoard(): Boolean = userOnBoard
+
+  override def checkVehicleAndSetItBroken(): Unit = {
+    val result = selfDrivingVehicle.checkVehicleIsStolenAndSetBroken
+    if(result) {
+      stopUi.writeMessageLog(vehicleSetToBrokenLog)
+    }
+    else {
+      stopUi.writeMessageLog(vehicleIsAlreadyStolenLog)
+    }
+  }
+
+  override def setVehicleStolen(): Unit = {
+    selfDrivingVehicle.setState(VehicleConstants.stateStolen)
+    stopUi.writeMessageLog(vehicleSetToStolenLog)
+  }
 
 }
 
