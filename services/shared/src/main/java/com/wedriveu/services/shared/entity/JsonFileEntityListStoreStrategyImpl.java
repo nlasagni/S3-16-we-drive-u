@@ -46,7 +46,7 @@ public class JsonFileEntityListStoreStrategyImpl<T> implements EntityListStoreSt
     }
 
     @Override
-    public void clear() throws Exception  {
+    public void clear() throws Exception {
         file.delete();
         initStore();
     }

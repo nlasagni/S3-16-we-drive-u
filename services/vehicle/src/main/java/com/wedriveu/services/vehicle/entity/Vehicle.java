@@ -5,19 +5,34 @@ import com.wedriveu.services.shared.utilities.Position;
 
 import java.util.Date;
 
+import static com.wedriveu.services.shared.utilities.Constants.*;
+
 /**
- * Created by Michele on 12/07/2017.
+ * @author Marco Baldassarri
+ * @author Michele
+ * @since 02/08/2017
  */
 public class Vehicle {
+
+    public static final String STATUS_AVAILABLE = "available";
+    public static final String STATUS_BOOKED = "booked";
+    public static final String STATUS_RECHARGING = "recharging";
+    public static final String STATUS_BROKEN_STOLEN = "broken_stolen";
+    public static final String STATUS_NETWORK_ISSUES = "net_issues";
+
+    @JsonProperty(CAR_LICENCE_PLATE)
     private String carLicencePlate;
+    @JsonProperty(STATE)
     private String state;
+    @JsonProperty(POSITION)
     private Position position;
+    @JsonProperty(LAST_UPDATE)
     private Date lastUpdate;
 
-    public Vehicle(@JsonProperty("carLicencePlate") String carLicencePlate,
-                   @JsonProperty("state") String state,
-                   @JsonProperty("position") Position position,
-                   @JsonProperty("lastUpdate") Date lastUpdate) {
+    public Vehicle(String carLicencePlate,
+                   String state,
+                   Position position,
+                   Date lastUpdate) {
         this.carLicencePlate = carLicencePlate;
         this.state = state;
         this.position = position;
@@ -56,4 +71,13 @@ public class Vehicle {
         this.position = position;
     }
 
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "carLicencePlate='" + carLicencePlate + '\'' +
+                ", state='" + state + '\'' +
+                ", position=" + position +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
 }

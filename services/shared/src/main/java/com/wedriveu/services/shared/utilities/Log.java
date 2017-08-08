@@ -1,13 +1,15 @@
 package com.wedriveu.services.shared.utilities;
 
 /**
- * Created by Michele on 22/07/2017.
+ * @author Michele
+ * @author Marco Baldassarri
+ * @since 01/08/2017
  */
 public class Log {
 
     private static final String ERROR = "[ERROR] %s %s";
 
-    public static void log(String toLog){
+    public static void log(String toLog) {
         System.out.println(toLog);
     }
 
@@ -16,8 +18,7 @@ public class Log {
         throwable.printStackTrace();
     }
 
-    public static void error(String message, Throwable throwable) {
-        error("", message, throwable);
+    public static void info(String tag, String message) {
+        System.out.println("[" + tag + "] " + message);
     }
-
 }
