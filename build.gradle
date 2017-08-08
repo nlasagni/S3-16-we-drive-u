@@ -15,31 +15,38 @@ allprojects {
     }
 }
 
-def mobileModule = "mobile"
+def sharedModulePath = ":shared"
+def mobileModulePath = ":mobile"
+def java7ModulePaths = [mobileModulePath, sharedModulePath] as String[]
 
-def filterProjects(String name) {
-    return subprojects.grep {it.name != name}
+configure(subprojects.grep { sharedModulePath == it.path }) {
+    apply plugin: 'java'
+    sourceCompatibility = "$jdk7Version"
+    javadoc.destinationDir = new File("$docsFolderJava")
+    dependencies {
+        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    }
 }
 
-configure(filterProjects(mobileModule)) {
+configure(subprojects.grep {!java7ModulePaths.contains(it.path)}) {
     apply plugin: 'java'
     apply plugin: 'scala'
-    sourceCompatibility = "$jdkVersion"
+    sourceCompatibility = "$jdk8Version"
     javadoc.destinationDir = new File("$docsFolderJava")
     scaladoc.destinationDir = new File("$docsFolderScala")
 
     dependencies {
         testCompile "junit:junit:$junitVersion"
         testCompile "org.scala-lang:scala-library:$scalaVersion"
-        testCompile "io.vertx:vertx-unit:$vertxVersion"
+        testCompile "io.vertx:vertx-unit:$vertx3Version"
         compile "org.scala-lang:scala-library:$scalaVersion"
         compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-        compile "io.vertx:vertx-core:$vertxVersion"
-        compile "io.vertx:vertx-web:$vertxVersion"
-        compile "io.vertx:vertx-config:$vertxVersion"
-        compile "io.vertx:vertx-rabbitmq-client:$vertxVersion"
+        compile "io.vertx:vertx-core:$vertx3Version"
+        compile "io.vertx:vertx-config:$vertx3Version"
+        compile "io.vertx:vertx-rabbitmq-client:$vertx3Version"
         compile "com.rabbitmq:amqp-client:$rabbitMQVersion"
         compile "org.slf4j:slf4j-api:$slf4jVersion"
+        compile project(path: ':shared')
     }
 }
 
