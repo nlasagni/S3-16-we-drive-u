@@ -1,6 +1,7 @@
 package com.wedriveu.services.authentication;
 
-import com.wedriveu.services.authentication.boundary.AuthenticationServiceImpl;
+import com.wedriveu.services.authentication.boundary.AuthenticationServiceVerticleImpl;
+import io.vertx.core.Vertx;
 
 /**
  * Created by Michele on 18/07/2017.
@@ -8,6 +9,9 @@ import com.wedriveu.services.authentication.boundary.AuthenticationServiceImpl;
 public class Main {
 
     public static void main(String[] args) {
-        new AuthenticationServiceImpl().startService();
+        Vertx vertx = Vertx.vertx();
+        AuthenticationServiceVerticleImpl authenticationServiceVerticle = new AuthenticationServiceVerticleImpl();
+        vertx.deployVerticle(authenticationServiceVerticle);
     }
+
 }
