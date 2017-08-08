@@ -20,6 +20,7 @@ public class VehicleElectionVerticle extends VerticlePublisher {
     public void start(Future<Void> future) throws Exception {
         super.start(future);
         vertx.eventBus().consumer(Messages.VehicleStore.GET_VEHICLE_COMPLETED, this::sendVehicleToUser);
+        future.complete();
     }
 
     private void sendVehicleToUser(Message message) {

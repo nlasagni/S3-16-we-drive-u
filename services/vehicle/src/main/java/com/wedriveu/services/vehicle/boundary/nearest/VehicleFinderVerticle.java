@@ -15,10 +15,10 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.IntStream;
 
 import static com.wedriveu.services.shared.utilities.Constants.*;
 
@@ -89,11 +89,11 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     }
 
     private void publishToMultipleRoutingKeys() {
-        for (int index = ZERO; index < availableVehicles.size(); index++) {
+        IntStream.range(ZERO, availableVehicles.size()).forEach(index -> {
             publishToConsumer(Constants.VEHICLE_SERVICE_EXCHANGE,
                     String.format(Constants.ROUTING_KEY_CAN_DRIVE,
                             availableVehicles.get(index).getCarLicencePlate()), index);
-        }
+        });
     }
 
     private void declareExchanges(Handler<AsyncResult<Void>> handler) {

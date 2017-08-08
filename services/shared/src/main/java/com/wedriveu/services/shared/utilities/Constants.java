@@ -41,21 +41,18 @@ public interface Constants {
 
     // Services RabbitMQ
     String SERVICE_QUEUE_BASE_NAME = "service";
-    String QUEUE_NAME_JSON_KEY = "queue";
 
     //Exchanges
     String VEHICLE_SERVICE_EXCHANGE = "vehicle";
-    String DEPLOY_ERROR = "VERTICLE_DEPLOY_ERROR";
 
     // Vehicle Service RabbitMQ
     String EVENT_BUS_AVAILABLE_ADDRESS = "service.vehicle.eventbus";
     String EVENT_BUS_FINDER_ADDRESS = "finder.vehicle.eventbus";
     String CONSUMER_VEHICLE_SERVICE = "vehicle";
-    String ROUTING_KEY_VEHICLE_REQUEST = "vehicle.request.com.wedriveu.services.shared.rabbitmq.nearest";
-    String ROUTING_KEY_VEHICLE_RESPONSE = "vehicle.response.com.wedriveu.services.shared.rabbitmq.nearest.%s";
+    String ROUTING_KEY_VEHICLE_REQUEST = "vehicle.request.nearest";
+    String ROUTING_KEY_VEHICLE_RESPONSE = "vehicle.response.nearest.%s";
     String ROUTING_KEY_CAN_DRIVE = "vehicle.request.candrive.%s";
     String ROUTING_KEY_CAN_DRIVE_RESPONSE = "vehicle.response.candrive.%s";
-
 
     String BODY = "body";
     String USER_POSITION = "userPosition";
@@ -63,9 +60,6 @@ public interface Constants {
     String STATUS_AVAILABLE = "available";
     String ELIGIBLE_VEHICLE_LIST = "eligibleVehicleList";
     String TRIP_DISTANCE = "tripDistance";
-
-    String MESSAGE_PUBLISHED_LOG = "Publisher sent message to ";
     String EXCHANGE_TYPE = "direct";
-    String STARTED = "Started RabbitMQ publisher for ";
     int ZERO = 0;
 }

@@ -1,7 +1,8 @@
 package com.wedriveu.services.shared.utilities;
 
 /**
- * Created by Marco on 04/08/2017.
+ * @author Marco Baldassarri
+ * @since 04/08/2017.
  */
 public class PositionUtils {
 

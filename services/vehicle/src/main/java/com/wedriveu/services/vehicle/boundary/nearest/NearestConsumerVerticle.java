@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
 import static com.wedriveu.services.shared.utilities.Constants.*;
 
 /**
- * Starts the consumer which handles the user request for the com.wedriveu.services.shared.rabbitmq.nearest vehicle.
+ * Starts the consumer which handles the user request for the vehicle.
  * The information the consumer expects to receive are the user current position (Latitude, Longitude), the chosen
  * destination position (Latitude, Longitude) and the username associated with the user.
  *

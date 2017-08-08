@@ -7,12 +7,13 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
-
 import static com.wedriveu.services.shared.utilities.Constants.EXCHANGE_TYPE;
 import static com.wedriveu.services.shared.utilities.Constants.VEHICLE_SERVICE_EXCHANGE;
 
 /**
- * Created by Marco on 07/08/2017.
+ * Basic Vert.x RabbitMQ Publisher Verticle.
+ *
+ * @author Marco Baldassarri
  */
 public class VerticlePublisher extends AbstractVerticle {
 
@@ -22,7 +23,6 @@ public class VerticlePublisher extends AbstractVerticle {
     @Override
     public void start(Future<Void> startFuture) throws Exception {
         super.start(startFuture);
-        startFuture.complete();
     }
 
     protected void publish(String exchangeName, String routingKey, JsonObject data) {
@@ -54,4 +54,5 @@ public class VerticlePublisher extends AbstractVerticle {
                                      JsonObject dataToUser) {
         client.basicPublish(exchangeName, routingKey, dataToUser, null);
     }
+
 }

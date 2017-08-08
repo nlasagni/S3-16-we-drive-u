@@ -14,9 +14,11 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
  */
 public class Vehicle {
 
-    public static final String STATUS_STARTED = "started";
-    public static final String STATUS_PROCESSING = "processing";
-    public static final String STATUS_COMPLETED = "completed";
+    public static final String STATUS_AVAILABLE = "available";
+    public static final String STATUS_BOOKED = "booked";
+    public static final String STATUS_RECHARGING = "recharging";
+    public static final String STATUS_BROKEN_STOLEN = "broken_stolen";
+    public static final String STATUS_NETWORK_ISSUES = "net_issues";
 
     @JsonProperty(CAR_LICENCE_PLATE)
     private String carLicencePlate;
