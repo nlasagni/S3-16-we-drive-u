@@ -50,21 +50,39 @@ public class VehicleCounter {
     public int getAvailable() {
         return available;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        VehicleCounter that = (VehicleCounter) o;
+
+        if (getAvailable() != that.getAvailable()) return false;
+        if (getBroken() != that.getBroken()) return false;
+        if (getBooked() != that.getBooked()) return false;
+        if (getRecharging() != that.getRecharging()) return false;
+        return getStolen() == that.getStolen();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getAvailable();
+        result = 31 * result + getBroken();
+        result = 31 * result + getBooked();
+        result = 31 * result + getRecharging();
+        result = 31 * result + getStolen();
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "available: " + available +
-                " booked: " + booked +
-                " broken: " + broken +
-                " recharging: " + recharging +
-                " stolen: " + stolen;
+        return "VehicleCounter{" +
+                "available=" + available +
+                ", broken=" + broken +
+                ", booked=" + booked +
+                ", recharging=" + recharging +
+                ", stolen=" + stolen +
+                '}';
     }
-
-    public boolean equals(VehicleCounter vehicleCounter) {
-        return  this.available == vehicleCounter.getAvailable() &&
-                this.booked == vehicleCounter.getBooked() &&
-                this.broken == vehicleCounter.getBroken() &&
-                this.recharging == vehicleCounter.getRecharging() &&
-                this.stolen == vehicleCounter.getStolen();
-    }
-
 }
