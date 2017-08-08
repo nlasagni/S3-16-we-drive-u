@@ -1,5 +1,6 @@
 package com.wedriveu.mobile.service;
 
+import android.app.Activity;
 import com.wedriveu.mobile.service.login.LoginService;
 import com.wedriveu.mobile.service.scheduling.SchedulingService;
 
@@ -20,7 +21,7 @@ public interface ServiceFactory {
      * 
      * @return the login service
      */
-    LoginService createLoginService();
+    LoginService createLoginService(Activity activity);
 
     /**
      * 

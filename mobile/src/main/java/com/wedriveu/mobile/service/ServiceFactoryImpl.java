@@ -1,5 +1,6 @@
 package com.wedriveu.mobile.service;
 
+import android.app.Activity;
 import com.wedriveu.mobile.service.login.LoginService;
 import com.wedriveu.mobile.service.login.LoginServiceImpl;
 import com.wedriveu.mobile.service.scheduling.SchedulingService;
@@ -21,8 +22,8 @@ public class ServiceFactoryImpl implements ServiceFactory {
         return instance;
     }
     @Override
-    public LoginService createLoginService() {
-        return new LoginServiceImpl();
+    public LoginService createLoginService(Activity activity) {
+        return new LoginServiceImpl(activity);
     }
 
     @Override
