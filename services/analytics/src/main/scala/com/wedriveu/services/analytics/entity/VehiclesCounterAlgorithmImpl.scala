@@ -1,5 +1,6 @@
 package com.wedriveu.services.analytics.entity
-import com.wedriveu.services.shared.entity.VehicleCounter
+import com.wedriveu.services.shared.entity.{AnalyticsVehicle, VehicleCounter}
+
 import collection.mutable._
 import collection.JavaConverters._
 

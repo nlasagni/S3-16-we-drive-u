@@ -1,4 +1,4 @@
-package com.wedriveu.services.analytics.entity;
+package com.wedriveu.services.shared.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
