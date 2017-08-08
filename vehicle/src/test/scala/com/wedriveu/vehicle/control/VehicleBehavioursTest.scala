@@ -35,6 +35,8 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   var randomLatitudeDestination: Double = .0
   var randomLongitudeDestination: Double = .0
 
+  //The debugging variable of the VehicleControl works like this: if it is set True, it will not do any recharge. If it
+  // set False, the vehicle will works as inteded.
   override def beforeEach() {}
 
   test("The vehicle position, after a random destination position input, should be equals to it") {
@@ -75,4 +77,33 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     assert(vehicleControl.getVehicle().getSate().equals(VehicleConstants.stateAvailable))
   }
 
+  test("The vehicle state should be broken when the broken event arrives") {
+    val vehicleControl: VehicleControl =
+      new VehicleControlImpl(licenseFirstTest,
+        stateFirstTest,
+        new Position(latitude, longitude),
+        VehicleConstants.maxBatteryValue,
+        speedTest,
+        new VehicleStopViewImpl(1),
+        false)
+    val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), false)
+    vehicleControl.subscribeToBrokenEvents()
+    Thread.sleep(17000)
+    assert(vehicleControl.getVehicle().getSate().equals(VehicleConstants.stateBroken))
+  }
+
+  test("The vehicle state should be stolen when the stolen event arrives") {
+    val vehicleControl: VehicleControl =
+      new VehicleControlImpl(licenseFirstTest,
+        stateFirstTest,
+        new Position(latitude, longitude),
+        VehicleConstants.maxBatteryValue,
+        speedTest,
+        new VehicleStopViewImpl(1),
+        false)
+    val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), false)
+    vehicleControl.subscribeToStolenEvents()
+    Thread.sleep(18000)
+    assert(vehicleControl.getVehicle().getSate().equals(VehicleConstants.stateStolen))
+  }
 }
