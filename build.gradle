@@ -36,6 +36,9 @@ configure(filterProjects(mobileModule)) {
         compile "io.vertx:vertx-core:$vertxVersion"
         compile "io.vertx:vertx-web:$vertxVersion"
         compile "io.vertx:vertx-config:$vertxVersion"
+        compile "io.vertx:vertx-rabbitmq-client:$vertxVersion"
+        testCompile "io.vertx:vertx-unit:$vertxVersion"
+        compile group: "com.rabbitmq", name: "amqp-client", version: "$rabbitMQVersion"
     }
 }
 

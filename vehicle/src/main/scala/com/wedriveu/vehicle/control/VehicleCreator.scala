@@ -8,7 +8,7 @@ import com.wedriveu.vehicle.entity.Position
 import com.wedriveu.vehicle.shared.VehicleConstants
 
 /**
-  * Created by Michele on 02/08/2017.
+  * @author Michele Donati on 02/08/2017.
   */
 class VehicleCreator(speed: Double, battery: Double, doBreak: Boolean, doNotBreak: Boolean, vehiclesCounter: Int) {
   val randomNumber: SecureRandom = new SecureRandom()
@@ -24,7 +24,7 @@ class VehicleCreator(speed: Double, battery: Double, doBreak: Boolean, doNotBrea
   stopUi.render()
 
   val newVehicle: VehicleControl =
-    new VehicleControlImpl(randomPlate, initialState, initialPosition, battery, speed, stopUi)
+    new VehicleControlImpl(randomPlate, initialState, initialPosition, battery, speed, stopUi, false)
   newVehicle.startVehicleEngine()
   newVehicle.subscribeToMovementAndChangePositionEvents()
 

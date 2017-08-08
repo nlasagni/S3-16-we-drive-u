@@ -4,6 +4,7 @@ import com.rabbitmq.client._
 import com.wedriveu.services.shared.utilities.{Constants, Log}
 import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.{Position, SelfDrivingVehicle}
+import com.wedriveu.vehicle.shared.VehicleConstants
 import com.wedriveu.vehicle.simulation.{VehicleEventsObservables, VehicleEventsObservablesImpl}
 
 /**
@@ -38,10 +39,11 @@ class VehicleControlImpl(license: String,
                          position: Position,
                          battery: Double,
                          speed: Double,
-                         stopUi: VehicleStopView) extends VehicleControl {
+                         stopUi: VehicleStopView,
+                         var debugVar: Boolean) extends VehicleControl {
   val vehicleGiven : SelfDrivingVehicle = new SelfDrivingVehicle(license, state, position, battery, speed)
   val vehicleEventsObservables: VehicleEventsObservables = new VehicleEventsObservablesImpl
-  val vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(vehicleGiven, stopUi)
+  val vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(vehicleGiven, stopUi, false)
   val received: String = " [x] Received '"
   val awaiting: String = " [x] Awaiting requests"
   var kilometersToDo: Double = .0
@@ -74,8 +76,8 @@ class VehicleControlImpl(license: String,
 
   private def configureRabbitMq(): Unit = {
     val factory: ConnectionFactory = new ConnectionFactory
-    factory.setHost(Constants.SERVER_HOST)
-    factory.setPassword(Constants.SERVER_PASSWORD)
+    factory.setHost(Constants.RABBITMQ_SERVER_HOST)
+    factory.setPassword(Constants.RABBITMQ_SERVER_PASSWORD)
     connection = factory.newConnection
     channel = connection.createChannel
     channel.queueDeclare(vehicleGiven.plate, false, false, false, null)
@@ -114,7 +116,16 @@ class VehicleControlImpl(license: String,
 
   def subscribeToMovementAndChangePositionEvents(): Unit = {
     vehicleEventsObservables.movementAndChangePositionObservable().subscribe(event => {
-      executeBehaviour(vehicleBehaviours.movementAndPositionChange, event)
+      if(!(vehicleGiven.getSate().equals(VehicleConstants.stateRecharging))
+        || !(vehicleGiven.getSate().equals(VehicleConstants.stateBroken))) {
+        executeBehaviour(vehicleBehaviours.movementAndPositionChange, event)
+        if (!(vehicleGiven.getSate().equals(VehicleConstants.stateRecharging))
+          && !(vehicleGiven.getSate().equals(VehicleConstants.stateBroken))
+          && !vehicleBehaviours.isUserOnBoard()
+          && !debugVar) {
+          vehicleBehaviours.goToRecharge()
+        }
+      }
     })
   }
 
