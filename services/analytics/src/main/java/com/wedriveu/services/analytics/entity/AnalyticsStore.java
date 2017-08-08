@@ -1,5 +1,7 @@
 package com.wedriveu.services.analytics.entity;
 
+import com.wedriveu.services.shared.entity.VehicleCounter;
+
 import java.util.Optional;
 
 /**
@@ -36,6 +38,12 @@ public interface AnalyticsStore {
      * clear the database
      */
     void clear();
+
+    /**
+     * get the number of vehicles divided per status
+     * @return a class VehicleCounter that contains the number of vehicles per status
+     */
+    VehicleCounter getVehicleCounter();
 }
 
 

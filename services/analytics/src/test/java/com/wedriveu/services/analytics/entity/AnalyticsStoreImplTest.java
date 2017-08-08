@@ -1,11 +1,12 @@
 package com.wedriveu.services.analytics.entity;
 
+
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
 import com.wedriveu.services.shared.entity.JsonFileEntityListStoreStrategyImpl;
+import com.wedriveu.services.shared.entity.VehicleCounter;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,10 +15,9 @@ import static org.junit.Assert.*;
 /**
  * @author Stefano Bernagozzi
  */
+public class AnalyticsStoreImplTest {
 
-
-public class AnalyticsStoreTest {
-    private static final String DATABASE_FILE_NAME = AnalyticsStoreTest.class.getSimpleName() + ".json";
+    private static final String DATABASE_FILE_NAME = AnalyticsStoreImplTest.class.getSimpleName() + ".json";
     private static final String VEHICLE_1_LICENSE_PLATE = "vehicle1";
     private static final String VEHICLE_NOT_FOUND_LICENSE_PLATE = "vehicle3";
 
@@ -26,16 +26,11 @@ public class AnalyticsStoreTest {
 
     @Before
     public void setUp() throws Exception {
+        VehiclesCounterAlgorithm vehiclesCounterAlgorithm = new VehiclesCounterAlgorithmImpl();
         EntityListStoreStrategy<AnalyticsVehicle> storeStrategy =
                 new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, DATABASE_FILE_NAME);
-        analyticsStore = new AnalyticsStoreImpl(storeStrategy);
+        analyticsStore = new AnalyticsStoreImpl(storeStrategy, vehiclesCounterAlgorithm);
         vehicle= new AnalyticsVehicle(VEHICLE_1_LICENSE_PLATE, "available");
-    }
-
-    @Test
-    public void addVehicle() throws Exception {
-        boolean correctInsertionSuccess = insertVehicleIntoDatabase();
-        assertTrue(correctInsertionSuccess);
     }
 
     @Test
@@ -47,6 +42,12 @@ public class AnalyticsStoreTest {
                 vehicleFromStore.isPresent() &&
                 !vehicleNotFound.isPresent() &&
                 vehicleFromStore.get().getLicensePlate().equals(vehicle.getLicensePlate()));
+
+    }
+
+    @Test
+    public void addVehicle() throws Exception {
+        assertTrue(insertVehicleIntoDatabase());
     }
 
     @Test
@@ -60,6 +61,39 @@ public class AnalyticsStoreTest {
                 vehicleFromStore.isPresent() &&
                 vehicleFromStore.get().getStatus().equals(NEW_STATUS));
 
+    }
+
+    @Test
+    public void getVehicleCounter() throws Exception {
+        final int availableVehicles = 5;
+        final int brokenVehicles = 6;
+        final int bookedVehicles = 7;
+        final int stolenVehicles = 8;
+        final int rechargingVehicles = 9;
+        addSomeVehiclesToDatabase(availableVehicles, brokenVehicles,bookedVehicles,stolenVehicles,rechargingVehicles);
+        VehicleCounter counter = analyticsStore.getVehicleCounter();
+        assertTrue(counter.getAvailable() == availableVehicles &&
+                counter.getBooked() == bookedVehicles &&
+                counter.getBroken() == brokenVehicles &&
+                counter.getRecharging() == rechargingVehicles &&
+                counter.getStolen() == stolenVehicles );
+
+    }
+
+
+    private void addSomeVehiclesToDatabase(int available, int broken, int booked, int stolen, int recharging) {
+        addVehiclesWithStatus(available, "available");
+        addVehiclesWithStatus(broken, "broken");
+        addVehiclesWithStatus(booked, "booked");
+        addVehiclesWithStatus(stolen, "stolen");
+        addVehiclesWithStatus(recharging, "recharging");
+
+    }
+
+    private void addVehiclesWithStatus(int numberOfVehicles, String status) {
+        for (int i = 0; i < numberOfVehicles; i++) {
+            analyticsStore.addVehicle(status + i, status);
+        }
     }
 
     private boolean insertVehicleIntoDatabase() {

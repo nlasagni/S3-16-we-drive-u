@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import com.wedriveu.services.shared.entity.*;
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
+import com.wedriveu.services.shared.entity.VehicleCounter;
 import com.wedriveu.services.shared.utilities.Log;
+
 
 /**
  * @author Stefano Bernagozzi
@@ -19,9 +22,12 @@ public class AnalyticsStoreImpl implements AnalyticsStore{
     private static final String GET_ERROR = "Error while getting vehicle";
     private static final String UPDATE_ERROR = "Error while updating vehicle";
     private static final String CLEAR_ERROR = "Error while clearing store";
+    private VehiclesCounterAlgorithm vehiclesCounterAlgorithmStrategy;
 
-    public AnalyticsStoreImpl(EntityListStoreStrategy<AnalyticsVehicle> storeStrategy) {
+    public AnalyticsStoreImpl(EntityListStoreStrategy<AnalyticsVehicle> storeStrategy,
+                              VehiclesCounterAlgorithm vehiclesCounterAlgorithmStrategy) {
         this.storeStrategy = storeStrategy;
+        this.vehiclesCounterAlgorithmStrategy = vehiclesCounterAlgorithmStrategy;
     }
 
     @Override
@@ -85,5 +91,15 @@ public class AnalyticsStoreImpl implements AnalyticsStore{
         } catch (Exception e) {
             Log.error(TAG, CLEAR_ERROR, e);
         }
+    }
+
+    @Override
+    public VehicleCounter getVehicleCounter() {
+        try {
+            return vehiclesCounterAlgorithmStrategy.vehicleCounter(storeStrategy.getEntities());
+        } catch (Exception e) {
+            Log.error(TAG, CLEAR_ERROR, e);
+        }
+        return null;
     }
 }
