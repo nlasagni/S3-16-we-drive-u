@@ -1,7 +1,7 @@
 package com.wedriveu.services.authentication.boundary;
 
-import com.wedriveu.shared.model.LoginRequest;
-import com.wedriveu.shared.model.LoginResponse;
+import com.wedriveu.shared.entity.LoginRequest;
+import com.wedriveu.shared.entity.LoginResponse;
 
 /**
  * @author Michele Donati
