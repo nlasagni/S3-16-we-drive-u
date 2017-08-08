@@ -82,8 +82,8 @@ class VehicleControlImpl(license: String,
 
   private def configureRabbitMq(): Unit = {
     val factory: ConnectionFactory = new ConnectionFactory
-    factory.setHost(Constants.RABBITMQ_SERVER_HOST)
-    factory.setPassword(Constants.RABBITMQ_SERVER_PASSWORD)
+    factory.setHost(Constants.RabbitMQ.Broker.HOST)
+    factory.setPassword(Constants.RabbitMQ.Broker.PASSWORD)
     connection = factory.newConnection
     channel = connection.createChannel
     channel.queueDeclare(vehicleGiven.plate, false, false, false, null)

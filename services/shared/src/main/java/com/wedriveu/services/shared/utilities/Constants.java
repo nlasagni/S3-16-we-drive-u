@@ -7,24 +7,42 @@ package com.wedriveu.services.shared.utilities;
  */
 public interface Constants {
 
-    String USERS_DATABASE_FILENAME = "users.json";
-    String BOOKINGS_DATABASE_PATH = "services/booking/databaseFile/bookings.json";
+    interface EventBus {
+        String BODY = "body";
+    }
+
+    interface RabbitMQ {
+        interface Broker {
+            String HOST = "uniboguys.duckdns.org";
+            String PASSWORD = "FmzevdBBmpcdvPHLDJQR";
+            int PORT = 5672;
+        }
+        interface ConfigKey {
+            String HOST = "host";
+            String PASSWORD = "password";
+            String PORT = "port";
+        }
+        interface Exchanges {
+            interface Type {
+                String DIRECT = "direct";
+            }
+            String NO_EXCHANGE = "";
+            String USER = "user";
+            String VEHICLE = "vehicle";
+        }
+        interface RoutingKey {
+            String LOGIN = "user.request.login";
+            String VEHICLE_REQUEST = "vehicle.request.nearest";
+            String VEHICLE_RESPONSE = "vehicle.response.nearest.%s";
+            String CAN_DRIVE_REQUEST = "vehicle.request.candrive.%s";
+            String CAN_DRIVE_RESPONSE = "vehicle.response.candrive.%s";
+        }
+    }
+
     String VEHICLES_DATABASE_PATH = "services/vehicle/src/test/resources/vehicles.json";
-    String BOOKING_DATABASE_FILE_NAME = "bookings.json";
 
-    String USER_LOGIN = "/user/login";
     String USERNAME = "username";
-    String PASSWORD = "password";
-    String USERNAME_PASSWORD_MISSING = "username or password missing";
-    String USERNAME_PASSWORD_WRONG = "wrong username or password";
-    String USER_AUTHENTICATED = "user authenticated";
-    String CONTENT_TYPE = "content-type";
-    String TEXT_PLAIN = "text/plain";
-    int PORT_AUTHENTICATION_SERVICE = 8080;
 
-    String RABBITMQ_SERVER_HOST = "uniboguys.duckdns.org";
-    String RABBITMQ_SERVER_PASSWORD = "FmzevdBBmpcdvPHLDJQR";
-    int RABBITMQ_SERVER_PORT = 5672;
     String UTF = "UTF-8";
 
     double RANGE = 20;
@@ -41,24 +59,17 @@ public interface Constants {
     // Services RabbitMQ
     String SERVICE_QUEUE_BASE_NAME = "service";
 
-    //Exchanges
-    String VEHICLE_SERVICE_EXCHANGE = "vehicle";
-
     // Vehicle Service RabbitMQ
     String EVENT_BUS_AVAILABLE_ADDRESS = "service.vehicle.eventbus";
     String EVENT_BUS_FINDER_ADDRESS = "finder.vehicle.eventbus";
     String CONSUMER_VEHICLE_SERVICE = "vehicle";
-    String ROUTING_KEY_VEHICLE_REQUEST = "vehicle.request.nearest";
-    String ROUTING_KEY_VEHICLE_RESPONSE = "vehicle.response.nearest.%s";
-    String ROUTING_KEY_CAN_DRIVE = "vehicle.request.candrive.%s";
-    String ROUTING_KEY_CAN_DRIVE_RESPONSE = "vehicle.response.candrive.%s";
 
-    String BODY = "body";
     String USER_POSITION = "userPosition";
     String DESTINATION_POSITION = "destinationPosition";
     String STATUS_AVAILABLE = "available";
     String ELIGIBLE_VEHICLE_LIST = "eligibleVehicleList";
     String TRIP_DISTANCE = "tripDistance";
-    String EXCHANGE_TYPE = "direct";
+
     int ZERO = 0;
+
 }

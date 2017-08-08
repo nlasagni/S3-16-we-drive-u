@@ -1,5 +1,6 @@
 package com.wedriveu.services.shared.rabbitmq;
 
+import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
@@ -7,8 +8,6 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
-import static com.wedriveu.services.shared.utilities.Constants.EXCHANGE_TYPE;
-import static com.wedriveu.services.shared.utilities.Constants.VEHICLE_SERVICE_EXCHANGE;
 
 /**
  * Basic Vert.x RabbitMQ Publisher Verticle.
@@ -42,8 +41,8 @@ public class VerticlePublisher extends AbstractVerticle {
     }
 
     protected void declareExchanges(Handler<AsyncResult<Void>> handler) {
-        client.exchangeDeclare(VEHICLE_SERVICE_EXCHANGE,
-                EXCHANGE_TYPE,
+        client.exchangeDeclare(Constants.RabbitMQ.Exchanges.VEHICLE,
+                Constants.RabbitMQ.Exchanges.Type.DIRECT,
                 false,
                 false,
                 handler);

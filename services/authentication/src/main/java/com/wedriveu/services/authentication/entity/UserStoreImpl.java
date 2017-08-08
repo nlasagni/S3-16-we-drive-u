@@ -19,12 +19,13 @@ import java.util.List;
 public class UserStoreImpl implements UserStore {
 
     private static final String STORE_FOLDER = "store";
+    private static final String USERS_DATABASE_FILENAME = "users.json";
 
     private File file;
 
     public UserStoreImpl() throws IOException {
         new File(STORE_FOLDER).mkdir();
-        file = new File(STORE_FOLDER + File.separator + Constants.USERS_DATABASE_FILENAME);
+        file = new File(STORE_FOLDER + File.separator + USERS_DATABASE_FILENAME);
         file.createNewFile();
     }
 
