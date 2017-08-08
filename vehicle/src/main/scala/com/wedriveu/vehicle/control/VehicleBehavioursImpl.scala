@@ -103,7 +103,9 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
           if (checkVehicleIsBrokenOrStolen()) {
             break()
           }
-          //Thread.sleep(500)
+          if(!debugVar){
+            Thread.sleep(500)
+          }
           deltaLat = position.latitude - selfDrivingVehicle.position.latitude
           deltaLon = position.longitude - selfDrivingVehicle.position.longitude
           calculateMovement(time, estimatedJourneyTimeInSeconds, deltaLat, deltaLon)

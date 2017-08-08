@@ -67,7 +67,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
         speedTest,
         new VehicleStopViewImpl(1),
         false)
-    val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), false)
+    val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), true)
     randomLatitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
     randomLongitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
     vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination,randomLongitudeDestination))
@@ -86,7 +86,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
         speedTest,
         new VehicleStopViewImpl(1),
         false)
-    val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), false)
+    val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), true)
     vehicleControl.subscribeToBrokenEvents()
     Thread.sleep(17000)
     assert(vehicleControl.getVehicle().getSate().equals(VehicleConstants.stateBroken))
@@ -101,7 +101,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
         speedTest,
         new VehicleStopViewImpl(1),
         false)
-    val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), false)
+    val vehicleBehaviours = new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), true)
     vehicleControl.subscribeToStolenEvents()
     Thread.sleep(18000)
     assert(vehicleControl.getVehicle().getSate().equals(VehicleConstants.stateStolen))
