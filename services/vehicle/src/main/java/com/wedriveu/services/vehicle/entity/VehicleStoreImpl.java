@@ -37,6 +37,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.NearestControl.AVAILABLE_REQUEST, this::getAllAvailableVehiclesInRange);
         eventBus.consumer(Messages.NearestControl.GET_VEHICLE, this::getVehicle);
+        eventBus.consumer(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, this::addVehicle);
         createVehiclesFile();
         future.complete();
     }
@@ -69,10 +70,12 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     }
 
     @Override
-    public void addVehicle(Vehicle vehicle) {
+    public void addVehicle(Message message) {
+        Vehicle vehicle = ((JsonObject) message.body()).mapTo(Vehicle.class);
         List<Vehicle> vehicles = getVehicleList();
         vehicles.add(vehicle);
         writeJsonVehicleFile((ArrayList<Vehicle>) vehicles);
+        eventBus.send(Messages.VehicleStore.REGISTER_VEHICLE_COMPLETED, null);
     }
 
 
@@ -83,7 +86,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         List<Vehicle> vehicles = getVehicleList();
         List<Vehicle> availableVehicles = new ArrayList<>(vehicles.size());
         for (Vehicle vehicle : vehicles) {
-            if (vehicle.getState().equals(STATUS_AVAILABLE)
+            if (vehicle.getStatus().equals(STATUS_AVAILABLE)
                     && PositionUtils.isInRange(userPosition, vehicle.getPosition())) {
                 availableVehicles.add(vehicle);
             }
@@ -111,14 +114,14 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     }
 
     @Override
-    public void updateVehicleInVehicleList(String carLicencePlate, String state, Position position, Date lastUpdate) {
+    public void updateVehicleInVehicleList(String carLicencePlate, String status, Position position, Date lastUpdate) {
         ObjectMapper mapper = new ObjectMapper();
         List<Vehicle> vehicles = getVehicleList();
         for (Vehicle vehicle : vehicles) {
             if (vehicle.getCarLicencePlate().equals(carLicencePlate)) {
                 Log.log("Vehicle found for update");
-                if (!(vehicle.getState().equals(state))) {
-                    vehicle.setState(state);
+                if (!(vehicle.getStatus().equals(status))) {
+                    vehicle.setStatus(status);
                 }
                 if (!(vehicle.getPosition().equals(position))) {
                     vehicle.setPosition(position);
@@ -191,7 +194,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
                 Log.log("com.wedriveu.services.vehicle.entity.Vehicle found! -> " +
                         vehicle.getCarLicencePlate() +
                         " " +
-                        vehicle.getState());
+                        vehicle.getStatus());
                 return vehicle;
             }
         }

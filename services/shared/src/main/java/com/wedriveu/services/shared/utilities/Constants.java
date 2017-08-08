@@ -34,9 +34,13 @@ public interface Constants {
 
     // Vehicle Jackson parameters
     String CAR_LICENCE_PLATE = "licencePlate";
-    String STATE = "state";
+    String STATUS = "state";
     String POSITION = "position";
     String LAST_UPDATE = "lastUpdate";
+    String VEHICLE_NAME = "name";
+    String VEHICLE_DESCRIPTION = "description";
+    String IMAGE_URL = "imageUrl";
+    String REGISTER_RESULT = "vehicleRegisterResult";
 
     // Services RabbitMQ
     String SERVICE_QUEUE_BASE_NAME = "service";
@@ -52,6 +56,8 @@ public interface Constants {
     String ROUTING_KEY_VEHICLE_RESPONSE = "vehicle.response.nearest.%s";
     String ROUTING_KEY_CAN_DRIVE = "vehicle.request.candrive.%s";
     String ROUTING_KEY_CAN_DRIVE_RESPONSE = "vehicle.response.candrive.%s";
+    String ROUTING_KEY_REGISTER_VEHICLE_REQUEST = "vehicle.request.add";
+    String ROUTING_KEY_REGISTER_VEHICLE_RESPONSE = "vehicle.response.add.%d";
 
     String BODY = "body";
     String USER_POSITION = "userPosition";

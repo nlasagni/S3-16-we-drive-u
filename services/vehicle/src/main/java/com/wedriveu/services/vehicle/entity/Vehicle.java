@@ -3,6 +3,7 @@ package com.wedriveu.services.vehicle.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wedriveu.services.shared.utilities.Position;
 
+import java.net.URL;
 import java.util.Date;
 
 import static com.wedriveu.services.shared.utilities.Constants.*;
@@ -22,21 +23,51 @@ public class Vehicle {
 
     @JsonProperty(CAR_LICENCE_PLATE)
     private String carLicencePlate;
-    @JsonProperty(STATE)
-    private String state;
+    @JsonProperty(STATUS)
+    private String status;
     @JsonProperty(POSITION)
     private Position position;
     @JsonProperty(LAST_UPDATE)
     private Date lastUpdate;
+    @JsonProperty(VEHICLE_NAME)
+    private String name;
+    @JsonProperty(VEHICLE_DESCRIPTION)
+    private String description;
+    @JsonProperty(IMAGE_URL)
+    private URL imageUrl;
 
     public Vehicle(String carLicencePlate,
-                   String state,
+                   String status,
                    Position position,
                    Date lastUpdate) {
         this.carLicencePlate = carLicencePlate;
-        this.state = state;
+        this.status = status;
         this.position = position;
         this.lastUpdate = lastUpdate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public URL getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(URL imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getCarLicencePlate() {
@@ -47,12 +78,12 @@ public class Vehicle {
         this.carLicencePlate = carLicencePlate;
     }
 
-    public String getState() {
-        return state;
+    public String getStatus() {
+        return status;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Date getLastUpdate() {
@@ -75,7 +106,7 @@ public class Vehicle {
     public String toString() {
         return "Vehicle{" +
                 "carLicencePlate='" + carLicencePlate + '\'' +
-                ", state='" + state + '\'' +
+                ", state='" + status + '\'' +
                 ", position=" + position +
                 ", lastUpdate=" + lastUpdate +
                 '}';

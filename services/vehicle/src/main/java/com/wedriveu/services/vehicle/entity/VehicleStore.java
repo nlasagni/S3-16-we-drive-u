@@ -22,7 +22,7 @@ public interface VehicleStore {
     /**
      * @param vehicle Indicates the vehicle the will be added to the db.
      */
-    void addVehicle(Vehicle vehicle);
+    void addVehicle(Message vehicle);
 
 
     void getAllAvailableVehiclesInRange(Message message);

@@ -15,6 +15,7 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;

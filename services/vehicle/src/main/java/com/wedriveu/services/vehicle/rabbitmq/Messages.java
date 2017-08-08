@@ -21,6 +21,11 @@ public interface Messages {
     interface VehicleStore {
         String AVAILABLE_COMPLETED = "store.available.completed";
         String GET_VEHICLE_COMPLETED = "store.get.vehicle.completed";
+        String REGISTER_VEHICLE_COMPLETED = "vehicle.register.completed";
+    }
+
+    interface VehicleRegister {
+        String REGISTER_VEHICLE_REQUEST = "vehicle.register.request";
     }
 
 }
