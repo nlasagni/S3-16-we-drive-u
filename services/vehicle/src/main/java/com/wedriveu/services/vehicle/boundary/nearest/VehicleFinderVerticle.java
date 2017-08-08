@@ -90,15 +90,15 @@ public class VehicleFinderVerticle extends VerticleConsumer {
 
     private void publishToMultipleRoutingKeys() {
         IntStream.range(ZERO, availableVehicles.size()).forEach(index -> {
-            publishToConsumer(Constants.VEHICLE_SERVICE_EXCHANGE,
-                    String.format(Constants.ROUTING_KEY_CAN_DRIVE,
+            publishToConsumer(RabbitMQ.Exchanges.VEHICLE,
+                    String.format(RabbitMQ.RoutingKey.CAN_DRIVE_REQUEST,
                             availableVehicles.get(index).getCarLicencePlate()), index);
         });
     }
 
     private void declareExchanges(Handler<AsyncResult<Void>> handler) {
-        client.exchangeDeclare(Constants.VEHICLE_SERVICE_EXCHANGE,
-                EXCHANGE_TYPE,
+        client.exchangeDeclare(RabbitMQ.Exchanges.VEHICLE,
+                RabbitMQ.Exchanges.Type.DIRECT,
                 false,
                 false,
                 handler);
@@ -108,7 +108,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
                                    String routingKey,
                                    int index) {
         JsonObject requestJson = new JsonObject();
-        requestJson.put(BODY, getRequestObject(index).encode());
+        requestJson.put(EventBus.BODY, getRequestObject(index).encode());
         client.basicPublish(exchangeName, routingKey, requestJson, null);
     }
 
@@ -122,8 +122,8 @@ public class VehicleFinderVerticle extends VerticleConsumer {
 
 
     private void startFinderConsumer() throws IOException, TimeoutException {
-        startConsumer(VEHICLE_SERVICE_EXCHANGE,
-                String.format(ROUTING_KEY_CAN_DRIVE_RESPONSE, username),
+        startConsumer(RabbitMQ.Exchanges.VEHICLE,
+                String.format(RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, username),
                 EVENT_BUS_FINDER_ADDRESS);
     }
 
@@ -133,7 +133,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         if (counter <= availableVehicles.size()) {
             vertx.eventBus().consumer(eventBus, msg -> {
                 JsonObject responseJson = (JsonObject) msg.body();
-                String response = responseJson.getString(BODY);
+                String response = responseJson.getString(EventBus.BODY);
                 VehicleResponse vehicleResponse = (new JsonObject(response)).mapTo(VehicleResponse.class);
                 if (vehicleResponse.isEligible()) {
                     vehicleResponse.setUsername(username);

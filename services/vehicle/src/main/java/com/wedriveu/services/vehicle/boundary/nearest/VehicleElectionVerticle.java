@@ -1,6 +1,7 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
+import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
@@ -25,9 +26,9 @@ public class VehicleElectionVerticle extends VerticlePublisher {
 
     private void sendVehicleToUser(Message message) {
         JsonObject dataToUser = new JsonObject();
-        dataToUser.put(BODY, ((JsonObject) message.body()).encode());
-        publish(VEHICLE_SERVICE_EXCHANGE,
-                String.format(ROUTING_KEY_VEHICLE_RESPONSE, dataToUser.getString(USERNAME)),
+        dataToUser.put(EventBus.BODY, ((JsonObject) message.body()).encode());
+        publish(RabbitMQ.Exchanges.VEHICLE,
+                String.format(RabbitMQ.RoutingKey.VEHICLE_RESPONSE, dataToUser.getString(USERNAME)),
                 dataToUser);
     }
 
