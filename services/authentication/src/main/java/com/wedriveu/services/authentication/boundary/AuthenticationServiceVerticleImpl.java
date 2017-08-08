@@ -71,7 +71,11 @@ public class AuthenticationServiceVerticleImpl extends AbstractVerticle implemen
 	}
 
 	private void declareQueue(Future<JsonObject> future) {
-		rabbitMQClient.queueDeclare(QUEUE_NAME, true, false, false, future.completer());
+		rabbitMQClient.queueDeclare(QUEUE_NAME,
+				true,
+				false,
+				false,
+				future.completer());
 	}
 
 	private void bindQueueToExchange(Future<Void> future) {
@@ -92,7 +96,8 @@ public class AuthenticationServiceVerticleImpl extends AbstractVerticle implemen
 			try {
 				JsonObject message = new JsonObject(msg.body().toString());
 				LoginRequest loginRequest =
-							objectMapper.readValue(message.getString(Constants.EventBus.BODY), LoginRequest.class);
+						objectMapper.readValue(message.getString(Constants.EventBus.BODY),
+								LoginRequest.class);
 				requestId = loginRequest.getRequestId();
 				response = checkCredentials(loginRequest);
 			} catch (IOException e) {
@@ -110,7 +115,10 @@ public class AuthenticationServiceVerticleImpl extends AbstractVerticle implemen
 			String responseString = objectMapper.writeValueAsString(response);
 			JsonObject responseJson = new JsonObject();
 			responseJson.put(Constants.EventBus.BODY, responseString);
-			rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.NO_EXCHANGE, requestId, responseJson, onPublish -> {
+			rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.NO_EXCHANGE,
+					requestId,
+					responseJson,
+					onPublish -> {
 				if (!onPublish.succeeded()) {
 					Log.error(TAG, SEND_ERROR, onPublish.cause());
 				}

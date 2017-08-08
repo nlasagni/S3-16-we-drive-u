@@ -6,6 +6,7 @@ import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.shared.entity.LoginRequest;
 import com.wedriveu.shared.entity.LoginResponse;
 import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -30,7 +31,7 @@ public class AuthenticationServiceVerticleImplTest {
     private static final String PASSWORD = "PASSWORD1";
 
     private Vertx vertx;
-    private io.vertx.core.eventbus.EventBus eventBus;
+    private EventBus eventBus;
     private RabbitMQClient rabbitMQClient;
     private AuthenticationServiceVerticleImpl authenticationService;
     private String requestId;
