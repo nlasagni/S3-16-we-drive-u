@@ -11,15 +11,6 @@ public class VehicleCounter {
     private int recharging;
     private int stolen;
 
-
-    public VehicleCounter() {
-        available = 0;
-        broken = 0;
-        booked = 0;
-        recharging = 0;
-        stolen = 0;
-    }
-
     public void increaseAvailable() {
         available++;
     }
@@ -40,26 +31,6 @@ public class VehicleCounter {
         recharging++;
     }
 
-    public void decreaseAvailable() {
-        available--;
-    }
-
-    public void decreaseBroken() {
-        broken--;
-    }
-
-    public void decreaseBooked() {
-        booked--;
-    }
-
-    public void decreaseStolen(){
-        stolen--;
-    }
-
-    public void decreaseRecharging() {
-        recharging--;
-    }
-
     public int getStolen() {
         return stolen;
     }
@@ -78,6 +49,22 @@ public class VehicleCounter {
 
     public int getAvailable() {
         return available;
+    }
+
+    public String toString() {
+        return "available: " + available +
+                " booked: " + booked +
+                " broken: " + broken +
+                " recharging: " + recharging +
+                " stolen: " + stolen;
+    }
+
+    public boolean equals(VehicleCounter vehicleCounter) {
+        return  this.available == vehicleCounter.getAvailable() &&
+                this.booked == vehicleCounter.getBooked() &&
+                this.broken == vehicleCounter.getBroken() &&
+                this.recharging == vehicleCounter.getRecharging() &&
+                this.stolen == vehicleCounter.getStolen();
     }
 
 }

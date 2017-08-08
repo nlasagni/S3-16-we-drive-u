@@ -7,6 +7,7 @@ import com.wedriveu.services.shared.entity.VehicleCounter;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -25,9 +26,10 @@ public class AnalyticsStoreImplTest {
 
     @Before
     public void setUp() throws Exception {
+        VehiclesCounterAlgorithm vehiclesCounterAlgorithm = new VehiclesCounterAlgorithmImpl();
         EntityListStoreStrategy<AnalyticsVehicle> storeStrategy =
                 new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, DATABASE_FILE_NAME);
-        analyticsStore = new AnalyticsStoreImpl(storeStrategy);
+        analyticsStore = new AnalyticsStoreImpl(storeStrategy, vehiclesCounterAlgorithm);
         vehicle= new AnalyticsVehicle(VEHICLE_1_LICENSE_PLATE, "available");
     }
 
@@ -45,8 +47,7 @@ public class AnalyticsStoreImplTest {
 
     @Test
     public void addVehicle() throws Exception {
-        boolean correctInsertionSuccess = insertVehicleIntoDatabase();
-        assertTrue(correctInsertionSuccess);
+        assertTrue(insertVehicleIntoDatabase());
     }
 
     @Test
