@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Michele
  * @since  17/07/2017
  */
+
 public class Position {
 
     @JsonProperty

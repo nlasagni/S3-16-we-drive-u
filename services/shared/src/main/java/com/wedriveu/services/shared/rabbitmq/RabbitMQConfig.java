@@ -9,9 +9,6 @@ import io.vertx.core.json.JsonObject;
  */
 public class RabbitMQConfig {
 
-    private static final String PASSWORD = "password";
-    private static final String HOST = "host";
-    private static final String PORT = "port";
     private static io.vertx.rabbitmq.RabbitMQClient rabbitMQClient = null;
     private static RabbitMQConfig setup = null;
     private static Vertx vertx;
@@ -33,9 +30,9 @@ public class RabbitMQConfig {
 
     private static void setupRabbitMQ() {
         JsonObject config = new JsonObject();
-        config.put(HOST, Constants.RABBITMQ_SERVER_HOST);
-        config.put(PASSWORD, Constants.RABBITMQ_SERVER_PASSWORD);
-        config.put(PORT, Constants.RABBITMQ_SERVER_PORT);
+        config.put(Constants.RabbitMQ.ConfigKey.HOST, Constants.RabbitMQ.Broker.HOST);
+        config.put(Constants.RabbitMQ.ConfigKey.PASSWORD, Constants.RabbitMQ.Broker.PASSWORD);
+        config.put(Constants.RabbitMQ.ConfigKey.PORT, Constants.RabbitMQ.Broker.PORT);
         rabbitMQClient = io.vertx.rabbitmq.RabbitMQClient.create(vertx, config);
     }
 

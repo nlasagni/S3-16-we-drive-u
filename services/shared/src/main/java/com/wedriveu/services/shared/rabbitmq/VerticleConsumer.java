@@ -13,7 +13,6 @@ import java.util.concurrent.TimeoutException;
 /**
  * Basic Vert.x RabbitMQ Consumer Verticle. Used to properly handle inbound messages from external publishers.
  *
- * @author nicolalasagni
  * @author Marco Baldassarri
  * @since 29/07/2017
  */
