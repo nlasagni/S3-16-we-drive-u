@@ -2,7 +2,7 @@ package com.wedriveu.services.vehicle.rabbitmq;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wedriveu.services.shared.utilities.Position;
-import com.wedriveu.services.vehicle.entity.Vehicle;
+import com.wedriveu.services.shared.entity.Vehicle;
 
 import java.util.List;
 
