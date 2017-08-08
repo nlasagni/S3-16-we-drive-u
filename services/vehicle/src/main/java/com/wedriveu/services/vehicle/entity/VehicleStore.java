@@ -1,5 +1,6 @@
 package com.wedriveu.services.vehicle.entity;
 
+import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.utilities.Position;
 import io.vertx.core.eventbus.Message;
 
@@ -7,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This inteface models the <em>com.wedriveu.services.vehicle.entity.Vehicle' database domain</em>.
+ * This inteface models the <em>com.wedriveu.services.shared.entity.Vehicle' database domain</em>.
  *
  * @author Michele Donati
  * @author Marco Baldassarri
@@ -15,7 +16,7 @@ import java.util.List;
 public interface VehicleStore {
 
     /**
-     * Maps a <em>com.wedriveu.services.vehicle.entity.Vehicle</em> object in a Json object.
+     * Maps a <em>com.wedriveu.services.shared.entity.Vehicle</em> object in a Json object.
      */
     void createVehiclesFile();
 
@@ -28,7 +29,7 @@ public interface VehicleStore {
     void getAllAvailableVehiclesInRange(Message message);
 
     /**
-     * @param message Identifies the <em>com.wedriveu.services.vehicle.entity.Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.
+     * @param message Identifies the <em>com.wedriveu.services.shared.entity.Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.
      */
     void getVehicle(Message message);
 

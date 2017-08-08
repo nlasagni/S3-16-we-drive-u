@@ -6,7 +6,7 @@ import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponse;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Position;
 import com.wedriveu.services.shared.utilities.PositionUtils;
-import com.wedriveu.services.vehicle.entity.Vehicle;
+import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import io.vertx.core.AsyncResult;

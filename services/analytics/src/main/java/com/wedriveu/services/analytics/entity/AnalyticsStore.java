@@ -1,12 +1,13 @@
 package com.wedriveu.services.analytics.entity;
 
+import com.wedriveu.services.shared.entity.AnalyticsVehicle;
 import com.wedriveu.services.shared.entity.VehicleCounter;
 
 import java.util.Optional;
 
 /**
  * @author Stefano Bernagozzi
- * This inteface models the <em>com.wedriveu.services.analytics.entity.AnalyticsVehicle' database store</em>.
+ * This inteface models the <em>com.wedriveu.services.shared.entity.AnalyticsVehicle' database store</em>.
  */
 
 

@@ -1,13 +1,13 @@
 package com.wedriveu.services.analytics.entity;
 
 
+import com.wedriveu.services.shared.entity.AnalyticsVehicle;
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
 import com.wedriveu.services.shared.entity.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.services.shared.entity.VehicleCounter;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;

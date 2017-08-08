@@ -3,6 +3,7 @@ package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.Position;
@@ -188,14 +189,14 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         for (Vehicle vehicle : vehicles) {
 
             if (vehicle.getCarLicencePlate().equals(carLicencePlate)) {
-                Log.log("com.wedriveu.services.vehicle.entity.Vehicle found! -> " +
+                Log.log("com.wedriveu.services.shared.entity.Vehicle found! -> " +
                         vehicle.getCarLicencePlate() +
                         " " +
                         vehicle.getState());
                 return vehicle;
             }
         }
-        Log.log("com.wedriveu.services.vehicle.entity.Vehicle not found, retry!");
+        Log.log("com.wedriveu.services.shared.entity.Vehicle not found, retry!");
         return null;
     }
 
