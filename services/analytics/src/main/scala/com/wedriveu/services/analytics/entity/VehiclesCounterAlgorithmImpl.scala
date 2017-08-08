@@ -17,7 +17,7 @@ import collection.JavaConverters._
     }
 
     @annotation.tailrec
-    final def vehicleCounterRecursive(vehicleList: List[AnalyticsVehicle], counter: VehicleCounter): Boolean = vehicleList match {
+    private[this] final def vehicleCounterRecursive(vehicleList: List[AnalyticsVehicle], counter: VehicleCounter): Boolean = vehicleList match {
       case x :: tail =>
         x.getStatus match {
           case "available" => counter.increaseAvailable()
