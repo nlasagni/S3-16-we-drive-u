@@ -3,6 +3,7 @@ package com.wedriveu.services.vehicle.boundary.vehicleregister;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.utilities.MessageParser;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.json.JsonObject;
 
@@ -33,10 +34,11 @@ public class RegisterConsumerVerticle extends VerticleConsumer {
 
     @Override
     public void registerConsumer(String eventBus) {
-        vertx.eventBus().consumer(eventBus, msg -> addNewVehicle((JsonObject) msg.body()));
+        vertx.eventBus().consumer(eventBus, msg -> addNewVehicle(MessageParser.getJson(msg)));
     }
 
     private void addNewVehicle(JsonObject userData) {
+        Log.log(userData.encodePrettily());
         eventBus.send(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, userData);
     }
 }

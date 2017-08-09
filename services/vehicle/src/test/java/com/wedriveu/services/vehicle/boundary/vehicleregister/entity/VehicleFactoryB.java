@@ -2,6 +2,7 @@ package com.wedriveu.services.vehicle.boundary.vehicleregister.entity;
 
 import com.wedriveu.services.shared.utilities.Position;
 import com.wedriveu.services.vehicle.entity.Vehicle;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;

@@ -1,9 +1,8 @@
-
-package com.wedriveu.services.vehicle.boundary.vehicleregister;
+package com.wedriveu.services.vehicle.boundary.nearest;
 
 import com.wedriveu.services.vehicle.boundary.PublisherTest;
-import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryA;
-import com.wedriveu.services.vehicle.entity.Vehicle;
+import com.wedriveu.services.vehicle.boundary.nearest.entity.UserDataFactoryA;
+import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -16,16 +15,16 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
 
 
 @RunWith(VertxUnitRunner.class)
-public class RegisterConsumerVerticleTest extends PublisherTest {
+public class NearestConsumerVerticleTest extends PublisherTest {
 
-    private static final String EVENT_BUS_ADDRESS = RegisterConsumerVerticle.class.getCanonicalName();
+    private static final String EVENT_BUS_ADDRESS = NearestConsumerVerticleTest.class.getCanonicalName();
 
-    private RegisterConsumerVerticle registerConsumerVerticle;
+    private NearestConsumerVerticle registerConsumerVerticle;
 
 
     @Before
     public void setUp(TestContext context) throws Exception {
-        registerConsumerVerticle = new RegisterConsumerVerticle();
+        registerConsumerVerticle = new NearestConsumerVerticle();
         super.setup(context, registerConsumerVerticle);
     }
 
@@ -38,7 +37,7 @@ public class RegisterConsumerVerticleTest extends PublisherTest {
     public void registerConsumer(TestContext context) throws Exception {
         super.registerConsumer(context,
                 VEHICLE_SERVICE_EXCHANGE,
-                ROUTING_KEY_REGISTER_VEHICLE_REQUEST,
+                ROUTING_KEY_VEHICLE_REQUEST,
                 EVENT_BUS_ADDRESS,
                 createRequestJsonObject());
 
@@ -46,8 +45,8 @@ public class RegisterConsumerVerticleTest extends PublisherTest {
 
     @Override
     protected JsonObject createRequestJsonObject() {
-        Vehicle vehicle = new VehicleFactoryA().getVehicle();
-        JsonObject jsonObject = new JsonObject().mapFrom(vehicle);
+        UserRequest userData = new UserDataFactoryA().getUserData();
+        JsonObject jsonObject = new JsonObject().mapFrom(userData);
         jsonObject.put(BODY, jsonObject);
         return jsonObject;
     }
