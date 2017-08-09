@@ -1,19 +1,20 @@
-package com.wedriveu.mobile.service.login;
+package com.wedriveu.mobile.util.rabbitmq;
 
 import android.app.Activity;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.impl.DefaultExceptionHandler;
+import com.wedriveu.mobile.service.ServiceOperationCallback;
 
 /**
- * @author Nicola Lasagni on 08/08/2017.
+ * @author Nicola Lasagni on 09/08/2017.
  */
-class LoginExceptionHandler extends DefaultExceptionHandler {
+public class RabbitMqExceptionHandler<T> extends DefaultExceptionHandler {
 
     private Activity mActivity;
-    private LoginServiceCallback mCallback;
+    private ServiceOperationCallback<T> mCallback;
 
-    LoginExceptionHandler(Activity activity, LoginServiceCallback callback) {
+    public RabbitMqExceptionHandler(Activity activity, ServiceOperationCallback<T> callback) {
         mActivity = activity;
         mCallback = callback;
     }
@@ -27,8 +28,9 @@ class LoginExceptionHandler extends DefaultExceptionHandler {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mCallback.onLoginFinished(null, exception.getLocalizedMessage());
+                mCallback.onServiceOperationFinished(null, exception.getLocalizedMessage());
             }
         });
     }
+
 }
