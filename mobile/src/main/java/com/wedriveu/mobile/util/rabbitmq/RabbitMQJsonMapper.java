@@ -1,4 +1,4 @@
-package com.wedriveu.mobile.util;
+package com.wedriveu.mobile.util.rabbitmq;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
