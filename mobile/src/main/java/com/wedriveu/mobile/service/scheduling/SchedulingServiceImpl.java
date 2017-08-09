@@ -10,9 +10,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.rabbitmq.client.*;
 import com.wedriveu.mobile.model.SchedulingLocation;
 import com.wedriveu.mobile.model.Vehicle;
-import com.wedriveu.mobile.service.scheduling.model.VehicleResponse;
+import com.wedriveu.mobile.util.rabbitmq.RabbitMqExceptionHandler;
+import com.wedriveu.mobile.service.ServiceOperationCallback;
+import com.wedriveu.shared.entity.VehicleResponse;
 import com.wedriveu.mobile.store.UserStore;
-import com.wedriveu.mobile.util.RabbitMQJsonMapper;
+import com.wedriveu.mobile.util.rabbitmq.RabbitMQJsonMapper;
 import com.wedriveu.shared.entity.Position;
 import com.wedriveu.shared.entity.VehicleRequest;
 import com.wedriveu.shared.util.Constants;
@@ -49,7 +51,7 @@ public class SchedulingServiceImpl implements SchedulingService {
     }
 
     @Override
-    public void findNearestVehicle(final Place address, final SchedulingServiceCallback callback) {
+    public void findNearestVehicle(final Place address, final ServiceOperationCallback<Vehicle> callback) {
         schedulingLocation.setDestinationLatitude(address.getLatLng().latitude);
         schedulingLocation.setDestinationLongitude(address.getLatLng().longitude);
 
@@ -59,7 +61,7 @@ public class SchedulingServiceImpl implements SchedulingService {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    ExceptionHandler exceptionHandler = new SchedulingServiceExceptionHandler(mActivity, callback);
+                    ExceptionHandler exceptionHandler = new RabbitMqExceptionHandler<>(mActivity, callback);
                     ConnectionFactory connectionFactory =
                             createConnectionFactory(exceptionHandler,
                                     Constants.RabbitMQ.Broker.HOST,
@@ -150,7 +152,7 @@ public class SchedulingServiceImpl implements SchedulingService {
     private void subscribeForResponse(final Connection connection,
                                       final Channel channel,
                                       final VehicleRequest request,
-                                      final SchedulingServiceCallback callback) throws IOException, InterruptedException {
+                                      final ServiceOperationCallback<Vehicle> callback) throws IOException, InterruptedException {
         final BlockingQueue<byte[]> response = new ArrayBlockingQueue<>(1);
         String userName = mUserStore.getUser().getUsername();
         String queue = String.format(Constants.RabbitMQ.Queue.USER, userName);
@@ -179,7 +181,7 @@ public class SchedulingServiceImpl implements SchedulingService {
     }
 
     private void handleResponseDelivery(byte[] body,
-                                        final SchedulingServiceCallback callback) throws IOException {
+                                        final ServiceOperationCallback<Vehicle> callback) throws IOException {
         Vehicle vehicle = null;
         String error = "";
         if (body == null) {
@@ -204,11 +206,11 @@ public class SchedulingServiceImpl implements SchedulingService {
 
     private void handleResponse(final Vehicle vehicle,
                                 final String error,
-                                final SchedulingServiceCallback callback) {
+                                final ServiceOperationCallback<Vehicle> callback) {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                callback.onFindNearestVehicleFinished(vehicle, error);
+                callback.onServiceOperationFinished(vehicle, error);
             }
         });
     }

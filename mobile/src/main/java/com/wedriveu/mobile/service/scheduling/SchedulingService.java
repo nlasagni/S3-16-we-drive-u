@@ -1,6 +1,8 @@
 package com.wedriveu.mobile.service.scheduling;
 
 import com.google.android.gms.location.places.Place;
+import com.wedriveu.mobile.model.Vehicle;
+import com.wedriveu.mobile.service.ServiceOperationCallback;
 import com.wedriveu.mobile.util.location.LocationServiceListener;
 
 /**
@@ -20,6 +22,6 @@ public interface SchedulingService extends LocationServiceListener {
      * @param address The GPS coordinates given by the user.
      * @param callback
      */
-    void findNearestVehicle(Place address, SchedulingServiceCallback callback);
+    void findNearestVehicle(Place address, ServiceOperationCallback<Vehicle> callback);
 
 }
