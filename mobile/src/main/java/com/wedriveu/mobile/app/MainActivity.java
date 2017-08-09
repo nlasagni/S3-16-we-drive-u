@@ -18,6 +18,9 @@ import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.login.view.LoginViewImpl;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModelImpl;
+import com.wedriveu.mobile.store.StoreFactory;
+import com.wedriveu.mobile.store.StoreFactoryImpl;
+import com.wedriveu.mobile.store.UserStore;
 import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingViewImpl;
@@ -43,17 +46,25 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mFragmentManager = getSupportFragmentManager();
+        UserStore userStore = StoreFactoryImpl.getInstance().createUserStore(this);
         if (savedInstanceState == null) {
-            LoginViewImpl loginViewFragment = LoginViewImpl.newInstance(LoginViewModel.TAG);
-            LoginViewModelImpl loginViewModel = LoginViewModelImpl.newInstance(LoginView.TAG);
-            FragmentTransaction transaction = mFragmentManager.beginTransaction();
-            transaction.add(loginViewModel, LoginViewModel.TAG);
-            transaction.replace(R.id.fragment_container, loginViewFragment, LoginView.TAG);
-            transaction.commit();
-            mLocationService = LocationServiceImpl.getInstance(this);
+            if (userStore.getUser() != null) {
+                showTripScheduling();
+            } else {
+                showLogin();
+            }
         }
+    }
+
+    private void showLogin() {
+        LoginViewImpl loginViewFragment = LoginViewImpl.newInstance(LoginViewModel.TAG);
+        LoginViewModelImpl loginViewModel = LoginViewModelImpl.newInstance(LoginView.TAG);
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.add(loginViewModel, LoginViewModel.TAG);
+        transaction.replace(R.id.fragment_container, loginViewFragment, LoginView.TAG);
+        transaction.commit();
+        mLocationService = LocationServiceImpl.getInstance(this);
     }
 
     @Override
