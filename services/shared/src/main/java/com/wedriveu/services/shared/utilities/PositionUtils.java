@@ -1,5 +1,6 @@
 package com.wedriveu.services.shared.utilities;
 
+import com.wedriveu.shared.entity.Position;
 import com.wedriveu.shared.util.Constants;
 
 /**

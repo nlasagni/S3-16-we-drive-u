@@ -3,7 +3,7 @@ package com.wedriveu.services.booking.entity;
 import com.wedriveu.services.shared.entity.Booking;
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
 import com.wedriveu.services.shared.entity.JsonFileEntityListStoreStrategyImpl;
-import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.shared.entity.Position;
 import org.junit.Before;
 import org.junit.Test;
 
