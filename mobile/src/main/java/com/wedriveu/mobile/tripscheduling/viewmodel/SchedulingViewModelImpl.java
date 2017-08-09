@@ -16,7 +16,9 @@ import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.service.ServiceFactoryImpl;
 import com.wedriveu.mobile.service.scheduling.SchedulingService;
 import com.wedriveu.mobile.service.scheduling.SchedulingServiceCallback;
+import com.wedriveu.mobile.store.StoreFactory;
 import com.wedriveu.mobile.store.StoreFactoryImpl;
+import com.wedriveu.mobile.store.UserStore;
 import com.wedriveu.mobile.store.VehicleStore;
 import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
@@ -55,8 +57,10 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSchedulingService = ServiceFactoryImpl.getInstance().createSchedulingService();
-        LocationService mLocationService = LocationServiceImpl.getInstance(getActivity());
+        Activity activity = getActivity();
+        UserStore userStore = StoreFactoryImpl.getInstance().createUserStore(getContext());
+        mSchedulingService = ServiceFactoryImpl.getInstance().createSchedulingService(activity, userStore);
+        LocationService mLocationService = LocationServiceImpl.getInstance(activity);
         mVehicleStore = StoreFactoryImpl.getInstance().createVehicleStore(getContext());
         mLocationService.addLocationListener(mSchedulingService);
     }

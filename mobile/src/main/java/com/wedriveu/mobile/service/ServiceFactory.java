@@ -3,11 +3,11 @@ package com.wedriveu.mobile.service;
 import android.app.Activity;
 import com.wedriveu.mobile.service.login.LoginService;
 import com.wedriveu.mobile.service.scheduling.SchedulingService;
+import com.wedriveu.mobile.store.UserStore;
 
 /**
  *
- * 
- *     Service factory interface
+ * Service factory interface
  * 
  * @author Nicola Lasagni
  * @author Marco Baldassarri
@@ -17,18 +17,18 @@ public interface ServiceFactory {
 
     /**
      * 
-     *     Creates a Login Service
+     * Creates a Login Service.
      * 
-     * @return the login service
+     * @return An instance of {@linkplain LoginService}
      */
     LoginService createLoginService(Activity activity);
 
     /**
      * 
-     *     Creates a Scheduling Service
+     * Creates a Scheduling Service.
      * 
-     * @return
+     * @return An instance of {@linkplain SchedulingService}
      */
-    SchedulingService createSchedulingService();
+    SchedulingService createSchedulingService(Activity activity, UserStore userStore);
 
 }
