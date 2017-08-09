@@ -14,5 +14,6 @@ public interface Constants {
 
     String NO_RESPONSE_DATA_ERROR = "Response empty.";
     String TIME_OUT_ERROR = "Connection timeout reached. Please try again.";
+    String CLOSE_COMMUNICATION_ERROR = "Error occurred while closing RabbitMQ communication.";
 
 }

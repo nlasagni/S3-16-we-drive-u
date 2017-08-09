@@ -22,6 +22,9 @@ public interface Constants {
             String PASSWORD = "password";
             String PORT = "port";
         }
+        interface Queue {
+            String USER = "user.%s";
+        }
         interface Exchanges {
             interface Type {
                 String DIRECT = "direct";
