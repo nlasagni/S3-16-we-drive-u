@@ -17,6 +17,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static com.wedriveu.mobile.util.Constants.CLOSE_COMMUNICATION_ERROR;
 import static com.wedriveu.mobile.util.Constants.NO_RESPONSE_DATA_ERROR;
 import static com.wedriveu.mobile.util.Constants.TIME_OUT_ERROR;
 
@@ -30,7 +31,6 @@ public class LoginServiceImpl implements LoginService {
 
     private static final String TAG = LoginServiceImpl.class.getSimpleName();
     private static final String LOGIN_ERROR = "Error occurred while performing login operation.";
-    private static final String CLOSE_COMMUNICATION_ERROR = "Error occurred while closing RabbitMQ communication.";
 
     private Activity mActivity;
 
@@ -61,7 +61,7 @@ public class LoginServiceImpl implements LoginService {
                     }
                 } catch (IOException | TimeoutException | InterruptedException e) {
                     Log.e(TAG, LOGIN_ERROR, e);
-                    callback.onLoginFinished(null, LOGIN_ERROR);
+                    handleResponse(null, LOGIN_ERROR, callback);
                 }
                 return null;
             }
@@ -131,7 +131,6 @@ public class LoginServiceImpl implements LoginService {
                                        Envelope envelope,
                                        AMQP.BasicProperties properties,
                                        byte[] body) throws IOException {
-                Log.e(TAG, Thread.currentThread().getName());
                 response.offer(body);
             }
 
@@ -140,17 +139,16 @@ public class LoginServiceImpl implements LoginService {
                 handleResponse(null, sig.getLocalizedMessage(), callback);
             }
         });
-        Log.e(TAG, Thread.currentThread().getName());
         byte[] responseBody =
                 response.poll(com.wedriveu.mobile.util.Constants.SERVICE_OPERATION_TIMEOUT, TimeUnit.MILLISECONDS);
-        closeCommunication(connection, channel, request.getRequestId());
-        handleResponseDelivery(responseBody, request, callback);
+        handleResponseDelivery(connection, channel, responseBody, request, callback);
     }
 
-    private void handleResponseDelivery(byte[] body,
+    private void handleResponseDelivery(Connection connection,
+                                        Channel channel,
+                                        byte[] body,
                                         final LoginRequest request,
                                         final LoginServiceCallback callback) throws IOException {
-        Log.e(TAG, Thread.currentThread().getName());
         User user = null;
         String error = "";
         if (body == null) {
@@ -160,6 +158,9 @@ public class LoginServiceImpl implements LoginService {
         } else {
             LoginResponse response = RabbitMQJsonMapper.mapFromByteArray(body, LoginResponse.class);
             if (response.getSuccess()) {
+                String userQueue = String.format(Constants.RabbitMQ.Queue.USER, request.getUsername());
+                channel.queueDeclare(userQueue, true, false, true, null);
+                closeCommunication(connection, channel, request.getRequestId());
                 user = new User(request.getUsername(), request.getPassword());
             } else {
                 error = response.getErrorMessage();
