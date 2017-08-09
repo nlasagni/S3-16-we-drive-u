@@ -36,15 +36,33 @@ public class Vehicle {
     @JsonProperty(IMAGE_URL)
     private URL imageUrl;
 
-    public Vehicle(String carLicencePlate,
-                   String status,
-                   Position position,
-                   Date lastUpdate) {
+    public Vehicle(@JsonProperty(CAR_LICENCE_PLATE) String carLicencePlate,
+                   @JsonProperty(STATUS) String status,
+                   @JsonProperty(POSITION) Position position,
+                   @JsonProperty(LAST_UPDATE) Date lastUpdate,
+                   @JsonProperty(VEHICLE_NAME) String name,
+                   @JsonProperty(VEHICLE_DESCRIPTION) String description,
+                   @JsonProperty(IMAGE_URL) URL imageUrl) {
+        this.carLicencePlate = carLicencePlate;
+        this.status = status;
+        this.position = position;
+        this.lastUpdate = lastUpdate;
+        this.name = name;
+        this.description = description;
+        this.imageUrl = imageUrl;
+    }
+
+    public Vehicle(@JsonProperty(CAR_LICENCE_PLATE) String carLicencePlate,
+                   @JsonProperty(STATUS) String status,
+                   @JsonProperty(POSITION) Position position,
+                   @JsonProperty(LAST_UPDATE) Date lastUpdate) {
         this.carLicencePlate = carLicencePlate;
         this.status = status;
         this.position = position;
         this.lastUpdate = lastUpdate;
     }
+
+    public Vehicle() { }
 
     public String getName() {
         return name;
