@@ -36,11 +36,10 @@ public class NearestControl extends AbstractVerticle {
     private List<VehicleResponse> responseList;
 
     @Override
-    public void start(Future<Void> future) throws Exception {
+    public void start() throws Exception {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.VehicleStore.AVAILABLE_COMPLETED, this::availableVehiclesCompleted);
         eventBus.consumer(Messages.VehicleFinder.VEHICLE_RESPONSE, this::handleVehicleResponses);
-        future.complete();
     }
 
     private void handleVehicleResponses(Message message) {

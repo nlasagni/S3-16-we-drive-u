@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.utilities.Log;
-import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.shared.entity.Position;
 import com.wedriveu.services.shared.utilities.PositionUtils;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
@@ -36,12 +36,11 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private EventBus eventBus;
 
     @Override
-    public void start(Future<Void> future) throws Exception {
+    public void start() throws Exception {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.NearestControl.AVAILABLE_REQUEST, this::getAllAvailableVehiclesInRange);
         eventBus.consumer(Messages.NearestControl.GET_VEHICLE, this::getVehicle);
         createVehiclesFile();
-        future.complete();
     }
 
     @Override

@@ -19,11 +19,6 @@ public class VerticlePublisher extends AbstractVerticle {
     private static RabbitMQClient client;
     private static String TAG = VerticlePublisher.class.getSimpleName();
 
-    @Override
-    public void start(Future<Void> startFuture) throws Exception {
-        super.start(startFuture);
-    }
-
     protected void publish(String exchangeName, String routingKey, JsonObject data) {
         client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
         client.start(onStartCompleted -> {

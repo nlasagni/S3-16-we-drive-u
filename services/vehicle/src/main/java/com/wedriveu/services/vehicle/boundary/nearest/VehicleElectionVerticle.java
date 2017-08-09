@@ -18,10 +18,8 @@ import static com.wedriveu.shared.util.Constants.USERNAME;
 public class VehicleElectionVerticle extends VerticlePublisher {
 
     @Override
-    public void start(Future<Void> future) throws Exception {
-        super.start(future);
+    public void start() throws Exception {
         vertx.eventBus().consumer(Messages.VehicleStore.GET_VEHICLE_COMPLETED, this::sendVehicleToUser);
-        future.complete();
     }
 
     private void sendVehicleToUser(Message message) {
