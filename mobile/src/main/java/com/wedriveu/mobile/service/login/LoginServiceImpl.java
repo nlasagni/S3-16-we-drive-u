@@ -5,10 +5,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 import com.rabbitmq.client.*;
 import com.wedriveu.mobile.model.User;
+import com.wedriveu.mobile.util.rabbitmq.RabbitMqExceptionHandler;
+import com.wedriveu.mobile.service.ServiceOperationCallback;
 import com.wedriveu.shared.entity.LoginRequest;
 import com.wedriveu.shared.entity.LoginResponse;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.mobile.util.RabbitMQJsonMapper;
+import com.wedriveu.mobile.util.rabbitmq.RabbitMQJsonMapper;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -40,13 +42,13 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public void login(final String username,
                       final String password,
-                      final LoginServiceCallback callback) {
+                      final ServiceOperationCallback<User> callback) {
         new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    ExceptionHandler exceptionHandler = new LoginExceptionHandler(mActivity, callback);
+                    ExceptionHandler exceptionHandler = new RabbitMqExceptionHandler<>(mActivity, callback);
                     ConnectionFactory connectionFactory =
                             createConnectionFactory(exceptionHandler,
                                     Constants.RabbitMQ.Broker.HOST,
@@ -123,7 +125,7 @@ public class LoginServiceImpl implements LoginService {
     private void subscribeForResponse(final Connection connection,
                                       final Channel channel,
                                       final LoginRequest request,
-                                      final LoginServiceCallback callback) throws IOException, InterruptedException {
+                                      final ServiceOperationCallback<User> callback) throws IOException, InterruptedException {
         final BlockingQueue<byte[]> response = new ArrayBlockingQueue<>(1);
         channel.basicConsume(request.getRequestId(), new DefaultConsumer(channel) {
             @Override
@@ -148,7 +150,7 @@ public class LoginServiceImpl implements LoginService {
                                         Channel channel,
                                         byte[] body,
                                         final LoginRequest request,
-                                        final LoginServiceCallback callback) throws IOException {
+                                        final ServiceOperationCallback<User> callback) throws IOException {
         User user = null;
         String error = "";
         if (body == null) {
@@ -171,11 +173,11 @@ public class LoginServiceImpl implements LoginService {
 
     private void handleResponse(final User user,
                                 final String error,
-                                final LoginServiceCallback callback) {
+                                final ServiceOperationCallback<User> callback) {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                callback.onLoginFinished(user, error);
+                callback.onServiceOperationFinished(user, error);
             }
         });
     }
