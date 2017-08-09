@@ -2,6 +2,7 @@ package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.json.JsonObject;
 
@@ -27,6 +28,7 @@ public class RegisterConsumerVerticle extends VerticleConsumer {
 
     private void startVehicleRegisterConsumer() throws IOException, TimeoutException {
         startConsumer(VEHICLE_SERVICE_EXCHANGE, ROUTING_KEY_REGISTER_VEHICLE_REQUEST, EVENT_BUS_AVAILABLE_ADDRESS);
+        Log.info("CONSUMER", "STARTED");
     }
 
     @Override
