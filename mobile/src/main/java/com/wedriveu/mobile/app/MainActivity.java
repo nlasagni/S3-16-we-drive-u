@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mFragmentManager = getSupportFragmentManager();
+        mLocationService = LocationServiceImpl.getInstance(this);
         UserStore userStore = StoreFactoryImpl.getInstance().createUserStore(this);
         if (savedInstanceState == null) {
             if (userStore.getUser() != null) {
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
         transaction.add(loginViewModel, LoginViewModel.TAG);
         transaction.replace(R.id.fragment_container, loginViewFragment, LoginView.TAG);
         transaction.commit();
-        mLocationService = LocationServiceImpl.getInstance(this);
     }
 
     @Override
