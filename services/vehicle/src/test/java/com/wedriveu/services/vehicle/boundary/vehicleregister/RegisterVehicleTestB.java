@@ -1,10 +1,8 @@
-
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
-import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.boundary.PublisherTest;
-import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactory;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryA;
+import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryB;
 import com.wedriveu.services.vehicle.entity.Vehicle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.TestContext;
@@ -15,16 +13,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.wedriveu.services.shared.utilities.Constants.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(VertxUnitRunner.class)
-public class RegisterConsumerVerticleTest extends PublisherTest {
+public class RegisterVehicleTestB extends PublisherTest {
 
-    //inserire event_bus_address privati
     private static final String EVENT_BUS_ADDRESS = RegisterConsumerVerticle.class.getCanonicalName();
-    private static final String QUEUE = "vehicle";
+    private static final String QUEUE = "vehicle.queue";
     private RegisterConsumerVerticle registerConsumerVerticle;
 
-    public RegisterConsumerVerticleTest() {
+    public RegisterVehicleTestB() {
         super(QUEUE, VEHICLE_SERVICE_EXCHANGE, ROUTING_KEY_REGISTER_VEHICLE_REQUEST,
                 ROUTING_KEY_REGISTER_VEHICLE_RESPONSE, EVENT_BUS_ADDRESS);
     }
@@ -33,10 +32,8 @@ public class RegisterConsumerVerticleTest extends PublisherTest {
     public void setUp(TestContext context) throws Exception {
         registerConsumerVerticle = new RegisterConsumerVerticle();
         super.setup(context, registerConsumerVerticle);
-       /* VehicleFactory factory = new VehicleFactoryA();
-        Vehicle v = factory.getVehicle();
-        String licencePlate = new VehicleFactoryA().getVehicle().getCarLicencePlate();*/
-        super.declareQueueAndBind("AAA", context);
+        String licencePlate = new VehicleFactoryB().getVehicle().getCarLicencePlate();
+        super.declareQueueAndBind(licencePlate, context);
     }
 
     @After
@@ -50,11 +47,15 @@ public class RegisterConsumerVerticleTest extends PublisherTest {
     }
 
     @Override
+    protected void checkResponse(JsonObject responseJson) {
+        assertThat(responseJson.getBoolean(REGISTER_RESULT), instanceOf(Boolean.class));
+    }
+
+    @Override
     protected JsonObject getJson() {
-        Vehicle vehicle = new VehicleFactoryA().getVehicle();
+        Vehicle vehicle = new VehicleFactoryB().getVehicle();
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(BODY, JsonObject.mapFrom(vehicle).toString());
-        Log.info("REGISTER", jsonObject.encodePrettily());
         return jsonObject;
     }
 

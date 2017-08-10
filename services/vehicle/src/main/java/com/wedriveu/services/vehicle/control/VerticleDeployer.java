@@ -1,5 +1,6 @@
 package com.wedriveu.services.vehicle.control;
 
+import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleElectionVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterConsumerVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterPublisherVerticle;
@@ -22,6 +23,7 @@ public class VerticleDeployer extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
+
 
         List<Future> futures = new ArrayList<>();
         Future controlFuture = Future.future();

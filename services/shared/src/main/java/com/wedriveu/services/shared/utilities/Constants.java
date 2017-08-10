@@ -22,8 +22,10 @@ public interface Constants {
     String TEXT_PLAIN = "text/plain";
     int PORT_AUTHENTICATION_SERVICE = 8080;
 
-    String RABBITMQ_SERVER_HOST = "uniboguys.duckdns.org";
-    String RABBITMQ_SERVER_PASSWORD = "FmzevdBBmpcdvPHLDJQR";
+    //String RABBITMQ_SERVER_HOST = "uniboguys.duckdns.org";
+    //String RABBITMQ_SERVER_PASSWORD = "FmzevdBBmpcdvPHLDJQR";
+    String RABBITMQ_SERVER_HOST = "localhost";
+    String RABBITMQ_SERVER_PASSWORD = "guest";
     int RABBITMQ_SERVER_PORT = 5672;
     String UTF = "UTF-8";
 
