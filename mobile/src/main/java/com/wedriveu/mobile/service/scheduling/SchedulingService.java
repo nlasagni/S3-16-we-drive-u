@@ -14,8 +14,6 @@ import com.wedriveu.mobile.util.location.LocationServiceListener;
  */
 public interface SchedulingService extends LocationServiceListener {
 
-    String TAG = SchedulingService.class.getSimpleName();
-
     /**
      * Calls the vehicle service and perform a HTTP request to get the chosen vehicle
      *
