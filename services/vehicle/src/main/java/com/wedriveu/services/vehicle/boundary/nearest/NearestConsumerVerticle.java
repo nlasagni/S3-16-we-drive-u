@@ -39,7 +39,11 @@ public class NearestConsumerVerticle extends VerticleConsumer {
 
     @Override
     public void registerConsumer(String eventBus) {
-        vertx.eventBus().consumer(eventBus, msg -> searchAvailableVehicles((JsonObject) msg.body()));
+        vertx.eventBus().consumer(eventBus, msg -> {
+            JsonObject message = (JsonObject) msg.body();
+            JsonObject response = new JsonObject(message.getString(Constants.EventBus.BODY));
+            searchAvailableVehicles(response);
+        });
     }
 
     private void searchAvailableVehicles(JsonObject userData) {
