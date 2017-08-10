@@ -42,11 +42,26 @@ public class VerticlePublisher extends AbstractVerticle {
     }
 
     protected void declareExchanges(Handler<AsyncResult<Void>> handler) {
-        client.exchangeDeclare(VEHICLE_SERVICE_EXCHANGE,
+        declareExchangesWithName(VEHICLE_SERVICE_EXCHANGE, handler);
+    }
+
+    protected void declareExchangesWithName(String name, Handler<AsyncResult<Void>> handler) {
+        client.exchangeDeclare(name,
                 EXCHANGE_TYPE,
                 false,
                 false,
                 handler);
+    }
+
+
+    private void startRabbitMQCommunication(Future future, String exchangeName, Handler<AsyncResult<Void>> handler) {
+        client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
+        client.start(onStartCompleted -> {
+                    if (onStartCompleted.succeeded()) {
+                        declareExchangesWithName(exchangeName, handler);
+                    }
+                }
+        );
     }
 
     protected void publishToConsumer(String exchangeName,

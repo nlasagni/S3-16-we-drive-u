@@ -52,6 +52,20 @@ public interface Constants {
     String ROUTING_KEY_VEHICLE_RESPONSE = "vehicle.response.nearest.%s";
     String ROUTING_KEY_CAN_DRIVE = "vehicle.request.candrive.%s";
     String ROUTING_KEY_CAN_DRIVE_RESPONSE = "vehicle.response.candrive.%s";
+    String ROUTING_KEY_VEHICLE_REQUEST_ALL = "vehicle.request.all";
+    String ROUTING_KEY_VEHICLE_RESPONSE_ALL = "vehicle.response.all";
+
+    // messages
+    String VEHICLE_REQUEST_ALL_MESSAGE = "Requesting All Vehicles From Analytics Service";
+    String ANALYTICS_VEHICLE_LIST_RETRIEVER_START_MESSAGE = "Vehicle List Request Sent, Listen";
+
+
+
+    // Analytics Service RabbitMQ
+    String ANALYTICS_VEHICLE_LIST_RETRIEVER_VERTICLE_ADDRESS = "VehicleListRetrieverVerticle";
+    String ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS = "VehicleListRequestVerticle";
+    String ANALYTICS_SERVICE_EXCHANGE = "analytics";
+    String CONSUMER_ANALYTICS_SERVICE = "analytics";
 
     String BODY = "body";
     String USER_POSITION = "userPosition";
