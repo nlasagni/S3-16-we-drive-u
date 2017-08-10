@@ -46,14 +46,18 @@ public class AuthenticationServiceVerticleImplTest {
 
     private void setUpAsyncComponents(TestContext context) {
         Async async = context.async(3);
-        rabbitMQClient = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
+        JsonObject config = new JsonObject();
+        config.put(Constants.RabbitMQ.ConfigKey.HOST, Constants.RabbitMQ.Broker.HOST);
+        config.put(Constants.RabbitMQ.ConfigKey.PASSWORD, Constants.RabbitMQ.Broker.PASSWORD);
+        config.put(Constants.RabbitMQ.ConfigKey.PORT, Constants.RabbitMQ.Broker.PORT);
+        rabbitMQClient = io.vertx.rabbitmq.RabbitMQClient.create(vertx, config);
         rabbitMQClient.start(onStart -> {
             rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
                 context.assertTrue(onQueueDeclare.succeeded());
-                vertx.deployVerticle(authenticationService, context.asyncAssertSuccess(onDeploy ->
-                        async.complete()
-                ));
+                vertx.deployVerticle(authenticationService, context.asyncAssertSuccess(onDeploy -> {
+                    async.complete();
+                }));
                 async.countDown();
             });
             async.countDown();
@@ -69,30 +73,30 @@ public class AuthenticationServiceVerticleImplTest {
     @Test
     public void checkCredentials(TestContext context) throws Exception {
         final Async async = context.async(2);
+        checkServiceResponse(context, async);
+        async.awaitSuccess();
+    }
+
+    private void checkServiceResponse(TestContext context, Async async) {
+        MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
+            JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
+            Log.info(TAG, responseJson.toString());
+            LoginResponse response = responseJson.mapTo(LoginResponse.class);
+            context.assertTrue(response.isSuccess());
+            async.complete();
+        });
+        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
+        consumer.exceptionHandler(event -> {
+            context.fail(event.getCause());
+            async.complete();
+        });
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.USER,
                 Constants.RabbitMQ.RoutingKey.LOGIN,
                 createRequestJsonObject(),
                 onPublish -> {
                     context.assertTrue(onPublish.succeeded());
-                    checkServiceResponse(context, async);
                     async.countDown();
                 });
-        async.awaitSuccess();
-    }
-
-    private void checkServiceResponse(TestContext context, Async async) {
-        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
-        MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-                JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
-                Log.info(TAG, responseJson.toString());
-                LoginResponse response = responseJson.mapTo(LoginResponse.class);
-                context.assertTrue(response.getSuccess());
-                async.complete();
-        });
-        consumer.exceptionHandler(event -> {
-            context.fail(event.getCause());
-            async.complete();
-        });
     }
 
     private JsonObject createRequestJsonObject() {
