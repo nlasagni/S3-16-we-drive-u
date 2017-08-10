@@ -21,6 +21,7 @@ public class Vehicle {
     public static final String STATUS_BROKEN_STOLEN = "broken_stolen";
     public static final String STATUS_NETWORK_ISSUES = "net_issues";
 
+
     @JsonProperty(CAR_LICENCE_PLATE)
     private String carLicencePlate;
     @JsonProperty(STATUS)
@@ -36,13 +37,23 @@ public class Vehicle {
     @JsonProperty(IMAGE_URL)
     private URL imageUrl;
 
-    public Vehicle(@JsonProperty(CAR_LICENCE_PLATE) String carLicencePlate,
-                   @JsonProperty(STATUS) String status,
-                   @JsonProperty(POSITION) Position position,
-                   @JsonProperty(LAST_UPDATE) Date lastUpdate,
-                   @JsonProperty(VEHICLE_NAME) String name,
-                   @JsonProperty(VEHICLE_DESCRIPTION) String description,
-                   @JsonProperty(IMAGE_URL) URL imageUrl) {
+
+   /* private String carLicencePlate;
+    private String status;
+    private Position position;
+    private Date lastUpdate;
+    private String name;
+    private String description;
+    private URL imageUrl;
+*/
+
+    public Vehicle(String carLicencePlate,
+                   String status,
+                   Position position,
+                   Date lastUpdate,
+                   String name,
+                   String description,
+                   URL imageUrl) {
         this.carLicencePlate = carLicencePlate;
         this.status = status;
         this.position = position;

@@ -34,7 +34,7 @@ public interface Constants {
 
     // Vehicle Jackson parameters
     String CAR_LICENCE_PLATE = "licencePlate";
-    String STATUS = "state";
+    String STATUS = "status";
     String POSITION = "position";
     String LAST_UPDATE = "lastUpdate";
     String VEHICLE_NAME = "name";
@@ -57,7 +57,7 @@ public interface Constants {
     String ROUTING_KEY_CAN_DRIVE = "vehicle.request.candrive.%s";
     String ROUTING_KEY_CAN_DRIVE_RESPONSE = "vehicle.response.candrive.%s";
     String ROUTING_KEY_REGISTER_VEHICLE_REQUEST = "vehicle.request.add";
-    String ROUTING_KEY_REGISTER_VEHICLE_RESPONSE = "vehicle.response.add.%d";
+    String ROUTING_KEY_REGISTER_VEHICLE_RESPONSE = "vehicle.response.add.%s";
 
     String BODY = "body";
     String USER_POSITION = "userPosition";

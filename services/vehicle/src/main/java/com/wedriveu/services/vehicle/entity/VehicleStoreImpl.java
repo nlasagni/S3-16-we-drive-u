@@ -3,6 +3,7 @@ package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.istack.internal.NotNull;
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.Position;
@@ -41,8 +42,20 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         eventBus.consumer(Messages.NearestControl.AVAILABLE_REQUEST, this::getAllAvailableVehiclesInRange);
         eventBus.consumer(Messages.NearestControl.GET_VEHICLE, this::getVehicle);
         eventBus.consumer(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, this::addVehicle);
-        createVehiclesFile();
+        //createVehiclesFile();
+        createJsonFile();
         future.complete();
+    }
+
+    private void createJsonFile() {
+        try {
+            File file = new File(Constants.VEHICLES_DATABASE_PATH);
+            if(file.createNewFile()) {
+                Log.info("FILE", "File Created");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -74,10 +87,10 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     @Override
     public void addVehicle(Message message) {
+        JsonObject responseJson = new JsonObject();
         JsonObject vehicleRequesterJson = (JsonObject) message.body();
         Vehicle vehicleRequester = vehicleRequesterJson.mapTo(Vehicle.class);
         List<Vehicle> vehicles = getVehicleList();
-        JsonObject responseJson = new JsonObject();
         responseJson.put(CAR_LICENCE_PLATE, vehicleRequesterJson.getValue(CAR_LICENCE_PLATE));
         Optional existingVehicle = vehicles.stream().filter(x -> x.equals(vehicleRequester)).findFirst();
         if(existingVehicle.isPresent()) {
@@ -123,7 +136,12 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     public List<Vehicle> getVehicleList() {
         ObjectMapper mapper = new ObjectMapper();
         List<Vehicle> vehicles = readFromVehiclesDb(mapper);
-        return vehicles;
+        //return (vehicles.isEmpty() || vehicles == null) ? new ArrayList<>() : vehicles;
+        //return vehicles;
+        if(vehicles != null) {
+            return vehicles;
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -222,9 +240,9 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
                     });
             return vehicles;
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     private void checkDuplicatesAndWriteOnVehiclesDb(List<Vehicle> vehicles, ObjectMapper mapper) {
