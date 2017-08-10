@@ -8,7 +8,7 @@ import com.wedriveu.mobile.service.scheduling.SchedulingServiceImpl;
 import com.wedriveu.mobile.store.UserStore;
 
 /**
- * Created by nicolalasagni on 18/07/2017.
+ * @author Nicola Lasagni on 18/07/2017.
  */
 public class ServiceFactoryImpl implements ServiceFactory {
 
