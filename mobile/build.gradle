@@ -39,6 +39,9 @@ android {
         sourceCompatibility jdk7Version
         targetCompatibility jdk7Version
     }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
 }
 
 dependencies {
@@ -57,18 +60,15 @@ dependencies {
     compile "com.google.android.gms:play-services-places:$androidPlayServicesVersion"
     //Other
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    compile "com.squareup.retrofit2:converter-jackson:$jacksonConverterVersion"
     compile "com.github.bumptech.glide:glide:$androidGlideVersion"
     compile "com.rabbitmq:amqp-client:$rabbitMQVersion"
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile project(path: ':shared')
 }
 
 task ("javadoc", type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    destinationDir = new File("$docsFolderJava")
+    destinationDir = new File("$docsFolderJava/${project.path}")
     failOnError false
 }
 
