@@ -11,7 +11,7 @@ allprojects {
         }
     }
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -22,8 +22,10 @@ def java7ModulePaths = [mobileModulePath, sharedModulePath] as String[]
 configure(subprojects.grep { sharedModulePath == it.path }) {
     apply plugin: 'java'
     sourceCompatibility = "$jdk7Version"
-    javadoc.destinationDir = new File("$docsFolderJava")
+    javadoc.destinationDir = new File("$docsFolderJava/${it.path}")
     dependencies {
+        compile "com.rabbitmq:amqp-client:$rabbitMQVersion"
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
         compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     }
 }
@@ -32,8 +34,8 @@ configure(subprojects.grep {!java7ModulePaths.contains(it.path)}) {
     apply plugin: 'java'
     apply plugin: 'scala'
     sourceCompatibility = "$jdk8Version"
-    javadoc.destinationDir = new File("$docsFolderJava")
-    scaladoc.destinationDir = new File("$docsFolderScala")
+    javadoc.destinationDir = new File("$docsFolderJava/${it.path}")
+    scaladoc.destinationDir = new File("$docsFolderScala/${it.path}")
 
     dependencies {
         testCompile "junit:junit:$junitVersion"
