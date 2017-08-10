@@ -4,8 +4,6 @@ import android.app.Activity;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.impl.DefaultExceptionHandler;
-import com.wedriveu.mobile.service.ServiceOperationCallback;
-import com.wedriveu.mobile.service.ServiceResult;
 
 /**
  * The default {@linkplain ServiceExceptionHandler} used to manage message consumer exceptions.

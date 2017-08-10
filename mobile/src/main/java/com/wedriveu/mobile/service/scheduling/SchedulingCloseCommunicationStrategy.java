@@ -2,8 +2,8 @@ package com.wedriveu.mobile.service.scheduling;
 
 import com.rabbitmq.client.Channel;
 import com.wedriveu.mobile.model.User;
-import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqCloseCommunicationStrategy;
 import com.wedriveu.shared.rabbitmq.communication.RabbitMqCommunication;
+import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqCloseCommunicationStrategy;
 import com.wedriveu.shared.util.Constants;
 
 import java.io.IOException;

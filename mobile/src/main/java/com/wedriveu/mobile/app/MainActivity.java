@@ -18,7 +18,6 @@ import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.login.view.LoginViewImpl;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModelImpl;
-import com.wedriveu.mobile.store.StoreFactory;
 import com.wedriveu.mobile.store.StoreFactoryImpl;
 import com.wedriveu.mobile.store.UserStore;
 import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
