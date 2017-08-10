@@ -15,6 +15,7 @@ import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.service.ServiceFactoryImpl;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
+import com.wedriveu.mobile.service.ServiceResult;
 import com.wedriveu.mobile.service.scheduling.SchedulingService;
 import com.wedriveu.mobile.store.StoreFactoryImpl;
 import com.wedriveu.mobile.store.UserStore;
@@ -69,8 +70,8 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
         mRouter.showProgressDialog();
         mSchedulingService.findNearestVehicle(mPlace, new ServiceOperationCallback<Vehicle>() {
             @Override
-            public void onServiceOperationFinished(Vehicle result, String errorMessage) {
-                onFindNearestVehicleFinished(result, errorMessage);
+            public void onServiceOperationFinished(ServiceResult<Vehicle> result) {
+                onFindNearestVehicleFinished(result.getResult(), result.getErrorMessage());
             }
         });
     }

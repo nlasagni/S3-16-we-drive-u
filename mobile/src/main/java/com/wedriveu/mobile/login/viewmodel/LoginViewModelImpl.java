@@ -10,6 +10,7 @@ import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.model.User;
 import com.wedriveu.mobile.service.ServiceFactoryImpl;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
+import com.wedriveu.mobile.service.ServiceResult;
 import com.wedriveu.mobile.service.login.LoginService;
 import com.wedriveu.mobile.store.StoreFactoryImpl;
 import com.wedriveu.mobile.store.UserStore;
@@ -55,8 +56,8 @@ public class LoginViewModelImpl extends Fragment implements LoginViewModel {
         mRouter.showProgressDialog();
         mLoginService.login(username, password, new ServiceOperationCallback<User>() {
             @Override
-            public void onServiceOperationFinished(User result, String errorMessage) {
-                onLoginFinished(result, errorMessage);
+            public void onServiceOperationFinished(ServiceResult<User> result) {
+                onLoginFinished(result.getResult(), result.getErrorMessage());
             }
         });
     }
