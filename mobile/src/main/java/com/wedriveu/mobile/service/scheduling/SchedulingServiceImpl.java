@@ -10,11 +10,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.rabbitmq.client.*;
 import com.wedriveu.mobile.model.SchedulingLocation;
 import com.wedriveu.mobile.model.Vehicle;
-import com.wedriveu.mobile.util.rabbitmq.RabbitMqExceptionHandler;
+import com.wedriveu.shared.rabbitmq.communication.RabbitMqCommunicationManager;
+import com.wedriveu.shared.rabbitmq.communication.DefaultRabbitMqCommunicationManager;
+import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqCommunicationConfig;
+import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqCloseCommunicationStrategy;
+import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqConsumerStrategy;
+import com.wedriveu.mobile.service.ServiceExceptionHandler;
+import com.wedriveu.mobile.service.ServiceResult;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
 import com.wedriveu.shared.entity.VehicleResponse;
 import com.wedriveu.mobile.store.UserStore;
-import com.wedriveu.mobile.util.rabbitmq.RabbitMQJsonMapper;
 import com.wedriveu.shared.entity.Position;
 import com.wedriveu.shared.entity.VehicleRequest;
 import com.wedriveu.shared.util.Constants;
@@ -28,7 +33,6 @@ import java.util.concurrent.TimeoutException;
 
 import static com.wedriveu.mobile.util.Constants.CLOSE_COMMUNICATION_ERROR;
 import static com.wedriveu.mobile.util.Constants.NO_RESPONSE_DATA_ERROR;
-import static com.wedriveu.mobile.util.Constants.TIME_OUT_ERROR;
 
 /**
  * @author Marco Baldassarri on 18/07/2017.
@@ -36,6 +40,7 @@ import static com.wedriveu.mobile.util.Constants.TIME_OUT_ERROR;
  */
 public class SchedulingServiceImpl implements SchedulingService {
 
+    private static final String TAG = SchedulingServiceImpl.class.getSimpleName();
     private static final String SCHEDULING_ERROR = "Error occurred while performing scheduling operation.";
 
     private Activity mActivity;
@@ -43,44 +48,45 @@ public class SchedulingServiceImpl implements SchedulingService {
     private Double mUserLatitude;
     private Double mUserLongitude;
     private SchedulingLocation schedulingLocation;
+    private RabbitMqCommunicationManager mCommunicationManager;
 
     public SchedulingServiceImpl(Activity activity, UserStore userStore) {
         mActivity = activity;
         mUserStore = userStore;
         schedulingLocation = new SchedulingLocation();
+        mCommunicationManager = new DefaultRabbitMqCommunicationManager();
     }
 
     @Override
     public void findNearestVehicle(final Place address, final ServiceOperationCallback<Vehicle> callback) {
         schedulingLocation.setDestinationLatitude(address.getLatLng().latitude);
         schedulingLocation.setDestinationLongitude(address.getLatLng().longitude);
-
-
         new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... voids) {
+                ServiceResult<Vehicle> result;
                 try {
-                    ExceptionHandler exceptionHandler = new RabbitMqExceptionHandler<>(mActivity, callback);
-                    ConnectionFactory connectionFactory =
-                            createConnectionFactory(exceptionHandler,
-                                    Constants.RabbitMQ.Broker.HOST,
-                                    Constants.RabbitMQ.Broker.PASSWORD);
-                    Connection connection = createConnection(connectionFactory);
-                    Channel channel = createChannel(connection);
-                    if (channel != null) {
-                        VehicleRequest request = createRequest(address);
-                        findNearest(channel, request);
-                        subscribeForResponse(connection, channel, request, callback);
-                    }
+                    ExceptionHandler exceptionHandler = new ServiceExceptionHandler(mActivity, callback);
+                    RabbitMqCommunicationConfig config =
+                            new RabbitMqCommunicationConfig.Builder()
+                                    .host(Constants.RabbitMQ.Broker.HOST)
+                                    .password(Constants.RabbitMQ.Broker.PASSWORD)
+                                    .exceptionHandler(exceptionHandler).build();
+                    mCommunicationManager.setUpCommunication(config);
+                    VehicleRequest request = createRequest(address);
+                    sendRequest(request);
+                    final BlockingQueue<VehicleResponse> response = new ArrayBlockingQueue<>(1);
+                    VehicleResponse responseBody = subscribeForResponse(response);
+                    result = createServiceResult(responseBody);
+                    closeCommunication();
                 } catch (IOException | TimeoutException | InterruptedException e) {
                     Log.e(TAG, SCHEDULING_ERROR, e);
-                    handleResponse(null, SCHEDULING_ERROR, callback);
+                    result = new ServiceResult<>(null, SCHEDULING_ERROR);
                 }
+                handleResponse(result, callback);
                 return null;
             }
-
-
         }.execute();
     }
 
@@ -96,35 +102,11 @@ public class SchedulingServiceImpl implements SchedulingService {
         mUserLongitude = null;
     }
 
-    private ConnectionFactory createConnectionFactory(ExceptionHandler exceptionHandler,
-                                                      String host,
-                                                      String password) {
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        connectionFactory.setExceptionHandler(exceptionHandler);
-        connectionFactory.setHost(host);
-        connectionFactory.setPassword(password);
-        return connectionFactory;
-    }
-
-    private Connection createConnection(ConnectionFactory connectionFactory) throws IOException, TimeoutException {
-        return connectionFactory.newConnection();
-    }
-
-    private Channel createChannel(Connection connection) throws IOException {
-        return connection.createChannel();
-    }
-
-    private void closeCommunication(Connection connection, Channel channel, String queue) {
+    private void closeCommunication() {
         try {
-            if (channel != null) {
-                String userName = mUserStore.getUser().getUsername();
-                String routingKey = String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE, userName);
-                channel.queueUnbind(queue, Constants.RabbitMQ.Exchanges.VEHICLE, routingKey);
-                channel.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
+            RabbitMqCloseCommunicationStrategy strategy =
+                    new SchedulingCloseCommunicationStrategy(mUserStore.getUser());
+            mCommunicationManager.closeCommunication(strategy);
         } catch (IOException | TimeoutException e) {
             Log.e(TAG, CLOSE_COMMUNICATION_ERROR, e);
         }
@@ -141,76 +123,46 @@ public class SchedulingServiceImpl implements SchedulingService {
         return request;
     }
 
-    private void findNearest(Channel channel, VehicleRequest request) throws IOException {
-        byte[] body = RabbitMQJsonMapper.mapToByteArray(request);
-        channel.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
+    private void sendRequest(VehicleRequest request) throws IOException {
+        mCommunicationManager.publishMessage(Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST,
-                null,
-                body);
+                request);
     }
 
-    private void subscribeForResponse(final Connection connection,
-                                      final Channel channel,
-                                      final VehicleRequest request,
-                                      final ServiceOperationCallback<Vehicle> callback) throws IOException, InterruptedException {
-        final BlockingQueue<byte[]> response = new ArrayBlockingQueue<>(1);
-        String userName = mUserStore.getUser().getUsername();
-        String queue = String.format(Constants.RabbitMQ.Queue.USER, userName);
-        String routingKey = String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE, userName);
-        String userQueue = String.format(Constants.RabbitMQ.Queue.USER, request.getUsername());
-        channel.queueDeclare(userQueue, true, false, true, null);
-        channel.queueBind(queue, Constants.RabbitMQ.Exchanges.VEHICLE, routingKey);
-        channel.basicConsume(queue, new DefaultConsumer(channel) {
-            @Override
-            public void handleDelivery(String consumerTag,
-                                       Envelope envelope,
-                                       AMQP.BasicProperties properties,
-                                       byte[] body) throws IOException {
-                response.offer(body);
-            }
+    private VehicleResponse subscribeForResponse(final BlockingQueue<VehicleResponse> responseBlockingQueue)
+            throws IOException, InterruptedException {
+        RabbitMqConsumerStrategy<VehicleResponse> strategy =
+                new SchedulingConsumerStrategy(mUserStore.getUser(), responseBlockingQueue);
+        mCommunicationManager.registerConsumer(strategy, VehicleResponse.class);
+        return responseBlockingQueue.poll(com.wedriveu.mobile.util.Constants.SERVICE_OPERATION_TIMEOUT,
+                TimeUnit.MILLISECONDS);
 
-            @Override
-            public void handleShutdownSignal(String consumerTag, ShutdownSignalException sig) {
-                handleResponse(null, sig.getLocalizedMessage(), callback);
-            }
-        });
-        byte[] responseBody =
-                response.poll(com.wedriveu.mobile.util.Constants.SERVICE_OPERATION_TIMEOUT, TimeUnit.MILLISECONDS);
-        closeCommunication(connection, channel, queue);
-        handleResponseDelivery(responseBody, callback);
     }
 
-    private void handleResponseDelivery(byte[] body,
-                                        final ServiceOperationCallback<Vehicle> callback) throws IOException {
-        Vehicle vehicle = null;
-        String error = "";
-        if (body == null) {
-            error = TIME_OUT_ERROR;
-        } else if (body.length == 0) {
-            error = NO_RESPONSE_DATA_ERROR;
-        } else {
-            VehicleResponse response = RabbitMQJsonMapper.mapFromByteArray(body, VehicleResponse.class);
-            if (response != null && !TextUtils.isEmpty(response.getLicencePlate())) {
-                vehicle = new Vehicle(response.getLicencePlate(),
-                        response.getVehicleName(),
-                        response.getDescription(),
-                        response.getPictureURL(),
-                        response.getArriveAtUserTime(),
-                        response.getArriveAtDestinationTime());
+    private ServiceResult<Vehicle> createServiceResult(VehicleResponse response) throws IOException {
+            Vehicle vehicle = null;
+            String error = "";
+            if (response == null) {
+                error = NO_RESPONSE_DATA_ERROR;
+            } else if (!TextUtils.isEmpty(response.getLicencePlate())) {
+                    vehicle = new Vehicle(response.getLicencePlate(),
+                            response.getVehicleName(),
+                            response.getDescription(),
+                            response.getPictureURL(),
+                            response.getArriveAtUserTime(),
+                            response.getArriveAtDestinationTime());
             } else {
                 error = NO_RESPONSE_DATA_ERROR;
             }
-        }
-        handleResponse(vehicle, error, callback);
+        return new ServiceResult<>(vehicle, error);
     }
 
-    private void handleResponse(final Vehicle vehicle,
-                                final String error,
+    private void handleResponse(final ServiceResult<Vehicle> result,
                                 final ServiceOperationCallback<Vehicle> callback) {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                callback.onServiceOperationFinished(vehicle, error);
+                callback.onServiceOperationFinished(result);
             }
         });
     }
