@@ -14,7 +14,6 @@ import static com.wedriveu.services.shared.utilities.Constants.BODY;
 /**
  * Created by Marco on 09/08/2017.
  */
-
 public abstract class PublisherTest {
 
     private static final String PASSWORD = "password";
@@ -99,32 +98,39 @@ public abstract class PublisherTest {
     }
 
     protected void publishMessage(TestContext context, JsonObject data) {
-        final Async async = context.async(3);
+        final Async async = context.async();
         Log.info("PUBLISH", "\nEXCHANGE_NAME:" + exchangeName + "\nROUTING_KEY: " + requestRoutingKey +
                 "\nDATA: " + data.encodePrettily());
         context.assertNotNull(data);
         rabbitMQClient.basicPublish(exchangeName, requestRoutingKey, data,
                 context.asyncAssertSuccess(onPublish -> {
                     handleServiceResponse(context, async, eventBusAddress);
-                    async.complete();
                 }));
         async.awaitSuccess();
     }
 
     private void handleServiceResponse(TestContext context, Async async, String eventBusAddress) {
-        rabbitMQClient.basicConsume(queue, eventBusAddress, context.asyncAssertSuccess(onGet -> {}));
-        MessageConsumer<JsonObject> consumer = eventBus.consumer(eventBusAddress, msg -> {
-            context.assertNotNull(msg.body());
-            JsonObject responseJson = new JsonObject(msg.body().getString(BODY));
-            checkResponse(responseJson);
-            async.countDown();
 
-            Log.info("CONSUME", "\nEXCHANGE_NAME:" + exchangeName + "\nROUTING_KEY: " + responseRoutingKey +
-                    "\nDATA: " + responseJson.encodePrettily());
-        });
-        consumer.exceptionHandler(event -> {
-            context.fail(event.getCause());
-            async.countDown();
+        rabbitMQClient.basicConsume(queue, eventBusAddress, context.asyncAssertSuccess(onGet -> {
+
+            MessageConsumer<JsonObject> consumer = eventBus.consumer(eventBusAddress, msg -> {
+                context.assertNotNull(msg.body());
+                JsonObject responseJson = new JsonObject(msg.body().getString(BODY));
+                checkResponse(responseJson);
+
+                Log.info("CONSUME", "\nEXCHANGE_NAME:" + exchangeName + "\nROUTING_KEY: " + responseRoutingKey +
+                        "\nDATA: " + responseJson.encodePrettily());
+                async.complete();
+            });
+            consumer.exceptionHandler(event -> {
+                context.fail(event.getCause());
+                async.complete();
+            });
+        }));
+
+        vertx.setTimer(8000, onTime -> {
+            System.out.println("TEST: ASYNC COMPLETE");
+            async.complete();
         });
     }
 

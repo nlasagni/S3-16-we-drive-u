@@ -41,4 +41,5 @@ public class RegisterConsumerVerticle extends VerticleConsumer {
         Log.log(userData.encodePrettily());
         eventBus.send(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, userData);
     }
+
 }
