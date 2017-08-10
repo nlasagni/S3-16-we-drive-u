@@ -9,12 +9,12 @@ import static com.wedriveu.services.shared.utilities.Constants.BODY;
 /**
  * Created by Marco on 09/08/2017.
  */
-public class MessageParser<T> {
+public class MessageParser {
 
-    public static<T> T getObject(Message message, Class object) {
+    public static<T> T getObject(Message message, Class<T> object) {
         JsonObject responseJson = (JsonObject) message.body();
         String response = responseJson.getString(BODY);
-        return (new JsonObject(response)).mapTo((Class<T>) object);
+        return (new JsonObject(response)).mapTo( object);
     }
 
     public static JsonObject getJson(Message message) {

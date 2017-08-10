@@ -1,6 +1,7 @@
 
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
+import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.boundary.PublisherTest;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryA;
 import com.wedriveu.services.vehicle.entity.Vehicle;
@@ -14,12 +15,10 @@ import org.junit.runner.RunWith;
 
 import static com.wedriveu.services.shared.utilities.Constants.*;
 
-
 @RunWith(VertxUnitRunner.class)
 public class RegisterConsumerVerticleTest extends PublisherTest {
-
+    //inserire event_bus_address privati
     private static final String EVENT_BUS_ADDRESS = RegisterConsumerVerticle.class.getCanonicalName();
-
     private RegisterConsumerVerticle registerConsumerVerticle;
 
 
@@ -36,19 +35,24 @@ public class RegisterConsumerVerticleTest extends PublisherTest {
 
     @Test
     public void registerConsumer(TestContext context) throws Exception {
+        JsonObject object = getJson();
+        Log.info("OBJ", object.encodePrettily());
         super.registerConsumer(context,
                 VEHICLE_SERVICE_EXCHANGE,
                 ROUTING_KEY_REGISTER_VEHICLE_REQUEST,
                 EVENT_BUS_ADDRESS,
-                createRequestJsonObject());
+                getJson());
+        JsonObject object1 = getJson();
+        Log.info("OBJ", object1.encodePrettily());
 
     }
 
     @Override
-    protected JsonObject createRequestJsonObject() {
+    protected JsonObject getJson() {
         Vehicle vehicle = new VehicleFactoryA().getVehicle();
-        JsonObject jsonObject = new JsonObject().mapFrom(vehicle);
-        jsonObject.put(BODY, jsonObject);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.put(BODY, JsonObject.mapFrom(vehicle).toString());
+        Log.info("REGISTER", jsonObject.encodePrettily());
         return jsonObject;
     }
 

@@ -8,11 +8,14 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rabbitmq.RabbitMQClient;
+import org.junit.runner.RunWith;
 
 /**
  * Created by Marco on 09/08/2017.
  */
+
 public abstract class PublisherTest {
 
     private static final String JSON_QUEUE_KEY = "queue";
@@ -28,7 +31,6 @@ public abstract class PublisherTest {
     protected void setup(TestContext context, Verticle verticle) {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
-
         JsonObject config = new JsonObject();
         config.put(HOST, Constants.RABBITMQ_SERVER_HOST);
         config.put(PASSWORD, Constants.RABBITMQ_SERVER_PASSWORD);
@@ -78,5 +80,5 @@ public abstract class PublisherTest {
         async.awaitSuccess();
     }
 
-    protected abstract JsonObject createRequestJsonObject();
+    protected abstract JsonObject getJson();
 }
