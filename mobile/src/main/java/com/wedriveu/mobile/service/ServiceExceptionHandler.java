@@ -1,20 +1,23 @@
-package com.wedriveu.mobile.util.rabbitmq;
+package com.wedriveu.mobile.service;
 
 import android.app.Activity;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.impl.DefaultExceptionHandler;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
+import com.wedriveu.mobile.service.ServiceResult;
 
 /**
+ * The default {@linkplain ServiceExceptionHandler} used to manage message consumer exceptions.
+ *
  * @author Nicola Lasagni on 09/08/2017.
  */
-public class RabbitMqExceptionHandler<T> extends DefaultExceptionHandler {
+public class ServiceExceptionHandler extends DefaultExceptionHandler {
 
     private Activity mActivity;
-    private ServiceOperationCallback<T> mCallback;
+    private ServiceOperationCallback<?> mCallback;
 
-    public RabbitMqExceptionHandler(Activity activity, ServiceOperationCallback<T> callback) {
+    public ServiceExceptionHandler(Activity activity, ServiceOperationCallback<?> callback) {
         mActivity = activity;
         mCallback = callback;
     }
@@ -28,7 +31,7 @@ public class RabbitMqExceptionHandler<T> extends DefaultExceptionHandler {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mCallback.onServiceOperationFinished(null, exception.getLocalizedMessage());
+                mCallback.onServiceOperationFinished(new ServiceResult(null, exception.getLocalizedMessage()));
             }
         });
     }
