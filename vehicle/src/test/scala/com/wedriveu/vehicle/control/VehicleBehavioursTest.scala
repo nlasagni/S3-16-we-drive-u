@@ -2,8 +2,8 @@ package com.wedriveu.vehicle.control
 
 import java.util.concurrent.ThreadLocalRandom
 
+import com.wedriveu.shared.utils.Position
 import com.wedriveu.vehicle.boundary.VehicleStopViewImpl
-import com.wedriveu.vehicle.entity.Position
 import com.wedriveu.vehicle.shared.VehicleConstants
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
 
@@ -29,6 +29,8 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   val maxBoundPositionLat: Double = 44.1565639
   val minorBoundPositionLon: Double = 12.2363402
   val maxBoundPositionLon: Double = 12.2585623
+  val timeToSleepTest1 = 5000
+  val timeToSleepTest2 = 11000
   val timeToSleepForBrokenEvent = 19000
   val timeToSleepForStolenEvent = 20000
 
@@ -47,9 +49,9 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     randomLatitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
     randomLongitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
     vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination,randomLongitudeDestination))
-    while(!vehicleBehaviours.getDebuggingVar()){}
-      assert(vehicleControl.getVehicle().position.latitude == randomLatitudeDestination
-        && vehicleControl.getVehicle().position.longitude == randomLongitudeDestination
+    Thread.sleep(timeToSleepTest1)
+      assert(vehicleControl.getVehicle().position.getLatitude == randomLatitudeDestination
+        && vehicleControl.getVehicle().position.getLongitude == randomLongitudeDestination
         && vehicleControl.getVehicle().battery < VehicleConstants.maxBatteryValue)
   }
 
@@ -60,7 +62,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     randomLongitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
     vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination,randomLongitudeDestination))
     vehicleBehaviours.goToRecharge()
-    while(!vehicleBehaviours.getDebuggingVar()){}
+    Thread.sleep(timeToSleepTest2)
     assert(vehicleControl.getVehicle().battery == VehicleConstants.maxBatteryValue)
     assert(vehicleControl.getVehicle().getState().equals(VehicleConstants.stateAvailable))
   }
