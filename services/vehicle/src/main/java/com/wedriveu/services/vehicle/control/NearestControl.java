@@ -17,7 +17,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.shared.util.Constants.CAR_LICENCE_PLATE;
+import static com.wedriveu.shared.util.Constants.USERNAME;
+import static com.wedriveu.shared.util.Constants.ZERO;
+
 
 /**
  * This Controller serves all the interaction requests with the
@@ -33,11 +36,10 @@ public class NearestControl extends AbstractVerticle {
     private List<VehicleResponse> responseList;
 
     @Override
-    public void start(Future<Void> future) throws Exception {
+    public void start() throws Exception {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.VehicleStore.AVAILABLE_COMPLETED, this::availableVehiclesCompleted);
         eventBus.consumer(Messages.VehicleFinder.VEHICLE_RESPONSE, this::handleVehicleResponses);
-        future.complete();
     }
 
     private void handleVehicleResponses(Message message) {

@@ -1,5 +1,8 @@
 package com.wedriveu.mobile.service.login;
 
+import com.wedriveu.mobile.model.User;
+import com.wedriveu.mobile.service.ServiceOperationCallback;
+
 /**
  *
  * This service interacts with the AuthenticationService backend to perform the user login.
@@ -17,6 +20,6 @@ public interface LoginService {
      * @param password password login credential
      * @param callback method called from the LoginService in order to give the proper result back to the ViewModel
      */
-    void login(String username, String password, LoginServiceCallback callback);
+    void login(String username, String password, ServiceOperationCallback<User> callback);
 
 }

@@ -1,26 +1,28 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
+import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponse;
-import com.wedriveu.services.shared.utilities.Constants;
-import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.shared.entity.Position;
 import com.wedriveu.services.shared.utilities.PositionUtils;
-import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.IntStream;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.shared.util.Constants.EVENT_BUS_FINDER_ADDRESS;
+import static com.wedriveu.shared.util.Constants.ZERO;
 
 /**
  * Handles the communication with all the current available vehicles.
@@ -90,15 +92,15 @@ public class VehicleFinderVerticle extends VerticleConsumer {
 
     private void publishToMultipleRoutingKeys() {
         IntStream.range(ZERO, availableVehicles.size()).forEach(index -> {
-            publishToConsumer(RabbitMQ.Exchanges.VEHICLE,
-                    String.format(RabbitMQ.RoutingKey.CAN_DRIVE_REQUEST,
+            publishToConsumer(Constants.RabbitMQ.Exchanges.VEHICLE,
+                    String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_REQUEST,
                             availableVehicles.get(index).getCarLicencePlate()), index);
         });
     }
 
     private void declareExchanges(Handler<AsyncResult<Void>> handler) {
-        client.exchangeDeclare(RabbitMQ.Exchanges.VEHICLE,
-                RabbitMQ.Exchanges.Type.DIRECT,
+        client.exchangeDeclare(Constants.RabbitMQ.Exchanges.VEHICLE,
+                Constants.RabbitMQ.Exchanges.Type.DIRECT,
                 false,
                 false,
                 handler);
@@ -108,7 +110,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
                                    String routingKey,
                                    int index) {
         JsonObject requestJson = new JsonObject();
-        requestJson.put(EventBus.BODY, getRequestObject(index).encode());
+        requestJson.put(Constants.EventBus.BODY, getRequestObject(index).encode());
         client.basicPublish(exchangeName, routingKey, requestJson, null);
     }
 
@@ -122,8 +124,8 @@ public class VehicleFinderVerticle extends VerticleConsumer {
 
 
     private void startFinderConsumer() throws IOException, TimeoutException {
-        startConsumer(RabbitMQ.Exchanges.VEHICLE,
-                String.format(RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, username),
+        startConsumer(Constants.RabbitMQ.Exchanges.VEHICLE,
+                String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, username),
                 EVENT_BUS_FINDER_ADDRESS);
     }
 
@@ -133,7 +135,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         if (counter <= availableVehicles.size()) {
             vertx.eventBus().consumer(eventBus, msg -> {
                 JsonObject responseJson = (JsonObject) msg.body();
-                String response = responseJson.getString(EventBus.BODY);
+                String response = responseJson.getString(Constants.EventBus.BODY);
                 VehicleResponse vehicleResponse = (new JsonObject(response)).mapTo(VehicleResponse.class);
                 if (vehicleResponse.isEligible()) {
                     vehicleResponse.setUsername(username);

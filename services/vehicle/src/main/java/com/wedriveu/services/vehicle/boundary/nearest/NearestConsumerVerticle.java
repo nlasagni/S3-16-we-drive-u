@@ -1,14 +1,15 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.json.JsonObject;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.shared.util.Constants.EVENT_BUS_AVAILABLE_ADDRESS;
+
 
 /**
  * Starts the consumer which handles the user request for the vehicle.
@@ -31,12 +32,18 @@ public class NearestConsumerVerticle extends VerticleConsumer {
     }
 
     private void startUserConsumer() throws IOException, TimeoutException {
-        startConsumer(RabbitMQ.Exchanges.VEHICLE, RabbitMQ.RoutingKey.VEHICLE_REQUEST, EVENT_BUS_AVAILABLE_ADDRESS);
+        startConsumer(Constants.RabbitMQ.Exchanges.VEHICLE,
+                Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST,
+                EVENT_BUS_AVAILABLE_ADDRESS);
     }
 
     @Override
     public void registerConsumer(String eventBus) {
-        vertx.eventBus().consumer(eventBus, msg -> searchAvailableVehicles((JsonObject) msg.body()));
+        vertx.eventBus().consumer(eventBus, msg -> {
+            JsonObject message = (JsonObject) msg.body();
+            JsonObject response = new JsonObject(message.getString(Constants.EventBus.BODY));
+            searchAvailableVehicles(response);
+        });
     }
 
     private void searchAvailableVehicles(JsonObject userData) {

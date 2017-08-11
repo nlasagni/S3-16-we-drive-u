@@ -10,6 +10,10 @@ public interface Constants {
 
     //Address resolution
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    int HTTP_CALL_TIMEOUT = 60;
+    int SERVICE_OPERATION_TIMEOUT = 20000;
+
+    String NO_RESPONSE_DATA_ERROR = "Response empty.";
+    String TIME_OUT_ERROR = "Connection timeout reached. Please try again.";
+    String CLOSE_COMMUNICATION_ERROR = "Error occurred while closing RabbitMQ communication.";
 
 }

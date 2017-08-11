@@ -1,4 +1,4 @@
-package com.wedriveu.services.shared.utilities;
+package com.wedriveu.shared.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -42,6 +42,34 @@ public class Position {
     public double getEuclideanDistance(Position position) {
         return Math.sqrt(Math.pow(this.latitude - position.getLatitude(), 2)
                 + Math.pow(this.longitude - position.getLongitude(), 2));
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Position otherPosition = (Position) other;
+        return Double.compare(otherPosition.latitude, latitude) == 0 &&
+                Double.compare(otherPosition.longitude, longitude) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(getLatitude());
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(getLongitude());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 
 }

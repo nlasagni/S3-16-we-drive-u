@@ -1,7 +1,7 @@
 package com.wedriveu.services.vehicle.entity;
 
 import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.shared.entity.Position;
 import io.vertx.core.eventbus.Message;
 
 import java.util.Date;

@@ -1,11 +1,11 @@
 package com.wedriveu.services.shared.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.shared.entity.Position;
 
 import java.util.Date;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.shared.util.Constants.*;
 
 /**
  * @author Marco Baldassarri
@@ -20,19 +20,15 @@ public class Vehicle {
     public static final String STATUS_BROKEN_STOLEN = "broken_stolen";
     public static final String STATUS_NETWORK_ISSUES = "net_issues";
 
-    @JsonProperty(CAR_LICENCE_PLATE)
     private String carLicencePlate;
-    @JsonProperty(STATE)
     private String state;
-    @JsonProperty(POSITION)
     private Position position;
-    @JsonProperty(LAST_UPDATE)
     private Date lastUpdate;
 
-    public Vehicle(String carLicencePlate,
-                   String state,
-                   Position position,
-                   Date lastUpdate) {
+    public Vehicle(@JsonProperty(CAR_LICENCE_PLATE) String carLicencePlate,
+                   @JsonProperty(STATE) String state,
+                   @JsonProperty(POSITION) Position position,
+                   @JsonProperty(LAST_UPDATE) Date lastUpdate) {
         this.carLicencePlate = carLicencePlate;
         this.state = state;
         this.position = position;

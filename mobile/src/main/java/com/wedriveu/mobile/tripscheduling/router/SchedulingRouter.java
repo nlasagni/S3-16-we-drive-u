@@ -1,7 +1,6 @@
 package com.wedriveu.mobile.tripscheduling.router;
 
 import com.wedriveu.mobile.app.DialogProvider;
-import com.wedriveu.mobile.model.Vehicle;
 
 /**
  *

@@ -4,14 +4,12 @@ package com.wedriveu.services.vehicle.entity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
-import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.shared.entity.Position;
 import com.wedriveu.services.shared.utilities.PositionUtils;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -22,7 +20,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.wedriveu.services.shared.utilities.Constants.STATUS_AVAILABLE;
+import static com.wedriveu.services.shared.entity.Vehicle.STATUS_AVAILABLE;
+import static com.wedriveu.shared.util.Constants.CAR_LICENCE_PLATE;
+import static com.wedriveu.shared.util.Constants.VEHICLES_DATABASE_PATH;
+
 
 /**
  * Created by Michele on 12/07/2017.
@@ -34,12 +35,11 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private EventBus eventBus;
 
     @Override
-    public void start(Future<Void> future) throws Exception {
+    public void start() throws Exception {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.NearestControl.AVAILABLE_REQUEST, this::getAllAvailableVehiclesInRange);
         eventBus.consumer(Messages.NearestControl.GET_VEHICLE, this::getVehicle);
         createVehiclesFile();
-        future.complete();
     }
 
     @Override
@@ -99,7 +99,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     public void getVehicle(Message message) {
         List<Vehicle> vehicles = getVehicleList();
         JsonObject vehicleData = (JsonObject) message.body();
-        String carLicencePlate = vehicleData.getString(Constants.CAR_LICENCE_PLATE);
+        String carLicencePlate = vehicleData.getString(CAR_LICENCE_PLATE);
         JsonObject response = vehicleData.mapFrom(getRequestedVehicle(vehicles, carLicencePlate));
         eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED, response);
     }
@@ -203,7 +203,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private List<Vehicle> readFromVehiclesDb(ObjectMapper mapper) {
         try {
             List<Vehicle> vehicles =
-                    mapper.readValue(new File(Constants.VEHICLES_DATABASE_PATH), new TypeReference<List<Vehicle>>() {
+                    mapper.readValue(new File(VEHICLES_DATABASE_PATH), new TypeReference<List<Vehicle>>() {
                     });
             return vehicles;
         } catch (IOException e) {
@@ -215,7 +215,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private void checkDuplicatesAndWriteOnVehiclesDb(List<Vehicle> vehicles, ObjectMapper mapper) {
         if (thereAreNoDuplicates(vehicles)) {
             try {
-                mapper.writeValue(new File(Constants.VEHICLES_DATABASE_PATH), vehicles);
+                mapper.writeValue(new File(VEHICLES_DATABASE_PATH), vehicles);
                 String jsonInString = mapper.writeValueAsString(vehicles);
                 Log.log(jsonInString);
                 jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(vehicles);

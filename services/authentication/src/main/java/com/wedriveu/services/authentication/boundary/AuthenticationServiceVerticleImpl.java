@@ -40,7 +40,6 @@ public class AuthenticationServiceVerticleImpl extends AbstractVerticle implemen
 
 	@Override
 	public void start(Future<Void> startFuture) throws Exception {
-		super.start(startFuture);
 		eventBus = vertx.eventBus();
 		checker = new CredentialsCheckerImpl();
 		objectMapper = new ObjectMapper();
@@ -50,11 +49,16 @@ public class AuthenticationServiceVerticleImpl extends AbstractVerticle implemen
 	private void startService(Future<Void> future) {
 		rabbitMQClient = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
 		Future<Void> initFuture = Future.future();
+		Future<Void> endFuture = Future.future();
 		startClient(initFuture);
 		initFuture.compose(v -> {
 			Future<JsonObject> declareQueueFuture = Future.future();
 			declareQueue(declareQueueFuture);
 			return declareQueueFuture;
+		}).compose(v -> {
+			Future<Void> exchangeDeclareFuture = Future.future();
+			exchangeDeclare(exchangeDeclareFuture);
+			return exchangeDeclareFuture;
 		}).compose(v -> {
 			Future<Void> bindQueueFuture = Future.future();
 			bindQueueToExchange(bindQueueFuture);
@@ -63,7 +67,10 @@ public class AuthenticationServiceVerticleImpl extends AbstractVerticle implemen
 			Future<Void> basicConsumeFuture = Future.future();
 			basicConsume(basicConsumeFuture);
 			return basicConsumeFuture;
-		}).compose(v -> registerConsumer(), future);
+		}).compose(v -> {
+			registerConsumer();
+			future.complete();
+		}, endFuture);
 	}
 
 	private void startClient(Future<Void> future) {
@@ -76,6 +83,16 @@ public class AuthenticationServiceVerticleImpl extends AbstractVerticle implemen
 				false,
 				false,
 				future.completer());
+	}
+
+	private void exchangeDeclare(Future<Void> future) {
+		rabbitMQClient.exchangeDelete(Constants.RabbitMQ.Exchanges.USER, onDelete -> {
+			rabbitMQClient.exchangeDeclare(Constants.RabbitMQ.Exchanges.USER,
+					Constants.RabbitMQ.Exchanges.Type.DIRECT,
+					true,
+					false,
+					future.completer());
+		});
 	}
 
 	private void bindQueueToExchange(Future<Void> future) {

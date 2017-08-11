@@ -1,7 +1,7 @@
 package com.wedriveu.services.shared.rabbitmq;
 
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -18,11 +18,6 @@ public class VerticlePublisher extends AbstractVerticle {
 
     private static RabbitMQClient client;
     private static String TAG = VerticlePublisher.class.getSimpleName();
-
-    @Override
-    public void start(Future<Void> startFuture) throws Exception {
-        super.start(startFuture);
-    }
 
     protected void publish(String exchangeName, String routingKey, JsonObject data) {
         client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();

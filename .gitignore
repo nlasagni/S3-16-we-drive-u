@@ -131,7 +131,6 @@ latest-docs
 releases
 store
 *.json
-/services/vehicle/src/test/resources/
 .vertx
 
 /captures
