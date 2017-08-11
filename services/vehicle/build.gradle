@@ -1,5 +1,7 @@
 dependencies {
     compile project(path: ':services:shared')
+    compile project(path: ':vehicle')
+    compile project(path: ':shared')
 }
 
 jar {

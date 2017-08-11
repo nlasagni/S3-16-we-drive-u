@@ -3,6 +3,17 @@ apply plugin: 'scala'
 
 sourceCompatibility = 1.8
 
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala', 'src/main/java']
+        }
+        java {
+            srcDirs = []
+        }
+    }
+}
+
 repositories {
     jcenter()
     mavenCentral()
@@ -17,4 +28,5 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
     compile group: 'com.rabbitmq', name: 'amqp-client', version: '4.0.2'
     compile project(path: ':services:shared')
+    compile project(path: ':shared')
 }
