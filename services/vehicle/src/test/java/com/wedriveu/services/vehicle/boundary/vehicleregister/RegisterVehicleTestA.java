@@ -18,7 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(VertxUnitRunner.class)
 public class RegisterVehicleTestA extends PublisherTest {
 
-    private static final String EVENT_BUS_ADDRESS = RegisterConsumerVerticle.class.getCanonicalName();
+    private static final String EVENT_BUS_ADDRESS = RegisterVehicleTestA.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue";
     private RegisterConsumerVerticle registerConsumerVerticle;
 

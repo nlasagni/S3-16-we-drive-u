@@ -2,6 +2,8 @@ package com.wedriveu.services.vehicle.boundary;
 
 import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterPublisherVerticle;
+import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -34,7 +36,6 @@ public abstract class PublisherTest {
                          String requestRoutingKey,
                          String responseRoutingKey,
                          String eventBusAddress) {
-
         this.queue = queue;
         this.exchangeName = exchangeName;
         this.requestRoutingKey = requestRoutingKey;
@@ -51,8 +52,19 @@ public abstract class PublisherTest {
         Async async = context.async();
         rabbitMQClient = RabbitMQClient.create(vertx, config);
         rabbitMQClient.start(onStart -> {
-            vertx.deployVerticle(verticle, context.asyncAssertSuccess(onDeploy -> async.complete()));
+            /*vertx.deployVerticle(verticle, context.asyncAssertSuccess(onDeployConsumer -> {
+                Log.info("VERTICLE", "DEPLOYED REGISTER CONSUMER");
+                vertx.deployVerticle(new RegisterPublisherVerticle(), context.asyncAssertSuccess(onDeployPublisher -> {
+                    Log.info("VERTICLE", "DEPLOYED REGISTER PUBLISHER");
+                    vertx.deployVerticle(new VehicleStoreImpl(), context.asyncAssertSuccess(onDeployStore -> {
+                        Log.info("VERTICLE", "DEPLOYED VEHICLE STORE CONSUMER");
+                        async.complete();
+                    }));
+                }));
+            }));*/
+            async.complete();
         });
+
         async.awaitSuccess();
     }
 
@@ -71,12 +83,12 @@ public abstract class PublisherTest {
     }
 
     protected void declareQueueAndBind(String keyName, TestContext context) {
-        Async async = context.async(1);
+        Async async = context.async();
         declareQueue(onDeclareCompleted -> {
             context.assertTrue(onDeclareCompleted.succeeded());
             bindQueueToExchange(keyName, onQueueBinded -> {
                 context.assertTrue(onQueueBinded.succeeded());
-                async.countDown();
+                async.complete();
             });
         });
         async.awaitSuccess();
@@ -98,6 +110,7 @@ public abstract class PublisherTest {
     }
 
     protected void publishMessage(TestContext context, JsonObject data) {
+        context.assertTrue(true);
         final Async async = context.async();
         Log.info("PUBLISH", "\nEXCHANGE_NAME:" + exchangeName + "\nROUTING_KEY: " + requestRoutingKey +
                 "\nDATA: " + data.encodePrettily());
@@ -111,25 +124,22 @@ public abstract class PublisherTest {
 
     private void handleServiceResponse(TestContext context, Async async, String eventBusAddress) {
 
-        rabbitMQClient.basicConsume(queue, eventBusAddress, context.asyncAssertSuccess(onGet -> {
+        rabbitMQClient.basicConsume(queue, eventBusAddress, context.asyncAssertSuccess(onGet -> {} ));
+        MessageConsumer<JsonObject> consumer = eventBus.consumer(eventBusAddress, msg -> {
+            context.assertNotNull(msg.body());
+            JsonObject responseJson = new JsonObject(msg.body().getString(BODY));
+            checkResponse(responseJson);
 
-            MessageConsumer<JsonObject> consumer = eventBus.consumer(eventBusAddress, msg -> {
-                context.assertNotNull(msg.body());
-                JsonObject responseJson = new JsonObject(msg.body().getString(BODY));
-                checkResponse(responseJson);
-
-                Log.info("CONSUME", "\nEXCHANGE_NAME:" + exchangeName + "\nROUTING_KEY: " + responseRoutingKey +
-                        "\nDATA: " + responseJson.encodePrettily());
-                async.complete();
-            });
-            consumer.exceptionHandler(event -> {
-                context.fail(event.getCause());
-                async.complete();
-            });
-        }));
-
-        vertx.setTimer(8000, onTime -> {
-            System.out.println("TEST: ASYNC COMPLETE");
+            Log.info("CONSUME", "\nEXCHANGE_NAME:" + exchangeName + "\nROUTING_KEY: " + responseRoutingKey +
+                    "\nDATA: " + responseJson.encodePrettily());
+            async.complete();
+        });
+        consumer.exceptionHandler(event -> {
+            context.fail(event.getCause());
+            async.complete();
+        });
+        vertx.setTimer(5000, handler -> {
+            context.fail();
             async.complete();
         });
     }

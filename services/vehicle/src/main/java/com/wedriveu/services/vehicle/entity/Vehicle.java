@@ -73,7 +73,8 @@ public class Vehicle {
         this.lastUpdate = lastUpdate;
     }
 
-    public Vehicle() { }
+    public Vehicle() {
+    }
 
     public String getName() {
         return name;

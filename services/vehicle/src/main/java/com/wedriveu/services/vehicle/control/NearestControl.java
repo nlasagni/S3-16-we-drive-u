@@ -5,7 +5,6 @@ import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponse;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
@@ -33,11 +32,11 @@ public class NearestControl extends AbstractVerticle {
     private List<VehicleResponse> responseList;
 
     @Override
-    public void start(Future<Void> future) throws Exception {
+    public void start() throws Exception {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.VehicleStore.AVAILABLE_COMPLETED, this::availableVehiclesCompleted);
         eventBus.consumer(Messages.VehicleFinder.VEHICLE_RESPONSE, this::handleVehicleResponses);
-        future.complete();
+
     }
 
     private void handleVehicleResponses(Message message) {

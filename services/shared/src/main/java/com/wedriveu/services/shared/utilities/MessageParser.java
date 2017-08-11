@@ -1,6 +1,5 @@
 package com.wedriveu.services.shared.utilities;
 
-import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponse;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
@@ -11,10 +10,10 @@ import static com.wedriveu.services.shared.utilities.Constants.BODY;
  */
 public class MessageParser {
 
-    public static<T> T getObject(Message message, Class<T> object) {
+    public static <T> T getObject(Message message, Class<T> object) {
         JsonObject responseJson = (JsonObject) message.body();
         String response = responseJson.getString(BODY);
-        return (new JsonObject(response)).mapTo( object);
+        return (new JsonObject(response)).mapTo(object);
     }
 
     public static JsonObject getJson(Message message) {

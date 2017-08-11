@@ -8,6 +8,12 @@ package com.wedriveu.services.vehicle.rabbitmq;
  */
 public interface Messages {
 
+
+    interface VehicleService {
+        String BOOT = "vehicle.service.boot";
+
+    }
+
     interface NearestControl {
         String AVAILABLE_REQUEST = "control.available";
         String DATA_TO_VEHICLE = "control.data.to.vehicle";

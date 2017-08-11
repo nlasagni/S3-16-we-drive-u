@@ -3,15 +3,10 @@ package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.istack.internal.NotNull;
-import com.wedriveu.services.shared.utilities.Constants;
-import com.wedriveu.services.shared.utilities.Log;
-import com.wedriveu.services.shared.utilities.Position;
-import com.wedriveu.services.shared.utilities.PositionUtils;
+import com.wedriveu.services.shared.utilities.*;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -23,9 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.wedriveu.services.shared.utilities.Constants.CAR_LICENCE_PLATE;
-import static com.wedriveu.services.shared.utilities.Constants.REGISTER_RESULT;
-import static com.wedriveu.services.shared.utilities.Constants.STATUS_AVAILABLE;
+import static com.wedriveu.services.shared.utilities.Constants.*;
 
 /**
  * Created by Michele on 12/07/2017.
@@ -37,21 +30,22 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private EventBus eventBus;
 
     @Override
-    public void start(Future<Void> future) throws Exception {
+    public void start() throws Exception {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.NearestControl.AVAILABLE_REQUEST, this::getAllAvailableVehiclesInRange);
         eventBus.consumer(Messages.NearestControl.GET_VEHICLE, this::getVehicle);
         eventBus.consumer(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, this::addVehicle);
         //createVehiclesFile();
         createJsonFile();
-        future.complete();
     }
 
     private void createJsonFile() {
         try {
             File file = new File(Constants.VEHICLES_DATABASE_PATH);
-            if(file.createNewFile()) {
-                Log.info("FILE", "File Created");
+            if (file.exists()) {
+                if (file.createNewFile()) {
+                    Log.info("FILE", "File Created");
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -87,13 +81,14 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     @Override
     public void addVehicle(Message message) {
+        Log.info("====== VEHICLE STORE", "ADD VEHICLE");
         JsonObject responseJson = new JsonObject();
-        JsonObject vehicleRequesterJson = (JsonObject) message.body();
+        JsonObject vehicleRequesterJson = MessageParser.getJson(message);
         Vehicle vehicleRequester = vehicleRequesterJson.mapTo(Vehicle.class);
         List<Vehicle> vehicles = getVehicleList();
         responseJson.put(CAR_LICENCE_PLATE, vehicleRequesterJson.getValue(CAR_LICENCE_PLATE));
         Optional existingVehicle = vehicles.stream().filter(x -> x.equals(vehicleRequester)).findFirst();
-        if(existingVehicle.isPresent()) {
+        if (existingVehicle.isPresent()) {
             responseJson.put(REGISTER_RESULT, false);
         } else {
             responseJson.put(REGISTER_RESULT, true);
@@ -138,7 +133,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         List<Vehicle> vehicles = readFromVehiclesDb(mapper);
         //return (vehicles.isEmpty() || vehicles == null) ? new ArrayList<>() : vehicles;
         //return vehicles;
-        if(vehicles != null) {
+        if (vehicles != null) {
             return vehicles;
         }
         return new ArrayList<>();

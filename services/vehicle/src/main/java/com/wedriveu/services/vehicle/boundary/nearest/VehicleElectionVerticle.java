@@ -2,7 +2,6 @@ package com.wedriveu.services.vehicle.boundary.nearest;
 
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
@@ -17,10 +16,8 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
 public class VehicleElectionVerticle extends VerticlePublisher {
 
     @Override
-    public void start(Future<Void> future) throws Exception {
-        super.start(future);
+    public void start() throws Exception {
         vertx.eventBus().consumer(Messages.VehicleStore.GET_VEHICLE_COMPLETED, this::sendVehicleToUser);
-        future.complete();
     }
 
     private void sendVehicleToUser(Message message) {

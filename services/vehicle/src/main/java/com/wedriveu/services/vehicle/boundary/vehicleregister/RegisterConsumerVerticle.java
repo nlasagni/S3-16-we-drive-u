@@ -23,8 +23,10 @@ public class RegisterConsumerVerticle extends VerticleConsumer {
 
     @Override
     public void start() throws Exception {
+        Log.info("REGISTER CONSUMER VERTICLE", "START SETUP");
         super.start();
         startVehicleRegisterConsumer();
+        Log.info("REGISTER CONSUMER VERTICLE", "END SETUP");
     }
 
     private void startVehicleRegisterConsumer() throws IOException, TimeoutException {
@@ -34,11 +36,17 @@ public class RegisterConsumerVerticle extends VerticleConsumer {
 
     @Override
     public void registerConsumer(String eventBus) {
-        vertx.eventBus().consumer(eventBus, msg -> addNewVehicle(MessageParser.getJson(msg)));
+        Log.info("====== REGISTER CONSUMER", "ADD NEW VEHICLE REGISTER CONSUMER");
+
+        vertx.eventBus().consumer(eventBus, msg -> {
+            Log.info("====== REGISTER CONSUMER", "ADD NEW VEHICLE EVENT BUS HANDLER");
+            addNewVehicle(MessageParser.getJson(msg));
+        });
     }
 
     private void addNewVehicle(JsonObject userData) {
-        Log.log(userData.encodePrettily());
+        Log.info("====== REGISTER CONSUMER", "ADD NEW VEHICLE ADD");
+
         eventBus.send(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, userData);
     }
 
