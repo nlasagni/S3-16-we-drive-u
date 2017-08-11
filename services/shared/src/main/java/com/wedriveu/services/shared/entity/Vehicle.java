@@ -1,7 +1,7 @@
 package com.wedriveu.services.shared.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.shared.utils.Position;
 
 import java.util.Date;
 
