@@ -4,8 +4,10 @@ import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponse;
+
 import com.wedriveu.shared.entity.Position;
 import com.wedriveu.services.shared.utilities.PositionUtils;
+
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import com.wedriveu.shared.util.Constants;
@@ -116,8 +118,8 @@ public class VehicleFinderVerticle extends VerticleConsumer {
 
     private JsonObject getRequestObject(int index) {
         Position vehiclePosition = availableVehicles.get(index).getPosition();
-        distanceToUser = PositionUtils.getDistanceInKm(userPosition, vehiclePosition);
-        double tripDistance = (distanceToUser) + (PositionUtils.getDistanceInKm(userPosition, destPosition));
+        distanceToUser = Position.getDistanceInKm(userPosition, vehiclePosition);
+        double tripDistance = (distanceToUser) + (Position.getDistanceInKm(userPosition, destPosition));
         userRequest.setTripDistance(tripDistance);
         return new JsonObject().mapFrom(userRequest);
     }

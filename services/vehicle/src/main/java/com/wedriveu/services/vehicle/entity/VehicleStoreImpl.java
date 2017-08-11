@@ -5,8 +5,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.utilities.Log;
+
 import com.wedriveu.shared.entity.Position;
 import com.wedriveu.services.shared.utilities.PositionUtils;
+
+
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import io.vertx.core.AbstractVerticle;
@@ -85,7 +88,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         List<Vehicle> availableVehicles = new ArrayList<>(vehicles.size());
         for (Vehicle vehicle : vehicles) {
             if (vehicle.getState().equals(STATUS_AVAILABLE)
-                    && PositionUtils.isInRange(userPosition, vehicle.getPosition())) {
+                    && Position.isInRange(userPosition, vehicle.getPosition())) {
                 availableVehicles.add(vehicle);
             }
         }
