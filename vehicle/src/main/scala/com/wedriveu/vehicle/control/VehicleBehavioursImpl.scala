@@ -1,7 +1,8 @@
 package com.wedriveu.vehicle.control
 
+import com.wedriveu.shared.utils.Position
 import com.wedriveu.vehicle.boundary.VehicleStopView
-import com.wedriveu.vehicle.entity.{Position, SelfDrivingVehicle}
+import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
 import com.wedriveu.vehicle.simulation.{RechargingLatchManager, RechargingLatchManagerImpl}
 
@@ -97,7 +98,6 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
       val estimatedJourneyTimeInSeconds: Long =
         ((distanceInKm / selfDrivingVehicle.speed) * conversionInSeconds).asInstanceOf[Long]
       stopUi.writeMessageLog(timeInSecondsLog + estimatedJourneyTimeInSeconds)
-
       breakable {
         for (time <- timeOfJourney to estimatedJourneyTimeInSeconds by timeStep) {
           if (checkVehicleIsBrokenOrStolen()) {
@@ -106,15 +106,15 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
           if(!debugVar){
             Thread.sleep(500)
           }
-          deltaLat = position.latitude - selfDrivingVehicle.position.latitude
-          deltaLon = position.longitude - selfDrivingVehicle.position.longitude
+          deltaLat = position.getLatitude - selfDrivingVehicle.position.getLatitude
+          deltaLon = position.getLongitude - selfDrivingVehicle.position.getLongitude
           calculateMovement(time, estimatedJourneyTimeInSeconds, deltaLat, deltaLon)
           if ((time + timeStep) > estimatedJourneyTimeInSeconds) {
             if (checkVehicleIsBrokenOrStolen()) {
               break()
             }
-            deltaLat = position.latitude - selfDrivingVehicle.position.latitude
-            deltaLon = position.longitude - selfDrivingVehicle.position.longitude
+            deltaLat = position.getLatitude - selfDrivingVehicle.position.getLatitude
+            deltaLon = position.getLongitude - selfDrivingVehicle.position.getLongitude
             calculateMovement(estimatedJourneyTimeInSeconds, estimatedJourneyTimeInSeconds, deltaLat, deltaLon)
             debugging = true
           }
@@ -126,17 +126,17 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
   private def checkVehicleIsBrokenOrStolen(): Boolean = {
     if(selfDrivingVehicle.getState().equals(VehicleConstants.stateStolen)){
       stopUi.writeMessageLog(stateStolenLog
-        + selfDrivingVehicle.position.latitude
+        + selfDrivingVehicle.position.getLatitude
         + commaLog
-        + selfDrivingVehicle.position.longitude)
+        + selfDrivingVehicle.position.getLongitude)
       //TODO Here i will notify the service that i'm stolen
       true
     }
     else if (selfDrivingVehicle.getState().equals(VehicleConstants.stateBroken)) {
       stopUi.writeMessageLog(stateBrokenLog
-        + selfDrivingVehicle.position.latitude
+        + selfDrivingVehicle.position.getLatitude
         + commaLog
-        + selfDrivingVehicle.position.longitude)
+        + selfDrivingVehicle.position.getLongitude)
       //TODO Here i will notify the service that i'm broken
       true
     }
@@ -150,14 +150,14 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
                                 deltaLat: Double,
                                 deltaLon: Double): Unit = {
     val elapsedTime: Double = time.asInstanceOf[Double] / estimatedJourneyTimeInSeconds
-    var latInter: Double = selfDrivingVehicle.position.latitude + deltaLat * elapsedTime
-    var lonInter: Double = selfDrivingVehicle.position.longitude + deltaLon * elapsedTime
+    var latInter: Double = selfDrivingVehicle.position.getLatitude + deltaLat * elapsedTime
+    var lonInter: Double = selfDrivingVehicle.position.getLongitude + deltaLon * elapsedTime
     selfDrivingVehicle.position = new Position(latInter, lonInter)
     drainBattery()
     stopUi.writeMessageLog(newPositionLog
-      + selfDrivingVehicle.position.latitude
+      + selfDrivingVehicle.position.getLatitude
       + commaLog
-      + selfDrivingVehicle.position.longitude)
+      + selfDrivingVehicle.position.getLongitude)
   }
 
   private def drainBattery(): Unit = {
@@ -192,18 +192,18 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
       val distance : Double = 20.0 * Math.sqrt(randomNumber1)
       val bearing: Double = 2 * Math.PI * randomNumber2
       val newLatitude: Double =
-        Math.asin(Math.sin(selfDrivingVehicle.position.latitude)
+        Math.asin(Math.sin(selfDrivingVehicle.position.getLatitude)
           * Math.cos(distance/VehicleConstants.earthRadiusInKm)
-          + Math.cos(selfDrivingVehicle.position.latitude)
+          + Math.cos(selfDrivingVehicle.position.getLatitude)
           * Math.sin(distance/VehicleConstants.earthRadiusInKm)
           * Math.cos(bearing))
       val newLongitude: Double =
-        selfDrivingVehicle.position.longitude
+        selfDrivingVehicle.position.getLongitude
       + Math.atan2(Math.sin(bearing)
         *Math.sin(distance/VehicleConstants.earthRadiusInKm)
-        *Math.cos(selfDrivingVehicle.position.latitude),
+        *Math.cos(selfDrivingVehicle.position.getLatitude),
         Math.cos(distance/VehicleConstants.earthRadiusInKm)
-          -Math.sin(selfDrivingVehicle.position.latitude)
+          -Math.sin(selfDrivingVehicle.position.getLatitude)
           *Math.sin(newLatitude))
       stopUi.writeMessageLog(needRechargingLog + newLatitude + commaLog + newLongitude)
       movementAndPositionChange(new Position(newLatitude, newLongitude))

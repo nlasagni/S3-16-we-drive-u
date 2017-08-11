@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom
 import java.text.DecimalFormat
 
 import com.wedriveu.services.shared.utilities.Log
-import com.wedriveu.vehicle.entity.Position
+import com.wedriveu.shared.utils.Position
 
 /**
   * @author Michele Donati on 28/07/2017.
