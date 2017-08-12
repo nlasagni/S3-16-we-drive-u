@@ -50,7 +50,7 @@ public class VehicleVerticleRegisterImplTest {
     private VehicleControl vehicleControl;
     private String license = "VEHICLE2";
     private String[] licenseList = {"VEHICLE1", "VEHICLE3", "VEHICLE4", "VEHICLE5"};
-    private String state = "available";
+    private String state = "";
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
@@ -79,17 +79,13 @@ public class VehicleVerticleRegisterImplTest {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
                     rabbitMQClient.queueBind(requestId, exchanges.VEHICLE(), routingKeys.REGISTER_REQUEST(), onQueueBind ->{
                         vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy -> {
-                            System.out.println("TEST: IL VEICOLO DEPLOYATO");
                             async.complete();}
                         ));
-                        System.out.println("TEST: QUEUE " + requestId + " BINDATA" );
                         async.countDown();
                         context.assertTrue(onQueueBind.succeeded());
                     });
-                    System.out.println("TEST: EXCHANGE DICHIARATO");
                     async.countDown();
                 context.assertTrue(onQueueDeclare.succeeded());
-                System.out.println("TEST: QUEUE DICHIARATA");
                 async.countDown();
             });
             async.countDown();
@@ -109,18 +105,13 @@ public class VehicleVerticleRegisterImplTest {
 
     private void checkVehicleRequest(TestContext context) {
         final Async async = context.async();
-        System.out.println("TEST: CHECK VEHICLE REQUEST");
         rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
-            System.out.println("TEST: BASIC CONSUME COMPLETATA");
             MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-                System.out.println("TEST: CONSUMO MESSAGGIO");
                 JsonObject requestJson = new JsonObject(msg.body().getString(eventBusConstants.BODY()));
                 Log.info(TAG, requestJson.toString());
                 RegisterToServiceRequest request = requestJson.mapTo(RegisterToServiceRequest.class);
-                System.out.println("TEST: La request = " + request.getLicense());
                 RegisterToServiceResponse response = new RegisterToServiceResponse();
                 response.setRegisterOk(checkLicenseList(request.getLicense()));
-                System.out.println("TEST: La response = " + response.getRegisterOk());
                 sendResponse(response, context);
             });
             consumer.exceptionHandler(event -> {
@@ -128,7 +119,6 @@ public class VehicleVerticleRegisterImplTest {
             });
         });
         vertx.setTimer(8000, onTime -> {
-            System.out.println("TEST: ASYNC COMPLETE");
             async.complete();});
         async.awaitSuccess();
     }
@@ -147,17 +137,13 @@ public class VehicleVerticleRegisterImplTest {
     private void sendResponse(RegisterToServiceResponse response, TestContext context) {
         try {
             String responseString = objectMapper.writeValueAsString(response);
-            System.out.println("HO FATTO LA RESPONSE = " + responseString);
             JsonObject responseJson = new JsonObject();
             responseJson.put(eventBusConstants.BODY(), responseString);
-            System.out.println("IL JSON = " + responseJson.toString());
-            System.out.println("License = " + license);
             rabbitMQClient.basicPublish(exchanges.VEHICLE(),
                     String.format(routingKeys.REGISTER_RESPONSE(), license),
                     responseJson,
                     onPublish -> {
                         context.assertTrue(onPublish.succeeded());
-                        System.out.println("SEND RIUSCITA");
                     });
         } catch (JsonProcessingException e) {
             e.printStackTrace();

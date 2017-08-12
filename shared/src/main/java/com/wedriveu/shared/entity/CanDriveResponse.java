@@ -1,8 +1,11 @@
 package com.wedriveu.shared.entity;
 
 /**
- * Created by Michele on 09/08/2017.
+ * @author Michele Donati on 09/08/2017.
+ *
+ * This class represents a "can drive?" response that a vehicle sends to the service.
  */
+
 public class CanDriveResponse {
 
     private String license;

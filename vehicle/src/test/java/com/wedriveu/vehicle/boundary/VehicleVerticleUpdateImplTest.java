@@ -74,16 +74,13 @@ public class VehicleVerticleUpdateImplTest {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
                 rabbitMQClient.queueBind(requestId, exchanges.VEHICLE(), routingKeys.VEHICLE_UPDATE(), onQueueBind ->{
                     vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy -> {
-                        System.out.println("TEST: IL VEICOLO DEPLOYATO");
                         async.complete();}
                     ));
-                    System.out.println("TEST: QUEUE " + requestId + " BINDATA" );
                     async.countDown();
                     context.assertTrue(onQueueBind.succeeded());
                 });
                 async.countDown();
                 context.assertTrue(onQueueDeclare.succeeded());
-                System.out.println("TEST: QUEUE DICHIARATA");
                 async.countDown();
             });
             async.countDown();
@@ -103,15 +100,11 @@ public class VehicleVerticleUpdateImplTest {
 
     private void checkVehicleUpdate(TestContext context) {
         final Async async = context.async();
-        System.out.println("TEST: CHECK VEHICLE UPDATE");
         rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
-            System.out.println("TEST: BASIC CONSUME COMPLETATA");
             MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-                System.out.println("TEST: CONSUMO MESSAGGIO");
                 JsonObject updateJson = new JsonObject(msg.body().getString(eventBusConstants.BODY()));
                 Log.info(TAG, updateJson.toString());
                 UpdateToService updateArrived = updateJson.mapTo(UpdateToService.class);
-                System.out.println("TEST: La update to service = " + updateArrived.getLicense());
                 context.assertTrue(updateArrived.getPosition().equals(position)
                         && updateArrived.getStatus().equals(state)
                         && updateArrived.getLicense().equals(license)
@@ -123,7 +116,6 @@ public class VehicleVerticleUpdateImplTest {
         });
         vehicleVerticle.sendUpdate();
         vertx.setTimer(5000, onTime -> {
-            System.out.println("TEST: ASYNC COMPLETE");
             async.complete();});
         async.awaitSuccess();
     }

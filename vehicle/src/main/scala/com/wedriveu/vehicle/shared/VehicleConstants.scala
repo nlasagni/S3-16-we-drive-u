@@ -4,7 +4,7 @@ package com.wedriveu.vehicle.shared
   * @author Michele Donati on 06/08/2017.
   */
 
-/** This trait is useful to access vehicle's constants. */
+/** This trait is useful to access vehicle's constants and RabbitMq infrastructure's constants. */
 
 object VehicleConstants {
   final val stateBroken: String = "broken"
@@ -34,6 +34,7 @@ object RoutingKeys {
   final val BOOK_RESPONSE = "vehicle.response.book.%s"
   final val VEHICLE_ARRIVED = "vehicle.event.arrived"
   final val VEHICLE_UPDATE = "vehicle.event.updated"
+  final val VEHICLE_DRIVE_COMMAND = "vehicle.event.drive"
 }
 
 object EventBusConstants {

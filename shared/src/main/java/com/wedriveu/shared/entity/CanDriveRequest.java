@@ -1,8 +1,11 @@
 package com.wedriveu.shared.entity;
 
 /**
- * Created by Michele on 09/08/2017.
+ * @author Michele Donati on 09/08/2017.
+ *
+ * This class represents a "can drive?" request that the service sends to the available vehicles.
  */
+
 public class CanDriveRequest {
 
     private double distanceInKm;

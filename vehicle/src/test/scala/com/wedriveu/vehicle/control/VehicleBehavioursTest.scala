@@ -8,8 +8,9 @@ import com.wedriveu.vehicle.shared.VehicleConstants
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
 
 /**
-  * Created by Michele on 31/07/2017.
+  * @author Michele Donati on 31/07/2017.
   */
+
 class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   val speedTest: Double = 50.0
   val licenseFirstTest: String = "veicolo1"

@@ -4,10 +4,16 @@ import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
 
 /**
-  * Created by Michele on 09/08/2017.
+  * @author Michele Donati on 09/08/2017.
   */
-trait CanDriveChecker {
 
+/** This trait models the part of the system used to check if a journey is possible for the vehicle.*/
+trait CanDriveChecker {
+  /** This method permits to check if the journey is possible given its distance and the vehicle's battery.
+    *
+    * @param distanceInKm This indicates the distance in Km to travel.
+    * @return Return a Boolean object that is True if the journey can be done, False otherwise.
+    */
   def checkJourney(distanceInKm: Double): Boolean
 
 }
