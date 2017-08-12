@@ -2,8 +2,10 @@ package com.wedriveu.services.analytics.boundary;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonObject;
 
 import java.util.concurrent.Callable;
 
@@ -14,9 +16,8 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
  */
 public class VehicleListRetrieverVerticle extends VerticleConsumer{
     public VehicleListRetrieverVerticle() {
-        super(CONSUMER_ANALYTICS_SERVICE);
+        super("VehicleListRetrieverVerticle");
     }
-    Future futureLocal;
 
     @Override
     public void start(Future futureRetriever) throws Exception {
@@ -31,7 +32,7 @@ public class VehicleListRetrieverVerticle extends VerticleConsumer{
                 futureRetriever.fail(v.cause());
             }
         });
-        startConsumerWithFuture(VEHICLE_SERVICE_EXCHANGE, ROUTING_KEY_VEHICLE_RESPONSE_ALL, EVENT_BUS_AVAILABLE_ADDRESS, futureConsumer);
+        startConsumerWithFuture(ANALYTICS_SERVICE_EXCHANGE, ROUTING_KEY_VEHICLE_RESPONSE_ALL, EVENT_BUS_AVAILABLE_ADDRESS, futureConsumer);
     }
 
     @Override
@@ -41,7 +42,9 @@ public class VehicleListRetrieverVerticle extends VerticleConsumer{
     }
 
     private void sendToController(Message message) {
-        vertx.eventBus().send(ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS, message);
+        System.out.println("VehicleListRetrieverVerticle " + message.body().toString());
+        VehicleListObject vehicleListObject = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleListObject.class);
+        vertx.eventBus().send(ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS, VertxJsonMapper.mapInBodyFrom(vehicleListObject));
         Log.log("sent vehicle list to analytics controller");
     }
 

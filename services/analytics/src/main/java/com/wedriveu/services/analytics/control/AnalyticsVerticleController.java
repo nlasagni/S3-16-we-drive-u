@@ -1,5 +1,6 @@
 package com.wedriveu.services.analytics.control;
 
+import com.wedriveu.services.analytics.boundary.VehicleListObject;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
@@ -21,9 +22,15 @@ public class AnalyticsVerticleController extends AbstractVerticle {
     }
 
     private void storeVehicleList(Message message) {
-        Vehicle[] vehicleList = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), Vehicle[].class);
+        System.out.println("AnalyticsVerticleController " + message.body().toString());
+        VehicleListObject vehicleList = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleListObject.class);
+        for(Vehicle vehicle: vehicleList.getVehicleList()){
+            System.out.println(vehicle.toString());
+        }
+/*
         for (Vehicle vehicle: vehicleList) {
             System.out.println(vehicle.toString());
         }
+        */
     }
 }

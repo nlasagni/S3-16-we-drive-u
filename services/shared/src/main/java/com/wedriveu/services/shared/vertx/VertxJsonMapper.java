@@ -1,7 +1,10 @@
 package com.wedriveu.services.shared.vertx;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.wedriveu.services.shared.utilities.Constants;
 import io.vertx.core.json.JsonObject;
+
+import java.util.List;
 
 /**
  * @author Stefano Bernagozzi
@@ -36,5 +39,4 @@ public class VertxJsonMapper {
         jsonObject.put(Constants.BODY, body.toString());
         return jsonObject;
     }
-
 }

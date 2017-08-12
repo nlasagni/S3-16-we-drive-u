@@ -13,6 +13,7 @@ import io.vertx.rabbitmq.RabbitMQClient;
  * Basic Vert.x RabbitMQ Publisher Verticle.
  *
  * @author Marco Baldassarri
+ * @author Stefano Bernagozzi
  */
 public class VerticlePublisher extends AbstractVerticle {
 

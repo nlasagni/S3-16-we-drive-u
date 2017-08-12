@@ -1,19 +1,13 @@
 package com.wedriveu.services.analytics.control;
 
-import com.wedriveu.services.analytics.boundary.VehicleListRequestVerticle;
-import com.wedriveu.services.analytics.boundary.VehicleListRetrieverVerticle;
+import com.wedriveu.services.analytics.boundary.*;
 import com.wedriveu.services.shared.utilities.Log;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.Executors;
 
 import static com.wedriveu.services.shared.utilities.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE;
 import static com.wedriveu.services.shared.utilities.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS;
@@ -40,6 +34,13 @@ public class AnalyticsVerticleDeployer extends AbstractVerticle {
         vertx.deployVerticle(new AnalyticsVerticleController(), controlFuture.completer());
         futures.add(controlFuture);
 
+        Future generatorRequestHandlerFuture = Future.future();
+        vertx.deployVerticle(new VehicleListGeneratorRequestHandler(), generatorRequestHandlerFuture.completer());
+        futures.add(generatorRequestHandlerFuture);
+
+        Future generatorResponseHandlerFuture = Future.future();
+        vertx.deployVerticle(new VehicleListGeneratorResponseHandler(), generatorResponseHandlerFuture.completer());
+        futures.add(generatorResponseHandlerFuture);
 
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {
