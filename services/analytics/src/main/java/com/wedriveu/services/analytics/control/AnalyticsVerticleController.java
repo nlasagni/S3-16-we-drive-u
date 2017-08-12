@@ -1,5 +1,6 @@
 package com.wedriveu.services.analytics.control;
 
+import com.wedriveu.services.analytics.entity.AnalyticsStore;
 import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.utilities.Log;
@@ -14,6 +15,7 @@ import static com.wedriveu.shared.util.Constants.*;
  * @author Stefano Bernagozzi
  */
 public class AnalyticsVerticleController extends AbstractVerticle {
+    private AnalyticsStore analyticsStore;
     @Override
     public void start() throws Exception{
         vertx.eventBus().consumer(ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS, this::storeVehicleList);
@@ -21,15 +23,9 @@ public class AnalyticsVerticleController extends AbstractVerticle {
     }
 
     private void storeVehicleList(Message message) {
-        System.out.println("AnalyticsVerticleController " + message.body().toString());
         VehicleListObject vehicleList = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleListObject.class);
         for(Vehicle vehicle: vehicleList.getVehicleList()){
-            System.out.println(vehicle.toString());
+            analyticsStore.addVehicle(vehicle.getCarLicencePlate(), vehicle.getState());
         }
-/*
-        for (Vehicle vehicle: vehicleList) {
-            System.out.println(vehicle.toString());
-        }
-        */
     }
 }

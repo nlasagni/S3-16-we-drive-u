@@ -191,6 +191,8 @@ public interface Constants {
     String ROUTING_KEY_VEHICLE_RESPONSE_ALL = "vehicle.response.all";
     String ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS = "AnalyticsVerticleController";
     String ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE = "Started all services, start requesting vehicle list";
+
+    String ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS = "test.analytics.vehicleListRequest";
     /**
      * The constant zero.
      */

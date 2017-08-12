@@ -59,7 +59,6 @@ public abstract class VerticleConsumer extends AbstractVerticle {
                                     registerConsumer(eventBusAddress);
                                     basicConsume(eventBusAddress);
                                     if (future != null) {
-                                        Log.log("name: " + name + " Completing future bind VehicleListRetrieverVerticle");
                                         future.complete();
                                     }
                                 } else {
@@ -82,10 +81,8 @@ public abstract class VerticleConsumer extends AbstractVerticle {
         System.out.println("startConsumer "+name+ " started "+(client == null));
         client.start(onStartCompleted -> {
             if (onStartCompleted.succeeded()) {
-                Log.log("onStartCompleted.succeeded()");
                 handler.handle(Future.succeededFuture());
             } else {
-                Log.log(" onStartCompleted failed future");
                 handler.handle(Future.failedFuture(onStartCompleted.cause().getMessage()));
             }
         });
@@ -106,9 +103,6 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     private void bindQueueToExchange(String exchangeName,
                                      String baseRoutingKey,
                                      Handler<AsyncResult<Void>> handler) {
-        Log.log("Base routing key: " + baseRoutingKey);
-        Log.log("exchangeName: " + exchangeName);
-        Log.log("queueName: " + queueName);
         //baseRoutingKey = name.isEmpty() ? String.format(baseRoutingKey, name) : baseRoutingKey;
         declareExchangesWithName(exchangeName, onDeclare -> {
             client.queueBind(queueName,

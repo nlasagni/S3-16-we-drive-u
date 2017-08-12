@@ -17,28 +17,18 @@ public class VehicleListRequestVerticle extends VerticlePublisher {
     @Override
     public void start() throws Exception {
         startConsumer();
-        Log.log("future VehicleListRequestVerticle complete");
+        //Log.log("future VehicleListRequestVerticle complete");
     }
 
     private void startConsumer() {
-        Log.log("started vertx eventbus consumer in VehicleListRequestVerticle, attending start to receive");
+        //Log.log("started vertx eventbus consumer in VehicleListRequestVerticle, attending start to receive");
         vertx.eventBus().consumer(ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS, this::requestVehicleListToVehicleService);
     }
 
-
     private void requestVehicleListToVehicleService(Message message) {
-        //if (message.body().toString()!= )
-        System.out.println("VehicleListRequestVerticle " + message.body().toString());
         JsonObject dataToUser = new JsonObject();
         dataToUser.put(EventBus.BODY, VEHICLE_REQUEST_ALL_MESSAGE);
         publish(RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_VEHICLE_REQUEST_ALL,dataToUser);
-        Log.log("sent request for all vehicles to vehicle service in VehicleListRequestVerticle");
+        //Log.log("sent request for all vehicles to vehicle service in VehicleListRequestVerticle");
     }
-
-    /*
-    private void startVehicleListRetriever(AsyncResult<Void> voidAsyncResult) {
-        vertx.eventBus().send(ANALYTICS_VEHICLE_LIST_RETRIEVER_VERTICLE_ADDRESS, ANALYTICS_VEHICLE_LIST_RETRIEVER_START_MESSAGE);
-        Log.log("sent message to " + ANALYTICS_VEHICLE_LIST_RETRIEVER_VERTICLE_ADDRESS + "for start retrieving vehicle list");
-    }
-    */
 }

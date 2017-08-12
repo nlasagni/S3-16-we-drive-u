@@ -14,19 +14,33 @@ public class VehicleListObject {
         return vehicleList;
     }
 
-    public void setVehicleList(ArrayList<Vehicle> vehicleList) {
-        this.vehicleList = vehicleList;
-    }
-
     @JsonProperty ("vehicleList")
     private ArrayList<Vehicle> vehicleList;
 
-    public VehicleListObject () {
-        vehicleList = new ArrayList<>();
-        vehicleList.add(new Vehicle("MACCHINA1",
-                "broken",
-                new Position(10.2, 13.2),
-                new Date(2017, 11, 30, 12, 37, 43)));
+    public VehicleListObject (ArrayList<Vehicle> vehicleList) {
+        this.vehicleList = vehicleList;
+    }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        VehicleListObject that = (VehicleListObject) o;
+
+        return getVehicleList() != null ? getVehicleList().equals(that.getVehicleList()) : that.getVehicleList() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getVehicleList() != null ? getVehicleList().hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "VehicleListObject{" +
+                "vehicleList=" + vehicleList +
+                '}';
     }
 }

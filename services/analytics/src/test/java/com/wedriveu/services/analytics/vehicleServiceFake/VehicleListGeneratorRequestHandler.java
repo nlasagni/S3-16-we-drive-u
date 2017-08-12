@@ -5,6 +5,7 @@ import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.utilities.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonObject;
 
 import static com.wedriveu.shared.util.Constants.*;
 
@@ -42,6 +43,9 @@ public class VehicleListGeneratorRequestHandler extends VerticleConsumer{
     }
 
     private void sendToResponseHandler(Message message) {
-        vertx.eventBus().send("mandaVeicoli", "manda");
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.put(EventBus.BODY,
+                ((JsonObject) message.body()).getValue(EventBus.BODY));
+        vertx.eventBus().send(ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS, jsonObject);
     }
 }
