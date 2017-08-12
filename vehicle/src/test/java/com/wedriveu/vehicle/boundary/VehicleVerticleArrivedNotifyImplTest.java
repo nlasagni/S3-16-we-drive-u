@@ -1,15 +1,11 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.shared.entity.ArrivedNotify;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.utils.Log;
 import com.wedriveu.shared.utils.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.wedriveu.vehicle.shared.EventBusConstants$;
-import com.wedriveu.vehicle.shared.Exchanges$;
-import com.wedriveu.vehicle.shared.RoutingKeys$;
 import com.weriveu.vehicle.boundary.VehicleVerticleArrivedNotifyImpl;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -35,9 +31,6 @@ public class VehicleVerticleArrivedNotifyImplTest {
     private static final String JSON_QUEUE_KEY = "queue";
     private static final String EVENT_BUS_ADDRESS = VehicleVerticleArrivedNotifyImplTest.class.getCanonicalName();
 
-    private EventBusConstants$ eventBusConstants = EventBusConstants$.MODULE$;
-    private Exchanges$ exchanges = Exchanges$.MODULE$;
-    private RoutingKeys$ routingKeys = RoutingKeys$.MODULE$;
     private Vertx vertx;
     private EventBus eventBus;
     private RabbitMQClient rabbitMQClient;
@@ -73,7 +66,10 @@ public class VehicleVerticleArrivedNotifyImplTest {
         rabbitMQClient.start(onStart -> {
             rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
-                rabbitMQClient.queueBind(requestId, exchanges.VEHICLE(), routingKeys.VEHICLE_ARRIVED(), onQueueBind ->{
+                rabbitMQClient.queueBind(requestId,
+                        Constants.RabbitMQ.Exchanges.VEHICLE,
+                        Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
+                        onQueueBind ->{
                     vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy -> {
                         async.complete();}
                     ));
@@ -103,7 +99,7 @@ public class VehicleVerticleArrivedNotifyImplTest {
         final Async async = context.async();
         rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
             MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-                JsonObject notifyJson = new JsonObject(msg.body().getString(eventBusConstants.BODY()));
+                JsonObject notifyJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
                 Log.info(TAG, notifyJson.toString());
                 ArrivedNotify notify = notifyJson.mapTo(ArrivedNotify.class);
                 context.assertTrue(notify.getLicense().equals(license));

@@ -1,15 +1,11 @@
 package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.shared.entity.RegisterToServiceRequest;
 import com.wedriveu.shared.entity.RegisterToServiceResponse;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.utils.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
-import com.wedriveu.vehicle.shared.EventBusConstants$;
-import com.wedriveu.vehicle.shared.Exchanges$;
-import com.wedriveu.vehicle.shared.RoutingKeys$;
 import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -18,8 +14,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.UUID;
 
 /**
@@ -39,9 +33,6 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     private ObjectMapper objectMapper;
 
     private VehicleConstants$ vehicleConstants = VehicleConstants$.MODULE$;
-    private Exchanges$ exchanges = Exchanges$.MODULE$;
-    private RoutingKeys$ routingKeys = RoutingKeys$.MODULE$;
-    private EventBusConstants$ eventBusConstants = EventBusConstants$.MODULE$;
 
     public VehicleVerticleRegisterImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
@@ -97,8 +88,8 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
 
     private void bindQueueToExchange(Future<Void> future) {
         rabbitMQClient.queueBind(QUEUE_NAME,
-                exchanges.VEHICLE(),
-                String.format(routingKeys.REGISTER_RESPONSE(), vehicle.getVehicle().plate()),
+                Constants.RabbitMQ.Exchanges.VEHICLE,
+                String.format(Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE, vehicle.getVehicle().plate()),
                 future.completer());
     }
 
@@ -111,7 +102,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
             try {
                 JsonObject message = new JsonObject(msg.body().toString());
                 RegisterToServiceResponse registerToServiceResponse =
-                        objectMapper.readValue(message.getString(eventBusConstants.BODY()),
+                        objectMapper.readValue(message.getString(Constants.EventBus.BODY),
                                 RegisterToServiceResponse.class);
                 checkResponse(registerToServiceResponse);
             } catch (IOException e) {
@@ -122,7 +113,10 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
 
     @Override
     public void registerToService(String license) {
-        rabbitMQClient.basicPublish(exchanges.VEHICLE(), routingKeys.REGISTER_REQUEST(), createRequest(), onPublish -> {
+        rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
+                Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
+                createRequest(),
+                onPublish -> {
             onPublish.succeeded();
         });
     }
@@ -131,7 +125,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
         RegisterToServiceRequest request = new RegisterToServiceRequest();
         request.setLicense(vehicle.getVehicle().plate());
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(eventBusConstants.BODY(), JsonObject.mapFrom(request).toString());
+        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(request).toString());
         return jsonObject;
     }
 

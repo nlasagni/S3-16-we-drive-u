@@ -1,15 +1,12 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.shared.entity.CanDriveRequest;
 import com.wedriveu.shared.entity.CanDriveResponse;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.utils.Log;
 import com.wedriveu.shared.utils.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.wedriveu.vehicle.shared.EventBusConstants$;
-import com.wedriveu.vehicle.shared.Exchanges$;
-import com.wedriveu.vehicle.shared.RoutingKeys$;
 import com.weriveu.vehicle.boundary.VehicleVerticleCanDriveImpl;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -37,9 +34,6 @@ public class VehicleVerticleCanDriveImplTest {
     private static final String USERNAME = "Michele";
     private static final double distance = 40.0;
 
-    private EventBusConstants$ eventBusConstants = EventBusConstants$.MODULE$;
-    private Exchanges$ exchanges = Exchanges$.MODULE$;
-    private RoutingKeys$ routingKeys = RoutingKeys$.MODULE$;
     private Vertx vertx;
     private EventBus eventBus;
     private RabbitMQClient rabbitMQClient;
@@ -74,8 +68,8 @@ public class VehicleVerticleCanDriveImplTest {
             rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
                 rabbitMQClient.queueBind(requestId,
-                        exchanges.VEHICLE(),
-                        String.format(routingKeys.CAN_DRIVE_RESPONSE(), USERNAME),
+                        Constants.RabbitMQ.Exchanges.VEHICLE,
+                        String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, USERNAME),
                         onQueueBind -> {
                     vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy ->
                             async.complete()
@@ -99,8 +93,8 @@ public class VehicleVerticleCanDriveImplTest {
     @Test
     public void canDrive(TestContext context) throws Exception {
         final Async async = context.async(2);
-        rabbitMQClient.basicPublish(exchanges.VEHICLE(),
-                String.format(routingKeys.CAN_DRIVE_REQUEST(), license),
+        rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
+                String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_REQUEST, license),
                 createRequestJsonObject(),
                 onPublish -> {
                     context.assertTrue(onPublish.succeeded());
@@ -113,7 +107,7 @@ public class VehicleVerticleCanDriveImplTest {
     private void checkVehicleCanDriveResponse(TestContext context, Async async) {
         rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
         MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-            JsonObject responseJson = new JsonObject(msg.body().getString(eventBusConstants.BODY()));
+            JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
             Log.info(TAG, responseJson.toString());
             CanDriveResponse responseCanDrive = responseJson.mapTo(CanDriveResponse.class);
             context.assertTrue(responseCanDrive.getOk());
@@ -130,7 +124,7 @@ public class VehicleVerticleCanDriveImplTest {
         request.setDistanceInKm(distance);
         request.setUsername(USERNAME);
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(eventBusConstants.BODY(), JsonObject.mapFrom(request).toString());
+        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(request).toString());
         return jsonObject;
     }
 

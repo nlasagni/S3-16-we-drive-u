@@ -20,23 +20,3 @@ object VehicleConstants {
   final val initialLongitude: Double = 12.2474513
 }
 
-object Exchanges {
-  final val VEHICLE = "vehicle"
-  final val NO_EXCHANGE = ""
-}
-
-object RoutingKeys {
-  final val CAN_DRIVE_REQUEST = "vehicle.request.candrive.%s"
-  final val CAN_DRIVE_RESPONSE = "vehicle.request.candrive.%s"
-  final val REGISTER_REQUEST = "vehicle.request.add"
-  final val REGISTER_RESPONSE = "vehicle.response.add.%s"
-  final val BOOK_REQUEST = "vehicle.request.book.%s"
-  final val BOOK_RESPONSE = "vehicle.response.book.%s"
-  final val VEHICLE_ARRIVED = "vehicle.event.arrived"
-  final val VEHICLE_UPDATE = "vehicle.event.updated"
-  final val VEHICLE_DRIVE_COMMAND = "vehicle.event.drive"
-}
-
-object EventBusConstants {
-  final val BODY = "body"
-}

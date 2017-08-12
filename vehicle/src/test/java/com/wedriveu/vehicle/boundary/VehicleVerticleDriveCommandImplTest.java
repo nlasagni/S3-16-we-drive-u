@@ -1,13 +1,10 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.shared.entity.DriveCommand;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.utils.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.wedriveu.vehicle.shared.EventBusConstants$;
-import com.wedriveu.vehicle.shared.Exchanges$;
-import com.wedriveu.vehicle.shared.RoutingKeys$;
 import com.weriveu.vehicle.boundary.VehicleVerticleDriveCommandImpl;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
@@ -45,9 +42,6 @@ public class VehicleVerticleDriveCommandImplTest {
     private double randomLongitudeDestination =
             ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon);
 
-    private EventBusConstants$ eventBusConstants = EventBusConstants$.MODULE$;
-    private Exchanges$ exchanges = Exchanges$.MODULE$;
-    private RoutingKeys$ routingKeys = RoutingKeys$.MODULE$;
     private Vertx vertx;
     private EventBus eventBus;
     private RabbitMQClient rabbitMQClient;
@@ -96,8 +90,8 @@ public class VehicleVerticleDriveCommandImplTest {
     @Test
     public void drive(TestContext context) throws Exception {
         final Async async = context.async(2);
-        rabbitMQClient.basicPublish(exchanges.VEHICLE(),
-                routingKeys.VEHICLE_DRIVE_COMMAND(),
+        rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
+                Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND,
                 createCommandJsonObject(),
                 onPublish -> {
                     context.assertTrue(onPublish.succeeded());
@@ -112,7 +106,7 @@ public class VehicleVerticleDriveCommandImplTest {
         newCommand.setUserPosition(new Position(randomLatitudeUser, randomLongitudeUser));
         newCommand.setDestinationPosition(new Position(randomLatitudeDestination, randomLongitudeDestination));
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(eventBusConstants.BODY(), JsonObject.mapFrom(newCommand).toString());
+        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(newCommand).toString());
         return jsonObject;
     }
 

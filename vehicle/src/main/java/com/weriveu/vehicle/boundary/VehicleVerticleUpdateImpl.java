@@ -1,12 +1,9 @@
 package com.weriveu.vehicle.boundary;
 
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.shared.entity.UpdateToService;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.utils.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
-import com.wedriveu.vehicle.shared.EventBusConstants$;
-import com.wedriveu.vehicle.shared.Exchanges$;
-import com.wedriveu.vehicle.shared.RoutingKeys$;
 import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -26,10 +23,7 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
     private static final String NOT_FAILURE_MESSAGE = "The vehicle is not broken/stolen";
 
     private RabbitMQClient rabbitMQClient;
-    private Exchanges$ exchanges = Exchanges$.MODULE$;
-    private RoutingKeys$ routingKeys = RoutingKeys$.MODULE$;
     private VehicleConstants$ vehicleConstants = VehicleConstants$.MODULE$;
-    private EventBusConstants$ eventBusConstants = EventBusConstants$.MODULE$;
 
     public VehicleVerticleUpdateImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
@@ -60,7 +54,10 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
 
     @Override
     public void sendUpdate() {
-        rabbitMQClient.basicPublish(exchanges.VEHICLE(), routingKeys.VEHICLE_UPDATE(), createUpdate(), onPublish -> {
+        rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
+                Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE,
+                createUpdate(),
+                onPublish -> {
             onPublish.succeeded();
             if(onPublish.failed()){
                 Log.error(TAG, SEND_ERROR);
@@ -77,14 +74,13 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
         String message;
         if(state.equals(vehicleConstants.stateBroken()) || state.equals(vehicleConstants.stateStolen())) {
             message = FAILURE_MESSAGE;
-            updateToService.setFailureMessage(message);
         }
         else {
             message = NOT_FAILURE_MESSAGE;
-            updateToService.setFailureMessage(message);
         }
+        updateToService.setFailureMessage(message);
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(eventBusConstants.BODY(), JsonObject.mapFrom(updateToService).toString());
+        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(updateToService).toString());
         return jsonObject;
     }
 

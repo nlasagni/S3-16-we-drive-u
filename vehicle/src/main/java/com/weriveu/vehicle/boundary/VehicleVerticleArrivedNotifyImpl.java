@@ -1,12 +1,9 @@
 package com.weriveu.vehicle.boundary;
 
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.shared.entity.ArrivedNotify;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.utils.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
-import com.wedriveu.vehicle.shared.EventBusConstants$;
-import com.wedriveu.vehicle.shared.Exchanges$;
-import com.wedriveu.vehicle.shared.RoutingKeys$;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
@@ -23,9 +20,6 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
     private static final String SEND_ERROR = "Error occurred while sending request.";
 
     private RabbitMQClient rabbitMQClient;
-    private Exchanges$ exchanges = Exchanges$.MODULE$;
-    private RoutingKeys$ routingKeys = RoutingKeys$.MODULE$;
-    private EventBusConstants$ eventBusConstants = EventBusConstants$.MODULE$;
 
     public VehicleVerticleArrivedNotifyImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
@@ -56,7 +50,10 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
 
     @Override
     public void sendArrivedNotify(ArrivedNotify notify) {
-        rabbitMQClient.basicPublish(exchanges.VEHICLE(), routingKeys.VEHICLE_ARRIVED(), createNotify(notify), onPublish -> {
+        rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
+                Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
+                createNotify(notify),
+                onPublish -> {
             onPublish.succeeded();
             if(onPublish.failed()){
                 Log.error(TAG, SEND_ERROR);
@@ -66,7 +63,7 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
 
     private JsonObject createNotify(ArrivedNotify notify) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(eventBusConstants.BODY(), JsonObject.mapFrom(notify).toString());
+        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(notify).toString());
         return jsonObject;
     }
 

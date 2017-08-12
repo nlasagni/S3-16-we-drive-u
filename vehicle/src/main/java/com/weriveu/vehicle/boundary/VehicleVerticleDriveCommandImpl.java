@@ -1,14 +1,10 @@
 package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.shared.entity.DriveCommand;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.utils.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
-import com.wedriveu.vehicle.shared.EventBusConstants$;
-import com.wedriveu.vehicle.shared.Exchanges$;
-import com.wedriveu.vehicle.shared.RoutingKeys$;
-import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
@@ -32,9 +28,6 @@ public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
     private ObjectMapper objectMapper;
-    private Exchanges$ exchanges = Exchanges$.MODULE$;
-    private RoutingKeys$ routingKeys = RoutingKeys$.MODULE$;
-    private EventBusConstants$ eventBusConstants = EventBusConstants$.MODULE$;
 
     public VehicleVerticleDriveCommandImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
@@ -89,8 +82,8 @@ public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements
 
     private void bindQueueToExchange(Future<Void> future) {
         rabbitMQClient.queueBind(QUEUE_NAME,
-                exchanges.VEHICLE(),
-                routingKeys.VEHICLE_DRIVE_COMMAND(),
+                Constants.RabbitMQ.Exchanges.VEHICLE,
+                Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND,
                 future.completer());
     }
 
@@ -103,7 +96,7 @@ public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements
             try {
                 JsonObject message = new JsonObject(msg.body().toString());
                 DriveCommand driveCommand =
-                        objectMapper.readValue(message.getString(eventBusConstants.BODY()), DriveCommand.class);
+                        objectMapper.readValue(message.getString(Constants.EventBus.BODY), DriveCommand.class);
                 drive(driveCommand);
             } catch (IOException e) {
                 Log.error(TAG, READ_ERROR, e);

@@ -2,17 +2,13 @@ package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.shared.entity.RegisterToServiceRequest;
 import com.wedriveu.shared.entity.RegisterToServiceResponse;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.utils.Log;
 import com.wedriveu.shared.utils.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.wedriveu.vehicle.shared.EventBusConstants$;
-import com.wedriveu.vehicle.shared.Exchanges$;
-import com.wedriveu.vehicle.shared.RoutingKeys$;
 import com.weriveu.vehicle.boundary.VehicleVerticleRegisterImpl;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -38,9 +34,6 @@ public class VehicleVerticleRegisterImplTest {
     private static final String JSON_QUEUE_KEY = "queue";
     private static final String EVENT_BUS_ADDRESS = VehicleVerticleRegisterImplTest.class.getSimpleName();
 
-    private EventBusConstants$ eventBusConstants = EventBusConstants$.MODULE$;
-    private Exchanges$ exchanges = Exchanges$.MODULE$;
-    private RoutingKeys$ routingKeys = RoutingKeys$.MODULE$;
     private Vertx vertx;
     private EventBus eventBus;
     private RabbitMQClient rabbitMQClient;
@@ -77,7 +70,10 @@ public class VehicleVerticleRegisterImplTest {
         rabbitMQClient.start(onStart -> {
             rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
-                    rabbitMQClient.queueBind(requestId, exchanges.VEHICLE(), routingKeys.REGISTER_REQUEST(), onQueueBind ->{
+                    rabbitMQClient.queueBind(requestId,
+                            Constants.RabbitMQ.Exchanges.VEHICLE,
+                            Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
+                            onQueueBind ->{
                         vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy -> {
                             async.complete();}
                         ));
@@ -107,7 +103,7 @@ public class VehicleVerticleRegisterImplTest {
         final Async async = context.async();
         rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
             MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-                JsonObject requestJson = new JsonObject(msg.body().getString(eventBusConstants.BODY()));
+                JsonObject requestJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
                 Log.info(TAG, requestJson.toString());
                 RegisterToServiceRequest request = requestJson.mapTo(RegisterToServiceRequest.class);
                 RegisterToServiceResponse response = new RegisterToServiceResponse();
@@ -138,9 +134,9 @@ public class VehicleVerticleRegisterImplTest {
         try {
             String responseString = objectMapper.writeValueAsString(response);
             JsonObject responseJson = new JsonObject();
-            responseJson.put(eventBusConstants.BODY(), responseString);
-            rabbitMQClient.basicPublish(exchanges.VEHICLE(),
-                    String.format(routingKeys.REGISTER_RESPONSE(), license),
+            responseJson.put(Constants.EventBus.BODY, responseString);
+            rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
+                    String.format(Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE, license),
                     responseJson,
                     onPublish -> {
                         context.assertTrue(onPublish.succeeded());

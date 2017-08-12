@@ -88,7 +88,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         List<Vehicle> availableVehicles = new ArrayList<>(vehicles.size());
         for (Vehicle vehicle : vehicles) {
             if (vehicle.getState().equals(STATUS_AVAILABLE)
-                    && Position.isInRange(userPosition, vehicle.getPosition())) {
+                    && PositionUtils.isInRange(userPosition, vehicle.getPosition())) {
                 availableVehicles.add(vehicle);
             }
         }

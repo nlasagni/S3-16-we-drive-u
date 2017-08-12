@@ -2,15 +2,11 @@ package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.shared.entity.VehicleBookRequest;
 import com.wedriveu.shared.entity.VehicleBookResponse;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.utils.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
-import com.wedriveu.vehicle.shared.EventBusConstants$;
-import com.wedriveu.vehicle.shared.Exchanges$;
-import com.wedriveu.vehicle.shared.RoutingKeys$;
-import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
@@ -36,10 +32,6 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
     private ObjectMapper objectMapper;
-    private VehicleConstants$ vehicleConstants = VehicleConstants$.MODULE$;
-    private Exchanges$ exchanges = Exchanges$.MODULE$;
-    private RoutingKeys$ routingKeys = RoutingKeys$.MODULE$;
-    private EventBusConstants$ eventBusConstants = EventBusConstants$.MODULE$;
 
     public VehicleVerticleBookImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
@@ -94,8 +86,8 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
 
     private void bindQueueToExchange(Future<Void> future) {
         rabbitMQClient.queueBind(QUEUE_NAME,
-                exchanges.VEHICLE(),
-                String.format(routingKeys.BOOK_REQUEST(), vehicle.getVehicle().plate()),
+                Constants.RabbitMQ.Exchanges.VEHICLE,
+                String.format(Constants.RabbitMQ.RoutingKey.BOOK_REQUEST, vehicle.getVehicle().plate()),
                 future.completer());
     }
 
@@ -109,7 +101,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
             try {
                 JsonObject message = new JsonObject(msg.body().toString());
                 VehicleBookRequest bookRequest =
-                        objectMapper.readValue(message.getString(eventBusConstants.BODY()), VehicleBookRequest.class);
+                        objectMapper.readValue(message.getString(Constants.EventBus.BODY), VehicleBookRequest.class);
                 response = book(bookRequest);
             } catch (IOException e) {
                 Log.error(TAG, READ_ERROR, e);
@@ -122,9 +114,9 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
         try {
             String responseString = objectMapper.writeValueAsString(response);
             JsonObject responseJson = new JsonObject();
-            responseJson.put(eventBusConstants.BODY(), responseString);
-            rabbitMQClient.basicPublish(exchanges.VEHICLE(),
-                    String.format(routingKeys.BOOK_RESPONSE(), vehicle.getVehicle().plate()),
+            responseJson.put(Constants.EventBus.BODY, responseString);
+            rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
+                    String.format(Constants.RabbitMQ.RoutingKey.BOOK_RESPONSE, vehicle.getVehicle().plate()),
                     responseJson,
                     onPublish -> {
                         if (!onPublish.succeeded()) {
@@ -143,12 +135,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
         }
         vehicle.setUsername(request.getUsername());
         VehicleBookResponse response = new VehicleBookResponse();
-        if(vehicle.getVehicle().getState().equals(vehicleConstants.stateAvailable())) {
-            response.setBooked(true);
-        }
-        else {
-            response.setBooked(false);
-        }
+        response.setBooked(vehicle.getVehicle().getState().equals(Constants.STATUS_AVAILABLE));
         return response;
     }
 

@@ -118,8 +118,8 @@ public class VehicleFinderVerticle extends VerticleConsumer {
 
     private JsonObject getRequestObject(int index) {
         Position vehiclePosition = availableVehicles.get(index).getPosition();
-        distanceToUser = Position.getDistanceInKm(userPosition, vehiclePosition);
-        double tripDistance = (distanceToUser) + (Position.getDistanceInKm(userPosition, destPosition));
+        distanceToUser = PositionUtils.getDistanceInKm(userPosition, vehiclePosition);
+        double tripDistance = (distanceToUser) + (PositionUtils.getDistanceInKm(userPosition, destPosition));
         userRequest.setTripDistance(tripDistance);
         return new JsonObject().mapFrom(userRequest);
     }
