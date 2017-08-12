@@ -14,7 +14,7 @@ public class RabbitMQConfig {
     private static final String PORT = "port";
     private static io.vertx.rabbitmq.RabbitMQClient rabbitMQClient = null;
     private static RabbitMQConfig setup = null;
-    private static Vertx vertx;
+    private  Vertx vertx;
 
     private RabbitMQConfig() {
     }
@@ -24,14 +24,17 @@ public class RabbitMQConfig {
     }
 
     public static RabbitMQConfig getInstance(Vertx vertx) {
-        if (setup == null) {
+       /* if (setup == null) {
             setup = new RabbitMQConfig(vertx);
             setupRabbitMQ();
         }
-        return setup;
+        return setup;*/
+       RabbitMQConfig config = new RabbitMQConfig(vertx);
+       config.setupRabbitMQ();
+       return config;
     }
 
-    private static void setupRabbitMQ() {
+    private void setupRabbitMQ() {
         JsonObject config = new JsonObject();
         config.put(HOST, Constants.RABBITMQ_SERVER_HOST);
         config.put(PASSWORD, Constants.RABBITMQ_SERVER_PASSWORD);

@@ -51,9 +51,11 @@ public interface Constants {
     String VEHICLE_SERVICE_EXCHANGE = "vehicle";
 
     // Vehicle Service RabbitMQ
-    String EVENT_BUS_AVAILABLE_ADDRESS = "service.vehicle.eventbus";
-    String EVENT_BUS_FINDER_ADDRESS = "finder.vehicle.eventbus";
-    String CONSUMER_VEHICLE_SERVICE = "vehicle";
+
+
+    String VEHICLE_SERVICE_QUEUE_NEAREST = "service.vehicle.queue.nearest";
+    String VEHICLE_SERVICE_QUEUE_FINDER = "service.vehicle.queue.finder";
+    String VEHICLE_SERVICE_QUEUE_REGISTER = "service.vehicle.queue.register";
     String ROUTING_KEY_VEHICLE_REQUEST = "vehicle.request.nearest";
     String ROUTING_KEY_VEHICLE_RESPONSE = "vehicle.response.nearest.%s";
     String ROUTING_KEY_CAN_DRIVE = "vehicle.request.candrive.%s";

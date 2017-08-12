@@ -3,7 +3,10 @@ package com.wedriveu.services.vehicle.boundary.vehicleregister;
 import com.wedriveu.services.vehicle.boundary.PublisherTest;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryA;
 import com.wedriveu.services.vehicle.entity.Vehicle;
+import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.junit.After;
@@ -20,7 +23,7 @@ public class RegisterVehicleTestA extends PublisherTest {
 
     private static final String EVENT_BUS_ADDRESS = RegisterVehicleTestA.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue";
-    private RegisterConsumerVerticle registerConsumerVerticle;
+    public static final int ASYNC_COUNT = 5;
 
     public RegisterVehicleTestA() {
         super(QUEUE, VEHICLE_SERVICE_EXCHANGE, ROUTING_KEY_REGISTER_VEHICLE_REQUEST,
@@ -29,10 +32,27 @@ public class RegisterVehicleTestA extends PublisherTest {
 
     @Before
     public void setUp(TestContext context) throws Exception {
-        registerConsumerVerticle = new RegisterConsumerVerticle();
-        super.setup(context, registerConsumerVerticle);
-        String licencePlate = new VehicleFactoryA().getVehicle().getCarLicencePlate();
-        super.declareQueueAndBind(licencePlate, context);
+        Async async = context.async(ASYNC_COUNT);
+        Vertx vertx = Vertx.vertx();
+        super.setup(vertx, completed -> {
+            async.countDown();
+            String licencePlate = new VehicleFactoryA().getVehicle().getCarLicencePlate();
+            super.declareQueueAndBind(licencePlate, context, declared -> {
+                context.assertTrue(declared.succeeded());
+                async.countDown();
+                vertx.deployVerticle(new RegisterConsumerVerticle(), context.asyncAssertSuccess(onDeployConsumer -> {
+                    async.countDown();
+                    vertx.deployVerticle(new RegisterPublisherVerticle(), context.asyncAssertSuccess(onDeployPublisher -> {
+                        async.countDown();
+                        vertx.deployVerticle(new VehicleStoreImpl(), context.asyncAssertSuccess(onDeployStore -> {
+                            async.complete();
+                        }));
+                    }));
+                }));
+            });
+        });
+        async.awaitSuccess();
+
     }
 
     @After

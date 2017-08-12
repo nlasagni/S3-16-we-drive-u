@@ -4,6 +4,7 @@ import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponse;
 import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.Position;
 import com.wedriveu.services.shared.utilities.PositionUtils;
 import com.wedriveu.services.vehicle.entity.Vehicle;
@@ -34,6 +35,7 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
  */
 public class VehicleFinderVerticle extends VerticleConsumer {
 
+    private static final String EVENT_BUS_FINDER_ADDRESS = VehicleFinderVerticle.class.getCanonicalName();
     private static RabbitMQClient client;
     private String username;
     private List<Vehicle> availableVehicles;
@@ -45,7 +47,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     private JsonArray responseJsonArray;
 
     public VehicleFinderVerticle() {
-        super(Constants.CONSUMER_VEHICLE_SERVICE);
+        super(VEHICLE_SERVICE_QUEUE_FINDER);
     }
 
     @Override
@@ -118,7 +120,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         distanceToUser = PositionUtils.getDistanceInKm(userPosition, vehiclePosition);
         double tripDistance = (distanceToUser) + (PositionUtils.getDistanceInKm(userPosition, destPosition));
         userRequest.setTripDistance(tripDistance);
-        return new JsonObject().mapFrom(userRequest);
+        return JsonObject.mapFrom(userRequest);
     }
 
 
@@ -133,13 +135,14 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         counter++;
         if (counter <= availableVehicles.size()) {
             vertx.eventBus().consumer(eventBus, msg -> {
+                Log.info("FINDER CONSUMER VERTICLE", "CAN DRIVE VEHICLE ");
                 JsonObject responseJson = (JsonObject) msg.body();
                 String response = responseJson.getString(BODY);
                 VehicleResponse vehicleResponse = (new JsonObject(response)).mapTo(VehicleResponse.class);
                 if (vehicleResponse.isEligible()) {
                     vehicleResponse.setUsername(username);
                     vehicleResponse.setDistanceToUser(distanceToUser);
-                    responseJsonArray.add(new JsonObject().mapFrom(vehicleResponse));
+                    responseJsonArray.add(JsonObject.mapFrom(vehicleResponse));
                     if (counter == availableVehicles.size()) {
                         vertx.eventBus().send(Messages.VehicleFinder.VEHICLE_RESPONSE, responseJsonArray);
                         vertx.undeploy(deploymentID());

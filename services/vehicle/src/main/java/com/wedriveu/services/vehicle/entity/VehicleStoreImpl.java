@@ -3,7 +3,10 @@ package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.utilities.*;
+import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.services.shared.utilities.PositionUtils;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import io.vertx.core.AbstractVerticle;
@@ -81,9 +84,8 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     @Override
     public void addVehicle(Message message) {
-        Log.info("====== VEHICLE STORE", "ADD VEHICLE");
         JsonObject responseJson = new JsonObject();
-        JsonObject vehicleRequesterJson = MessageParser.getJson(message);
+        JsonObject vehicleRequesterJson = (JsonObject) message.body();
         Vehicle vehicleRequester = vehicleRequesterJson.mapTo(Vehicle.class);
         List<Vehicle> vehicles = getVehicleList();
         responseJson.put(CAR_LICENCE_PLATE, vehicleRequesterJson.getValue(CAR_LICENCE_PLATE));

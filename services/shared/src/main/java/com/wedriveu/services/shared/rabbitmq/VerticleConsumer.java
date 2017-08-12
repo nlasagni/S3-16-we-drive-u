@@ -31,30 +31,22 @@ public abstract class VerticleConsumer extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
-        Log.info("VERTICLE CONSUMER", "START SETUP");
         this.queueName = Constants.SERVICE_QUEUE_BASE_NAME + "." + name;
         eventBus = vertx.eventBus();
         client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
-        Log.info("VERTICLE CONSUMER", "END SETUP");
     }
 
     protected void startConsumer(String exchange, String routingKey, String eventBusAddress)
             throws IOException, TimeoutException {
 
         startConsumer(onStart -> {
-            Log.info("VERTICLE CONSUMER", "START CONSUMER");
             declareQueue(onQueue -> {
-                Log.info("VERTICLE CONSUMER", "DECLARE QUEUE");
                 if (onQueue.succeeded()) {
                     bindQueueToExchange(exchange,
                             routingKey, onBind -> {
-                                Log.info("VERTICLE CONSUMER", "BIND QUEUE TO EXCHANGE");
                                 if (onBind.succeeded()) {
-                                    Log.info("VERTICLE CONSUMER", "BIND SUCCEEDED");
                                     registerConsumer(eventBusAddress);
                                     basicConsume(eventBusAddress);
-                                } else {
-                                    Log.info("VERTICLE CONSUMER", "BIND FAILED");
                                 }
                             });
                 }

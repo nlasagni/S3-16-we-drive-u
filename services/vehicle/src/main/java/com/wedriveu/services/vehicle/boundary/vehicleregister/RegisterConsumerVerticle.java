@@ -1,7 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
-import com.wedriveu.services.shared.utilities.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.MessageParser;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
@@ -17,36 +16,31 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
  */
 public class RegisterConsumerVerticle extends VerticleConsumer {
 
+    private static final String REGISTER_EVENT_BUS_ADDRESS = RegisterConsumerVerticle.class.getCanonicalName();
+
     public RegisterConsumerVerticle() {
-        super(Constants.CONSUMER_VEHICLE_SERVICE);
+        super(VEHICLE_SERVICE_QUEUE_REGISTER);
     }
 
     @Override
     public void start() throws Exception {
-        Log.info("REGISTER CONSUMER VERTICLE", "START SETUP");
         super.start();
         startVehicleRegisterConsumer();
-        Log.info("REGISTER CONSUMER VERTICLE", "END SETUP");
     }
 
     private void startVehicleRegisterConsumer() throws IOException, TimeoutException {
-        startConsumer(VEHICLE_SERVICE_EXCHANGE, ROUTING_KEY_REGISTER_VEHICLE_REQUEST, EVENT_BUS_AVAILABLE_ADDRESS);
-        Log.info("CONSUMER", "STARTED");
+        startConsumer(VEHICLE_SERVICE_EXCHANGE, ROUTING_KEY_REGISTER_VEHICLE_REQUEST, REGISTER_EVENT_BUS_ADDRESS);
     }
 
     @Override
     public void registerConsumer(String eventBus) {
-        Log.info("====== REGISTER CONSUMER", "ADD NEW VEHICLE REGISTER CONSUMER");
-
         vertx.eventBus().consumer(eventBus, msg -> {
-            Log.info("====== REGISTER CONSUMER", "ADD NEW VEHICLE EVENT BUS HANDLER");
+            Log.info("REGISTER CONSUMER VERTICLE", "ADD NEW VEHICLE ");
             addNewVehicle(MessageParser.getJson(msg));
         });
     }
 
     private void addNewVehicle(JsonObject userData) {
-        Log.info("====== REGISTER CONSUMER", "ADD NEW VEHICLE ADD");
-
         eventBus.send(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, userData);
     }
 

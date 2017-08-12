@@ -2,13 +2,15 @@ package com.wedriveu.services.vehicle.boundary.nearest;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.json.JsonObject;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.services.shared.utilities.Constants.ROUTING_KEY_VEHICLE_REQUEST;
+import static com.wedriveu.services.shared.utilities.Constants.VEHICLE_SERVICE_EXCHANGE;
 
 /**
  * Starts the consumer which handles the user request for the vehicle.
@@ -20,8 +22,10 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
  */
 public class NearestConsumerVerticle extends VerticleConsumer {
 
+    private static final String NEAREST_EVENT_BUS_ADDRESS = NearestConsumerVerticle.class.getCanonicalName();
+
     public NearestConsumerVerticle() {
-        super(Constants.CONSUMER_VEHICLE_SERVICE);
+        super(Constants.VEHICLE_SERVICE_QUEUE_NEAREST);
     }
 
     @Override
@@ -31,12 +35,16 @@ public class NearestConsumerVerticle extends VerticleConsumer {
     }
 
     private void startUserConsumer() throws IOException, TimeoutException {
-        startConsumer(VEHICLE_SERVICE_EXCHANGE, ROUTING_KEY_VEHICLE_REQUEST, EVENT_BUS_AVAILABLE_ADDRESS);
+        startConsumer(VEHICLE_SERVICE_EXCHANGE, ROUTING_KEY_VEHICLE_REQUEST, NEAREST_EVENT_BUS_ADDRESS);
     }
 
     @Override
     public void registerConsumer(String eventBus) {
-        vertx.eventBus().consumer(eventBus, msg -> searchAvailableVehicles((JsonObject) msg.body()));
+
+        vertx.eventBus().consumer(eventBus, msg -> {
+            Log.info("NEAREST CONSUMER VERTICLE", "SEARCH AVAILABLE VEHICLES ");
+            searchAvailableVehicles((JsonObject) msg.body());
+        });
     }
 
     private void searchAvailableVehicles(JsonObject userData) {

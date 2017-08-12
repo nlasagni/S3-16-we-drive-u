@@ -13,7 +13,7 @@ import io.vertx.rabbitmq.RabbitMQClient;
  */
 public class VerticlePublisher extends AbstractVerticle {
 
-    private static RabbitMQClient client;
+    private RabbitMQClient client;
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
@@ -22,8 +22,11 @@ public class VerticlePublisher extends AbstractVerticle {
     }
 
     protected void publish(String exchangeName, String routingKey, JsonObject data) {
-        Log.info("VERTICLE PUBLISHER - PUBLISH", exchangeName + " " + routingKey + " " + data.encodePrettily());
+        Log.info(VerticlePublisher.class.getSimpleName(), "publish message on " + exchangeName + " " + routingKey + " " + data.toString());
         client.basicPublish(exchangeName, routingKey, data, onPublish -> {
+            if (!onPublish.succeeded()) {
+                Log.error(VerticlePublisher.class.getSimpleName(), onPublish.cause().getMessage(), onPublish.cause());
+            }
         });
     }
 

@@ -1,7 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
 import com.wedriveu.services.vehicle.boundary.PublisherTest;
-import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryA;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryB;
 import com.wedriveu.services.vehicle.entity.Vehicle;
 import io.vertx.core.json.JsonObject;
@@ -30,10 +29,10 @@ public class RegisterVehicleTestB extends PublisherTest {
 
     @Before
     public void setUp(TestContext context) throws Exception {
-        registerConsumerVerticle = new RegisterConsumerVerticle();
+      /*  registerConsumerVerticle = new RegisterConsumerVerticle();
         super.setup(context, registerConsumerVerticle);
         String licencePlate = new VehicleFactoryB().getVehicle().getCarLicencePlate();
-        super.declareQueueAndBind(licencePlate, context);
+        super.declareQueueAndBind(licencePlate, context);*/
     }
 
     @After
