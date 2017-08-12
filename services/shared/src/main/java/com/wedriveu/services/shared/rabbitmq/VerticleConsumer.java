@@ -1,6 +1,6 @@
 package com.wedriveu.services.shared.rabbitmq;
 
-import io.vertx.core.AbstractVerticle;<<<<<<< HEAD
+import io.vertx.core.AbstractVerticle;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import io.vertx.core.AbstractVerticle;
