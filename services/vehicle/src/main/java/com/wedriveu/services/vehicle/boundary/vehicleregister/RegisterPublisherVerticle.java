@@ -10,7 +10,10 @@ import io.vertx.core.json.JsonObject;
 import static com.wedriveu.services.shared.utilities.Constants.*;
 
 /**
- * Created by Marco on 08/08/2017.
+ *
+ * Vert.x RabbitMQ Publisher for vehicle register response. Replies the vehicle with the adding result to the database.
+ * @author Marco Baldassarri
+ * @since 08/08/2017.
  */
 public class RegisterPublisherVerticle extends VerticlePublisher {
 
@@ -28,4 +31,5 @@ public class RegisterPublisherVerticle extends VerticlePublisher {
                 String.format(ROUTING_KEY_REGISTER_VEHICLE_RESPONSE, licencePlate),
                 new JsonObject().put(Constants.BODY, json.toString()));
     }
+
 }

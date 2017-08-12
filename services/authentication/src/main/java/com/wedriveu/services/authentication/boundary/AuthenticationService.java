@@ -12,7 +12,7 @@ import io.vertx.ext.web.RoutingContext;
 public interface AuthenticationService {
 
     /**
-     *  This method starts the service.
+     * This method starts the service.
      */
     void startService();
 
@@ -23,6 +23,7 @@ public interface AuthenticationService {
 
     /**
      * This method checks the credentials from user's input.
+     *
      * @param routingContext Represents the context for the handling of a request in Vert.x-Web.
      */
     void checkCredentials(RoutingContext routingContext);

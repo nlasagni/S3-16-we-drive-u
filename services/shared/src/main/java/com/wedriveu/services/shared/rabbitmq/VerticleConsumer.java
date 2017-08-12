@@ -1,7 +1,7 @@
 package com.wedriveu.services.shared.rabbitmq;
 
+import com.wedriveu.services.shared.rabbitmq.client.RabbitMQFactory;
 import com.wedriveu.services.shared.utilities.Constants;
-import com.wedriveu.services.shared.utilities.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -33,7 +33,8 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     public void start() throws Exception {
         this.queueName = Constants.SERVICE_QUEUE_BASE_NAME + "." + name;
         eventBus = vertx.eventBus();
-        client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
+        //client = RabbitMQFactory.getInstance(vertx).getRabbitMQClient();
+        client = RabbitMQFactory.createClient(vertx);
     }
 
     protected void startConsumer(String exchange, String routingKey, String eventBusAddress)

@@ -1,5 +1,6 @@
 package com.wedriveu.services.shared.rabbitmq;
 
+import com.wedriveu.services.shared.rabbitmq.client.RabbitMQFactory;
 import com.wedriveu.services.shared.utilities.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
@@ -22,7 +23,7 @@ public class ExchangeManagerVerticle extends AbstractVerticle {
 
     private void bindExchange(Message message) {
         String exchangeName = (String) message.body();
-        client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
+        client = RabbitMQFactory.createClient(vertx);
         client.start(started -> {
             declareExchange(exchangeName);
         });

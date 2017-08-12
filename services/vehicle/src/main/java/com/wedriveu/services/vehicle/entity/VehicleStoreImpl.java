@@ -30,7 +30,9 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
 
 public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
+    private static final String STORE_FOLDER = "store";
     private EventBus eventBus;
+    private File file;
 
     @Override
     public void start() throws Exception {
@@ -38,48 +40,19 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         eventBus.consumer(Messages.NearestControl.AVAILABLE_REQUEST, this::getAllAvailableVehiclesInRange);
         eventBus.consumer(Messages.NearestControl.GET_VEHICLE, this::getVehicle);
         eventBus.consumer(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, this::addVehicle);
-        //createVehiclesFile();
         createJsonFile();
     }
 
     private void createJsonFile() {
         try {
-            File file = new File(Constants.VEHICLES_DATABASE_PATH);
-            if (file.exists()) {
-                if (file.createNewFile()) {
-                    Log.info("FILE", "File Created");
-                }
+            new File(STORE_FOLDER).mkdir();
+            file = new File(STORE_FOLDER + File.separator + Constants.VEHICLES_DATABASE_FILENAME);
+            if (!file.exists()) {
+                file.createNewFile();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void createVehiclesFile() {
-        Vehicle vehicle = createVehicle("MACCHINA1",
-                "broken",
-                new Position(10.2, 13.2),
-                new Date(2017, 11, 30, 12, 37, 43));
-        Vehicle vehicle2 = createVehicle("MACCHINA2",
-                "available",
-                new Position(11.2, 14.2),
-                new Date(2017, 10, 28, 11, 43, 12));
-        Vehicle vehicle3 = createVehicle("MACCHINA3",
-                "busy",
-                new Position(15.2, 13.2),
-                new Date(2017, 9, 26, 10, 56, 46));
-        Vehicle vehicle4 = createVehicle("MACCHINA4",
-                "recharging",
-                new Position(13.2, 16.2),
-                new Date(2017, 8, 24, 9, 37, 22));
-
-        ArrayList<Vehicle> vehicleListToJSon = new ArrayList<Vehicle>();
-        vehicleListToJSon.add(vehicle);
-        vehicleListToJSon.add(vehicle2);
-        vehicleListToJSon.add(vehicle3);
-        vehicleListToJSon.add(vehicle4);
-        writeJsonVehicleFile(vehicleListToJSon);
     }
 
     @Override
@@ -98,7 +71,6 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
             writeJsonVehicleFile((ArrayList<Vehicle>) vehicles);
         }
         eventBus.send(Messages.VehicleStore.REGISTER_VEHICLE_COMPLETED, responseJson);
-
     }
 
 
@@ -115,8 +87,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
             }
         }
         userData.setVehicleList(availableVehicles);
-
-        eventBus.send(Messages.VehicleStore.AVAILABLE_COMPLETED, new JsonObject().mapFrom(userData));
+        eventBus.send(Messages.VehicleStore.AVAILABLE_COMPLETED, JsonObject.mapFrom(userData));
     }
 
 
@@ -133,8 +104,6 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     public List<Vehicle> getVehicleList() {
         ObjectMapper mapper = new ObjectMapper();
         List<Vehicle> vehicles = readFromVehiclesDb(mapper);
-        //return (vehicles.isEmpty() || vehicles == null) ? new ArrayList<>() : vehicles;
-        //return vehicles;
         if (vehicles != null) {
             return vehicles;
         }
@@ -233,11 +202,10 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private List<Vehicle> readFromVehiclesDb(ObjectMapper mapper) {
         try {
             List<Vehicle> vehicles =
-                    mapper.readValue(new File(Constants.VEHICLES_DATABASE_PATH), new TypeReference<List<Vehicle>>() {
+                    mapper.readValue(file, new TypeReference<List<Vehicle>>() {
                     });
             return vehicles;
         } catch (IOException e) {
-            //e.printStackTrace();
             return null;
         }
     }
@@ -245,7 +213,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private void checkDuplicatesAndWriteOnVehiclesDb(List<Vehicle> vehicles, ObjectMapper mapper) {
         if (thereAreNoDuplicates(vehicles)) {
             try {
-                mapper.writeValue(new File(Constants.VEHICLES_DATABASE_PATH), vehicles);
+                mapper.writeValue(file, vehicles);
                 String jsonInString = mapper.writeValueAsString(vehicles);
                 Log.log(jsonInString);
                 jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(vehicles);

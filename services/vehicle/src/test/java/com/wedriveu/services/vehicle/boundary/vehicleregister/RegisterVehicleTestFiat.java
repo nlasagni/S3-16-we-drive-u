@@ -1,7 +1,7 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
 import com.wedriveu.services.vehicle.boundary.PublisherTest;
-import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryA;
+import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryFiat;
 import com.wedriveu.services.vehicle.entity.Vehicle;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
 import io.vertx.core.Vertx;
@@ -13,46 +13,49 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import static com.wedriveu.services.shared.utilities.Constants.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(VertxUnitRunner.class)
-public class RegisterVehicleTestA extends PublisherTest {
+public class RegisterVehicleTestFiat extends PublisherTest {
 
-    private static final String EVENT_BUS_ADDRESS = RegisterVehicleTestA.class.getCanonicalName();
-    private static final String QUEUE = "vehicle.queue";
-    public static final int ASYNC_COUNT = 5;
+    private static final String EVENT_BUS_ADDRESS = RegisterVehicleTestFiat.class.getCanonicalName();
+    private static final String QUEUE = "vehicle.queue.fiat";
+    private static final int ASYNC_COUNT = 5;
+    private Async async;
+    private Vertx vertx;
 
-    public RegisterVehicleTestA() {
+    public RegisterVehicleTestFiat() {
         super(QUEUE, VEHICLE_SERVICE_EXCHANGE, ROUTING_KEY_REGISTER_VEHICLE_REQUEST,
                 ROUTING_KEY_REGISTER_VEHICLE_RESPONSE, EVENT_BUS_ADDRESS);
     }
 
     @Before
     public void setUp(TestContext context) throws Exception {
-        Async async = context.async(ASYNC_COUNT);
-        Vertx vertx = Vertx.vertx();
+        async = context.async(ASYNC_COUNT);
+        vertx = Vertx.vertx();
         super.setup(vertx, completed -> {
             async.countDown();
-            String licencePlate = new VehicleFactoryA().getVehicle().getCarLicencePlate();
+            String licencePlate = new VehicleFactoryFiat().getVehicle().getCarLicencePlate();
             super.declareQueueAndBind(licencePlate, context, declared -> {
                 context.assertTrue(declared.succeeded());
                 async.countDown();
-                vertx.deployVerticle(new RegisterConsumerVerticle(), context.asyncAssertSuccess(onDeployConsumer -> {
-                    async.countDown();
-                    vertx.deployVerticle(new RegisterPublisherVerticle(), context.asyncAssertSuccess(onDeployPublisher -> {
-                        async.countDown();
-                        vertx.deployVerticle(new VehicleStoreImpl(), context.asyncAssertSuccess(onDeployStore -> {
-                            async.complete();
-                        }));
-                    }));
-                }));
+                deployVerticles(context);
             });
         });
         async.awaitSuccess();
+    }
 
+    @SuppressWarnings("Duplicates")
+    private void deployVerticles(TestContext context) {
+        vertx.deployVerticle(new RegisterConsumerVerticle(), context.asyncAssertSuccess(onDeployConsumer -> {
+            async.countDown();
+            vertx.deployVerticle(new RegisterPublisherVerticle(), context.asyncAssertSuccess(onDeployPublisher -> {
+                async.countDown();
+                vertx.deployVerticle(new VehicleStoreImpl(), context.asyncAssertSuccess(onDeployStore -> async.complete()));
+            }));
+        }));
     }
 
     @After
@@ -72,7 +75,7 @@ public class RegisterVehicleTestA extends PublisherTest {
 
     @Override
     protected JsonObject getJson() {
-        Vehicle vehicle = new VehicleFactoryA().getVehicle();
+        Vehicle vehicle = new VehicleFactoryFiat().getVehicle();
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(BODY, JsonObject.mapFrom(vehicle).toString());
         return jsonObject;

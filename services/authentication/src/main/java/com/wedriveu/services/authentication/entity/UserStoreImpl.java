@@ -30,10 +30,10 @@ public class UserStoreImpl implements UserStore {
     @Override
     public void mapEntityToJson() {
 
-        User user = createDummyObject("Michele","PASSWORD1");
-        User user2 = createDummyObject("Stefano","PASSWORD2");
-        User user3 = createDummyObject("Nicola","PASSWORD3");
-        User user4 = createDummyObject("Marco","PASSWORD4");
+        User user = createDummyObject("Michele", "PASSWORD1");
+        User user2 = createDummyObject("Stefano", "PASSWORD2");
+        User user3 = createDummyObject("Nicola", "PASSWORD3");
+        User user4 = createDummyObject("Marco", "PASSWORD4");
 
         ArrayList<User> userListToJSon = new ArrayList<User>();
         userListToJSon.add(user);
@@ -50,7 +50,8 @@ public class UserStoreImpl implements UserStore {
 
         try {
             List<User> users =
-                    mapper.readValue(file, new TypeReference<List<User>>(){});
+                    mapper.readValue(file, new TypeReference<List<User>>() {
+                    });
             return getRequestedUuser(users, username);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -67,7 +68,7 @@ public class UserStoreImpl implements UserStore {
         return new User(username, password);
     }
 
-    private void writeJSonUsersFile(ArrayList<User> userListToJSon){
+    private void writeJSonUsersFile(ArrayList<User> userListToJSon) {
         try {
             ObjectMapper mapper = new ObjectMapper();
 
@@ -85,9 +86,9 @@ public class UserStoreImpl implements UserStore {
         }
     }
 
-    private User getRequestedUuser(List<User> users, String username){
+    private User getRequestedUuser(List<User> users, String username) {
         for (User user : users) {
-            if(user.getUsername().equals(username)) {
+            if (user.getUsername().equals(username)) {
                 Log.log("Login success! " +
                         "Username: " +
                         user.getUsername() +

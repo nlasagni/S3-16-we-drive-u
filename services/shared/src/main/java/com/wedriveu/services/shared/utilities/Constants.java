@@ -8,9 +8,7 @@ package com.wedriveu.services.shared.utilities;
 public interface Constants {
 
     String USERS_DATABASE_FILENAME = "users.json";
-    String BOOKINGS_DATABASE_PATH = "services/booking/databaseFile/bookings.json";
-    String VEHICLES_DATABASE_PATH = "services/vehicle/src/test/resources/vehicles.json";
-    String BOOKING_DATABASE_FILE_NAME = "bookings.json";
+    String VEHICLES_DATABASE_FILENAME = "vehicles.json";
 
     String USER_LOGIN = "/user/login";
     String USERNAME = "username";
@@ -22,10 +20,8 @@ public interface Constants {
     String TEXT_PLAIN = "text/plain";
     int PORT_AUTHENTICATION_SERVICE = 8080;
 
-    //String RABBITMQ_SERVER_HOST = "uniboguys.duckdns.org";
-    //String RABBITMQ_SERVER_PASSWORD = "FmzevdBBmpcdvPHLDJQR";
-    String RABBITMQ_SERVER_HOST = "localhost";
-    String RABBITMQ_SERVER_PASSWORD = "guest";
+    String RABBITMQ_SERVER_HOST = "uniboguys.duckdns.org";
+    String RABBITMQ_SERVER_PASSWORD = "FmzevdBBmpcdvPHLDJQR";
     int RABBITMQ_SERVER_PORT = 5672;
     String UTF = "UTF-8";
 
@@ -51,8 +47,6 @@ public interface Constants {
     String VEHICLE_SERVICE_EXCHANGE = "vehicle";
 
     // Vehicle Service RabbitMQ
-
-
     String VEHICLE_SERVICE_QUEUE_NEAREST = "service.vehicle.queue.nearest";
     String VEHICLE_SERVICE_QUEUE_FINDER = "service.vehicle.queue.finder";
     String VEHICLE_SERVICE_QUEUE_REGISTER = "service.vehicle.queue.register";

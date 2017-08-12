@@ -15,11 +15,9 @@ import java.util.List;
 public interface VehicleStore {
 
     /**
-     * Maps a <em>com.wedriveu.services.vehicle.entity.Vehicle</em> object in a Json object.
-     */
-    void createVehiclesFile();
-
-    /**
+     * A new vehicle is being added to the json file. if the vehicle already exists (the licencePlace is already there)
+     * it sends back a message containing a negative boolean, or positive otherwise.
+     *
      * @param vehicle Indicates the vehicle the will be added to the db.
      */
     void addVehicle(Message vehicle);

@@ -36,7 +36,6 @@ public class NearestControl extends AbstractVerticle {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.VehicleStore.AVAILABLE_COMPLETED, this::availableVehiclesCompleted);
         eventBus.consumer(Messages.VehicleFinder.VEHICLE_RESPONSE, this::handleVehicleResponses);
-
     }
 
     private void handleVehicleResponses(Message message) {
@@ -63,7 +62,6 @@ public class NearestControl extends AbstractVerticle {
         bestVehicleJson.put(CAR_LICENCE_PLATE, chosen.getLicencePlate());
         return bestVehicleJson;
     }
-
 
     private void availableVehiclesCompleted(Message message) {
         JsonObject userData = (JsonObject) message.body();

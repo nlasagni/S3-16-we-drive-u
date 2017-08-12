@@ -1,7 +1,6 @@
 package com.wedriveu.services.vehicle.boundary;
 
-import com.wedriveu.services.shared.utilities.Constants;
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.rabbitmq.client.RabbitMQFactory;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -18,10 +17,7 @@ import static com.wedriveu.services.shared.utilities.Constants.BODY;
  */
 public abstract class PublisherTest {
 
-    private static final String PASSWORD = "password";
-    private static final String HOST = "host";
-    private static final String TAG = PublisherTest.class.getSimpleName();
-
+    private static final int DELAY = 10000;
     private RabbitMQClient rabbitMQClient;
     private String queue;
     private String exchangeName;
@@ -29,7 +25,6 @@ public abstract class PublisherTest {
     private String responseRoutingKey;
     private String eventBusAddress;
     private Vertx vertx;
-    private JsonObject config;
 
     public PublisherTest(String queue,
                          String exchangeName,
@@ -45,10 +40,7 @@ public abstract class PublisherTest {
 
     protected void setup(Vertx vertx, Handler<AsyncResult<Void>> handler) {
         this.vertx = vertx;
-        config = new JsonObject();
-        config.put(HOST, Constants.RABBITMQ_SERVER_HOST);
-        config.put(PASSWORD, Constants.RABBITMQ_SERVER_PASSWORD);
-        rabbitMQClient = RabbitMQClient.create(vertx, config);
+        rabbitMQClient = RabbitMQFactory.createClient(vertx);
         rabbitMQClient.start(handler);
     }
 
@@ -77,11 +69,9 @@ public abstract class PublisherTest {
         if (!keyName.isEmpty()) {
             responseRoutingKey = String.format(responseRoutingKey, keyName);
         }
-
         rabbitMQClient.queueBind(queue, exchangeName, responseRoutingKey,
                 onBind -> {
                     if (onBind.succeeded()) {
-                        Log.info("BIND_TO_EXCHANGE", "EXCHANGE_NAME: " + exchangeName + ", ROUTING_KEY: " + responseRoutingKey);
                         handler.handle(Future.succeededFuture());
                     } else {
                         handler.handle(io.vertx.core.Future.failedFuture(onBind.cause().getMessage()));
@@ -92,32 +82,23 @@ public abstract class PublisherTest {
     protected void publishMessage(TestContext context, JsonObject data) {
         final Async async = context.async();
         context.assertNotNull(data);
-        Log.info("PUBLISH_TEST", "HANDLE RESPONSE");
-        Log.info("PUBLISH_TEST", "QUEUE: " + queue + ", EVENT_BUS_ADDRESS: " + eventBusAddress);
         handleServiceResponse(context, async, eventBusAddress);
         rabbitMQClient.basicConsume(queue, eventBusAddress, context.asyncAssertSuccess(onGet -> {
-            Log.info("PUBLISH_TEST", "BASIC CONSUME");
             rabbitMQClient.basicPublish(exchangeName, requestRoutingKey, data,
                     context.asyncAssertSuccess(onPublish -> {
-                        Log.info("PUBLISH_TEST", "BASIC PUBLISH");
-                        vertx.setTimer(10000, handler -> {
+                        vertx.setTimer(DELAY, handler -> {
                             context.fail();
                             async.complete();
                         });
                     }));
         }));
-        //async.awaitSuccess();
     }
 
     private void handleServiceResponse(TestContext context, Async async, String eventBusAddress) {
         vertx.eventBus().consumer(eventBusAddress, msg -> {
             context.assertNotNull(msg.body());
-            JsonObject responseJson = new JsonObject(((JsonObject)msg.body()).getString(BODY));
-            Log.info("*********************", "IT WORKS");
+            JsonObject responseJson = new JsonObject(((JsonObject) msg.body()).getString(BODY));
             checkResponse(responseJson);
-            Log.info("CONSUME", "EXCHANGE_NAME:" + exchangeName +
-                    ", ROUTING_KEY: " + responseRoutingKey +
-                    ", DATA: " + responseJson.encodePrettily());
             async.complete();
         }).exceptionHandler(event -> {
             context.fail(event.getCause());

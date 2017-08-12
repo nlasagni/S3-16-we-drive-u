@@ -1,6 +1,5 @@
 package com.wedriveu.services.vehicle.control;
 
-import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleElectionVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterConsumerVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterPublisherVerticle;
@@ -23,8 +22,6 @@ public class VerticleDeployer extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
-
-
         List<Future> futures = new ArrayList<>();
         Future controlFuture = Future.future();
         vertx.deployVerticle(new NearestControl(), controlFuture.completer());
@@ -48,10 +45,8 @@ public class VerticleDeployer extends AbstractVerticle {
 
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {
-                Log.info("DEPLOYER", "ALL VERTICLES DEPLOYED");
                 startFuture.complete();
             } else {
-                Log.info("DEPLOYER", "ALL VERTICLES FAILED" + completed.cause());
                 startFuture.fail(completed.cause());
             }
         });

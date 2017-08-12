@@ -1,10 +1,9 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
-import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
+import com.wedriveu.services.shared.rabbitmq.client.RabbitMQFactory;
 import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponse;
 import com.wedriveu.services.shared.utilities.Constants;
-import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.utilities.Position;
 import com.wedriveu.services.shared.utilities.PositionUtils;
 import com.wedriveu.services.vehicle.entity.Vehicle;
@@ -78,7 +77,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     }
 
     private void startVehicleCommunication() {
-        client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
+        client = RabbitMQFactory.createClient(vertx);
         client.start(onStartCompleted -> {
                     if (onStartCompleted.succeeded()) {
                         declareExchanges(onDeclareCompleted -> {
@@ -135,7 +134,6 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         counter++;
         if (counter <= availableVehicles.size()) {
             vertx.eventBus().consumer(eventBus, msg -> {
-                Log.info("FINDER CONSUMER VERTICLE", "CAN DRIVE VEHICLE ");
                 JsonObject responseJson = (JsonObject) msg.body();
                 String response = responseJson.getString(BODY);
                 VehicleResponse vehicleResponse = (new JsonObject(response)).mapTo(VehicleResponse.class);

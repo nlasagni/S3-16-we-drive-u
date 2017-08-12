@@ -10,18 +10,18 @@ import java.util.Date;
 /**
  * Created by Marco on 02/08/2017.
  */
-public class VehicleFactoryA implements VehicleFactory {
+public class VehicleFactoryFiat implements VehicleFactory {
 
-    private static final String LICENCE_PLATE = "AAA";
+    private static final String LICENCE_PLATE = "BBB";
     private static final String STATUS = "available";
-    //via sacchi 3, Cesena
-    private static final double LATITUDE = 44.139761;
-    private static final double LONGITUDE = 12.243219;
+    //rome
+    private static final double LATITUDE = 41.903319;
+    private static final double LONGITUDE = 12.496441;
     private static final Position POSITION = new Position(LATITUDE, LONGITUDE);
     private static final Date LAST_UPDATE = new Date();
-    private static final String NAME = "Mini Cooper D";
-    private static final String DESCRIPTION = "Stick beauty with power";
-    private static final String IMAGE_URL = "http://blog.caranddriver.com/wp-content/uploads/2016/05/2017-Mini-Cooper-S-Seven-Edition-PLACEMENT-626x382.jpg";
+    private static final String NAME = "Fiat 500";
+    private static final String DESCRIPTION = "Italians Do it Better";
+    private static final String IMAGE_URL = "https://tinyurl.com/y7kbefj9";
 
     @SuppressWarnings("Duplicates")
     @Override

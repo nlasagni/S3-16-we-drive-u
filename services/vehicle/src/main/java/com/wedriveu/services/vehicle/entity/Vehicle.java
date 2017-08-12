@@ -21,7 +21,6 @@ public class Vehicle {
     public static final String STATUS_BROKEN_STOLEN = "broken_stolen";
     public static final String STATUS_NETWORK_ISSUES = "net_issues";
 
-
     @JsonProperty(CAR_LICENCE_PLATE)
     private String carLicencePlate;
     @JsonProperty(STATUS)
@@ -36,16 +35,6 @@ public class Vehicle {
     private String description;
     @JsonProperty(IMAGE_URL)
     private URL imageUrl;
-
-
-   /* private String carLicencePlate;
-    private String status;
-    private Position position;
-    private Date lastUpdate;
-    private String name;
-    private String description;
-    private URL imageUrl;
-*/
 
     public Vehicle(String carLicencePlate,
                    String status,

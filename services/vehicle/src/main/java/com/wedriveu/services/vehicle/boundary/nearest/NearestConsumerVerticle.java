@@ -2,7 +2,6 @@ package com.wedriveu.services.vehicle.boundary.nearest;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.utilities.Constants;
-import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.json.JsonObject;
 
@@ -40,11 +39,7 @@ public class NearestConsumerVerticle extends VerticleConsumer {
 
     @Override
     public void registerConsumer(String eventBus) {
-
-        vertx.eventBus().consumer(eventBus, msg -> {
-            Log.info("NEAREST CONSUMER VERTICLE", "SEARCH AVAILABLE VEHICLES ");
-            searchAvailableVehicles((JsonObject) msg.body());
-        });
+        vertx.eventBus().consumer(eventBus, msg -> searchAvailableVehicles((JsonObject) msg.body()) );
     }
 
     private void searchAvailableVehicles(JsonObject userData) {
