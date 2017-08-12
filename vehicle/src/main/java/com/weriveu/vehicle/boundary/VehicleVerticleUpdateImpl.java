@@ -61,9 +61,7 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
     @Override
     public void sendUpdate() {
         rabbitMQClient.basicPublish(exchanges.VEHICLE(), routingKeys.VEHICLE_UPDATE(), createUpdate(), onPublish -> {
-            if(onPublish.succeeded()){
-                System.out.println("VEHICLE-UPDATE: HO MANDATO LA NOTIFICA");
-            }
+            onPublish.succeeded();
             if(onPublish.failed()){
                 Log.error(TAG, SEND_ERROR);
             }
@@ -87,7 +85,6 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
         }
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(eventBusConstants.BODY(), JsonObject.mapFrom(updateToService).toString());
-        System.out.println("VEHICLE-UPDATE: Ho creato il jsonobject = " + jsonObject.toString());
         return jsonObject;
     }
 

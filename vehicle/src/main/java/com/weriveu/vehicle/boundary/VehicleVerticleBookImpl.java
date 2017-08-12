@@ -31,7 +31,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
     private static final String READ_ERROR = "Error occurred while reading request.";
     private static final String SEND_ERROR = "Error occurred while sending response.";
     private static final String ENGINE_ILLEGAL_STATE = "The Engine has not been started yet or it has been stopped.";
-    private static String QUEUE_NAME = "vehicle.";
+    private static String QUEUE_NAME = "vehicle.book.";
 
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
@@ -121,7 +121,6 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
     private void sendResponse(VehicleBookResponse response){
         try {
             String responseString = objectMapper.writeValueAsString(response);
-            System.out.println(responseString);
             JsonObject responseJson = new JsonObject();
             responseJson.put(eventBusConstants.BODY(), responseString);
             rabbitMQClient.basicPublish(exchanges.VEHICLE(),
