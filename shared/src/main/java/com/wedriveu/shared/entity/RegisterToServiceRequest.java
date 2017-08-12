@@ -1,7 +1,9 @@
 package com.wedriveu.shared.entity;
 
 /**
- * Created by Michele on 10/08/2017.
+ * @author Michele Donati on 10/08/2017.
+ *
+ * This class represents a "register" request that the vehicles sends to the service.
  */
 public class RegisterToServiceRequest {
 

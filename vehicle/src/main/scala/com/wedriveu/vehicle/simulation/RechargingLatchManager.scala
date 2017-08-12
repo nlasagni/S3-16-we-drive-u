@@ -13,6 +13,7 @@ trait RechargingLatchManager {
   /** This method permits to start the Latch Thread. */
   def startLatchedThread(): Unit
 }
+
 class RechargingLatchManagerImpl(selfDrivingVehicle: SelfDrivingVehicle) extends RechargingLatchManager {
   val tenSecondsOfRecharge: Int = 10
   val maxTimeOfAwaiting: Long = 15L

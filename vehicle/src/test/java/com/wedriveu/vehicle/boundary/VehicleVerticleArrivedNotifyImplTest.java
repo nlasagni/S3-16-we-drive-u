@@ -75,16 +75,13 @@ public class VehicleVerticleArrivedNotifyImplTest {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
                 rabbitMQClient.queueBind(requestId, exchanges.VEHICLE(), routingKeys.VEHICLE_ARRIVED(), onQueueBind ->{
                     vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy -> {
-                        System.out.println("TEST: IL VEICOLO DEPLOYATO");
                         async.complete();}
                     ));
-                    System.out.println("TEST: QUEUE " + requestId + " BINDATA" );
                     async.countDown();
                     context.assertTrue(onQueueBind.succeeded());
                 });
                 async.countDown();
                 context.assertTrue(onQueueDeclare.succeeded());
-                System.out.println("TEST: QUEUE DICHIARATA");
                 async.countDown();
             });
             async.countDown();
@@ -104,15 +101,11 @@ public class VehicleVerticleArrivedNotifyImplTest {
 
     private void checkVehicleNotify(TestContext context) {
         final Async async = context.async();
-        System.out.println("TEST: CHECK VEHICLE NOTIFY");
         rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
-            System.out.println("TEST: BASIC CONSUME COMPLETATA");
             MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-                System.out.println("TEST: CONSUMO MESSAGGIO");
                 JsonObject notifyJson = new JsonObject(msg.body().getString(eventBusConstants.BODY()));
                 Log.info(TAG, notifyJson.toString());
                 ArrivedNotify notify = notifyJson.mapTo(ArrivedNotify.class);
-                System.out.println("TEST: La notifyToSend = " + notify.getLicense());
                 context.assertTrue(notify.getLicense().equals(license));
             });
             consumer.exceptionHandler(event -> {
@@ -121,7 +114,6 @@ public class VehicleVerticleArrivedNotifyImplTest {
         });
         vehicleVerticle.sendArrivedNotify(notifyToSend);
         vertx.setTimer(5000, onTime -> {
-            System.out.println("TEST: ASYNC COMPLETE");
             async.complete();});
         async.awaitSuccess();
     }

@@ -2,6 +2,8 @@ package com.wedriveu.shared.entity;
 
 /**
  * @author Michele Donati on 11/08/2017.
+ *
+ * This class represents an "arrived to destination" notify that a vehicle sends to the service.
  */
 
 public class ArrivedNotify {

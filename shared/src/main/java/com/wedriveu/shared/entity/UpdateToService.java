@@ -4,6 +4,8 @@ import com.wedriveu.shared.utils.Position;
 
 /**
  * @author Michele Donati on 11/08/2017.
+ *
+ * This class represents an "update" command that the vehicle sends to the service.
  */
 
 public class UpdateToService {

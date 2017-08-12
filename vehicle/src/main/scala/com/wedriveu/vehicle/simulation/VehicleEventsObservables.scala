@@ -67,7 +67,7 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
                 subscriber.onCompleted()
                 return
               }
-              //This event will be triggered by a server instruction
+              //This event will be not necessary when the service is up.
               randomLatitudeDestination =
                 ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
               randomLongitudeDestination =
