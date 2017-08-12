@@ -1,5 +1,6 @@
 package com.wedriveu.vehicle.boundary;
 
+
 import com.wedriveu.shared.entity.UpdateToService;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.utils.Log;
@@ -19,7 +20,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import scala.collection.script.Update;
 
 /**
  * @author Michele Donati on 11/08/2017.

@@ -2,9 +2,6 @@ package com.wedriveu.vehicle.control
 
 import com.rabbitmq.client._
 
-import com.wedriveu.services.shared.utilities.Log
-import com.wedriveu.shared.util.Constants
-
 import com.wedriveu.shared.utils.Position
 
 import com.wedriveu.vehicle.boundary.VehicleStopView
