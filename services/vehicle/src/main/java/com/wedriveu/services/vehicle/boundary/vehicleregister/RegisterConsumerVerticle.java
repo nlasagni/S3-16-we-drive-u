@@ -12,8 +12,7 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
 /**
  * Vert.x RabbitMQ Consumer that listens for new vehicle register requests.
  *
- * @author Marco Baldassarri
- * @since 08/08/2017
+ * @author Marco Baldassarri on 08/08/2017.
  */
 public class RegisterConsumerVerticle extends VerticleConsumer {
 

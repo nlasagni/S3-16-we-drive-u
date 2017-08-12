@@ -3,7 +3,9 @@ package com.wedriveu.services.shared.rabbitmq;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQFactory;
 import com.wedriveu.services.shared.utilities.Log;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
@@ -22,12 +24,11 @@ public class VerticlePublisher extends AbstractVerticle {
         client.start(startFuture.completer());
     }
 
-    protected void publish(String exchangeName, String routingKey, JsonObject data) {
-        client.basicPublish(exchangeName, routingKey, data, onPublish -> {
-            if (!onPublish.succeeded()) {
-                Log.error(VerticlePublisher.class.getSimpleName(), onPublish.cause().getMessage(), onPublish.cause());
-            }
-        });
+    protected void publish(String exchangeName,
+                           String routingKey,
+                           JsonObject data,
+                           Handler<AsyncResult<Void>> onPublish) {
+        client.basicPublish(exchangeName, routingKey, data, onPublish);
     }
 
 }

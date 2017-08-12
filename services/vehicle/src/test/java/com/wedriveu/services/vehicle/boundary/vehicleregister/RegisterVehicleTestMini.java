@@ -1,6 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
-import com.wedriveu.services.vehicle.boundary.PublisherTest;
+import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
 import com.wedriveu.services.vehicle.entity.Vehicle;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
@@ -19,7 +19,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(VertxUnitRunner.class)
-public class RegisterVehicleTestMini extends PublisherTest {
+public class RegisterVehicleTestMini extends BaseInteractionClient {
 
     private static final String EVENT_BUS_ADDRESS = RegisterVehicleTestMini.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.mini";

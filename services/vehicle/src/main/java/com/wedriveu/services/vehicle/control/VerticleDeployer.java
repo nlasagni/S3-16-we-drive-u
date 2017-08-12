@@ -15,8 +15,7 @@ import java.util.List;
  * Deploys the whole Verticle collection once. This has been created in order to avoid deploying the same Verticles
  * multiple times at each user vehicle request.
  *
- * @author Marco Baldassarri
- * @since 04/08/2017
+ * @author Marco Baldassarri on 04/08/2017.
  */
 public class VerticleDeployer extends AbstractVerticle {
 

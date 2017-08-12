@@ -1,35 +1,51 @@
 package com.wedriveu.services.vehicle.rabbitmq;
 
 /**
- * Represents the messages sent between Verticles inside the VehicleService.
+ * Represents the message addresses used between Verticles inside the VehicleService.
  *
- * @author Marco Baldassarri
- * @since 30/07/2017
+ * @author Marco Baldassarri on 30/07/2017.
  */
 public interface Messages {
 
-
+    /**
+     * Address used at the application startup from the Main class to start the
+     * {@linkplain com.wedriveu.services.vehicle.app.BootVerticle} Verticle.
+     */
     interface VehicleService {
         String BOOT = "vehicle.service.boot";
 
     }
 
+    /**
+     * Addresses used by the {@linkplain NearestControl} Verticle to handle the requests used
+     * at the beginning of vehicle election process.
+     */
     interface NearestControl {
         String AVAILABLE_REQUEST = "control.available";
         String DATA_TO_VEHICLE = "control.data.to.vehicle";
         String GET_VEHICLE = "election.vehicle.request";
     }
 
+    /**
+     * Address used by the {@linkplain VehicleFinder} Verticle to lookup vehicles that can actually make the trip.
+     */
     interface VehicleFinder {
         String VEHICLE_RESPONSE = "finder.vehicle.response";
     }
 
+    /**
+     * Addresses used by the {@linkplain VehicleStore} Verticle to handle db requests and responses.
+     */
     interface VehicleStore {
         String AVAILABLE_COMPLETED = "store.available.completed";
         String GET_VEHICLE_COMPLETED = "store.get.vehicle.completed";
         String REGISTER_VEHICLE_COMPLETED = "vehicle.register.completed";
     }
 
+    /**
+     * Address used by the {@linkplain VehicleRegister} Verticle to receive new vehicle register requests from the
+     * vehicle itself.
+     */
     interface VehicleRegister {
         String REGISTER_VEHICLE_REQUEST = "vehicle.register.request";
     }

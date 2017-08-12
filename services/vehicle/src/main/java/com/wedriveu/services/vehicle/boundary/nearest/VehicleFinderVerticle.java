@@ -29,8 +29,7 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
  * actual availability of the vehicles by using RabbitMQ Vert.x library.
  * At the end of the process, only one vehicle is being picked up.
  *
- * @author Marco Baldassarri
- * @since 5/08/2017
+ * @author Marco Baldassarri on 5/08/2017.
  */
 public class VehicleFinderVerticle extends VerticleConsumer {
 

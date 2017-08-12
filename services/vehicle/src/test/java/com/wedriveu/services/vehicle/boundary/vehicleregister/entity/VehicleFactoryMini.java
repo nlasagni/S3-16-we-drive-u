@@ -2,13 +2,12 @@ package com.wedriveu.services.vehicle.boundary.vehicleregister.entity;
 
 import com.wedriveu.services.shared.utilities.Position;
 import com.wedriveu.services.vehicle.entity.Vehicle;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
 /**
- * Created by Marco on 02/08/2017.
+ * @author Marco on 02/08/2017.
  */
 public class VehicleFactoryMini implements VehicleFactory {
 

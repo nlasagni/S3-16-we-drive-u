@@ -40,9 +40,6 @@ public interface Constants {
     String IMAGE_URL = "imageUrl";
     String REGISTER_RESULT = "vehicleRegisterResult";
 
-    // Services RabbitMQ
-    String SERVICE_QUEUE_BASE_NAME = "service";
-
     //Exchanges
     String VEHICLE_SERVICE_EXCHANGE = "vehicle";
 

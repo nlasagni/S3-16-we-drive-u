@@ -9,9 +9,11 @@ import java.util.Date;
 import static com.wedriveu.services.shared.utilities.Constants.*;
 
 /**
+ *
+ * Represents the POJO Vehicle.
+ *
  * @author Marco Baldassarri
  * @author Michele
- * @since 02/08/2017
  */
 public class Vehicle {
 

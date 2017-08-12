@@ -2,6 +2,7 @@ package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.utilities.Constants;
+import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
@@ -12,8 +13,8 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
 /**
  *
  * Vert.x RabbitMQ Publisher for vehicle register response. Replies the vehicle with the adding result to the database.
- * @author Marco Baldassarri
- * @since 08/08/2017.
+ *
+ * @author Marco Baldassarri on 08/08/2017.
  */
 public class RegisterPublisherVerticle extends VerticlePublisher {
 
@@ -29,7 +30,12 @@ public class RegisterPublisherVerticle extends VerticlePublisher {
         json.remove(CAR_LICENCE_PLATE);
         publish(VEHICLE_SERVICE_EXCHANGE,
                 String.format(ROUTING_KEY_REGISTER_VEHICLE_RESPONSE, licencePlate),
-                new JsonObject().put(Constants.BODY, json.toString()));
+                new JsonObject().put(Constants.BODY, json.toString()), onPublish ->  {
+                    if (!onPublish.succeeded()) {
+                        Log.error(RegisterPublisherVerticle.class.getSimpleName(),
+                                onPublish.cause().getMessage(), onPublish.cause());
+                    }
+                });
     }
 
 }

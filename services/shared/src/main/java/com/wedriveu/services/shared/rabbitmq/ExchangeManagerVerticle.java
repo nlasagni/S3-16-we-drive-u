@@ -9,7 +9,10 @@ import io.vertx.rabbitmq.RabbitMQClient;
 import static com.wedriveu.services.shared.utilities.Constants.EXCHANGE_TYPE;
 
 /**
- * Created by Marco on 11/08/2017.
+ * This Verticle is aim to declare and bind the exchange chosen by the Service at its startup.
+ *
+ * @author Marco Baldassarri
+ * @since 11/08/2017.
  */
 public class ExchangeManagerVerticle extends AbstractVerticle {
 

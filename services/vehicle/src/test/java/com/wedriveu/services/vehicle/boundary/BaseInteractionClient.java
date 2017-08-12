@@ -13,9 +13,12 @@ import io.vertx.rabbitmq.RabbitMQClient;
 import static com.wedriveu.services.shared.utilities.Constants.BODY;
 
 /**
- * Created by Marco on 09/08/2017.
+ *
+ * Basic RabbitMQ communication client (publisher and consumer) for testing VehicleService
+ * inbound and outbound communication.
+ * @author Marco on 09/08/2017.
  */
-public abstract class PublisherTest {
+public abstract class BaseInteractionClient {
 
     private static final int DELAY = 10000;
     private RabbitMQClient rabbitMQClient;
@@ -26,11 +29,11 @@ public abstract class PublisherTest {
     private String eventBusAddress;
     private Vertx vertx;
 
-    public PublisherTest(String queue,
-                         String exchangeName,
-                         String requestRoutingKey,
-                         String responseRoutingKey,
-                         String eventBusAddress) {
+    public BaseInteractionClient(String queue,
+                                 String exchangeName,
+                                 String requestRoutingKey,
+                                 String responseRoutingKey,
+                                 String eventBusAddress) {
         this.queue = queue;
         this.exchangeName = exchangeName;
         this.requestRoutingKey = requestRoutingKey;

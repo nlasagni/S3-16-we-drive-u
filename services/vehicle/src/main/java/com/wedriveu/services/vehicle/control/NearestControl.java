@@ -23,8 +23,7 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
  * {@linkplain com.wedriveu.services.vehicle.entity.VehicleStore} database. It handles the database replies
  * by deploying and interacting with other Verticles.
  *
- * @author Marco Baldassarri
- * @since 02/08/2017
+ * @author Marco Baldassarri on 02/08/2017.
  */
 public class NearestControl extends AbstractVerticle {
 

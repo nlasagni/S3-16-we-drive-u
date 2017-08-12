@@ -24,8 +24,8 @@ import java.util.Optional;
 import static com.wedriveu.services.shared.utilities.Constants.*;
 
 /**
- * Created by Michele on 12/07/2017.
- * Marco
+ * @author Marco Baldassarri on 12/07/2017.
+ * @author Michele
  */
 
 public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {

@@ -8,7 +8,7 @@ import java.net.URL;
 import java.util.Date;
 
 /**
- * Created by Marco on 02/08/2017.
+ * @author Marco on 02/08/2017.
  */
 public class VehicleFactoryFiat implements VehicleFactory {
 

@@ -7,6 +7,7 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -14,7 +15,6 @@ import java.util.concurrent.TimeoutException;
 /**
  * Basic Vert.x RabbitMQ Consumer Verticle. Used to properly handle inbound messages from external publishers.
  *
- * @author nicolalasagni
  * @author Marco Baldassarri
  * @since 29/07/2017
  */
@@ -22,24 +22,20 @@ public abstract class VerticleConsumer extends AbstractVerticle {
 
     protected EventBus eventBus;
     private String queueName;
-    private io.vertx.rabbitmq.RabbitMQClient client;
-    private String name;
+    private RabbitMQClient client;
 
     public VerticleConsumer(String name) {
-        this.name = name;
+        this.queueName = name;
     }
 
     @Override
     public void start() throws Exception {
-        this.queueName = Constants.SERVICE_QUEUE_BASE_NAME + "." + name;
         eventBus = vertx.eventBus();
-        //client = RabbitMQFactory.getInstance(vertx).getRabbitMQClient();
         client = RabbitMQFactory.createClient(vertx);
     }
 
     protected void startConsumer(String exchange, String routingKey, String eventBusAddress)
             throws IOException, TimeoutException {
-
         startConsumer(onStart -> {
             declareQueue(onQueue -> {
                 if (onQueue.succeeded()) {
@@ -78,7 +74,7 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     private void bindQueueToExchange(String exchangeName,
                                      String baseRoutingKey,
                                      Handler<AsyncResult<Void>> handler) {
-        baseRoutingKey = name.isEmpty() ? String.format(baseRoutingKey, name) : baseRoutingKey;
+        //baseRoutingKey = name.isEmpty() ? String.format(baseRoutingKey, name) : baseRoutingKey;
         client.queueBind(queueName,
                 exchangeName,
                 baseRoutingKey,

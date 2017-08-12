@@ -12,8 +12,7 @@ import static com.wedriveu.services.shared.utilities.Constants.*;
  * Represents the data the client sends when requesting the best vehicle to book as well as the list of available
  * vehicles at the time of the request.
  *
- * @author Marco Baldassarri
- * @since 02/08/2017
+ * @author Marco Baldassarri on 02/08/2017.
  */
 public class UserRequest {
 

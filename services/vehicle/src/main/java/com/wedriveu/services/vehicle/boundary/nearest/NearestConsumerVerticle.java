@@ -16,8 +16,7 @@ import static com.wedriveu.services.shared.utilities.Constants.VEHICLE_SERVICE_E
  * The information the consumer expects to receive are the user current position (Latitude, Longitude), the chosen
  * destination position (Latitude, Longitude) and the username associated with the user.
  *
- * @author Marco Baldassarri
- * @since 30/07/2017
+ * @author Marco Baldassarri on 30/07/2017.
  */
 public class NearestConsumerVerticle extends VerticleConsumer {
 

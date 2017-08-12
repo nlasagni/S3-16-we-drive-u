@@ -11,7 +11,10 @@ import io.vertx.core.eventbus.Message;
 import static com.wedriveu.services.shared.utilities.Constants.VEHICLE_SERVICE_EXCHANGE;
 
 /**
- * Created by Marco on 11/08/2017.
+ * Basic Verticle used to declare the VehicleService exchange used for RabbitMQ communications.
+ * Once the exchange has being set, all the application Verticles are being deployed in this class as well
+ *
+ * @author Marco Baldassarri on 11/08/2017.
  */
 public class BootVerticle extends AbstractVerticle {
 
