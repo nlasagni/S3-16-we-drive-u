@@ -32,9 +32,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     private static final String TAG = VehicleVerticleRegisterImpl.class.getSimpleName();
     private static final String EVENT_BUS_ADDRESS = "vehicle.register";
     private static final String READ_ERROR = "Error occurred while reading response.";
-    private static final String SEND_ERROR = "Error occurred while sending request.";
-    private static final String ENGINE_ILLEGAL_STATE = "The Engine has not been started yet or it has been stopped.";
-    private static String QUEUE_NAME = "vehicle.";
+    private static String QUEUE_NAME = "vehicle.register.";
 
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
@@ -47,7 +45,6 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
 
     public VehicleVerticleRegisterImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
-        System.out.println("LA TARGA DEL VEIOCOLO = " + vehicle.getVehicle().plate());
         QUEUE_NAME+=this.vehicle.getVehicle().plate();
     }
 
@@ -56,7 +53,6 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
         eventBus = vertx.eventBus();
         objectMapper = new ObjectMapper();
         startService(startFuture);
-        System.out.println("MI SONO DEPLOYATO");
     }
 
     private void startService(Future<Void> future) {
@@ -79,10 +75,8 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
         }).compose(v -> {
             Future<Void> basicConsumeFuture = Future.future();
             basicConsume(basicConsumeFuture);
-            System.out.println("Basic Consume " + QUEUE_NAME + " " + exchanges.VEHICLE() + " " +  String.format(routingKeys.REGISTER_RESPONSE(), vehicle.getVehicle().plate()));
             return basicConsumeFuture;
         }).compose(v -> {
-            System.out.println("Register Consumer " + QUEUE_NAME + " " + exchanges.VEHICLE() + " " + String.format(routingKeys.REGISTER_RESPONSE(), vehicle.getVehicle().plate()));
             registerConsumer();
             registerToService(vehicle.getVehicle().plate());
             future.complete();
@@ -115,13 +109,10 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             try {
-                System.out.println("HO PRESO IL MESSAGGIO");
                 JsonObject message = new JsonObject(msg.body().toString());
-                System.out.println("il messaggio è == " + message);
                 RegisterToServiceResponse registerToServiceResponse =
                         objectMapper.readValue(message.getString(eventBusConstants.BODY()),
                                 RegisterToServiceResponse.class);
-                System.out.println("LA RISPOSTA DEL SERVICE è = " + registerToServiceResponse.getRegisterOk());
                 checkResponse(registerToServiceResponse);
             } catch (IOException e) {
                 Log.error(TAG, READ_ERROR, e);
@@ -132,9 +123,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     @Override
     public void registerToService(String license) {
         rabbitMQClient.basicPublish(exchanges.VEHICLE(), routingKeys.REGISTER_REQUEST(), createRequest(), onPublish -> {
-            if(onPublish.succeeded()){
-                System.out.println("HO MANDATO LA RICHIESTA");
-            }
+            onPublish.succeeded();
         });
     }
 
@@ -143,27 +132,24 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
         request.setLicense(vehicle.getVehicle().plate());
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(eventBusConstants.BODY(), JsonObject.mapFrom(request).toString());
-        System.out.println("Ho creato il jsonobject = " + jsonObject.toString());
         return jsonObject;
     }
 
     private void checkResponse(RegisterToServiceResponse response) {
-        System.out.println("CHECKO LA RISPOSTA DEL SERVICE");
         if(!response.getRegisterOk()){
             String newLicensePlate = calculateNewLicensePlate(vehicle);
             registerToService(newLicensePlate);
         }
+        vehicle.getVehicle().setState(vehicleConstants.stateAvailable());
     }
 
     private String calculateNewLicensePlate(VehicleControl vehicle) {
-        System.out.println("Vecchia targa del veicolo = " + vehicle.getVehicle().plate());
         String newLicense = UUID.randomUUID().toString();
         if(vehicle.getVehicle().plate().equals(newLicense)) {
             String license = calculateNewLicensePlate(vehicle);
             return license;
         }
-        vehicle.getVehicle().plate_$eq(newLicense);
-        System.out.println("Nuova targa del veicolo = " + vehicle.getVehicle().plate());
+        vehicle.getVehicle().setPlate(newLicense);
         return newLicense;
     }
 

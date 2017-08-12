@@ -22,6 +22,7 @@ import java.io.IOException;
 /**
  * @author Michele Donati on 09/08/2017.
  */
+
 public class VehicleVerticleCanDriveImpl extends AbstractVerticle implements VehicleVerticleCanDrive {
 
     private VehicleControl vehicle;
@@ -30,7 +31,7 @@ public class VehicleVerticleCanDriveImpl extends AbstractVerticle implements Veh
     private static final String READ_ERROR = "Error occurred while reading request.";
     private static final String SEND_ERROR = "Error occurred while sending response.";
     private static final String ENGINE_ILLEGAL_STATE = "The Engine has not been started yet or it has been stopped.";
-    private static String QUEUE_NAME = "vehicle.";
+    private static String QUEUE_NAME = "vehicle.candrive.";
 
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
@@ -44,7 +45,6 @@ public class VehicleVerticleCanDriveImpl extends AbstractVerticle implements Veh
     public VehicleVerticleCanDriveImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
         QUEUE_NAME+=this.vehicle.getVehicle().plate();
-        System.out.println("CANDRIVE, LA TARGA DEL VEICOLO ASSOCIATO = " + vehicle.getVehicle().plate());
     }
 
     @Override
@@ -123,7 +123,6 @@ public class VehicleVerticleCanDriveImpl extends AbstractVerticle implements Veh
     private void sendResponse(CanDriveResponse response) {
         try {
             String responseString = objectMapper.writeValueAsString(response);
-            System.out.println(responseString);
             JsonObject responseJson = new JsonObject();
             responseJson.put(eventBusConstants.BODY(), responseString);
             rabbitMQClient.basicPublish(exchanges.VEHICLE(),

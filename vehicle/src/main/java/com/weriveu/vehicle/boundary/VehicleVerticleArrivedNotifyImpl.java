@@ -57,9 +57,7 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
     @Override
     public void sendArrivedNotify(ArrivedNotify notify) {
         rabbitMQClient.basicPublish(exchanges.VEHICLE(), routingKeys.VEHICLE_ARRIVED(), createNotify(notify), onPublish -> {
-            if(onPublish.succeeded()){
-                System.out.println("VEHICLE-NOTIFY: HO MANDATO LA NOTIFICA");
-            }
+            onPublish.succeeded();
             if(onPublish.failed()){
                 Log.error(TAG, SEND_ERROR);
             }
@@ -69,7 +67,6 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
     private JsonObject createNotify(ArrivedNotify notify) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(eventBusConstants.BODY(), JsonObject.mapFrom(notify).toString());
-        System.out.println("VEHICLE-NOTIFY: Ho creato il jsonobject = " + jsonObject.toString());
         return jsonObject;
     }
 
