@@ -1,13 +1,11 @@
-package com.wedriveu.services.analytics.boundary;
+package com.wedriveu.services.analytics.vehicleServiceFake;
 
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
+import com.wedriveu.services.shared.entity.VehicleListObject;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 import static com.wedriveu.shared.util.Constants.*;
 

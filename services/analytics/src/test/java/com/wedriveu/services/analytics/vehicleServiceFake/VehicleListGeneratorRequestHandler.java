@@ -1,4 +1,4 @@
-package com.wedriveu.services.analytics.boundary;
+package com.wedriveu.services.analytics.vehicleServiceFake;
 
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
