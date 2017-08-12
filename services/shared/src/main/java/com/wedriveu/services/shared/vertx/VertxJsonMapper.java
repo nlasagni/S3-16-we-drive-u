@@ -1,10 +1,7 @@
 package com.wedriveu.services.shared.vertx;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.wedriveu.services.shared.utilities.Constants;
 import io.vertx.core.json.JsonObject;
-
-import java.util.List;
+import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 
 /**
  * @author Stefano Bernagozzi
@@ -21,7 +18,7 @@ public class VertxJsonMapper {
     }
 
     public static <T> T mapFromBodyTo(JsonObject jsonObject, Class<T> classType)throws IllegalArgumentException {
-        JsonObject body = new JsonObject(jsonObject.getString(Constants.BODY));
+        JsonObject body = new JsonObject(jsonObject.getString(BODY));
         return mapTo(body, classType);
     }
 
@@ -36,7 +33,7 @@ public class VertxJsonMapper {
     public static <T> JsonObject mapInBodyFrom(T object) throws IllegalArgumentException {
         JsonObject body = mapFrom(object);
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(Constants.BODY, body.toString());
+        jsonObject.put(BODY, body.toString());
         return jsonObject;
     }
 }

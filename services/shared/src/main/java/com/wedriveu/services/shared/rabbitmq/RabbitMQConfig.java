@@ -20,7 +20,7 @@ public class RabbitMQConfig {
         this.vertx = vertx;
     }
 
-    public static RabbitMQConfig getInstance(Vertx vertx) {
+    public static synchronized RabbitMQConfig getInstance(Vertx vertx) {
         if (setup == null) {
             setup = new RabbitMQConfig(vertx);
             setupRabbitMQ();
@@ -36,7 +36,7 @@ public class RabbitMQConfig {
         rabbitMQClient = io.vertx.rabbitmq.RabbitMQClient.create(vertx, config);
     }
 
-    public io.vertx.rabbitmq.RabbitMQClient getRabbitMQClient() {
+    public synchronized io.vertx.rabbitmq.RabbitMQClient getRabbitMQClient() {
         return rabbitMQClient;
     }
 

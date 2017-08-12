@@ -1,9 +1,7 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.utilities.Log;
-import com.wedriveu.services.shared.utilities.Position;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -11,7 +9,7 @@ import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.shared.util.Constants.*;
 
 /**
  * @author Stefano Bernagozzi
@@ -49,7 +47,7 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher{
                     new Date(2017, 8, 24, 9, 37, 22)));*/
         JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new VehicleListObject());
         System.out.println("VehicleListRequestVerticle " + vehicleListJson.toString());
-        publish(ANALYTICS_SERVICE_EXCHANGE,ROUTING_KEY_VEHICLE_RESPONSE_ALL,vehicleListJson);
+        publish(RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_VEHICLE_RESPONSE_ALL,vehicleListJson);
         Log.log("sent request for all vehicles to vehicle service in VehicleListGeneratorResponseHandler");
     }
 

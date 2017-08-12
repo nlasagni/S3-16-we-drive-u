@@ -1,15 +1,14 @@
 package com.wedriveu.services.analytics.control;
 
-import com.wedriveu.services.analytics.boundary.VehicleListObject;
+import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.shared.util.Constants.*;
 
 /**
  * @author Stefano Bernagozzi

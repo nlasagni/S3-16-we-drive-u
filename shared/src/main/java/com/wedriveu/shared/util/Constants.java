@@ -6,6 +6,7 @@ package com.wedriveu.shared.util;
  * @author Michele on 22/07/2017.
  * @author Nicola Lasagni on 31/07/2017
  * @author Marco Baldassarri on 1/08/2017
+ * @author Stefano Bernagozzi on 12/08/2017
  */
 public interface Constants {
 
@@ -93,6 +94,11 @@ public interface Constants {
              * Exchange used for vehicle communications.
              */
             String VEHICLE = "vehicle";
+
+            /**
+             * Exchange used for analytics communications.
+             */
+            String ANALYTICS = "analytics";
         }
 
         /**
@@ -176,6 +182,15 @@ public interface Constants {
     String ELIGIBLE_VEHICLE_LIST = "eligibleVehicleList";
     String TRIP_DISTANCE = "tripDistance";
 
+    //analytics service
+    String VEHICLE_REQUEST_ALL_MESSAGE = "Requesting All Vehicles From Analytics Service";
+    String ANALYTICS_VEHICLE_LIST_RETRIEVER_START_MESSAGE = "Vehicle List Request Sent, Listen";
+    String ANALYTICS_VEHICLE_LIST_RETRIEVER_VERTICLE_ADDRESS = "VehicleListRetrieverVerticle";
+    String ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS = "VehicleListRequestVerticle";
+    String ROUTING_KEY_VEHICLE_REQUEST_ALL = "vehicle.request.all";
+    String ROUTING_KEY_VEHICLE_RESPONSE_ALL = "vehicle.response.all";
+    String ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS = "AnalyticsVerticleController";
+    String ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE = "Started all services, start requesting vehicle list";
     /**
      * The constant zero.
      */

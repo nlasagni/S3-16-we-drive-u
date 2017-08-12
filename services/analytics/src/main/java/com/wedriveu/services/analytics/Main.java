@@ -4,8 +4,6 @@ import com.wedriveu.services.analytics.control.*;
 import io.vertx.core.Vertx;
 import com.wedriveu.services.shared.utilities.Log;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
-
 /**
  * @Author Stefano Bernagozzi
  */

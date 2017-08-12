@@ -42,7 +42,7 @@ public class VerticlePublisher extends AbstractVerticle {
 
     protected void declareExchangesWithName(String name, Handler<AsyncResult<Void>> handler) {
         client.exchangeDeclare(name,
-                EXCHANGE_TYPE,
+                Constants.RabbitMQ.Exchanges.Type.DIRECT,
                 false,
                 false,
                 handler);

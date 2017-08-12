@@ -9,14 +9,12 @@ import io.vertx.core.Future;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wedriveu.services.shared.utilities.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE;
-import static com.wedriveu.services.shared.utilities.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS;
+import static com.wedriveu.shared.util.Constants.*;
 
 /**
  * @author Stefano Bernagozzi
  */
 public class AnalyticsVerticleDeployer extends AbstractVerticle {
-    private int counter;
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
@@ -34,13 +32,7 @@ public class AnalyticsVerticleDeployer extends AbstractVerticle {
         vertx.deployVerticle(new AnalyticsVerticleController(), controlFuture.completer());
         futures.add(controlFuture);
 
-        Future generatorRequestHandlerFuture = Future.future();
-        vertx.deployVerticle(new VehicleListGeneratorRequestHandler(), generatorRequestHandlerFuture.completer());
-        futures.add(generatorRequestHandlerFuture);
 
-        Future generatorResponseHandlerFuture = Future.future();
-        vertx.deployVerticle(new VehicleListGeneratorResponseHandler(), generatorResponseHandlerFuture.completer());
-        futures.add(generatorResponseHandlerFuture);
 
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {

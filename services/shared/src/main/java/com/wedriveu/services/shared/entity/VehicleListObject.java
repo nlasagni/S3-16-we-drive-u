@@ -1,8 +1,7 @@
-package com.wedriveu.services.analytics.boundary;
+package com.wedriveu.services.shared.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.utilities.Position;
+import com.wedriveu.shared.entity.Position;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -6,7 +6,7 @@ import com.wedriveu.services.shared.utilities.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.shared.util.Constants.*;
 
 /**
  * @author Stefano Bernagozzi
@@ -19,6 +19,7 @@ public class VehicleListGeneratorRequestHandler extends VerticleConsumer{
 
     @Override
     public void start(Future futureRequest) throws Exception {
+        setQueueName(RabbitMQ.Exchanges.ANALYTICS +"."+ ROUTING_KEY_VEHICLE_REQUEST_ALL);
         super.start();
         Future<Void> futureConsumer = Future.future();
         futureConsumer.setHandler(v->{
@@ -30,7 +31,7 @@ public class VehicleListGeneratorRequestHandler extends VerticleConsumer{
                 futureRequest.fail(v.cause());
             }
         });
-        startConsumerWithFuture(ANALYTICS_SERVICE_EXCHANGE, ROUTING_KEY_VEHICLE_REQUEST_ALL, EVENT_BUS_AVAILABLE_ADDRESS, futureConsumer);
+        startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS, ROUTING_KEY_VEHICLE_REQUEST_ALL, EVENT_BUS_AVAILABLE_ADDRESS, futureConsumer);
 
     }
 

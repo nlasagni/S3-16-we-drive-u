@@ -7,7 +7,7 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
-import static com.wedriveu.services.shared.utilities.Constants.*;
+import static com.wedriveu.shared.util.Constants.*;
 
 /**
  * @author Stefano Bernagozzi
@@ -30,8 +30,8 @@ public class VehicleListRequestVerticle extends VerticlePublisher {
         //if (message.body().toString()!= )
         System.out.println("VehicleListRequestVerticle " + message.body().toString());
         JsonObject dataToUser = new JsonObject();
-        dataToUser.put(BODY, VEHICLE_REQUEST_ALL_MESSAGE);
-        publish(ANALYTICS_SERVICE_EXCHANGE,ROUTING_KEY_VEHICLE_REQUEST_ALL,dataToUser);
+        dataToUser.put(EventBus.BODY, VEHICLE_REQUEST_ALL_MESSAGE);
+        publish(RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_VEHICLE_REQUEST_ALL,dataToUser);
         Log.log("sent request for all vehicles to vehicle service in VehicleListRequestVerticle");
     }
 
