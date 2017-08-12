@@ -6,7 +6,7 @@ import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
 import com.wedriveu.vehicle.simulation.{VehicleEventsObservables, VehicleEventsObservablesImpl}
-import com.weriveu.vehicle.boundary.{VehicleVerticleBookImpl, VehicleVerticleCanDriveImpl, VehicleVerticleRegisterImpl}
+import com.weriveu.vehicle.boundary._
 import io.vertx.core.Vertx
 
 /**
@@ -37,8 +37,9 @@ trait VehicleControl {
     *
     * @param userPosition Indicates the user position.
     * @param destinationPosition Indicates the destination position for the user.
+    * @param notRealisticVar Setteted to False the execution of the system will be more realistic.
     */
-  def changePositionUponBooking(userPosition: Position, destinationPosition: Position): Unit
+  def changePositionUponBooking(userPosition: Position, destinationPosition: Position, notRealisticVar: Boolean): Unit
 
   /** This method permits to retrieve the username of the user associated to this vehicle.
     *
@@ -74,21 +75,33 @@ class VehicleControlImpl(license: String,
 
   def startVehicleEngine(): Unit = {
     val vertx: Vertx = Vertx.vertx()
-    val vehicleVerticleCanDriveImpl: VehicleVerticleCanDriveImpl = new VehicleVerticleCanDriveImpl(this)
-    vertx.deployVerticle(vehicleVerticleCanDriveImpl)
-    val vehicleVerticleRegisterImpl: VehicleVerticleRegisterImpl = new VehicleVerticleRegisterImpl(this)
-    vertx.deployVerticle(vehicleVerticleRegisterImpl)
-    val vehicleVerticleBookImpl: VehicleVerticleBookImpl = new VehicleVerticleBookImpl(this)
-    vertx.deployVerticle(vehicleVerticleBookImpl)
+    val vehicleVerticleCanDrive: VehicleVerticleCanDriveImpl = new VehicleVerticleCanDriveImpl(this)
+    vertx.deployVerticle(vehicleVerticleCanDrive)
+
+    val vehicleVerticleBook: VehicleVerticleBookImpl = new VehicleVerticleBookImpl(this)
+    vertx.deployVerticle(vehicleVerticleBook)
+
+    val vehicleVerticleArrivedNotify: VehicleVerticleArrivedNotifyImpl = new VehicleVerticleArrivedNotifyImpl(this)
+    vertx.deployVerticle(vehicleVerticleArrivedNotify)
+
+    val vehicleVerticleDriveCommand: VehicleVerticleDriveCommandImpl = new VehicleVerticleDriveCommandImpl(this)
+    vertx.deployVerticle(vehicleVerticleDriveCommand)
+
+    val vehicleVerticleUpdate: VehicleVerticleUpdateImpl = new VehicleVerticleUpdateImpl(this)
+    vertx.deployVerticle(vehicleVerticleUpdate)
+
+    val vehicleVerticleRegister: VehicleVerticleRegisterImpl = new VehicleVerticleRegisterImpl(this)
+    vertx.deployVerticle(vehicleVerticleRegister)
   }
 
   private def executeBehaviour(callback:() => Unit) = callback()
 
   private def executeBehaviour(callback:(Position) => Unit, position: Position) = callback(position)
 
-  private def executeBehaviour(callback:(Position, Position) => Unit,
+  private def executeBehaviour(callback:(Position, Position, Boolean) => Unit,
                                position1: Position,
-                               position2: Position) = callback(position1,position2 )
+                               position2: Position,
+                               notRealisticVar: Boolean) = callback(position1,position2,notRealisticVar)
 
   def getVehicle() = vehicleGiven
 
@@ -126,8 +139,10 @@ class VehicleControlImpl(license: String,
     })
   }
 
-  override def changePositionUponBooking(userPosition: Position, destinationPosition: Position): Unit = {
-    executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition)
+  override def changePositionUponBooking(userPosition: Position,
+                                         destinationPosition: Position,
+                                         notRealisticVar: Boolean): Unit = {
+    executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition, notRealisticVar)
   }
 
 }

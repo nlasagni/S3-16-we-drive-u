@@ -24,8 +24,9 @@ trait VehicleBehaviours {
     *
     * @param userPosition Indicates the position of the user.
     * @param destinationPosition Indicates the destination position for the user.
+    * @param notRealisticVar Setteted to False the execution of the system will be more realistic.
     */
-  def positionChangeUponBooking(userPosition: Position, destinationPosition: Position): Unit
+  def positionChangeUponBooking(userPosition: Position, destinationPosition: Position, notRealisticVar: Boolean): Unit
 
   /** This method is called to start the recharge process of the vehicle. */
   def goToRecharge(): Unit
@@ -84,6 +85,7 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
    var userOnBoard: Boolean = false
    var debugging: Boolean = false
    var rechargingLatchManager: RechargingLatchManager = null
+   var testVar: Boolean = false
 
   //This algorithm calculates the distance in Km between the points, then estimates the journey time and calculates
   //the coordinates reached during the journey.
@@ -103,7 +105,7 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
           if (checkVehicleIsBrokenOrStolen()) {
             break()
           }
-          if(!debugVar){
+          if(!debugVar && !testVar){
             Thread.sleep(500)
           }
           deltaLat = position.getLatitude - selfDrivingVehicle.position.getLatitude
@@ -171,7 +173,10 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
     }
   }
 
-  override def positionChangeUponBooking(userPosition: Position, destinationPosition: Position): Unit = {
+  override def positionChangeUponBooking(userPosition: Position,
+                                         destinationPosition: Position,
+                                         notRealisticVar: Boolean): Unit = {
+    testVar = notRealisticVar
     movementAndPositionChange(userPosition)
     userOnBoard = true
     //TODO Here i will notify the service and the user that i'm arrived to the user
