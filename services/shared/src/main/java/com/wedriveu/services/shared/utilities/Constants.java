@@ -58,12 +58,12 @@ public interface Constants {
     // messages
     String VEHICLE_REQUEST_ALL_MESSAGE = "Requesting All Vehicles From Analytics Service";
     String ANALYTICS_VEHICLE_LIST_RETRIEVER_START_MESSAGE = "Vehicle List Request Sent, Listen";
-
-
+    String ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE = "start requesting vehicles";
 
     // Analytics Service RabbitMQ
-    String ANALYTICS_VEHICLE_LIST_RETRIEVER_VERTICLE_ADDRESS = "VehicleListRetrieverVerticle";
+    String ANALYTICS_VEHICLE_LIST_RETRIEVER_VERTICLE_ADDRESS = "analytics.controller.VehicleListRetrieverVerticle";
     String ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS = "VehicleListRequestVerticle";
+    String ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS = "analytics.controller.receiveVehicleList";
     String ANALYTICS_SERVICE_EXCHANGE = "analytics";
     String CONSUMER_ANALYTICS_SERVICE = "analytics";
 

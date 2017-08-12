@@ -28,9 +28,10 @@ public class VehicleListRequestVerticle extends VerticlePublisher {
 
     private void requestVehicleListToVehicleService(Message message) {
         //if (message.body().toString()!= )
+        System.out.println("VehicleListRequestVerticle " + message.body().toString());
         JsonObject dataToUser = new JsonObject();
         dataToUser.put(BODY, VEHICLE_REQUEST_ALL_MESSAGE);
-        publish(VEHICLE_SERVICE_EXCHANGE,ROUTING_KEY_VEHICLE_REQUEST_ALL,dataToUser);
+        publish(ANALYTICS_SERVICE_EXCHANGE,ROUTING_KEY_VEHICLE_REQUEST_ALL,dataToUser);
         Log.log("sent request for all vehicles to vehicle service in VehicleListRequestVerticle");
     }
 

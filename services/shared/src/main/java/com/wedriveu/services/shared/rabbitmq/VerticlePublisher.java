@@ -14,6 +14,7 @@ import static com.wedriveu.services.shared.utilities.Constants.VEHICLE_SERVICE_E
  * Basic Vert.x RabbitMQ Publisher Verticle.
  *
  * @author Marco Baldassarri
+ * @author Stefano Bernagozzi
  */
 public class VerticlePublisher extends AbstractVerticle {
 
