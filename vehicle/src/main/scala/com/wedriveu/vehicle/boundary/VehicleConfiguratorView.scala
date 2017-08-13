@@ -34,6 +34,8 @@ trait VehicleConfiguratorView {
     val errorInCanBreakMessageTitle: String = "Break events not selected error"
     val errorInCanStolenMessage: String = "At least one option of 'Can be Stolen?' checkbox should be selected."
     val errorInCanStolenMessageTitle: String = "Stolen events not selected error"
+    val errorInCanStolenAndBrokenMessage: String = "Not both Broken and Stolen options can be selected."
+    val errorInCanStolenAndBrokenMessageTitle: String = "Both options selected error."
     val notCommandFoundError: String = "No Command Found"
 
     setLocationRelativeTo(null)
@@ -150,6 +152,12 @@ trait VehicleConfiguratorView {
         JOptionPane.showMessageDialog(this,
           errorInCanStolenMessage,
           errorInCanStolenMessageTitle,
+          JOptionPane.ERROR_MESSAGE)
+      }
+      else if(checkBoxYesBreak.isSelected && checkBoxYesStolen.isSelected) {
+        JOptionPane.showMessageDialog(this,
+          errorInCanStolenAndBrokenMessage,
+          errorInCanStolenAndBrokenMessageTitle,
           JOptionPane.ERROR_MESSAGE)
       }
       else {
