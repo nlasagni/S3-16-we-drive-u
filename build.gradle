@@ -55,6 +55,6 @@ configure(subprojects.grep {!java7ModulePaths.contains(it.path)}) {
     }
 }
 
-defaultTasks 'clean', 'build', 'scaladoc'
+defaultTasks 'clean', 'build'
 
 

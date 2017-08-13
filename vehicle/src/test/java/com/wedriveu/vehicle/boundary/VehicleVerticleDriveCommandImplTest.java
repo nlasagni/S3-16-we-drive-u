@@ -111,7 +111,7 @@ public class VehicleVerticleDriveCommandImplTest {
     }
 
     private void checkVehiclePosition(TestContext context, Async async) {
-        vertx.setTimer(10000, onTime -> {
+        vertx.setTimer(12000, onTime -> {
             context.assertTrue(vehicleControl
                     .getVehicle()
                     .position()
