@@ -10,10 +10,12 @@ allprojects {
             downloadSources = true
         }
     }
+
     repositories {
         jcenter()
     }
 }
+
 
 def sharedModulePath = ":shared"
 def mobileModulePath = ":mobile"
@@ -40,6 +42,7 @@ configure(subprojects.grep {!java7ModulePaths.contains(it.path)}) {
     dependencies {
         testCompile "junit:junit:$junitVersion"
         testCompile "org.scala-lang:scala-library:$scalaVersion"
+        testCompile "org.scalatest:scalatest_2.12:$scalaTestVersion"
         testCompile "io.vertx:vertx-unit:$vertx3Version"
         compile "org.scala-lang:scala-library:$scalaVersion"
         compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
@@ -52,6 +55,6 @@ configure(subprojects.grep {!java7ModulePaths.contains(it.path)}) {
     }
 }
 
-defaultTasks 'clean', 'build', 'scaladoc'
+defaultTasks 'clean', 'build'
 
 

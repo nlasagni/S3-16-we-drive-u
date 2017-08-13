@@ -1,12 +1,15 @@
 package com.wedriveu.vehicle.control
 
 import com.rabbitmq.client._
-import com.wedriveu.services.shared.utilities.Log
-import com.wedriveu.shared.util.Constants
+
+import com.wedriveu.shared.utils.Position
+
 import com.wedriveu.vehicle.boundary.VehicleStopView
-import com.wedriveu.vehicle.entity.{Position, SelfDrivingVehicle}
+import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
 import com.wedriveu.vehicle.simulation.{VehicleEventsObservables, VehicleEventsObservablesImpl}
+import com.weriveu.vehicle.boundary._
+import io.vertx.core.Vertx
 
 /**
   * @author Michele Donati on 28/07/2017.
@@ -36,9 +39,21 @@ trait VehicleControl {
     *
     * @param userPosition Indicates the user position.
     * @param destinationPosition Indicates the destination position for the user.
+    * @param notRealisticVar Setteted to False the execution of the system will be more realistic.
     */
-  def changePositionUponBooking(userPosition: Position, destinationPosition: Position): Unit
+  def changePositionUponBooking(userPosition: Position, destinationPosition: Position, notRealisticVar: Boolean): Unit
 
+  /** This method permits to retrieve the username of the user associated to this vehicle.
+    *
+    * @return The username of the user.
+    */
+  def getUsername(): String
+
+  /** This method permits to define the username of the user associated to this vehicle.
+    *
+    * @param newUsername This indicates the new username to set.
+    */
+  def setUsername(newUsername: String): Unit
 }
 
 class VehicleControlImpl(license: String,
@@ -56,68 +71,39 @@ class VehicleControlImpl(license: String,
   var kilometersToDo: Double = .0
   var connection: Connection = null
   var channel: Channel = null
+  var username: String = null
 
   stopUi.setVehicleAssociated(this)
 
   def startVehicleEngine(): Unit = {
-    new Thread(new Runnable {
-      override def run(): Unit = {
-        configureRabbitMq()
-        try {
-          while (true) {
-            registerConsumer()
-          }
-        }finally{
-          if (connection != null) {
-            connection.close()
-          }
-        }
-      }
-    }).start()
-  }
+    val vertx: Vertx = Vertx.vertx()
+    val vehicleVerticleCanDrive: VehicleVerticleCanDriveImpl = new VehicleVerticleCanDriveImpl(this)
+    vertx.deployVerticle(vehicleVerticleCanDrive)
 
-  private def estimateBatteryConsumption(kilometersToDo: Double): Boolean = {
-    ((kilometersToDo + Constants.MAXIMUM_DISTANCE_TO_RECHARGE)
-      / Constants.ESTIMATED_KILOMETERS_PER_PERCENTAGE) < vehicleGiven.battery
-  }
+    val vehicleVerticleBook: VehicleVerticleBookImpl = new VehicleVerticleBookImpl(this)
+    vertx.deployVerticle(vehicleVerticleBook)
 
-  private def configureRabbitMq(): Unit = {
-    val factory: ConnectionFactory = new ConnectionFactory
-    factory.setHost(Constants.RabbitMQ.Broker.HOST)
-    factory.setPassword(Constants.RabbitMQ.Broker.PASSWORD)
-    connection = factory.newConnection
-    channel = connection.createChannel
-    channel.queueDeclare(vehicleGiven.plate, false, false, false, null)
-    channel.queueDeclare(vehicleGiven.plate + Constants.VEHICLE_TO_SERVICE, false, false, false, null)
-    channel.basicQos(10)
-    Log.log(awaiting)
-  }
+    val vehicleVerticleArrivedNotify: VehicleVerticleArrivedNotifyImpl = new VehicleVerticleArrivedNotifyImpl(this)
+    vertx.deployVerticle(vehicleVerticleArrivedNotify)
 
-  private def registerConsumer(): Unit = {
-    val vehicle: Consumer = new DefaultConsumer(channel) {
-      override def handleDelivery(consumerTag: String,
-                                  envelope: Envelope,
-                                  properties: AMQP.BasicProperties,
-                                  body: Array[Byte]): Unit = {
-        var response: String = new String(body, Constants.UTF)
-        kilometersToDo = response.toDouble
-        Log.log(received + response + "'")
-        channel.basicPublish("",
-          vehicleGiven.plate + Constants.VEHICLE_TO_SERVICE,
-          null,
-          (estimateBatteryConsumption(kilometersToDo)).toString.getBytes())
-      }
-    }
-    channel.basicConsume(vehicleGiven.plate, true, vehicle)
+    val vehicleVerticleDriveCommand: VehicleVerticleDriveCommandImpl = new VehicleVerticleDriveCommandImpl(this)
+    vertx.deployVerticle(vehicleVerticleDriveCommand)
+
+    val vehicleVerticleUpdate: VehicleVerticleUpdateImpl = new VehicleVerticleUpdateImpl(this)
+    vertx.deployVerticle(vehicleVerticleUpdate)
+
+    val vehicleVerticleRegister: VehicleVerticleRegisterImpl = new VehicleVerticleRegisterImpl(this)
+    vertx.deployVerticle(vehicleVerticleRegister)
   }
 
   private def executeBehaviour(callback:() => Unit) = callback()
 
   private def executeBehaviour(callback:(Position) => Unit, position: Position) = callback(position)
 
-  private def executeBehaviour(callback:(Position, Position) => Unit,
+  private def executeBehaviour(callback:(Position, Position, Boolean) => Unit,
                                position1: Position,
-                               position2: Position) = callback(position1,position2 )
+                               position2: Position,
+                               notRealisticVar: Boolean) = callback(position1,position2,notRealisticVar)
 
   def getVehicle() = vehicleGiven
 
@@ -137,6 +123,12 @@ class VehicleControlImpl(license: String,
     })
   }
 
+  def getUsername(): String = username
+
+  def setUsername(newUsername: String): Unit = {
+    username = newUsername
+  }
+
   override def subscribeToBrokenEvents(): Unit = {
     vehicleEventsObservables.brokenEventObservable().subscribe(event => {
       executeBehaviour(vehicleBehaviours.checkVehicleAndSetItBroken)
@@ -149,8 +141,10 @@ class VehicleControlImpl(license: String,
     })
   }
 
-  def changePositionUponBooking(userPosition: Position, destinationPosition: Position): Unit = {
-    executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition)
+  override def changePositionUponBooking(userPosition: Position,
+                                         destinationPosition: Position,
+                                         notRealisticVar: Boolean): Unit = {
+    executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition, notRealisticVar)
   }
 
 }

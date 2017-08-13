@@ -128,6 +128,37 @@ public interface Constants {
              * must be completed with the username, see {@linkplain String#format(String, Object...)}.
              */
             String CAN_DRIVE_RESPONSE = "vehicle.response.candrive.%s";
+            /**
+             * The routing key used by vehicles to communicate they want to register them in the db.
+             */
+            String REGISTER_REQUEST = "vehicle.request.add";
+            /**
+             * The routing key used by vehicle-service to communicate the response of a vehicle's registration request,
+             * must be completed with the license plate, see {@linkplain String#format(String, Object...)}.
+             */
+            String REGISTER_RESPONSE = "vehicle.response.add.%s";
+            /**
+             * The routing key used by vehicle-service to communicate a request of booking to a vehicle,
+             * must be completed with the license plate, see {@linkplain String#format(String, Object...)}.
+             */
+            String BOOK_REQUEST = "vehicle.request.book.%s";
+            /**
+             * The routing key used by vehicles to communicate the response of a booking request from service,
+             * must be completed with the license plate, see {@linkplain String#format(String, Object...)}.
+             */
+            String BOOK_RESPONSE = "vehicle.response.book.%s";
+            /**
+             * The routing key used by vehicles to communicate they arrived to destination.
+             */
+            String VEHICLE_ARRIVED = "vehicle.event.arrived";
+            /**
+             * The routing key used by vehicles to communicate their informations updates.
+             */
+            String VEHICLE_UPDATE = "vehicle.event.updated";
+            /**
+             * The routing key used by vehicle-service to communicate a drive command to a vehicle.
+             */
+            String VEHICLE_DRIVE_COMMAND = "vehicle.event.drive";
         }
     }
 

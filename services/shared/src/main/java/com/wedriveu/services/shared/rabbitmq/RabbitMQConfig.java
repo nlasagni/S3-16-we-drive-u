@@ -9,9 +9,11 @@ import io.vertx.core.json.JsonObject;
  */
 public class RabbitMQConfig {
 
+    private static io.vertx.rabbitmq.RabbitMQClient rabbitMQClientTest = null;
     private static io.vertx.rabbitmq.RabbitMQClient rabbitMQClient = null;
     private static RabbitMQConfig setup = null;
     private static Vertx vertx;
+    private static String localhost = "localhost";
 
     private RabbitMQConfig() {
     }
@@ -24,6 +26,7 @@ public class RabbitMQConfig {
         if (setup == null) {
             setup = new RabbitMQConfig(vertx);
             setupRabbitMQ();
+            setupRabbitMQTest();
         }
         return setup;
     }
@@ -36,8 +39,19 @@ public class RabbitMQConfig {
         rabbitMQClient = io.vertx.rabbitmq.RabbitMQClient.create(vertx, config);
     }
 
-    public synchronized io.vertx.rabbitmq.RabbitMQClient getRabbitMQClient() {
+  private static void setupRabbitMQTest() {
+        JsonObject config = new JsonObject();
+        config.put(Constants.RabbitMQ.ConfigKey.HOST, localhost);
+        config.put(Constants.RabbitMQ.ConfigKey.PORT, Constants.RabbitMQ.Broker.PORT);
+        rabbitMQClientTest = io.vertx.rabbitmq.RabbitMQClient.create(vertx, config);
+    }
+
+    public synchronized io.vertx.rabbitmq.RabbitMQClient getRabbitMQClient() 
         return rabbitMQClient;
+    }
+
+    public io.vertx.rabbitmq.RabbitMQClient getRabbitMQClientTest() {
+        return rabbitMQClientTest;
     }
 
 }
