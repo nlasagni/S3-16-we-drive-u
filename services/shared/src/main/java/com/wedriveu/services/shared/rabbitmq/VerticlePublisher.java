@@ -13,6 +13,7 @@ import io.vertx.rabbitmq.RabbitMQClient;
  * Basic Vert.x RabbitMQ Publisher Verticle.
  *
  * @author Marco Baldassarri
+ * @author Stefano Bernagozzi
  */
 public class VerticlePublisher extends AbstractVerticle {
 
@@ -36,11 +37,26 @@ public class VerticlePublisher extends AbstractVerticle {
     }
 
     protected void declareExchanges(Handler<AsyncResult<Void>> handler) {
-        client.exchangeDeclare(Constants.RabbitMQ.Exchanges.VEHICLE,
+        declareExchangesWithName(Constants.RabbitMQ.Exchanges.VEHICLE, handler);
+    }
+
+    protected void declareExchangesWithName(String name, Handler<AsyncResult<Void>> handler) {
+        client.exchangeDeclare(name,
                 Constants.RabbitMQ.Exchanges.Type.DIRECT,
                 false,
                 false,
                 handler);
+    }
+
+
+    private void startRabbitMQCommunication(Future future, String exchangeName, Handler<AsyncResult<Void>> handler) {
+        client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
+        client.start(onStartCompleted -> {
+                    if (onStartCompleted.succeeded()) {
+                        declareExchangesWithName(exchangeName, handler);
+                    }
+                }
+        );
     }
 
     protected void publishToConsumer(String exchangeName,
