@@ -10,10 +10,12 @@ allprojects {
             downloadSources = true
         }
     }
+
     repositories {
         jcenter()
     }
 }
+
 
 def sharedModulePath = ":shared"
 def mobileModulePath = ":mobile"
