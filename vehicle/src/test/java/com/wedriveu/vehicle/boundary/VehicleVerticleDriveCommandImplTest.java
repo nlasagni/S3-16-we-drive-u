@@ -114,9 +114,6 @@ public class VehicleVerticleDriveCommandImplTest {
 
     private void checkVehiclePosition(TestContext context, Async async) {
         Position desired = new Position(randomLatitudeDestination, randomLongitudeDestination);
-        double kmToDo =
-                desired.getDistanceInKm(position) +
-                        position.getDistanceInKm(new Position(randomLatitudeUser, randomLongitudeUser));
         vertx.setTimer(TIME_OUT, onTime -> {
             Position vehiclePosition = vehicleControl.getVehicle().position();
             double vehicleDistance = desired.getDistanceInKm(vehiclePosition);
