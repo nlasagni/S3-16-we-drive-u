@@ -2,7 +2,7 @@ package com.wedriveu.services.booking.entity;
 
 import com.wedriveu.services.shared.entity.Booking;
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * Created by Michele on 12/07/2017.
+ * @author Michele on 12/07/2017.
+ * @author Nicola Lasagni
  */
 public class BookingStoreImpl implements BookingStore {
 
@@ -88,7 +89,8 @@ public class BookingStoreImpl implements BookingStore {
         try {
             List<Booking> bookings = storeStrategy.getEntities();
             return bookings.stream()
-                    .filter(b -> b.getDate().getTime() >= fromDate.getTime() && b.getDate().getTime() <= toDate.getTime())
+                    .filter(b -> b.getDate().getTime() >= fromDate.getTime() &&
+                            b.getDate().getTime() <= toDate.getTime())
                     .collect(Collectors.toList());
         } catch (Exception e) {
             Log.error(TAG, GET_BY_DATE_ERROR, e);
