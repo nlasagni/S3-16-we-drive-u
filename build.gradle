@@ -55,6 +55,7 @@ configure(subprojects.grep {!java7ModulePaths.contains(it.path)}) {
     }
 }
 
+//FIXME Restore scaladoc command
 defaultTasks 'clean', 'build'
 
 

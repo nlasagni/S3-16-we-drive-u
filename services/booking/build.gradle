@@ -1,6 +1,5 @@
 dependencies {
     compile project(path: ':services:shared')
-    compile project(path: ':shared')
 }
 
 jar {
@@ -12,3 +11,4 @@ jar {
     }
     from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
 }
+
