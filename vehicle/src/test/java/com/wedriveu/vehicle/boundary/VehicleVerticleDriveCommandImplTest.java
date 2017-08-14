@@ -2,9 +2,11 @@ package com.wedriveu.vehicle.boundary;
 
 import com.wedriveu.shared.entity.DriveCommand;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
+import com.wedriveu.vehicle.shared.VehicleConstants$;
 import com.weriveu.vehicle.boundary.VehicleVerticleDriveCommandImpl;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
@@ -28,10 +30,11 @@ import java.util.concurrent.ThreadLocalRandom;
 @RunWith(VertxUnitRunner.class)
 public class VehicleVerticleDriveCommandImplTest {
 
-    private static final double minorBoundPositionLat = 44.1343417;
-    private static final double maxBoundPositionLat = 44.1565639;
-    private static final double minorBoundPositionLon = 12.2363402;
-    private static final double maxBoundPositionLon = 12.2585623;
+    private static final double minorBoundPositionLat = 44.145500;
+    private static final double maxBoundPositionLat = 44.146612;
+    private static final double minorBoundPositionLon = 12.247025;
+    private static final double maxBoundPositionLon = 12.247497;
+    private static final long TIME_OUT = 4000;
 
     private double randomLatitudeUser =
             ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat);
@@ -51,7 +54,7 @@ public class VehicleVerticleDriveCommandImplTest {
     private String state = "available";
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
-    private double speed = 50.0;
+    private double speed = 80.0;
     private VehicleStopView stopUi = new VehicleStopViewImpl(1);
     private boolean debugVar = false;
 
@@ -111,12 +114,13 @@ public class VehicleVerticleDriveCommandImplTest {
     }
 
     private void checkVehiclePosition(TestContext context, Async async) {
-        vertx.setTimer(12000, onTime -> {
-            context.assertTrue(vehicleControl
-                    .getVehicle()
-                    .position()
-                    .equals(new Position(randomLatitudeDestination, randomLongitudeDestination)));
-            async.complete();});
+        Position desired = new Position(randomLatitudeDestination, randomLongitudeDestination);
+        vertx.setTimer(TIME_OUT, onTime -> {
+            Position vehiclePosition = vehicleControl.getVehicle().position();
+            double vehicleDistance = desired.getDistanceInKm(vehiclePosition);
+            context.assertTrue(vehicleDistance <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS());
+            async.complete();
+        });
     }
 
 }
