@@ -5,6 +5,7 @@ import com.wedriveu.services.shared.utilities.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.rabbitmq.RabbitMQClient;
+
 import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.Type.DIRECT;
 
 /**

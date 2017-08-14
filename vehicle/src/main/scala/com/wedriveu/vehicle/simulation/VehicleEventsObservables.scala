@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom
 import java.text.DecimalFormat
 
 import com.wedriveu.services.shared.utilities.Log
-import com.wedriveu.vehicle.entity.Position
+import com.wedriveu.shared.utils.Position
 
 /**
   * @author Michele Donati on 28/07/2017.
@@ -67,7 +67,7 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
                 subscriber.onCompleted()
                 return
               }
-              //This event will be triggered by a server instruction
+              //This event will be not necessary when the service is up.
               randomLatitudeDestination =
                 ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
               randomLongitudeDestination =

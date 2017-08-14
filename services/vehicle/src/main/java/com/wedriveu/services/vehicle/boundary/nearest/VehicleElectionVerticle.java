@@ -3,9 +3,10 @@ package com.wedriveu.services.vehicle.boundary.nearest;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-import com.wedriveu.shared.util.Constants;
+
 import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 import static com.wedriveu.shared.util.Constants.USERNAME;
 

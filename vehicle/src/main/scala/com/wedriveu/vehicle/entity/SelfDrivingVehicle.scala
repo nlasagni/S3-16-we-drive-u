@@ -2,14 +2,17 @@ package com.wedriveu.vehicle.entity
 
 import java.util.concurrent.locks.{Condition, ReentrantLock}
 
+import com.wedriveu.shared.utils.Position
 import com.wedriveu.vehicle.shared.VehicleConstants
+
+import scala.beans.BeanProperty
 
 
 /**
   * @author Michele Donati on 28/07/2017.
   */
 
-class SelfDrivingVehicle(var plate: String,
+class SelfDrivingVehicle(@BeanProperty var plate: String,
                          private var state: String,
                          var position: Position,
                          var battery: Double,

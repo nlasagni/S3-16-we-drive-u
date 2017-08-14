@@ -1,7 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
-
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
@@ -10,7 +9,7 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 import static com.wedriveu.shared.util.Constants.EventBus.BODY;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_VEHICLE_RESPONSE;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE;
 import static com.wedriveu.shared.util.Constants.Vehicle.LICENCE_PLATE;
 
 
@@ -33,7 +32,7 @@ public class RegisterPublisherVerticle extends VerticlePublisher {
         String licencePlate = json.getString(LICENCE_PLATE);
         json.remove(LICENCE_PLATE);
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                String.format(REGISTER_VEHICLE_RESPONSE, licencePlate),
+                String.format(REGISTER_RESPONSE, licencePlate),
                 new JsonObject().put(BODY, json.toString()), onPublish ->  {
                     if (!onPublish.succeeded()) {
                         Log.error(RegisterPublisherVerticle.class.getSimpleName(),

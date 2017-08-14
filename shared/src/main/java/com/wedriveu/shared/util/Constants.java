@@ -32,13 +32,11 @@ public interface Constants {
             /**
              * The HOST of the RabbitMQ broker.
              */
-            //String HOST = "uniboguys.duckdns.org";
-            String HOST = "localhost";
+            String HOST = "uniboguys.duckdns.org";
             /**
              * The PASSWORD of the RabbitMQ broker.
              */
-            //String PASSWORD = "FmzevdBBmpcdvPHLDJQR";
-            String PASSWORD = "guest";
+            String PASSWORD = "FmzevdBBmpcdvPHLDJQR";
             /**
              * The PORT of the RabbitMQ broker.
              */
@@ -86,6 +84,10 @@ public interface Constants {
              * Exchange used for vehicle communications.
              */
             String VEHICLE = "vehicle";
+            /**
+             * Exchange used for analytics communications.
+             */
+            String ANALYTICS = "analytics";
         }
 
         /**
@@ -119,13 +121,35 @@ public interface Constants {
             /**
              * The routing key used by a vehicle to register itself to the vehicleService system.
              */
-            String REGISTER_VEHICLE_REQUEST = "vehicle.request.add";
+            String REGISTER_REQUEST = "vehicle.request.add";
 
             /**
              * The routing key used by the vehicleService to send back the response
              * to the vehicle after register request
              */
-            String REGISTER_VEHICLE_RESPONSE = "vehicle.response.add.%s";
+            String REGISTER_RESPONSE = "vehicle.response.add.%s";
+            /**
+             * The routing key used by vehicle-service to communicate a request of booking to a vehicle,
+             * must be completed with the license plate, see {@linkplain String#format(String, Object...)}.
+             */
+            String BOOK_REQUEST = "vehicle.request.book.%s";
+            /**
+             * The routing key used by vehicles to communicate the response of a booking request from service,
+             * must be completed with the license plate, see {@linkplain String#format(String, Object...)}.
+             */
+            String BOOK_RESPONSE = "vehicle.response.book.%s";
+            /**
+             * The routing key used by vehicles to communicate they arrived to destination.
+             */
+            String VEHICLE_ARRIVED = "vehicle.event.arrived";
+            /**
+             * The routing key used by vehicles to communicate their informations updates.
+             */
+            String VEHICLE_UPDATE = "vehicle.event.updated";
+            /**
+             * The routing key used by vehicle-service to communicate a drive command to a vehicle.
+             */
+            String VEHICLE_DRIVE_COMMAND = "vehicle.event.drive";
         }
 
         /**
@@ -190,7 +214,17 @@ public interface Constants {
     String VEHICLE_TO_SERVICE = "ToService";
 
 
-
+    //analytics service
+    String VEHICLE_REQUEST_ALL_MESSAGE = "Requesting All Vehicles From Analytics Service";
+    String ANALYTICS_VEHICLE_LIST_RETRIEVER_START_MESSAGE = "Vehicle List Request Sent, Listen";
+    String ANALYTICS_VEHICLE_LIST_RETRIEVER_VERTICLE_ADDRESS = "VehicleListRetrieverVerticle";
+    String ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS = "VehicleListRequestVerticle";
+    String ROUTING_KEY_VEHICLE_REQUEST_ALL = "vehicle.request.all";
+    String ROUTING_KEY_VEHICLE_RESPONSE_ALL = "vehicle.response.all";
+    String ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS = "AnalyticsVerticleController";
+    String ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE = "Started all services, start requesting vehicle list";
+    String EVENT_BUS_AVAILABLE_ADDRESS = "service.vehicle.eventbus";
+    String ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS = "test.analytics.vehicleListRequest";
 
 
 }

@@ -2,9 +2,6 @@ package com.wedriveu.services.shared.rabbitmq;
 
 
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
-import com.wedriveu.services.shared.utilities.Log;
-import com.wedriveu.services.shared.utilities.MessageParser;
-import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -14,8 +11,6 @@ import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
-
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_VEHICLE_REQUEST;
 
 /**
  * Basic Vert.x RabbitMQ Consumer Verticle. Used to properly handle inbound messages from external publishers.

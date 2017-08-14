@@ -4,6 +4,7 @@ import com.wedriveu.services.shared.entity.AnalyticsVehicle;
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
 import com.wedriveu.services.shared.entity.VehicleCounter;
 import com.wedriveu.services.shared.utilities.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

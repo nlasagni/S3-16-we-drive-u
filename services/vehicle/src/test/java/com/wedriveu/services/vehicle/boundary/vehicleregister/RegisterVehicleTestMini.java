@@ -3,7 +3,6 @@ package com.wedriveu.services.vehicle.boundary.vehicleregister;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
-
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
@@ -15,11 +14,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static com.wedriveu.services.vehicle.rabbitmq.Constants.*;
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
 import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_VEHICLE_REQUEST;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_VEHICLE_RESPONSE;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -33,7 +32,7 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
     private Vertx vertx;
 
     public RegisterVehicleTestMini() {
-        super(QUEUE, VEHICLE, REGISTER_VEHICLE_REQUEST, REGISTER_VEHICLE_RESPONSE, EVENT_BUS_ADDRESS);
+        super(QUEUE, VEHICLE, REGISTER_REQUEST, REGISTER_RESPONSE, EVENT_BUS_ADDRESS);
     }
 
     @Before

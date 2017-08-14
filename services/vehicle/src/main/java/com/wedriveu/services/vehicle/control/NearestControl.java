@@ -9,11 +9,13 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+
 import static com.wedriveu.shared.util.Constants.USERNAME;
 import static com.wedriveu.shared.util.Constants.Vehicle.LICENCE_PLATE;
 import static com.wedriveu.shared.util.Constants.ZERO;

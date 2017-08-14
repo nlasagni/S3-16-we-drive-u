@@ -1,6 +1,5 @@
 package com.wedriveu.services.vehicle.app;
 
-import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.Vertx;
 

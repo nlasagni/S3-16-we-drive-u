@@ -90,7 +90,7 @@ class VehicleStopViewImpl(vehicleIdentifier: Int)
     case command if command == stopCommand =>
       vehicleAssociated.getVehicle().setState(VehicleConstants.stateBroken)
       writeMessageLog(forceBrokenStatus + vehicleAssociated.getVehicle().getState())
-      //TODO Advice the service that i'm broken, no more seen by the system (System.exit(0))
+      //TODO Notify the service that i'm broken, no more seen by the system (System.exit(0))
 
     case _ => println(notCommandFoundError)
   }
