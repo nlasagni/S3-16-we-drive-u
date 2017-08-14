@@ -2,9 +2,10 @@ package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.shared.entity.VehicleBookRequest;
 import com.wedriveu.shared.entity.VehicleBookResponse;
-import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.utils.Constants;
 import com.wedriveu.shared.utils.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
 import io.vertx.core.AbstractVerticle;
@@ -135,7 +136,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
         }
         vehicle.setUsername(request.getUsername());
         VehicleBookResponse response = new VehicleBookResponse();
-        response.setBooked(vehicle.getVehicle().getState().equals(Constants.STATUS_AVAILABLE));
+        response.setBooked(vehicle.getVehicle().getState().equals(Vehicle.STATUS_AVAILABLE));
         return response;
     }
 

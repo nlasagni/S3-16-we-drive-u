@@ -15,10 +15,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
-import static com.wedriveu.shared.util.Constants.EventBus.BODY;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE;
+import static com.wedriveu.shared.utils.Constants.EventBus.BODY;
+import static com.wedriveu.shared.utils.Constants.RabbitMQ.Exchanges.VEHICLE;
+import static com.wedriveu.shared.utils.Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST;
+import static com.wedriveu.shared.utils.Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 

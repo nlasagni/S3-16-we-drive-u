@@ -1,4 +1,4 @@
-package com.wedriveu.shared.util;
+package com.wedriveu.shared.utils;
 
 /**
  * The global system Constants.
@@ -178,7 +178,6 @@ public interface Constants {
         String LICENCE_PLATE = "licencePlate";
 
     }
-    String STATUS_AVAILABLE = "available";
 
     /**
      * The constant zero.
@@ -190,16 +189,6 @@ public interface Constants {
      */
     String USERNAME = "username";
 
-
-
-
-
-
-
-    /**
-     * Default message encoding.
-     */
-    String UTF = "UTF-8";
 
     /**
      * The predefined range of kilometers used to simulate the vehicle recharging movement

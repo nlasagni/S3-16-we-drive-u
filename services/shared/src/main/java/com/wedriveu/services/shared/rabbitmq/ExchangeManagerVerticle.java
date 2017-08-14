@@ -6,7 +6,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.rabbitmq.RabbitMQClient;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.Type.DIRECT;
+import static com.wedriveu.shared.utils.Constants.RabbitMQ.Exchanges.Type.DIRECT;
 
 /**
  * This Verticle is aim to declare and bind the exchange chosen by the Service at its startup.

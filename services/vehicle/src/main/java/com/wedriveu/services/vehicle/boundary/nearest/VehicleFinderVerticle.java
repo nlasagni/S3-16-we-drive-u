@@ -9,7 +9,7 @@ import com.wedriveu.services.shared.utilities.PositionUtils;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import com.wedriveu.shared.entity.Position;
-import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.utils.Constants;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_FINDER_ADDRESS;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_FINDER;
-import static com.wedriveu.shared.util.Constants.ZERO;
+import static com.wedriveu.shared.utils.Constants.ZERO;
 
 /**
  * Handles the communication with all the current available vehicles.
@@ -46,6 +46,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     private double distanceToUser;
     private UserRequest userRequest;
     private JsonArray responseJsonArray;
+    private VehicleResponseCanDrive vehicleResponseCanDrive;
 
     public VehicleFinderVerticle() {
         super(VEHICLE_SERVICE_QUEUE_FINDER);
@@ -133,23 +134,19 @@ public class VehicleFinderVerticle extends VerticleConsumer {
 
     @Override
     public void registerConsumer(String eventBus) {
+        // FIXME: This part has been added for release 0.2.0 fix and has not been tested
         counter++;
         if (counter <= availableVehicles.size()) {
             vertx.eventBus().consumer(eventBus, msg -> {
                 JsonObject responseJson = (JsonObject) msg.body();
                 String response = responseJson.getString(Constants.EventBus.BODY);
-                VehicleResponseCanDrive vehicleResponseCanDrive = (new JsonObject(response)).mapTo(VehicleResponseCanDrive.class);
-                if (vehicleResponseCanDrive.isEligible()) {
-                    vehicleResponseCanDrive.setUsername(username);
-                    vehicleResponseCanDrive.setDistanceToUser(distanceToUser);
-                    responseJsonArray.add(JsonObject.mapFrom(vehicleResponseCanDrive));
-                    if (counter == availableVehicles.size()) {
-                        vertx.eventBus().send(Messages.VehicleFinder.VEHICLE_RESPONSE, responseJsonArray);
-                        vertx.undeploy(deploymentID());
-                    }
-                }
+                vehicleResponseCanDrive = (new JsonObject(response)).mapTo(VehicleResponseCanDrive.class);
+                vehicleResponseCanDrive.setUsername(username);
+                vehicleResponseCanDrive.setDistanceToUser(distanceToUser);
             });
-
+        } else {
+            responseJsonArray.add(JsonObject.mapFrom(vehicleResponseCanDrive));
+            vertx.eventBus().send(Messages.VehicleFinder.VEHICLE_RESPONSE, responseJsonArray);
         }
     }
 

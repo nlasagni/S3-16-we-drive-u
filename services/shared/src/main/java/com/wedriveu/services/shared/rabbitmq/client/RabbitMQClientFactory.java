@@ -1,6 +1,6 @@
 package com.wedriveu.services.shared.rabbitmq.client;
 
-import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.utils.Constants;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;

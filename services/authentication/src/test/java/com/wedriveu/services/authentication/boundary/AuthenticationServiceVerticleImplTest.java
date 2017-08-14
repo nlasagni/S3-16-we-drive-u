@@ -3,7 +3,7 @@ package com.wedriveu.services.authentication.boundary;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.shared.entity.LoginRequest;
 import com.wedriveu.shared.entity.LoginResponse;
-import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.utils.Constants;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;

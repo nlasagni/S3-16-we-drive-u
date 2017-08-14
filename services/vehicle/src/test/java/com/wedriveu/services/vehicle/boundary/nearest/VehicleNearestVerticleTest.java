@@ -1,10 +1,12 @@
-package com.wedriveu.services.vehicle.boundary.vehicleregister;
+package com.wedriveu.services.vehicle.boundary.nearest;
 
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
-import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryFiat;
+import com.wedriveu.services.vehicle.boundary.nearest.entity.UserDataFactoryA;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
+import com.wedriveu.shared.utils.Log;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -15,25 +17,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
 import static com.wedriveu.shared.utils.Constants.EventBus.BODY;
 import static com.wedriveu.shared.utils.Constants.RabbitMQ.Exchanges.VEHICLE;
-import static com.wedriveu.shared.utils.Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST;
-import static com.wedriveu.shared.utils.Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE;
+import static com.wedriveu.shared.utils.Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST;
+import static com.wedriveu.shared.utils.Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(VertxUnitRunner.class)
-public class RegisterVehicleTestFiat extends BaseInteractionClient {
+public class VehicleNearestVerticleTest extends BaseInteractionClient {
 
-    private static final String EVENT_BUS_ADDRESS = RegisterVehicleTestFiat.class.getCanonicalName();
-    private static final String QUEUE = "vehicle.queue.fiat";
+    private static final String EVENT_BUS_ADDRESS = VehicleNearestVerticleTest.class.getCanonicalName();
+    private static final String QUEUE = "vehicle.queue.nearest";
     private static final int ASYNC_COUNT = 3;
     private Async async;
     private Vertx vertx;
 
-    public RegisterVehicleTestFiat() {
-        super(QUEUE, VEHICLE, REGISTER_REQUEST, REGISTER_RESPONSE, EVENT_BUS_ADDRESS);
+    public VehicleNearestVerticleTest() {
+        super(QUEUE, VEHICLE, VEHICLE_REQUEST, VEHICLE_RESPONSE, EVENT_BUS_ADDRESS);
     }
 
     @Before
@@ -42,8 +43,8 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
         vertx = Vertx.vertx();
         super.setup(vertx, completed -> {
             async.countDown();
-            String licencePlate = new VehicleFactoryFiat().getVehicle().getCarLicencePlate();
-            super.declareQueueAndBind(licencePlate, context, declared -> {
+            String username = new UserDataFactoryA().getUserData().getUsername();
+            super.declareQueueAndBind(username, context, declared -> {
                 context.assertTrue(declared.succeeded());
                 async.countDown();
                 deployVerticles(context);
@@ -55,7 +56,7 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
     @SuppressWarnings("Duplicates")
     private void deployVerticles(TestContext context) {
         vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, completed -> {
-           async.complete();
+            async.complete();
         });
         vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
             vertx.eventBus().send(Messages.VehicleService.BOOT, null);
@@ -76,14 +77,15 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
 
     @Override
     protected void checkResponse(JsonObject responseJson) {
-        assertThat(responseJson.getBoolean(REGISTER_RESULT), instanceOf(Boolean.class));
+        Vehicle responseVehicle = responseJson.mapTo(Vehicle.class);
+        assertThat(responseVehicle, instanceOf(Vehicle.class));
     }
 
     @Override
     protected JsonObject getJson() {
-        Vehicle vehicle = new VehicleFactoryFiat().getVehicle();
+        UserRequest userDataA = new UserDataFactoryA().getUserData();
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(BODY, JsonObject.mapFrom(vehicle).toString());
+        jsonObject.put(BODY, JsonObject.mapFrom(userDataA).toString());
         return jsonObject;
     }
 

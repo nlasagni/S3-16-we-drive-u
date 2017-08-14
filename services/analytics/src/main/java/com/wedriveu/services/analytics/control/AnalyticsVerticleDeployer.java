@@ -10,8 +10,8 @@ import io.vertx.core.Future;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wedriveu.shared.util.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE;
-import static com.wedriveu.shared.util.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS;
+import static com.wedriveu.shared.utils.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE;
+import static com.wedriveu.shared.utils.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS;
 
 /**
  * @author Stefano Bernagozzi

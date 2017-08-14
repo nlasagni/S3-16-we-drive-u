@@ -12,8 +12,8 @@ import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.wedriveu.shared.util.Constants.ROUTING_KEY_VEHICLE_RESPONSE_ALL;
-import static com.wedriveu.shared.util.Constants.RabbitMQ;
+import static com.wedriveu.shared.utils.Constants.ROUTING_KEY_VEHICLE_RESPONSE_ALL;
+import static com.wedriveu.shared.utils.Constants.RabbitMQ;
 
 /**
  * @author Stefano Bernagozzi
@@ -50,7 +50,7 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher{
                     new Position(13.2, 16.2),
                     new Date(2017, 8, 24, 9, 37, 22)));
         JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new VehicleListObject(vehicleList));
-        publish(RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_VEHICLE_RESPONSE_ALL,vehicleListJson);
+        publish(RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_VEHICLE_RESPONSE_ALL,vehicleListJson, published -> { });
         Log.log("sent request for all vehicles to vehicle service in VehicleListGeneratorResponseHandler");
     }
 

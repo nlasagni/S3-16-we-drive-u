@@ -1,7 +1,7 @@
 package com.wedriveu.services.shared.vertx;
 
 import io.vertx.core.json.JsonObject;
-import static com.wedriveu.shared.util.Constants.EventBus.BODY;
+import static com.wedriveu.shared.utils.Constants.EventBus.BODY;
 
 /**
  * @author Stefano Bernagozzi

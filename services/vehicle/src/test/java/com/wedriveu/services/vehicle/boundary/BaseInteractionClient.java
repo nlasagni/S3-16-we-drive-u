@@ -10,7 +10,7 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.rabbitmq.RabbitMQClient;
 
-import static com.wedriveu.shared.util.Constants.EventBus.BODY;
+import static com.wedriveu.shared.utils.Constants.EventBus.BODY;
 
 /**
  *

@@ -1,6 +1,7 @@
 package com.wedriveu.services.vehicle.control;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponseCanDrive;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
@@ -15,10 +16,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.wedriveu.shared.util.Constants.USERNAME;
-import static com.wedriveu.shared.util.Constants.Vehicle.LICENCE_PLATE;
-import static com.wedriveu.shared.util.Constants.ZERO;
+import static com.wedriveu.services.shared.entity.Vehicle.NO_ELIGIBLE_VEHICLE_RESPONSE;
+import static com.wedriveu.shared.utils.Constants.USERNAME;
+import static com.wedriveu.shared.utils.Constants.Vehicle.LICENCE_PLATE;
+import static com.wedriveu.shared.utils.Constants.ZERO;
 
 
 /**
@@ -41,17 +44,32 @@ public class NearestControl extends AbstractVerticle {
     }
 
     private void handleVehicleResponses(Message message) {
-        JsonArray eligibleVehicles = (JsonArray) message.body();
-        responseList = new ArrayList<>(eligibleVehicles.size());
+        JsonArray responseListJson = (JsonArray) message.body();
+        responseList = new ArrayList<>(responseListJson.size());
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             VehicleResponseCanDrive[] vehicleResponsCanDrives =
-                    objectMapper.readValue(eligibleVehicles.toString(), VehicleResponseCanDrive[].class);
+                    objectMapper.readValue(responseListJson.toString(), VehicleResponseCanDrive[].class);
             responseList = Arrays.asList(vehicleResponsCanDrives);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        vertx.eventBus().send(Messages.NearestControl.GET_VEHICLE, getBestVehicle(responseList));
+        sendReplyToUser(getEligibleVehicles(responseList));
+
+    }
+
+    private void sendReplyToUser(List<VehicleResponseCanDrive> eligibleVehicles) {
+        if(eligibleVehicles.isEmpty() || eligibleVehicles == null) {
+            Vehicle noEligibleVehicle = new Vehicle();
+            noEligibleVehicle.setNotEligibleVehicleFound(NO_ELIGIBLE_VEHICLE_RESPONSE);
+            vertx.eventBus().send(Messages.VehicleStore.GET_VEHICLE_COMPLETED, noEligibleVehicle);
+        } else {
+            vertx.eventBus().send(Messages.NearestControl.GET_VEHICLE, getBestVehicle(responseList));
+        }
+    }
+
+    private List<VehicleResponseCanDrive> getEligibleVehicles(List<VehicleResponseCanDrive> responseList) {
+        return responseList.stream().filter(x -> x.isEligible()).collect(Collectors.toList());
     }
 
     private JsonObject getBestVehicle(List<VehicleResponseCanDrive> responseList) {

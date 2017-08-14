@@ -20,9 +20,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.wedriveu.services.shared.entity.Vehicle.STATUS_AVAILABLE;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
-import static com.wedriveu.shared.util.Constants.STATUS_AVAILABLE;
-import static com.wedriveu.shared.util.Constants.Vehicle.LICENCE_PLATE;
+import static com.wedriveu.shared.utils.Constants.Vehicle.LICENCE_PLATE;
 
 
 /**
@@ -99,8 +99,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         List<Vehicle> vehicles = getVehicleList();
         JsonObject vehicleData = (JsonObject) message.body();
         String carLicencePlate = vehicleData.getString(LICENCE_PLATE);
-        JsonObject response = vehicleData.mapFrom(getRequestedVehicle(vehicles, carLicencePlate));
-        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED, response);
+        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED, getRequestedVehicle(vehicles, carLicencePlate));
     }
 
     @Override

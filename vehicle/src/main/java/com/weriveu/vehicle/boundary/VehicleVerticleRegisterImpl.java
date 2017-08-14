@@ -3,7 +3,7 @@ package com.weriveu.vehicle.boundary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.shared.entity.RegisterToServiceRequest;
 import com.wedriveu.shared.entity.RegisterToServiceResponse;
-import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.utils.Constants;
 import com.wedriveu.shared.utils.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.shared.VehicleConstants$;

@@ -9,7 +9,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS;
+import static com.wedriveu.shared.utils.Constants.ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS;
 
 /**
  * @author Stefano Bernagozzi

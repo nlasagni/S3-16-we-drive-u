@@ -3,13 +3,15 @@ package com.wedriveu.services.vehicle.boundary.vehicleregister;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.utilities.MessageParser;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.utils.Constants;
 import io.vertx.core.json.JsonObject;
+
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_REGISTER_ADDRESS;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_REGISTER;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST;
+import static com.wedriveu.shared.utils.Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST;
 
 
 /**
