@@ -30,10 +30,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public class VehicleVerticleDriveCommandImplTest {
 
     private static final double minorBoundPositionLat = 44.145500;
-    private static final double maxBoundPositionLat = 44.146612;
-    private static final double minorBoundPositionLon = 12.247025;
-    private static final double maxBoundPositionLon = 12.247497;
-    private static final long TIME_OUT = 4000;
+    private static final double maxBoundPositionLat = 44.145501;
+    private static final double minorBoundPositionLon = 12.247497;
+    private static final double maxBoundPositionLon = 12.247498;
+    private static final long TIME_OUT = 10000;
 
     private double randomLatitudeUser =
             ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat);
@@ -114,6 +114,9 @@ public class VehicleVerticleDriveCommandImplTest {
 
     private void checkVehiclePosition(TestContext context, Async async) {
         Position desired = new Position(randomLatitudeDestination, randomLongitudeDestination);
+        double kmToDo =
+                desired.getDistanceInKm(position) +
+                        position.getDistanceInKm(new Position(randomLatitudeUser, randomLongitudeUser));
         vertx.setTimer(TIME_OUT, onTime -> {
             Position vehiclePosition = vehicleControl.getVehicle().position();
             double vehicleDistance = desired.getDistanceInKm(vehiclePosition);
