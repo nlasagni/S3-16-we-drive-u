@@ -4,7 +4,7 @@ import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.utils.Constants.*;
+import static com.wedriveu.shared.util.Constants.*;
 
 /**
  * @author Stefano Bernagozzi

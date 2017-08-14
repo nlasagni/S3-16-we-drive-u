@@ -5,7 +5,7 @@ import com.wedriveu.services.shared.rabbitmq.SharedMessages;
 import com.wedriveu.services.vehicle.boundary.nearest.NearestConsumerVerticle;
 import com.wedriveu.services.vehicle.control.VerticleDeployer;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import com.wedriveu.shared.utils.Constants;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 

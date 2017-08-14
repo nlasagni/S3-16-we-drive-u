@@ -3,13 +3,13 @@ package com.wedriveu.services.analytics.control;
 import com.wedriveu.services.analytics.entity.AnalyticsStore;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.entity.VehicleListObject;
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.utils.Constants.ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS;
+import static com.wedriveu.shared.util.Constants.ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS;
 
 /**
  * @author Stefano Bernagozzi

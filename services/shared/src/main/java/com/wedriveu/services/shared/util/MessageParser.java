@@ -1,9 +1,9 @@
-package com.wedriveu.services.shared.utilities;
+package com.wedriveu.services.shared.util;
 
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.utils.Constants.EventBus.BODY;
+import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 
 
 /**

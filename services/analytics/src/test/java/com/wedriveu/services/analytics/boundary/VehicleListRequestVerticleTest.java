@@ -1,7 +1,7 @@
 package com.wedriveu.services.analytics.boundary;
 
 import com.wedriveu.services.analytics.vehicleServiceFake.VehicleListGeneratorRequestHandler;
-import com.wedriveu.shared.utils.Constants;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -12,7 +12,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wedriveu.shared.utils.Constants.*;
+import static com.wedriveu.shared.util.Constants.*;
 import static org.junit.Assert.assertTrue;
 
 /**

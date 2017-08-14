@@ -3,7 +3,7 @@ package com.wedriveu.services.analytics.vehicleServiceFake;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.entity.Position;
 import io.vertx.core.eventbus.Message;
@@ -12,8 +12,8 @@ import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.wedriveu.shared.utils.Constants.ROUTING_KEY_VEHICLE_RESPONSE_ALL;
-import static com.wedriveu.shared.utils.Constants.RabbitMQ;
+import static com.wedriveu.shared.util.Constants.ROUTING_KEY_VEHICLE_RESPONSE_ALL;
+import static com.wedriveu.shared.util.Constants.RabbitMQ;
 
 /**
  * @author Stefano Bernagozzi

@@ -6,7 +6,7 @@ import com.wedriveu.services.authentication.control.CredentialsChecker;
 import com.wedriveu.services.authentication.control.CredentialsCheckerImpl;
 import com.wedriveu.services.authentication.util.Constants;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.shared.entity.LoginRequest;
 import com.wedriveu.shared.entity.LoginResponse;
 import io.vertx.core.AbstractVerticle;

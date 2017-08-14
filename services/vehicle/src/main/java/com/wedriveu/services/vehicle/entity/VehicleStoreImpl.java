@@ -4,7 +4,7 @@ package com.wedriveu.services.vehicle.entity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.utilities.PositionUtils;
+import com.wedriveu.services.shared.util.PositionUtils;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import com.wedriveu.shared.entity.Position;
@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import static com.wedriveu.services.shared.entity.Vehicle.STATUS_AVAILABLE;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
-import static com.wedriveu.shared.utils.Constants.Vehicle.LICENCE_PLATE;
+import static com.wedriveu.shared.util.Constants.Vehicle.LICENCE_PLATE;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.wedriveu.shared.utils;
+package com.wedriveu.shared.util;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

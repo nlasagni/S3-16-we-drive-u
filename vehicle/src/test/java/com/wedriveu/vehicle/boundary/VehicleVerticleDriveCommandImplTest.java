@@ -1,8 +1,8 @@
 package com.wedriveu.vehicle.boundary;
 
 import com.wedriveu.shared.entity.DriveCommand;
-import com.wedriveu.shared.utils.Constants;
-import com.wedriveu.shared.utils.Position;
+import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import com.weriveu.vehicle.boundary.VehicleVerticleDriveCommandImpl;

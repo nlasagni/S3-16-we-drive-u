@@ -6,8 +6,8 @@ import rx.lang.scala.Observable
 import java.util.concurrent.ThreadLocalRandom
 import java.text.DecimalFormat
 
-import com.wedriveu.services.shared.utilities.Log
-import com.wedriveu.shared.utils.Position
+import com.wedriveu.services.shared.util.Log
+import com.wedriveu.shared.util.Position
 
 /**
   * @author Michele Donati on 28/07/2017.

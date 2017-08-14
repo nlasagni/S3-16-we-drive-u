@@ -1,4 +1,4 @@
-package com.wedriveu.shared.utils;
+package com.wedriveu.shared.util;
 
 /**
  * The global system Constants.

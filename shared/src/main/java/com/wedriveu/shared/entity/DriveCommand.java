@@ -1,6 +1,6 @@
 package com.wedriveu.shared.entity;
 
-import com.wedriveu.shared.utils.Position;
+import com.wedriveu.shared.util.Position;
 
 /**
  * @author Michele Donati on 11/08/2017.

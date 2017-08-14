@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.wedriveu.services.shared.entity.Vehicle.NO_ELIGIBLE_VEHICLE_RESPONSE;
-import static com.wedriveu.shared.utils.Constants.USERNAME;
-import static com.wedriveu.shared.utils.Constants.Vehicle.LICENCE_PLATE;
-import static com.wedriveu.shared.utils.Constants.ZERO;
+import static com.wedriveu.shared.util.Constants.USERNAME;
+import static com.wedriveu.shared.util.Constants.Vehicle.LICENCE_PLATE;
+import static com.wedriveu.shared.util.Constants.ZERO;
 
 
 /**

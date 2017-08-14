@@ -2,14 +2,14 @@ package com.wedriveu.services.vehicle.boundary.nearest;
 
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import com.wedriveu.shared.utils.Constants;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.utils.Constants.EventBus.BODY;
-import static com.wedriveu.shared.utils.Constants.USERNAME;
+import static com.wedriveu.shared.util.Constants.EventBus.BODY;
+import static com.wedriveu.shared.util.Constants.USERNAME;
 
 /**
  * This Verticle uses RabbitMQ Vertx.x library to publish the chosen vehicle to the client.

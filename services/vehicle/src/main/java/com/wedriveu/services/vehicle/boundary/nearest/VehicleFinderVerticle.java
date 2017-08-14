@@ -5,11 +5,11 @@ import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponseCanDrive;
-import com.wedriveu.services.shared.utilities.PositionUtils;
+import com.wedriveu.services.shared.util.PositionUtils;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import com.wedriveu.shared.entity.Position;
-import com.wedriveu.shared.utils.Constants;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_FINDER_ADDRESS;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_FINDER;
-import static com.wedriveu.shared.utils.Constants.ZERO;
+import static com.wedriveu.shared.util.Constants.ZERO;
 
 /**
  * Handles the communication with all the current available vehicles.

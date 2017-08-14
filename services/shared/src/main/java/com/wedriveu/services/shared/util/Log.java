@@ -1,7 +1,7 @@
-package com.wedriveu.shared.utils;
+package com.wedriveu.services.shared.util;
 
 /**
- * @author Michele Donati
+ * @author Michele
  * @author Marco Baldassarri
  * @since 01/08/2017
  */

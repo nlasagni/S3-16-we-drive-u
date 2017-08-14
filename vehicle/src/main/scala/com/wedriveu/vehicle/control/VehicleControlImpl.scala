@@ -1,9 +1,7 @@
 package com.wedriveu.vehicle.control
 
 import com.rabbitmq.client._
-
-import com.wedriveu.shared.utils.Position
-
+import com.wedriveu.shared.util.Position
 import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants

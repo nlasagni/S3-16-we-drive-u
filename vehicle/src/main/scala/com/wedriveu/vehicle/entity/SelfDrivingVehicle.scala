@@ -2,7 +2,7 @@ package com.wedriveu.vehicle.entity
 
 import java.util.concurrent.locks.{Condition, ReentrantLock}
 
-import com.wedriveu.shared.utils.Position
+import com.wedriveu.shared.util.Position
 import com.wedriveu.vehicle.shared.VehicleConstants
 
 import scala.beans.BeanProperty

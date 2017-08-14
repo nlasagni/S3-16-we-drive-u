@@ -6,7 +6,6 @@ import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.nearest.entity.UserDataFactoryA;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
-import com.wedriveu.shared.utils.Log;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -17,10 +16,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static com.wedriveu.shared.utils.Constants.EventBus.BODY;
-import static com.wedriveu.shared.utils.Constants.RabbitMQ.Exchanges.VEHICLE;
-import static com.wedriveu.shared.utils.Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST;
-import static com.wedriveu.shared.utils.Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE;
+import static com.wedriveu.shared.util.Constants.EventBus.BODY;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 

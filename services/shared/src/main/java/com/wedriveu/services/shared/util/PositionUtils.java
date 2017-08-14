@@ -1,9 +1,9 @@
-package com.wedriveu.services.shared.utilities;
+package com.wedriveu.services.shared.util;
 
 import com.wedriveu.shared.entity.Position;
 
-import static com.wedriveu.shared.utils.Constants.Position.EARTH_RADIUS;
-import static com.wedriveu.shared.utils.Constants.Position.RANGE;
+import static com.wedriveu.shared.util.Constants.Position.EARTH_RADIUS;
+import static com.wedriveu.shared.util.Constants.Position.RANGE;
 
 /**
  * @author Marco Baldassarri
