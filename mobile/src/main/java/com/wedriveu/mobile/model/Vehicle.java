@@ -35,48 +35,24 @@ public class Vehicle {
         return licencePlate;
     }
 
-    public void setLicencePlate(String licencePlate) {
-        this.licencePlate = licencePlate;
-    }
-
     public String getVehicleName() {
         return vehicleName;
-    }
-
-    public void setVehicleName(String vehicleName) {
-        this.vehicleName = vehicleName;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getPictureURL() {
         return pictureURL;
-    }
-
-    public void setPictureURL(String pictureURL) {
-        this.pictureURL = pictureURL;
     }
 
     public String getArriveAtUserTime() {
         return arriveAtUserTime;
     }
 
-    public void setArriveAtUserTime(String arriveAtUserTime) {
-        this.arriveAtUserTime = arriveAtUserTime;
-    }
-
     public String getArriveAtDestinationTime() {
         return arriveAtDestinationTime;
-    }
-
-    public void setArriveAtDestinationTime(String arriveAtDestinationTime) {
-        this.arriveAtDestinationTime = arriveAtDestinationTime;
     }
 
     @Override

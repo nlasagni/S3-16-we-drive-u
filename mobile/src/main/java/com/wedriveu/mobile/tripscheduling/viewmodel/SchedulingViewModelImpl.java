@@ -36,7 +36,6 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
 
     private SchedulingRouter mRouter;
     private SchedulingService mSchedulingService;
-    private SchedulingView mSchedulingView;
     private VehicleStore mVehicleStore;
     private Place mPlace;
 
@@ -89,22 +88,22 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        SchedulingView schedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
         if (resultCode == Activity.RESULT_OK) {
             mPlace = PlaceAutocomplete.getPlace(getActivity(), data);
-            mSchedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
-            mSchedulingView.showSelectedAddress(mPlace);
+            schedulingView.showSelectedAddress(mPlace);
         } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-           mSchedulingView.renderError(getString(R.string.place_autocomplete_error));
+           schedulingView.renderError(getString(R.string.place_autocomplete_error));
         } else if (resultCode == RESULT_CANCELED) {
-            mSchedulingView.renderError(getString(R.string.place_autocomplete_error));
+            schedulingView.renderError(getString(R.string.place_autocomplete_error));
         }
     }
 
     private void onFindNearestVehicleFinished(Vehicle vehicle, String errorMessage) {
         mRouter.dismissProgressDialog();
         if (!TextUtils.isEmpty(errorMessage)) {
-            mSchedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
-            mSchedulingView.renderError(errorMessage);
+            SchedulingView schedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
+            schedulingView.renderError(errorMessage);
         } else {
             mVehicleStore.storeVehicle(vehicle);
             mRouter.showBooking();

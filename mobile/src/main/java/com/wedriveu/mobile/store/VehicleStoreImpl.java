@@ -22,7 +22,7 @@ public class VehicleStoreImpl implements VehicleStore {
     private SharedPreferences mSharedPreferences;
     private ObjectMapper mObjectMapper;
 
-    public VehicleStoreImpl(Context context) {
+    VehicleStoreImpl(Context context) {
         mSharedPreferences = context.getSharedPreferences(VEHICLE_PREFERENCE_NAME, Context.MODE_PRIVATE);
         mObjectMapper = new ObjectMapper();
     }

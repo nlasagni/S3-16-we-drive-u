@@ -62,7 +62,7 @@ public class LoginServiceImpl implements LoginService {
             protected Void doInBackground(Void... voids) {
                 ServiceResult<User> result;
                 try {
-                    ExceptionHandler exceptionHandler = new ServiceExceptionHandler(mActivity, callback);
+                    ExceptionHandler exceptionHandler = new ServiceExceptionHandler();
                     RabbitMqCommunicationConfig config =
                             new RabbitMqCommunicationConfig.Builder()
                                     .host(Constants.RabbitMQ.Broker.HOST)

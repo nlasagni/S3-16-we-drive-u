@@ -3,7 +3,7 @@ package com.wedriveu.mobile.util.location;
 import android.location.Location;
 
 /**
- * Created by Nicola Lasagni on 19/07/2016.
+ * @author Marco Baldassarri on 19/07/2016.
  */
 public interface LocationServiceListener {
 

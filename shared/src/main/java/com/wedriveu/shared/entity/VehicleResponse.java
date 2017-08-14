@@ -16,6 +16,7 @@ public class VehicleResponse {
     private String lastUpdate;
     private String userPosition;
     private String destinationPosition;
+    private String notEligibleVehicleFound;
 
     public String getLicencePlate() {
         return licencePlate;
@@ -89,6 +90,13 @@ public class VehicleResponse {
         this.destinationPosition = destinationPosition;
     }
 
+    public String getNotEligibleVehicleFound() {
+        return notEligibleVehicleFound;
+    }
+
+    public void setNotEligibleVehicleFound(String notEligibleVehicleFound) {
+        this.notEligibleVehicleFound = notEligibleVehicleFound;
+    }
 
     @Override
     public boolean equals(Object other) {

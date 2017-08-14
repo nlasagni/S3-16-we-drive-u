@@ -8,7 +8,6 @@ import android.util.Log;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.rabbitmq.client.ExceptionHandler;
-import com.wedriveu.mobile.model.SchedulingLocation;
 import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.service.ServiceExceptionHandler;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
@@ -47,27 +46,23 @@ public class SchedulingServiceImpl implements SchedulingService {
     private UserStore mUserStore;
     private Double mUserLatitude;
     private Double mUserLongitude;
-    private SchedulingLocation schedulingLocation;
     private RabbitMqCommunicationManager mCommunicationManager;
 
     public SchedulingServiceImpl(Activity activity, UserStore userStore) {
         mActivity = activity;
         mUserStore = userStore;
-        schedulingLocation = new SchedulingLocation();
         mCommunicationManager = new DefaultRabbitMqCommunicationManager();
     }
 
     @Override
     public void findNearestVehicle(final Place address, final ServiceOperationCallback<Vehicle> callback) {
-        schedulingLocation.setDestinationLatitude(address.getLatLng().latitude);
-        schedulingLocation.setDestinationLongitude(address.getLatLng().longitude);
         new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... voids) {
                 ServiceResult<Vehicle> result;
                 try {
-                    ExceptionHandler exceptionHandler = new ServiceExceptionHandler(mActivity, callback);
+                    ExceptionHandler exceptionHandler = new ServiceExceptionHandler();
                     RabbitMqCommunicationConfig config =
                             new RabbitMqCommunicationConfig.Builder()
                                     .host(Constants.RabbitMQ.Broker.HOST)
@@ -151,6 +146,8 @@ public class SchedulingServiceImpl implements SchedulingService {
                             response.getPictureURL(),
                             response.getArriveAtUserTime(),
                             response.getArriveAtDestinationTime());
+            } else if (!TextUtils.isEmpty(response.getNotEligibleVehicleFound())) {
+                error = response.getNotEligibleVehicleFound();
             } else {
                 error = NO_RESPONSE_DATA_ERROR;
             }

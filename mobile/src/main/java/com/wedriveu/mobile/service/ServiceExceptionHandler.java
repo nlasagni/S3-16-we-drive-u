@@ -1,9 +1,9 @@
 package com.wedriveu.mobile.service;
 
-import android.app.Activity;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.impl.DefaultExceptionHandler;
+import com.wedriveu.shared.util.Log;
 
 /**
  * The default {@linkplain ServiceExceptionHandler} used to manage message consumer exceptions.
@@ -12,13 +12,10 @@ import com.rabbitmq.client.impl.DefaultExceptionHandler;
  */
 public class ServiceExceptionHandler extends DefaultExceptionHandler {
 
-    private Activity mActivity;
-    private ServiceOperationCallback<?> mCallback;
+    private static final String TAG = ServiceExceptionHandler.class.getSimpleName();
+    private static final String EXCEPTION_MESSAGE = "Exception occurred on RabbitMQ consumer";
 
-    public ServiceExceptionHandler(Activity activity, ServiceOperationCallback<?> callback) {
-        mActivity = activity;
-        mCallback = callback;
-    }
+    public ServiceExceptionHandler() {}
 
     @Override
     public void handleConsumerException(Channel channel,
@@ -26,12 +23,7 @@ public class ServiceExceptionHandler extends DefaultExceptionHandler {
                                         Consumer consumer,
                                         String consumerTag,
                                         String methodName) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mCallback.onServiceOperationFinished(new ServiceResult(null, exception.getLocalizedMessage()));
-            }
-        });
+        Log.error(TAG, EXCEPTION_MESSAGE, exception);
     }
 
 }
