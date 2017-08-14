@@ -1,27 +1,26 @@
 package com.wedriveu.services.analytics.entity;
 
+import com.wedriveu.services.shared.entity.AnalyticsVehicle;
+import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
+import com.wedriveu.services.shared.entity.VehicleCounter;
+import com.wedriveu.services.shared.utilities.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
-
-import com.wedriveu.services.shared.entity.*;
-import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
-import com.wedriveu.services.shared.entity.VehicleCounter;
-import com.wedriveu.services.shared.utilities.Log;
 
 
 /**
  * @author Stefano Bernagozzi
  */
 
-public class AnalyticsStoreImpl implements AnalyticsStore{
-    private EntityListStoreStrategy<AnalyticsVehicle> storeStrategy;
+public class AnalyticsStoreImpl implements AnalyticsStore {
     private static final String TAG = AnalyticsStoreImpl.class.getSimpleName();
     private static final String ADD_ERROR = "Error while adding vehicle";
     private static final String GET_ERROR = "Error while getting vehicle";
     private static final String UPDATE_ERROR = "Error while updating vehicle";
     private static final String CLEAR_ERROR = "Error while clearing store";
+    private EntityListStoreStrategy<AnalyticsVehicle> storeStrategy;
     private VehiclesCounterAlgorithm vehiclesCounterAlgorithmStrategy;
 
     public AnalyticsStoreImpl(EntityListStoreStrategy<AnalyticsVehicle> storeStrategy,

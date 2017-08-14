@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * @author Marco Baldassarri
  * @author Michele
- * @since  17/07/2017
+ * @since 17/07/2017
  */
 
 public class Position {
@@ -15,7 +15,8 @@ public class Position {
     @JsonProperty
     private double longitude;
 
-    public Position() { }
+    public Position() {
+    }
 
     public Position(double latitude,
                     double longitude) {

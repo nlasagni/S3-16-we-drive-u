@@ -3,9 +3,12 @@ package com.wedriveu.services.shared.rabbitmq.nearest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * Describes the response the vehicle return to the VehicleService once it asks the vehicle if it
+ * can drive to destination.
+ *
  * Created by Marco on 04/08/2017.
  */
-public class VehicleResponse {
+public class VehicleResponseCanDrive {
 
     @JsonProperty
     private String licencePlate;
@@ -21,7 +24,6 @@ public class VehicleResponse {
 
     @JsonProperty
     private double vehicleSpeed;
-
 
     public double getVehicleSpeed() {
         return vehicleSpeed;

@@ -9,6 +9,8 @@ package com.wedriveu.shared.util;
  */
 public interface Constants {
 
+
+
     /**
      * Constants related to the Vertx Event bus.
      */
@@ -30,11 +32,13 @@ public interface Constants {
             /**
              * The HOST of the RabbitMQ broker.
              */
-            String HOST = "uniboguys.duckdns.org";
+            //String HOST = "uniboguys.duckdns.org";
+            String HOST = "localhost";
             /**
              * The PASSWORD of the RabbitMQ broker.
              */
-            String PASSWORD = "FmzevdBBmpcdvPHLDJQR";
+            //String PASSWORD = "FmzevdBBmpcdvPHLDJQR";
+            String PASSWORD = "guest";
             /**
              * The PORT of the RabbitMQ broker.
              */
@@ -57,17 +61,6 @@ public interface Constants {
              * The configuration key PORT.
              */
             String PORT = "port";
-        }
-
-        /**
-         * Constants related to the RabbitMQ queues.
-         */
-        interface Queue {
-            /**
-             * The user queue name, must be completed with the username,
-             * see {@linkplain String#format(String, Object...)}.
-             */
-            String USER = "user.%s";
         }
 
         /**
@@ -122,28 +115,67 @@ public interface Constants {
              * must be completed with the username, see {@linkplain String#format(String, Object...)}.
              */
             String CAN_DRIVE_RESPONSE = "vehicle.response.candrive.%s";
+
+            /**
+             * The routing key used by a vehicle to register itself to the vehicleService system.
+             */
+            String REGISTER_VEHICLE_REQUEST = "vehicle.request.add";
+
+            /**
+             * The routing key used by the vehicleService to send back the response
+             * to the vehicle after register request
+             */
+            String REGISTER_VEHICLE_RESPONSE = "vehicle.response.add.%s";
+        }
+
+        /**
+         * Constants related to the RabbitMQ queues.
+         */
+        interface Queue {
+            /**
+             * The user queue name, must be completed with the username,
+             * see {@linkplain String#format(String, Object...)}.
+             */
+            String USER = "user.%s";
         }
     }
 
+    interface Position {
+        /**
+         * The predefined range of kilometers used to choose a vehicle nearby a specific user.
+         */
+        double RANGE = 20;
+
+        double EARTH_RADIUS = 6372.795477598;
+    }
+
+
+    interface Vehicle {
+        String LICENCE_PLATE = "licencePlate";
+
+    }
+    String STATUS_AVAILABLE = "available";
+
     /**
-     * The vehicles database file path.
+     * The constant zero.
      */
-    String VEHICLES_DATABASE_PATH = "services/vehicle/src/test/resources/vehicles.json";
+    int ZERO = 0;
 
     /**
      * The constant USERNAME.
      */
     String USERNAME = "username";
 
+
+
+
+
+
+
     /**
      * Default message encoding.
      */
     String UTF = "UTF-8";
-
-    /**
-     * The predefined range of kilometers used to choose a vehicle nearby a specific user.
-     */
-    double RANGE = 20;
 
     /**
      * The predefined range of kilometers used to simulate the vehicle recharging movement
@@ -157,28 +189,8 @@ public interface Constants {
 
     String VEHICLE_TO_SERVICE = "ToService";
 
-// Vehicle Jackson parameters
-    String CAR_LICENCE_PLATE = "licencePlate";
-    String STATE = "state";
-    String POSITION = "position";
-    String LAST_UPDATE = "lastUpdate";
 
-// Services RabbitMQ
-    String SERVICE_QUEUE_BASE_NAME = "service";
 
-// Vehicle Service RabbitMQ
-    String EVENT_BUS_AVAILABLE_ADDRESS = "service.vehicle.eventbus";
-    String EVENT_BUS_FINDER_ADDRESS = "finder.vehicle.eventbus";
-    String CONSUMER_VEHICLE_SERVICE = "vehicle";
-    String USER_POSITION = "userPosition";
-    String DESTINATION_POSITION = "destinationPosition";
-    String STATUS_AVAILABLE = "available";
-    String ELIGIBLE_VEHICLE_LIST = "eligibleVehicleList";
-    String TRIP_DISTANCE = "tripDistance";
 
-    /**
-     * The constant zero.
-     */
-    int ZERO = 0;
 
 }

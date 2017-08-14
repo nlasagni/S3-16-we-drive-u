@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.authentication.control.CredentialsChecker;
 import com.wedriveu.services.authentication.control.CredentialsCheckerImpl;
 import com.wedriveu.services.authentication.util.Constants;
-import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
+import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.shared.entity.LoginRequest;
 import com.wedriveu.shared.entity.LoginResponse;
@@ -47,7 +47,7 @@ public class AuthenticationServiceVerticleImpl extends AbstractVerticle implemen
 	}
 
 	private void startService(Future<Void> future) {
-		rabbitMQClient = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
+		rabbitMQClient = RabbitMQClientFactory.createClient(vertx);
 		Future<Void> initFuture = Future.future();
 		Future<Void> endFuture = Future.future();
 		startClient(initFuture);

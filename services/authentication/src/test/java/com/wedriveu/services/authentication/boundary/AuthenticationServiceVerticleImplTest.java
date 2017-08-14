@@ -1,6 +1,5 @@
 package com.wedriveu.services.authentication.boundary;
 
-import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.shared.entity.LoginRequest;

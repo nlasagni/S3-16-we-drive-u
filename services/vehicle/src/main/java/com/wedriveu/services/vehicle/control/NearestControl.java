@@ -1,24 +1,21 @@
 package com.wedriveu.services.vehicle.control;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponse;
+import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponseCanDrive;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-import static com.wedriveu.shared.util.Constants.CAR_LICENCE_PLATE;
 import static com.wedriveu.shared.util.Constants.USERNAME;
+import static com.wedriveu.shared.util.Constants.Vehicle.LICENCE_PLATE;
 import static com.wedriveu.shared.util.Constants.ZERO;
 
 
@@ -27,13 +24,12 @@ import static com.wedriveu.shared.util.Constants.ZERO;
  * {@linkplain com.wedriveu.services.vehicle.entity.VehicleStore} database. It handles the database replies
  * by deploying and interacting with other Verticles.
  *
- * @author Marco Baldassarri
- * @since 02/08/2017
+ * @author Marco Baldassarri on 02/08/2017.
  */
 public class NearestControl extends AbstractVerticle {
 
     private EventBus eventBus;
-    private List<VehicleResponse> responseList;
+    private List<VehicleResponseCanDrive> responseList;
 
     @Override
     public void start() throws Exception {
@@ -47,26 +43,25 @@ public class NearestControl extends AbstractVerticle {
         responseList = new ArrayList<>(eligibleVehicles.size());
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            VehicleResponse[] vehicleResponses =
-                    objectMapper.readValue(eligibleVehicles.toString(), VehicleResponse[].class);
-            responseList = Arrays.asList(vehicleResponses);
+            VehicleResponseCanDrive[] vehicleResponsCanDrives =
+                    objectMapper.readValue(eligibleVehicles.toString(), VehicleResponseCanDrive[].class);
+            responseList = Arrays.asList(vehicleResponsCanDrives);
         } catch (IOException e) {
             e.printStackTrace();
         }
         vertx.eventBus().send(Messages.NearestControl.GET_VEHICLE, getBestVehicle(responseList));
     }
 
-    private JsonObject getBestVehicle(List<VehicleResponse> responseList) {
+    private JsonObject getBestVehicle(List<VehicleResponseCanDrive> responseList) {
         responseList.sort(Comparator.comparing(v ->
                 v.getDistanceToUser() / v.getVehicleSpeed()
         ));
-        VehicleResponse chosen = responseList.get(ZERO);
+        VehicleResponseCanDrive chosen = responseList.get(ZERO);
         JsonObject bestVehicleJson = new JsonObject();
         bestVehicleJson.put(USERNAME, chosen.getUsername());
-        bestVehicleJson.put(CAR_LICENCE_PLATE, chosen.getLicencePlate());
+        bestVehicleJson.put(LICENCE_PLATE, chosen.getLicencePlate());
         return bestVehicleJson;
     }
-
 
     private void availableVehiclesCompleted(Message message) {
         JsonObject userData = (JsonObject) message.body();

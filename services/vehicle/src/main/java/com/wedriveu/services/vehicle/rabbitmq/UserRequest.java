@@ -12,24 +12,23 @@ import static com.wedriveu.shared.util.Constants.*;
  * Represents the data the client sends when requesting the best vehicle to book as well as the list of available
  * vehicles at the time of the request.
  *
- * @author Marco Baldassarri
- * @since 02/08/2017
+ * @author Marco Baldassarri on 02/08/2017.
  */
 public class UserRequest {
 
-    @JsonProperty(USER_POSITION)
+    @JsonProperty
     private Position userPosition;
 
-    @JsonProperty(DESTINATION_POSITION)
+    @JsonProperty
     private Position destinationPosition;
 
-    @JsonProperty(USERNAME)
+    @JsonProperty
     private String username;
 
-    @JsonProperty(ELIGIBLE_VEHICLE_LIST)
+    @JsonProperty
     private List<Vehicle> vehicleList;
 
-    @JsonProperty(TRIP_DISTANCE)
+    @JsonProperty
     private double tripDistance;
 
     public double getTripDistance() {

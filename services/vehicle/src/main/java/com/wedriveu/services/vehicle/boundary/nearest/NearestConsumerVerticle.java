@@ -8,7 +8,8 @@ import io.vertx.core.json.JsonObject;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import static com.wedriveu.shared.util.Constants.EVENT_BUS_AVAILABLE_ADDRESS;
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.NEAREST_EVENT_BUS_ADDRESS;
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_NEAREST;
 
 
 /**
@@ -16,13 +17,12 @@ import static com.wedriveu.shared.util.Constants.EVENT_BUS_AVAILABLE_ADDRESS;
  * The information the consumer expects to receive are the user current position (Latitude, Longitude), the chosen
  * destination position (Latitude, Longitude) and the username associated with the user.
  *
- * @author Marco Baldassarri
- * @since 30/07/2017
+ * @author Marco Baldassarri on 30/07/2017.
  */
 public class NearestConsumerVerticle extends VerticleConsumer {
 
     public NearestConsumerVerticle() {
-        super(Constants.CONSUMER_VEHICLE_SERVICE);
+        super(VEHICLE_SERVICE_QUEUE_NEAREST);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class NearestConsumerVerticle extends VerticleConsumer {
     private void startUserConsumer() throws IOException, TimeoutException {
         startConsumer(Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST,
-                EVENT_BUS_AVAILABLE_ADDRESS);
+                NEAREST_EVENT_BUS_ADDRESS);
     }
 
     @Override

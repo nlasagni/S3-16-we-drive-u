@@ -11,12 +11,8 @@ public class AnalyticsVehicle {
     private String status;
 
     public AnalyticsVehicle(@JsonProperty("licensePlate") String licensePlate,
-                            @JsonProperty("status") String status){
+                            @JsonProperty("status") String status) {
         this.licensePlate = licensePlate;
-        this.status = status;
-    }
-
-    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -26,6 +22,10 @@ public class AnalyticsVehicle {
 
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

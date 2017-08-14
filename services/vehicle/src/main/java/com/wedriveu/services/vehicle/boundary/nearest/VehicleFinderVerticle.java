@@ -1,9 +1,10 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
+
 import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.rabbitmq.RabbitMQConfig;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
-import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponse;
+import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
+import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponseCanDrive;
 import com.wedriveu.shared.entity.Position;
 import com.wedriveu.services.shared.utilities.PositionUtils;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
@@ -21,7 +22,8 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.IntStream;
 
-import static com.wedriveu.shared.util.Constants.EVENT_BUS_FINDER_ADDRESS;
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_FINDER_ADDRESS;
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_FINDER;
 import static com.wedriveu.shared.util.Constants.ZERO;
 
 /**
@@ -30,10 +32,10 @@ import static com.wedriveu.shared.util.Constants.ZERO;
  * actual availability of the vehicles by using RabbitMQ Vert.x library.
  * At the end of the process, only one vehicle is being picked up.
  *
- * @author Marco Baldassarri
- * @since 5/08/2017
+ * @author Marco Baldassarri on 5/08/2017.
  */
 public class VehicleFinderVerticle extends VerticleConsumer {
+
 
     private static RabbitMQClient client;
     private String username;
@@ -46,7 +48,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     private JsonArray responseJsonArray;
 
     public VehicleFinderVerticle() {
-        super(Constants.CONSUMER_VEHICLE_SERVICE);
+        super(VEHICLE_SERVICE_QUEUE_FINDER);
     }
 
     @Override
@@ -77,7 +79,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     }
 
     private void startVehicleCommunication() {
-        client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
+        client = RabbitMQClientFactory.createClient(vertx);
         client.start(onStartCompleted -> {
                     if (onStartCompleted.succeeded()) {
                         declareExchanges(onDeclareCompleted -> {
@@ -119,7 +121,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         distanceToUser = PositionUtils.getDistanceInKm(userPosition, vehiclePosition);
         double tripDistance = (distanceToUser) + (PositionUtils.getDistanceInKm(userPosition, destPosition));
         userRequest.setTripDistance(tripDistance);
-        return new JsonObject().mapFrom(userRequest);
+        return JsonObject.mapFrom(userRequest);
     }
 
 
@@ -136,11 +138,11 @@ public class VehicleFinderVerticle extends VerticleConsumer {
             vertx.eventBus().consumer(eventBus, msg -> {
                 JsonObject responseJson = (JsonObject) msg.body();
                 String response = responseJson.getString(Constants.EventBus.BODY);
-                VehicleResponse vehicleResponse = (new JsonObject(response)).mapTo(VehicleResponse.class);
-                if (vehicleResponse.isEligible()) {
-                    vehicleResponse.setUsername(username);
-                    vehicleResponse.setDistanceToUser(distanceToUser);
-                    responseJsonArray.add(new JsonObject().mapFrom(vehicleResponse));
+                VehicleResponseCanDrive vehicleResponseCanDrive = (new JsonObject(response)).mapTo(VehicleResponseCanDrive.class);
+                if (vehicleResponseCanDrive.isEligible()) {
+                    vehicleResponseCanDrive.setUsername(username);
+                    vehicleResponseCanDrive.setDistanceToUser(distanceToUser);
+                    responseJsonArray.add(JsonObject.mapFrom(vehicleResponseCanDrive));
                     if (counter == availableVehicles.size()) {
                         vertx.eventBus().send(Messages.VehicleFinder.VEHICLE_RESPONSE, responseJsonArray);
                         vertx.undeploy(deploymentID());

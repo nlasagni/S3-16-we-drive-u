@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Stefano Bernagozzi
@@ -30,7 +30,7 @@ public class AnalyticsStoreImplTest {
         EntityListStoreStrategy<AnalyticsVehicle> storeStrategy =
                 new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, DATABASE_FILE_NAME);
         analyticsStore = new AnalyticsStoreImpl(storeStrategy, vehiclesCounterAlgorithm);
-        vehicle= new AnalyticsVehicle(VEHICLE_1_LICENSE_PLATE, "available");
+        vehicle = new AnalyticsVehicle(VEHICLE_1_LICENSE_PLATE, "available");
     }
 
     @Test
@@ -54,7 +54,7 @@ public class AnalyticsStoreImplTest {
     public void updateVehicle() throws Exception {
         boolean insertionSucceded = insertVehicleIntoDatabase();
         final String NEW_STATUS = "broken";
-        boolean updateSucceded = analyticsStore.updateVehicle(vehicle.getLicensePlate(),NEW_STATUS);
+        boolean updateSucceded = analyticsStore.updateVehicle(vehicle.getLicensePlate(), NEW_STATUS);
         Optional<AnalyticsVehicle> vehicleFromStore = analyticsStore.getVehicleByLicensePlate(vehicle.getLicensePlate());
         assertTrue(insertionSucceded &&
                 updateSucceded &&
@@ -70,13 +70,13 @@ public class AnalyticsStoreImplTest {
         final int bookedVehicles = 7;
         final int stolenVehicles = 8;
         final int rechargingVehicles = 9;
-        addSomeVehiclesToDatabase(availableVehicles, brokenVehicles,bookedVehicles,stolenVehicles,rechargingVehicles);
+        addSomeVehiclesToDatabase(availableVehicles, brokenVehicles, bookedVehicles, stolenVehicles, rechargingVehicles);
         VehicleCounter counter = analyticsStore.getVehicleCounter();
         assertTrue(counter.getAvailable() == availableVehicles &&
                 counter.getBooked() == bookedVehicles &&
                 counter.getBroken() == brokenVehicles &&
                 counter.getRecharging() == rechargingVehicles &&
-                counter.getStolen() == stolenVehicles );
+                counter.getStolen() == stolenVehicles);
 
     }
 

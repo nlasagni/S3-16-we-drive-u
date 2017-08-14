@@ -18,7 +18,6 @@ public interface UserStore {
     void mapEntityToJson();
 
     /**
-     *
      * @param username Identifies the <em>User</em>'s <em>username</em> that must be authenticated.
      * @return Returns the <em>User</em> authenticated, only if the authentication is succesfull.
      */

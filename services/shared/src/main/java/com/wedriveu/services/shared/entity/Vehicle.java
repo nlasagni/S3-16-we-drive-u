@@ -3,14 +3,15 @@ package com.wedriveu.services.shared.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wedriveu.shared.entity.Position;
 
+import java.net.URL;
 import java.util.Date;
 
-import static com.wedriveu.shared.util.Constants.*;
-
 /**
+ *
+ * Represents the POJO Vehicle.
+ *
  * @author Marco Baldassarri
  * @author Michele
- * @since 02/08/2017
  */
 public class Vehicle {
 
@@ -20,19 +21,72 @@ public class Vehicle {
     public static final String STATUS_BROKEN_STOLEN = "broken_stolen";
     public static final String STATUS_NETWORK_ISSUES = "net_issues";
 
+    @JsonProperty
     private String carLicencePlate;
-    private String state;
+    @JsonProperty
+    private String status;
+    @JsonProperty
     private Position position;
+    @JsonProperty
     private Date lastUpdate;
+    @JsonProperty
+    private String name;
+    @JsonProperty
+    private String description;
+    @JsonProperty
+    private URL imageUrl;
 
-    public Vehicle(@JsonProperty(CAR_LICENCE_PLATE) String carLicencePlate,
-                   @JsonProperty(STATE) String state,
-                   @JsonProperty(POSITION) Position position,
-                   @JsonProperty(LAST_UPDATE) Date lastUpdate) {
+    public Vehicle(String carLicencePlate,
+                   String status,
+                   Position position,
+                   Date lastUpdate,
+                   String name,
+                   String description,
+                   URL imageUrl) {
         this.carLicencePlate = carLicencePlate;
-        this.state = state;
+        this.status = status;
         this.position = position;
         this.lastUpdate = lastUpdate;
+        this.name = name;
+        this.description = description;
+        this.imageUrl = imageUrl;
+    }
+
+    public Vehicle(@JsonProperty String carLicencePlate,
+                   @JsonProperty String status,
+                   @JsonProperty Position position,
+                   @JsonProperty Date lastUpdate) {
+        this.carLicencePlate = carLicencePlate;
+        this.status = status;
+        this.position = position;
+        this.lastUpdate = lastUpdate;
+    }
+
+    public Vehicle() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public URL getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(URL imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getCarLicencePlate() {
@@ -43,12 +97,12 @@ public class Vehicle {
         this.carLicencePlate = carLicencePlate;
     }
 
-    public String getState() {
-        return state;
+    public String getStatus() {
+        return status;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Date getLastUpdate() {
@@ -71,9 +125,22 @@ public class Vehicle {
     public String toString() {
         return "Vehicle{" +
                 "carLicencePlate='" + carLicencePlate + '\'' +
-                ", state='" + state + '\'' +
+                ", state='" + status + '\'' +
                 ", position=" + position +
                 ", lastUpdate=" + lastUpdate +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vehicle vehicle = (Vehicle) o;
+        return carLicencePlate.equals(vehicle.carLicencePlate);
+    }
+
+    @Override
+    public int hashCode() {
+        return carLicencePlate.hashCode();
     }
 }

@@ -1,14 +1,21 @@
 package com.wedriveu.services.shared.rabbitmq;
 
+
+import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
+import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.utilities.MessageParser;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_VEHICLE_REQUEST;
 
 /**
  * Basic Vert.x RabbitMQ Consumer Verticle. Used to properly handle inbound messages from external publishers.
@@ -20,18 +27,16 @@ public abstract class VerticleConsumer extends AbstractVerticle {
 
     protected EventBus eventBus;
     private String queueName;
-    private io.vertx.rabbitmq.RabbitMQClient client;
-    private String name;
+    private RabbitMQClient client;
 
     public VerticleConsumer(String name) {
-        this.name = name;
+        this.queueName = name;
     }
 
     @Override
     public void start() throws Exception {
-        this.queueName = Constants.SERVICE_QUEUE_BASE_NAME + "." + name;
         eventBus = vertx.eventBus();
-        client = RabbitMQConfig.getInstance(vertx).getRabbitMQClient();
+        client = RabbitMQClientFactory.createClient(vertx);
     }
 
     protected void startConsumer(String exchange, String routingKey, String eventBusAddress)
@@ -74,7 +79,6 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     private void bindQueueToExchange(String exchangeName,
                                      String baseRoutingKey,
                                      Handler<AsyncResult<Void>> handler) {
-        baseRoutingKey = name.isEmpty() ? String.format(baseRoutingKey, name) : baseRoutingKey;
         client.queueBind(queueName,
                 exchangeName,
                 baseRoutingKey,
@@ -90,7 +94,8 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     public abstract void registerConsumer(String eventBus);
 
     private void basicConsume(String eventBus) {
-        client.basicConsume(queueName, eventBus, null);
+
+        client.basicConsume(queueName, eventBus, handler -> { });
     }
 
 }

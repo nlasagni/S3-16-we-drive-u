@@ -23,7 +23,7 @@ public class VehicleCounter {
         booked++;
     }
 
-    public void increaseStolen(){
+    public void increaseStolen() {
         stolen++;
     }
 
@@ -50,7 +50,7 @@ public class VehicleCounter {
     public int getAvailable() {
         return available;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -15,14 +15,19 @@ public interface BookingStore {
 
     /**
      * Adds a booking to the storeEntities.
+     *
      * @param booking The booking to be added to the storeEntities.
      * @return A boolean indicating the success or the failure of this operation.
      */
     boolean addBooking(Booking booking);
 
     /**
+<<<<<<< HEAD
      *
      * @param bookingId Identifies the <em>com.wedriveu.services.shared.entity.Booking</em>'s <em>ID</em> that must be retreived.
+=======
+     * @param bookingId Identifies the <em>com.wedriveu.services.booking.entity.Booking</em>'s <em>ID</em> that must be retreived.
+>>>>>>> WDU_86_Register_Vehicle_to_the_System
      * @return Returns the {@linkplain Booking} with the provided id, only if found.
      */
     Optional<Booking> getBooking(int bookingId);
@@ -30,7 +35,7 @@ public interface BookingStore {
     /**
      * Updates the status of a {@linkplain Booking}.
      *
-     * @param bookingId The id of the {@linkplain Booking} to be updated.
+     * @param bookingId     The id of the {@linkplain Booking} to be updated.
      * @param bookingStatus The new status of the {@linkplain Booking}.
      * @return A boolean indicating the success or the failure of this operation.
      */
@@ -40,7 +45,7 @@ public interface BookingStore {
      * Fetches all {@linkplain Booking} stored that are inside the range of specified dates.
      *
      * @param fromDate Starting date of the range.
-     * @param toDate End date of the range.
+     * @param toDate   End date of the range.
      * @return All the {@linkplain Booking}s inside the range of specified dates.
      */
     List<Booking> getBookingsByDate(Date fromDate, Date toDate);
