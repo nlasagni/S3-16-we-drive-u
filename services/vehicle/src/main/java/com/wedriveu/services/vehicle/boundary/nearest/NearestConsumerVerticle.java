@@ -32,7 +32,7 @@ public class NearestConsumerVerticle extends VerticleConsumer {
     }
 
     private void startUserConsumer() throws IOException, TimeoutException {
-        startConsumer(Constants.RabbitMQ.Exchanges.VEHICLE,
+        startConsumerWithDurableQueue(Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST,
                 NEAREST_EVENT_BUS_ADDRESS);
     }

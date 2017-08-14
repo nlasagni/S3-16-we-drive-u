@@ -34,7 +34,12 @@ public abstract class VerticleConsumer extends AbstractVerticle {
         client = RabbitMQClientFactory.createClient(vertx);
     }
 
-    protected void startConsumer(String exchange, String routingKey, String eventBusAddress)
+    protected void startConsumerWithDurableQueue(String exchange, String routingKey, String eventBusAddress)
+            throws IOException, TimeoutException {
+        startConsumer(true, exchange, routingKey, eventBusAddress);
+    }
+
+    protected void startConsumer(boolean durableQueue, String exchange, String routingKey, String eventBusAddress)
             throws IOException, TimeoutException {
         startConsumer(onStart -> {
             declareQueue(onQueue -> {
@@ -89,7 +94,6 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     public abstract void registerConsumer(String eventBus);
 
     private void basicConsume(String eventBus) {
-
         client.basicConsume(queueName, eventBus, handler -> { });
     }
 

@@ -1,7 +1,7 @@
 package com.wedriveu.services.vehicle.boundary.nearest.entity;
 
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
-import com.wedriveu.shared.entity.Position;
+import com.wedriveu.shared.rabbitmq.message.Position;
 
 /**
  * Created by Marco on 02/08/2017.

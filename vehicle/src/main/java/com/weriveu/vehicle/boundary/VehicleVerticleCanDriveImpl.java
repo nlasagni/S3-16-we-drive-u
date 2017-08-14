@@ -3,8 +3,8 @@ package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.shared.entity.CanDriveRequest;
-import com.wedriveu.shared.entity.CanDriveResponse;
+import com.wedriveu.shared.rabbitmq.message.CanDriveRequest;
+import com.wedriveu.shared.rabbitmq.message.CanDriveResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.CanDriveChecker;

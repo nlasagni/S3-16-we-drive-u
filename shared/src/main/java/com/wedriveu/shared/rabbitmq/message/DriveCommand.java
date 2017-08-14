@@ -1,4 +1,4 @@
-package com.wedriveu.shared.entity;
+package com.wedriveu.shared.rabbitmq.message;
 
 import com.wedriveu.shared.util.Position;
 

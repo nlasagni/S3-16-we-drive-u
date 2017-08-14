@@ -1,7 +1,7 @@
 package com.weriveu.vehicle.boundary;
 
-import com.wedriveu.shared.entity.VehicleBookRequest;
-import com.wedriveu.shared.entity.VehicleBookResponse;
+import com.wedriveu.shared.rabbitmq.message.VehicleBookRequest;
+import com.wedriveu.shared.rabbitmq.message.VehicleBookResponse;
 
 /**
  * @author Michele Donati on 11/08/2017.

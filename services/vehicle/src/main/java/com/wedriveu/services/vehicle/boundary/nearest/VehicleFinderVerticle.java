@@ -8,7 +8,7 @@ import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponseCanDrive;
 import com.wedriveu.services.shared.util.PositionUtils;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
-import com.wedriveu.shared.entity.Position;
+import com.wedriveu.shared.rabbitmq.message.Position;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -24,6 +24,7 @@ import java.util.stream.IntStream;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_FINDER_ADDRESS;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_FINDER;
+import static com.wedriveu.shared.util.Constants.USERNAME;
 import static com.wedriveu.shared.util.Constants.ZERO;
 
 /**
@@ -36,6 +37,7 @@ import static com.wedriveu.shared.util.Constants.ZERO;
  */
 public class VehicleFinderVerticle extends VerticleConsumer {
 
+    private static final long TIME_OUT = 60000;
 
     private static RabbitMQClient client;
     private String username;
@@ -48,8 +50,8 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     private JsonArray responseJsonArray;
     private VehicleResponseCanDrive vehicleResponseCanDrive;
 
-    public VehicleFinderVerticle() {
-        super(VEHICLE_SERVICE_QUEUE_FINDER);
+    public VehicleFinderVerticle(String id) {
+        super(String.format(VEHICLE_SERVICE_QUEUE_FINDER, id));
     }
 
     @Override
@@ -60,13 +62,15 @@ public class VehicleFinderVerticle extends VerticleConsumer {
 
     private void sendDataToVehicle(Message message) {
         prepareData((JsonObject) message.body());
-        startVehicleCommunication();
-        try {
-            startFinderConsumer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
+        if (availableVehicles == null || availableVehicles.isEmpty()) {
+            sendNoVehicleFound();
+        } else {
+            startVehicleCommunication();
+            try {
+                startFinderConsumer();
+            } catch (IOException | TimeoutException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -77,6 +81,12 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         destPosition = userRequest.getDestinationPosition();
         username = userRequest.getUsername();
         responseJsonArray = new JsonArray();
+    }
+
+    private void sendNoVehicleFound() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.put(USERNAME, username);
+        vertx.eventBus().send(Messages.VehicleFinder.VEHICLE_RESPONSE, jsonObject);
     }
 
     private void startVehicleCommunication() {
@@ -97,7 +107,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         IntStream.range(ZERO, availableVehicles.size()).forEach(index -> {
             publishToConsumer(Constants.RabbitMQ.Exchanges.VEHICLE,
                     String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_REQUEST,
-                            availableVehicles.get(index).getCarLicencePlate()), index);
+                            availableVehicles.get(index).getLicencePlate()), index);
         });
     }
 
@@ -127,27 +137,28 @@ public class VehicleFinderVerticle extends VerticleConsumer {
 
 
     private void startFinderConsumer() throws IOException, TimeoutException {
-        startConsumer(Constants.RabbitMQ.Exchanges.VEHICLE,
+        startConsumer(false,
+                Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, username),
                 EVENT_BUS_FINDER_ADDRESS);
     }
 
     @Override
     public void registerConsumer(String eventBus) {
-        // FIXME: This part has been added for release 0.2.0 fix and has not been tested
-        counter++;
-        if (counter <= availableVehicles.size()) {
-            vertx.eventBus().consumer(eventBus, msg -> {
+        vertx.setTimer(TIME_OUT, onTimeOut -> client.stop(onStop -> sendNoVehicleFound()));
+        vertx.eventBus().consumer(eventBus, msg -> {
+            counter++;
+            if (counter <= availableVehicles.size()) {
                 JsonObject responseJson = (JsonObject) msg.body();
                 String response = responseJson.getString(Constants.EventBus.BODY);
                 vehicleResponseCanDrive = (new JsonObject(response)).mapTo(VehicleResponseCanDrive.class);
                 vehicleResponseCanDrive.setUsername(username);
                 vehicleResponseCanDrive.setDistanceToUser(distanceToUser);
-            });
-        } else {
-            responseJsonArray.add(JsonObject.mapFrom(vehicleResponseCanDrive));
-            vertx.eventBus().send(Messages.VehicleFinder.VEHICLE_RESPONSE, responseJsonArray);
-        }
+                responseJsonArray.add(JsonObject.mapFrom(vehicleResponseCanDrive));
+            } else {
+                vertx.eventBus().send(Messages.VehicleFinder.VEHICLE_RESPONSE, responseJsonArray);
+            }
+        });
     }
 
 }

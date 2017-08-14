@@ -1,7 +1,7 @@
 package com.wedriveu.vehicle.boundary;
 
 
-import com.wedriveu.shared.entity.UpdateToService;
+import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;

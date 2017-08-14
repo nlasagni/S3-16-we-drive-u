@@ -1,7 +1,7 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.shared.entity.VehicleBookRequest;
-import com.wedriveu.shared.entity.VehicleBookResponse;
+import com.wedriveu.shared.rabbitmq.message.VehicleBookRequest;
+import com.wedriveu.shared.rabbitmq.message.VehicleBookResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;

@@ -1,7 +1,7 @@
 package com.wedriveu.services.shared.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wedriveu.shared.entity.Position;
+import com.wedriveu.shared.rabbitmq.message.Position;
 
 import java.util.Date;
 

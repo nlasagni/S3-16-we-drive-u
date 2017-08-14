@@ -1,7 +1,7 @@
 package com.weriveu.vehicle.boundary;
 
-import com.wedriveu.shared.entity.CanDriveRequest;
-import com.wedriveu.shared.entity.CanDriveResponse;
+import com.wedriveu.shared.rabbitmq.message.CanDriveRequest;
+import com.wedriveu.shared.rabbitmq.message.CanDriveResponse;
 
 /**
  * @author Michele Donati on 09/08/2017.

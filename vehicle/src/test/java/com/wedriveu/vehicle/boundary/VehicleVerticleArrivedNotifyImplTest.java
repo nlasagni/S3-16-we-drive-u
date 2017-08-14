@@ -1,6 +1,6 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.shared.entity.ArrivedNotify;
+import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;

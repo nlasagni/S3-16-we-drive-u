@@ -1,4 +1,4 @@
-package com.wedriveu.shared.entity;
+package com.wedriveu.shared.rabbitmq.message;
 
 /**
  * This class represents a login response of an authentication attempt into the system.

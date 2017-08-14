@@ -1,7 +1,7 @@
 package com.wedriveu.services.authentication.boundary;
 
-import com.wedriveu.shared.entity.LoginRequest;
-import com.wedriveu.shared.entity.LoginResponse;
+import com.wedriveu.shared.rabbitmq.message.LoginRequest;
+import com.wedriveu.shared.rabbitmq.message.LoginResponse;
 
 /**
  * @author Michele Donati

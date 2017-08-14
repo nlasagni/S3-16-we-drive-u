@@ -1,7 +1,7 @@
 package com.wedriveu.mobile.service.login;
 
 import com.wedriveu.mobile.service.ServiceConsumerStrategy;
-import com.wedriveu.shared.entity.LoginResponse;
+import com.wedriveu.shared.rabbitmq.message.LoginResponse;
 import com.wedriveu.shared.rabbitmq.communication.RabbitMqCommunication;
 
 import java.io.IOException;

@@ -189,6 +189,11 @@ public interface Constants {
      */
     String USERNAME = "username";
 
+    /**
+     * Key used for event bus messages.
+     */
+    String VEHICLE = "vehicle";
+
 
     /**
      * The predefined range of kilometers used to simulate the vehicle recharging movement

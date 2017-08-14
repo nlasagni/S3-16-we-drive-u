@@ -32,7 +32,7 @@ public class RegisterConsumerVerticle extends VerticleConsumer {
     }
 
     private void startVehicleRegisterConsumer() throws IOException, TimeoutException {
-        startConsumer(Constants.RabbitMQ.Exchanges.VEHICLE,
+        startConsumerWithDurableQueue(Constants.RabbitMQ.Exchanges.VEHICLE,
                 REGISTER_REQUEST,
                 EVENT_BUS_REGISTER_ADDRESS);
     }

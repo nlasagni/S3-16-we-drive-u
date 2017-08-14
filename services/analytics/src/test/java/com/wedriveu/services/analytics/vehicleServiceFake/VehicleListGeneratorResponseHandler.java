@@ -5,7 +5,7 @@ import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.entity.Position;
+import com.wedriveu.shared.rabbitmq.message.Position;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 

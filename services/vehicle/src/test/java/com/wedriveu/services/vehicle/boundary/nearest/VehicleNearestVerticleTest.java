@@ -59,9 +59,7 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
         });
         vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
             vertx.eventBus().send(Messages.VehicleService.BOOT, null);
-
         }));
-
     }
 
     @After
@@ -71,7 +69,7 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
 
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessage(context, getJson());
+        super.publishMessage(false, context, getJson());
     }
 
     @Override

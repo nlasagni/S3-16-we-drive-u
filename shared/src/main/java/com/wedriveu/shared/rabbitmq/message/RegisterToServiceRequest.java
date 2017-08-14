@@ -1,4 +1,4 @@
-package com.wedriveu.shared.entity;
+package com.wedriveu.shared.rabbitmq.message;
 
 /**
  * @author Michele Donati on 10/08/2017.

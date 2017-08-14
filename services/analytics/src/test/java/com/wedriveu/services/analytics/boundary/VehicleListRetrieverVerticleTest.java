@@ -4,7 +4,7 @@ import com.wedriveu.services.analytics.vehicleServiceFake.VehicleListGeneratorRe
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.entity.Position;
+import com.wedriveu.shared.rabbitmq.message.Position;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;

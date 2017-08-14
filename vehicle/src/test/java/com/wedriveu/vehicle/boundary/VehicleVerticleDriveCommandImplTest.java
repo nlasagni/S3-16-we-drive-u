@@ -1,8 +1,7 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.shared.entity.DriveCommand;
+import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;

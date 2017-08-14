@@ -25,7 +25,7 @@ public class AnalyticsVerticleController extends AbstractVerticle {
     private void storeVehicleList(Message message) {
         VehicleListObject vehicleList = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleListObject.class);
         for(Vehicle vehicle: vehicleList.getVehicleList()){
-            analyticsStore.addVehicle(vehicle.getCarLicencePlate(), vehicle.getStatus());
+            analyticsStore.addVehicle(vehicle.getLicencePlate(), vehicle.getStatus());
         }
     }
 }
