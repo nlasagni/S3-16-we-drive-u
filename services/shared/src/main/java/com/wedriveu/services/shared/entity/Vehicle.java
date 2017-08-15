@@ -138,11 +138,15 @@ public class Vehicle {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Vehicle vehicle = (Vehicle) o;
-        return licencePlate.equals(vehicle.licencePlate);
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof Vehicle)) {
+            return false;
+        }
+        Vehicle vehicle = (Vehicle) other;
+        return licencePlate != null && licencePlate.equals(vehicle.licencePlate);
     }
 
     @Override

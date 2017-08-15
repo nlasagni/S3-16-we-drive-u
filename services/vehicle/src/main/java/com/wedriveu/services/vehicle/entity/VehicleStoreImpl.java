@@ -79,13 +79,12 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     @Override
     public void clearVehicles() {
-        //TODO
-//        try {
-//            ObjectMapper mapper = new ObjectMapper();
-//            mapper.writeValue(file, new ArrayList<Vehicle>());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(file, new ArrayList<Vehicle>());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         eventBus.send(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, null);
     }
 
@@ -96,8 +95,10 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         List<Vehicle> vehicles = getVehicleList();
         List<Vehicle> availableVehicles = new ArrayList<>(vehicles.size());
         for (Vehicle vehicle : vehicles) {
-            if (vehicle.getStatus().equals(STATUS_AVAILABLE)
-                    && PositionUtils.isInRange(userPosition, vehicle.getPosition())) {
+            Position vehiclePosition = vehicle.getPosition();
+            if (STATUS_AVAILABLE.equals(vehicle.getStatus()) &&
+                    vehiclePosition != null &&
+                    PositionUtils.isInRange(userPosition, vehiclePosition)) {
                 availableVehicles.add(vehicle);
             }
         }
