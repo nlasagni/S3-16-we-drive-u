@@ -28,7 +28,7 @@ public class VehicleFactoryFiat implements VehicleFactory {
     @Override
     public Vehicle getVehicle() {
         Vehicle vehicle = new Vehicle();
-        vehicle.setLicencePlate(LICENCE_PLATE);
+        vehicle.setLicensePlate(LICENCE_PLATE);
         vehicle.setStatus(STATUS);
         vehicle.setPosition(POSITION);
         vehicle.setLastUpdate(LAST_UPDATE);

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static com.wedriveu.services.shared.entity.Vehicle.NO_ELIGIBLE_VEHICLE_RESPONSE;
 import static com.wedriveu.shared.util.Constants.*;
-import static com.wedriveu.shared.util.Constants.Vehicle.LICENCE_PLATE;
+import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 
 
 /**
@@ -94,7 +94,7 @@ public class NearestControl extends AbstractVerticle {
         VehicleResponseCanDrive chosen = responseList.get(ZERO);
         JsonObject bestVehicleJson = new JsonObject();
         bestVehicleJson.put(USERNAME, chosen.getUsername());
-        bestVehicleJson.put(LICENCE_PLATE, chosen.getLicencePlate());
+        bestVehicleJson.put(LICENSE_PLATE, chosen.getLicencePlate());
         return bestVehicleJson;
     }
 

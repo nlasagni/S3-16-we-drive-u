@@ -10,7 +10,7 @@ import io.vertx.core.json.JsonObject;
 
 import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE;
-import static com.wedriveu.shared.util.Constants.Vehicle.LICENCE_PLATE;
+import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 
 
 /**
@@ -29,8 +29,8 @@ public class RegisterPublisherVerticle extends VerticlePublisher {
 
     private void sendRegisterResponse(Message message) {
         JsonObject json = (JsonObject) message.body();
-        String licencePlate = json.getString(LICENCE_PLATE);
-        json.remove(LICENCE_PLATE);
+        String licencePlate = json.getString(LICENSE_PLATE);
+        json.remove(LICENSE_PLATE);
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(REGISTER_RESPONSE, licencePlate),
                 new JsonObject().put(BODY, json.toString()), onPublish ->  {

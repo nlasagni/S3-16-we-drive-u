@@ -25,7 +25,7 @@ public class Vehicle {
     public static final String NO_ELIGIBLE_VEHICLE_RESPONSE = "No vehicles nearby, " +
                                                         "please try again later or change your address";
 
-    private String licencePlate;
+    private String licensePlate;
     private String status;
     private Position position;
     private Date lastUpdate;
@@ -34,14 +34,14 @@ public class Vehicle {
     private URL imageUrl;
     private String notEligibleVehicleFound;
 
-    public Vehicle(@JsonProperty String licencePlate,
+    public Vehicle(@JsonProperty String licensePlate,
                    @JsonProperty String status,
                    @JsonProperty Position position,
                    @JsonProperty Date lastUpdate,
                    @JsonProperty String name,
                    @JsonProperty String description,
                    @JsonProperty URL imageUrl) {
-        this.licencePlate = licencePlate;
+        this.licensePlate = licensePlate;
         this.status = status;
         this.position = position;
         this.lastUpdate = lastUpdate;
@@ -50,11 +50,11 @@ public class Vehicle {
         this.imageUrl = imageUrl;
     }
 
-    public Vehicle(@JsonProperty String licencePlate,
+    public Vehicle(@JsonProperty String licensePlate,
                    @JsonProperty String status,
                    @JsonProperty Position position,
                    @JsonProperty Date lastUpdate) {
-        this.licencePlate = licencePlate;
+        this.licensePlate = licensePlate;
         this.status = status;
         this.position = position;
         this.lastUpdate = lastUpdate;
@@ -95,12 +95,12 @@ public class Vehicle {
         this.imageUrl = imageUrl;
     }
 
-    public String getLicencePlate() {
-        return licencePlate;
+    public String getLicensePlate() {
+        return licensePlate;
     }
 
-    public void setLicencePlate(String licencePlate) {
-        this.licencePlate = licencePlate;
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 
     public String getStatus() {
@@ -130,7 +130,7 @@ public class Vehicle {
     @Override
     public String toString() {
         return "Vehicle{" +
-                "licencePlate='" + licencePlate + '\'' +
+                "licensePlate='" + licensePlate + '\'' +
                 ", state='" + status + '\'' +
                 ", position=" + position +
                 ", lastUpdate=" + lastUpdate +
@@ -146,11 +146,11 @@ public class Vehicle {
             return false;
         }
         Vehicle vehicle = (Vehicle) other;
-        return licencePlate != null && licencePlate.equals(vehicle.licencePlate);
+        return licensePlate != null && licensePlate.equals(vehicle.licensePlate);
     }
 
     @Override
     public int hashCode() {
-        return licencePlate.hashCode();
+        return licensePlate.hashCode();
     }
 }

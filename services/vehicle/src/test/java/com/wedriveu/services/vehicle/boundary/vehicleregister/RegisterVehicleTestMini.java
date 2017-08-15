@@ -4,7 +4,6 @@ import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
-import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
@@ -43,7 +42,7 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
         vertx = Vertx.vertx();
         super.setup(vertx, completed -> {
             async.countDown();
-            String licencePlate = new VehicleFactoryMini().getVehicle().getLicencePlate();
+            String licencePlate = new VehicleFactoryMini().getVehicle().getLicensePlate();
             super.declareQueueAndBind(licencePlate, context, declared -> {
                 context.assertTrue(declared.succeeded());
                 async.countDown();

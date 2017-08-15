@@ -116,7 +116,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         IntStream.range(ZERO, availableVehicles.size()).forEach(index -> {
             publishToConsumer(Constants.RabbitMQ.Exchanges.VEHICLE,
                     String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_REQUEST,
-                            availableVehicles.get(index).getLicencePlate()), index);
+                            availableVehicles.get(index).getLicensePlate()), index);
         });
     }
 

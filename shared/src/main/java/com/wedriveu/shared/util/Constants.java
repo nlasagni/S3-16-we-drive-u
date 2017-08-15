@@ -180,7 +180,7 @@ public interface Constants {
 
 
     interface Vehicle {
-        String LICENCE_PLATE = "licencePlate";
+        String LICENSE_PLATE = "licensePlate";
 
     }
 

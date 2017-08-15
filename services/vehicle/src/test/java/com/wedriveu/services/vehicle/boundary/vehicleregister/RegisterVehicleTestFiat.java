@@ -42,7 +42,7 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
         vertx = Vertx.vertx();
         super.setup(vertx, completed -> {
             async.countDown();
-            String licencePlate = new VehicleFactoryFiat().getVehicle().getLicencePlate();
+            String licencePlate = new VehicleFactoryFiat().getVehicle().getLicensePlate();
             super.declareQueueAndBind(licencePlate, context, declared -> {
                 context.assertTrue(declared.succeeded());
                 async.countDown();

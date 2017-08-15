@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import static com.wedriveu.services.shared.entity.Vehicle.STATUS_AVAILABLE;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
-import static com.wedriveu.shared.util.Constants.Vehicle.LICENCE_PLATE;
+import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 
 
 /**
@@ -65,7 +65,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         JsonObject vehicleRequesterJson = (JsonObject) message.body();
         Vehicle vehicleRequester = vehicleRequesterJson.mapTo(Vehicle.class);
         List<Vehicle> vehicles = getVehicleList();
-        responseJson.put(LICENCE_PLATE, vehicleRequesterJson.getValue(LICENCE_PLATE));
+        responseJson.put(LICENSE_PLATE, vehicleRequesterJson.getValue(LICENSE_PLATE));
         Optional existingVehicle = vehicles.stream().filter(x -> x.equals(vehicleRequester)).findFirst();
         if (existingVehicle.isPresent()) {
             responseJson.put(REGISTER_RESULT, false);
@@ -111,7 +111,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     public void getVehicle(Message message) {
         List<Vehicle> vehicles = getVehicleList();
         JsonObject vehicleData = (JsonObject) message.body();
-        String carLicencePlate = vehicleData.getString(LICENCE_PLATE);
+        String carLicencePlate = vehicleData.getString(LICENSE_PLATE);
         Vehicle requestedVehicle = getRequestedVehicle(vehicles, carLicencePlate);
         eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED,
                 requestedVehicle == null ? null : JsonObject.mapFrom(requestedVehicle));
@@ -132,7 +132,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         ObjectMapper mapper = new ObjectMapper();
         List<Vehicle> vehicles = getVehicleList();
         for (Vehicle vehicle : vehicles) {
-            if (vehicle.getLicencePlate().equals(carLicencePlate)) {
+            if (vehicle.getLicensePlate().equals(carLicencePlate)) {
                 if (!(vehicle.getStatus().equals(status))) {
                     vehicle.setStatus(status);
                 }
@@ -150,7 +150,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         ObjectMapper mapper = new ObjectMapper();
         List<Vehicle> vehicles = getVehicleList();
         for (Vehicle vehicle : vehicles) {
-            if (vehicle.getLicencePlate().equals(carLicencePlate)) {
+            if (vehicle.getLicensePlate().equals(carLicencePlate)) {
                 vehicles.remove(vehicle);
                 break;
             }
@@ -163,7 +163,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         ObjectMapper mapper = new ObjectMapper();
         List<Vehicle> vehicles = getVehicleList();
         for (Vehicle vehicle : vehicles) {
-            if (vehicle.getLicencePlate().equals(carLicencePlateToDelete)) {
+            if (vehicle.getLicensePlate().equals(carLicencePlateToDelete)) {
                 vehicles.remove(vehicle);
                 vehicles.add(replacementVehicle);
                 break;
@@ -176,7 +176,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     public boolean theVehicleIsInTheDb(String carLicensePlate) {
         List<Vehicle> vehicles = getVehicleList();
         for (Vehicle vehicle : vehicles) {
-            if (vehicle.getLicencePlate().equals(carLicensePlate)) {
+            if (vehicle.getLicensePlate().equals(carLicensePlate)) {
                 return true;
             }
         }
@@ -200,7 +200,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private Vehicle getRequestedVehicle(List<Vehicle> vehicles, String carLicencePlate) {
         for (Vehicle vehicle : vehicles) {
 
-            if (vehicle.getLicencePlate().equals(carLicencePlate)) {
+            if (vehicle.getLicensePlate().equals(carLicencePlate)) {
                 return vehicle;
             }
         }
@@ -229,11 +229,11 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     private boolean thereAreNoDuplicates(List<Vehicle> vehicles) {
         for (int j = 0; j < vehicles.size(); j++) {
-            String currentCarLicencePlate = vehicles.get(j).getLicencePlate();
+            String currentCarLicencePlate = vehicles.get(j).getLicensePlate();
             for (int i = 0; i < vehicles.size(); i++) {
                 if (j != i
                         && i < vehicles.size() - 1
-                        && vehicles.get(i).getLicencePlate().equals(currentCarLicencePlate)) {
+                        && vehicles.get(i).getLicensePlate().equals(currentCarLicencePlate)) {
                     return false;
                 }
             }
