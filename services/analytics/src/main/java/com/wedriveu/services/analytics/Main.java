@@ -5,7 +5,7 @@ import com.wedriveu.services.shared.util.Log;
 import io.vertx.core.Vertx;
 
 /**
- * @Author Stefano Bernagozzi
+ * @author Stefano Bernagozzi
  */
 
 
