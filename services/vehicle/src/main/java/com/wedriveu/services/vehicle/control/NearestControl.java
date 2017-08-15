@@ -5,6 +5,7 @@ import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponseCanDrive;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
@@ -36,23 +37,36 @@ public class NearestControl extends AbstractVerticle {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.VehicleStore.AVAILABLE_COMPLETED, this::availableVehiclesCompleted);
         eventBus.consumer(Messages.VehicleFinder.VEHICLE_RESPONSE, this::handleVehicleResponses);
+        eventBus.consumer(Messages.VehicleFinder.NO_VEHICLE, this::handleNoVehicle);
     }
 
-    private void handleVehicleResponses(Message message) {
-        if (message.body() instanceof JsonObject) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.put(USERNAME, ((JsonObject) message.body()).getString(USERNAME));
-            Vehicle noEligibleVehicle = new Vehicle();
-            noEligibleVehicle.setNotEligibleVehicleFound(NO_ELIGIBLE_VEHICLE_RESPONSE);
-            jsonObject.put(VEHICLE, JsonObject.mapFrom(noEligibleVehicle).toString());
-            vertx.eventBus().send(Messages.VehicleStore.GET_VEHICLE_COMPLETED, jsonObject);
-        } else {
-            handleEligibleVehicles(message);
+    private void undeployFinder(String deploymentId) {
+        if (deploymentId != null && !deploymentId.isEmpty()) {
+            vertx.undeploy(deploymentId);
         }
     }
 
-    private void handleEligibleVehicles(Message message) {
-        JsonArray responseListJson = (JsonArray) message.body();
+    private void handleNoVehicle(Message message) {
+        JsonObject response = (JsonObject) message.body();
+        String deploymentId = response.getString(Constants.EventBus.DEPLOYMENT_ID);
+        undeployFinder(deploymentId);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.put(USERNAME, response.getString(USERNAME));
+        Vehicle noEligibleVehicle = new Vehicle();
+        noEligibleVehicle.setNotEligibleVehicleFound(NO_ELIGIBLE_VEHICLE_RESPONSE);
+        jsonObject.put(VEHICLE, JsonObject.mapFrom(noEligibleVehicle).toString());
+        vertx.eventBus().send(Messages.VehicleStore.GET_VEHICLE_COMPLETED, jsonObject);
+    }
+
+    private void handleVehicleResponses(Message message) {
+        JsonObject response = (JsonObject) message.body();
+        String deploymentId = response.getString(Constants.EventBus.DEPLOYMENT_ID);
+        undeployFinder(deploymentId);
+        JsonArray responseListJson = response.getJsonArray(Messages.VehicleFinder.VEHICLE_RESPONSE_RESULT);
+        handleEligibleVehicles(responseListJson);
+    }
+
+    private void handleEligibleVehicles(JsonArray responseListJson) {
         List<VehicleResponseCanDrive> responseList = new ArrayList<>(responseListJson.size());
         ObjectMapper objectMapper = new ObjectMapper();
         try {

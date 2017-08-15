@@ -32,6 +32,8 @@ public interface Messages {
      */
     interface VehicleFinder {
         String VEHICLE_RESPONSE = "finder.vehicle.response";
+        String VEHICLE_RESPONSE_RESULT = "vehicleResponseResult";
+        String NO_VEHICLE = "finder.vehicle.none";
     }
 
     /**

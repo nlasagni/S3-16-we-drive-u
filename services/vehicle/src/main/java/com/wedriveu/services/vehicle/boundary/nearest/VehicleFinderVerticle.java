@@ -85,8 +85,17 @@ public class VehicleFinderVerticle extends VerticleConsumer {
 
     private void sendNoVehicleFound() {
         JsonObject jsonObject = new JsonObject();
+        jsonObject.put(Constants.EventBus.DEPLOYMENT_ID, deploymentID());
         jsonObject.put(USERNAME, username);
-        vertx.eventBus().send(Messages.VehicleFinder.VEHICLE_RESPONSE, jsonObject);
+        eventBus.send(Messages.VehicleFinder.NO_VEHICLE, jsonObject);
+    }
+
+    private void sendResponse(JsonArray vehicles) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.put(Constants.EventBus.DEPLOYMENT_ID, deploymentID());
+        jsonObject.put(USERNAME, username);
+        jsonObject.put(Messages.VehicleFinder.VEHICLE_RESPONSE_RESULT, vehicles);
+        eventBus.send(Messages.VehicleFinder.VEHICLE_RESPONSE, jsonObject);
     }
 
     private void startVehicleCommunication() {
@@ -144,9 +153,9 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     }
 
     @Override
-    public void registerConsumer(String eventBus) {
+    public void registerConsumer(String eventBusAddress) {
         vertx.setTimer(TIME_OUT, onTimeOut -> client.stop(onStop -> sendNoVehicleFound()));
-        vertx.eventBus().consumer(eventBus, msg -> {
+        eventBus.consumer(eventBusAddress, msg -> {
             counter++;
             if (counter <= availableVehicles.size()) {
                 JsonObject responseJson = (JsonObject) msg.body();
@@ -156,7 +165,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
                 vehicleResponseCanDrive.setDistanceToUser(distanceToUser);
                 responseJsonArray.add(JsonObject.mapFrom(vehicleResponseCanDrive));
             } else {
-                vertx.eventBus().send(Messages.VehicleFinder.VEHICLE_RESPONSE, responseJsonArray);
+                sendResponse(responseJsonArray);
             }
         });
     }

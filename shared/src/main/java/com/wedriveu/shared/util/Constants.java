@@ -19,6 +19,11 @@ public interface Constants {
          * The json key with which retrieve the content of a message.
          */
         String BODY = "body";
+
+        /**
+         * The eventbus message key for passing a verticle deploymentId.
+         */
+        String DEPLOYMENT_ID = "deploymentId";
     }
 
     /**
