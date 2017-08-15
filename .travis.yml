@@ -35,13 +35,7 @@ script:
   - './gradlew'
 after_success:
   - 'bash deploy-services.sh'
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GH_TOKEN
-  local_dir: latest-docs
-  on:
-    branch: master
+  - 'bash push-docs.sh'
 deploy:
   provider: releases
   api-key: $GH_TOKEN
