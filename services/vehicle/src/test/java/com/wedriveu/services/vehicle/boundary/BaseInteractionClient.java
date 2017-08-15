@@ -1,6 +1,7 @@
 package com.wedriveu.services.vehicle.boundary;
 
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -20,7 +21,7 @@ import static com.wedriveu.shared.util.Constants.EventBus.BODY;
  */
 public abstract class BaseInteractionClient {
 
-    private static final int DELAY = 10000;
+    private static final int TIME_OUT = 12000;
     private RabbitMQClient rabbitMQClient;
     private String queue;
     private String exchangeName;
@@ -83,17 +84,19 @@ public abstract class BaseInteractionClient {
                 });
     }
 
-    protected void publishMessage(TestContext context, JsonObject data) {
+    protected void publishMessage(boolean withTimeOut, TestContext context, JsonObject data) {
         final Async async = context.async();
         context.assertNotNull(data);
         handleServiceResponse(context, async, eventBusAddress);
         rabbitMQClient.basicConsume(queue, eventBusAddress, context.asyncAssertSuccess(onGet -> {
             rabbitMQClient.basicPublish(exchangeName, requestRoutingKey, data,
                     context.asyncAssertSuccess(onPublish -> {
-                        vertx.setTimer(DELAY, handler -> {
-                            context.fail();
-                            async.complete();
-                        });
+                        if (withTimeOut) {
+                            vertx.setTimer(TIME_OUT, handler -> {
+                                context.fail();
+                                async.complete();
+                            });
+                        }
                     }));
         }));
     }

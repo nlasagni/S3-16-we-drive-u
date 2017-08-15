@@ -2,7 +2,7 @@ package com.wedriveu.services.analytics.control;
 
 import com.wedriveu.services.analytics.boundary.VehicleListRequestVerticle;
 import com.wedriveu.services.analytics.boundary.VehicleListRetrieverVerticle;
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;

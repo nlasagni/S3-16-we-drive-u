@@ -2,7 +2,7 @@ package com.wedriveu.vehicle.control
 
 import java.util.concurrent.ThreadLocalRandom
 
-import com.wedriveu.shared.utils.Position
+import com.wedriveu.shared.util.Position
 import com.wedriveu.vehicle.boundary.VehicleStopViewImpl
 import com.wedriveu.vehicle.shared.VehicleConstants
 import org.scalatest.{BeforeAndAfterEach, FunSuite}

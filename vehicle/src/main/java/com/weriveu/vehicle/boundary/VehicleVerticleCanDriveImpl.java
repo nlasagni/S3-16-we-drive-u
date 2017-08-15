@@ -3,14 +3,13 @@ package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.shared.entity.CanDriveRequest;
-import com.wedriveu.shared.entity.CanDriveResponse;
+import com.wedriveu.shared.rabbitmq.message.CanDriveRequest;
+import com.wedriveu.shared.rabbitmq.message.CanDriveResponse;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.utils.Log;
+import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.CanDriveChecker;
 import com.wedriveu.vehicle.control.CanDriveCheckerImpl;
 import com.wedriveu.vehicle.control.VehicleControl;
-import com.wedriveu.vehicle.shared.*;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;

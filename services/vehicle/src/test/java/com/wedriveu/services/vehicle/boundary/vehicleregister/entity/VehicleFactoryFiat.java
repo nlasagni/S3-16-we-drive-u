@@ -2,7 +2,7 @@ package com.wedriveu.services.vehicle.boundary.vehicleregister.entity;
 
 
 import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.shared.entity.Position;
+import com.wedriveu.shared.rabbitmq.message.Position;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,7 +28,7 @@ public class VehicleFactoryFiat implements VehicleFactory {
     @Override
     public Vehicle getVehicle() {
         Vehicle vehicle = new Vehicle();
-        vehicle.setCarLicencePlate(LICENCE_PLATE);
+        vehicle.setLicencePlate(LICENCE_PLATE);
         vehicle.setStatus(STATUS);
         vehicle.setPosition(POSITION);
         vehicle.setLastUpdate(LAST_UPDATE);

@@ -1,19 +1,34 @@
 package com.wedriveu.mobile.util;
 
 /**
- * Created by nicolalasagni on 18/07/2017.
+ * Global constants for the mobile app.
+ *
+ * @author Nicola Lasagni on 18/07/2017.
  */
 public interface Constants {
 
-    String SERVICE_BASE_URL = "http://uniboguys.duckdns.org:8080";
+    /**
+     * The {@linkplain android.os.Bundle} key for a generic view model id value.
+     */
     String VIEW_MODEL_ID = "viewModelId";
 
-    //Address resolution
+    /**
+     * The code needed to recognize a PLACE_AUTOCOMPLETE request to GoogleApi.
+     */
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    int SERVICE_OPERATION_TIMEOUT = 20000;
 
-    String NO_RESPONSE_DATA_ERROR = "Response empty.";
-    String TIME_OUT_ERROR = "Connection timeout reached. Please try again.";
+    /**
+     * The timeout for services operations.
+     */
+    int SERVICE_OPERATION_TIMEOUT = 30000;
+
+    /**
+     * A message to be displayed or logged when an empty response is received or the timeout is expired.
+     */
+    String NO_RESPONSE_DATA_ERROR = "An error occurred while communicating with our service, please try again later.";
+    /**
+     * A message to be displayed or logged when an error occurred during communication closing.
+     */
     String CLOSE_COMMUNICATION_ERROR = "Error occurred while closing RabbitMQ communication.";
 
 }

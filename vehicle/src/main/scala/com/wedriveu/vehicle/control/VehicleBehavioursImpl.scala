@@ -1,6 +1,6 @@
 package com.wedriveu.vehicle.control
 
-import com.wedriveu.shared.utils.Position
+import com.wedriveu.shared.util.{Log, Position}
 import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
@@ -151,9 +151,10 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
                                 estimatedJourneyTimeInSeconds: Long,
                                 deltaLat: Double,
                                 deltaLon: Double): Unit = {
-    val elapsedTime: Double = time.asInstanceOf[Double] / estimatedJourneyTimeInSeconds
-    var latInter: Double = selfDrivingVehicle.position.getLatitude + deltaLat * elapsedTime
-    var lonInter: Double = selfDrivingVehicle.position.getLongitude + deltaLon * elapsedTime
+    val elapsedTime: Double =
+      if (estimatedJourneyTimeInSeconds != 0) time.asInstanceOf[Double] / estimatedJourneyTimeInSeconds else 0
+    val latInter: Double = selfDrivingVehicle.position.getLatitude + deltaLat * elapsedTime
+    val lonInter: Double = selfDrivingVehicle.position.getLongitude + deltaLon * elapsedTime
     selfDrivingVehicle.position = new Position(latInter, lonInter)
     drainBattery()
     stopUi.writeMessageLog(newPositionLog

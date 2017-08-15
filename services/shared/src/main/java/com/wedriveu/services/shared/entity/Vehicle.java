@@ -1,7 +1,7 @@
 package com.wedriveu.services.shared.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wedriveu.shared.entity.Position;
+import com.wedriveu.shared.rabbitmq.message.Position;
 
 import java.net.URL;
 import java.util.Date;
@@ -20,30 +20,26 @@ public class Vehicle {
     public static final String STATUS_RECHARGING = "recharging";
     public static final String STATUS_BROKEN_STOLEN = "broken_stolen";
     public static final String STATUS_NETWORK_ISSUES = "net_issues";
+    public static final String NO_ELIGIBLE_VEHICLE_RESPONSE = "No vehicles nearby, " +
+                                                        "please try again later or change your address";
 
-    @JsonProperty
-    private String carLicencePlate;
-    @JsonProperty
+    private String licencePlate;
     private String status;
-    @JsonProperty
     private Position position;
-    @JsonProperty
     private Date lastUpdate;
-    @JsonProperty
     private String name;
-    @JsonProperty
     private String description;
-    @JsonProperty
     private URL imageUrl;
+    private String notEligibleVehicleFound;
 
-    public Vehicle(String carLicencePlate,
-                   String status,
-                   Position position,
-                   Date lastUpdate,
-                   String name,
-                   String description,
-                   URL imageUrl) {
-        this.carLicencePlate = carLicencePlate;
+    public Vehicle(@JsonProperty String licencePlate,
+                   @JsonProperty String status,
+                   @JsonProperty Position position,
+                   @JsonProperty Date lastUpdate,
+                   @JsonProperty String name,
+                   @JsonProperty String description,
+                   @JsonProperty URL imageUrl) {
+        this.licencePlate = licencePlate;
         this.status = status;
         this.position = position;
         this.lastUpdate = lastUpdate;
@@ -52,17 +48,25 @@ public class Vehicle {
         this.imageUrl = imageUrl;
     }
 
-    public Vehicle(@JsonProperty String carLicencePlate,
+    public Vehicle(@JsonProperty String licencePlate,
                    @JsonProperty String status,
                    @JsonProperty Position position,
                    @JsonProperty Date lastUpdate) {
-        this.carLicencePlate = carLicencePlate;
+        this.licencePlate = licencePlate;
         this.status = status;
         this.position = position;
         this.lastUpdate = lastUpdate;
     }
 
     public Vehicle() {
+    }
+
+    public String getNotEligibleVehicleFound() {
+        return notEligibleVehicleFound;
+    }
+
+    public void setNotEligibleVehicleFound(String notEligibleVehicleFound) {
+        this.notEligibleVehicleFound = notEligibleVehicleFound;
     }
 
     public String getName() {
@@ -89,12 +93,12 @@ public class Vehicle {
         this.imageUrl = imageUrl;
     }
 
-    public String getCarLicencePlate() {
-        return carLicencePlate;
+    public String getLicencePlate() {
+        return licencePlate;
     }
 
-    public void setCarLicencePlate(String carLicencePlate) {
-        this.carLicencePlate = carLicencePlate;
+    public void setLicencePlate(String licencePlate) {
+        this.licencePlate = licencePlate;
     }
 
     public String getStatus() {
@@ -124,7 +128,7 @@ public class Vehicle {
     @Override
     public String toString() {
         return "Vehicle{" +
-                "carLicencePlate='" + carLicencePlate + '\'' +
+                "licencePlate='" + licencePlate + '\'' +
                 ", state='" + status + '\'' +
                 ", position=" + position +
                 ", lastUpdate=" + lastUpdate +
@@ -136,11 +140,11 @@ public class Vehicle {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vehicle vehicle = (Vehicle) o;
-        return carLicencePlate.equals(vehicle.carLicencePlate);
+        return licencePlate.equals(vehicle.licencePlate);
     }
 
     @Override
     public int hashCode() {
-        return carLicencePlate.hashCode();
+        return licencePlate.hashCode();
     }
 }

@@ -178,7 +178,6 @@ public interface Constants {
         String LICENCE_PLATE = "licencePlate";
 
     }
-    String STATUS_AVAILABLE = "available";
 
     /**
      * The constant zero.
@@ -190,16 +189,11 @@ public interface Constants {
      */
     String USERNAME = "username";
 
-
-
-
-
-
-
     /**
-     * Default message encoding.
+     * Key used for event bus messages.
      */
-    String UTF = "UTF-8";
+    String VEHICLE = "vehicle";
+
 
     /**
      * The predefined range of kilometers used to simulate the vehicle recharging movement

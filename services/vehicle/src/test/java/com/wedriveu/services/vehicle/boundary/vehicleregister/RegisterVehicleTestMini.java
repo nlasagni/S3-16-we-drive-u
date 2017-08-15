@@ -41,7 +41,7 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
         vertx = Vertx.vertx();
         super.setup(vertx, completed -> {
             async.countDown();
-            String licencePlate = new VehicleFactoryMini().getVehicle().getCarLicencePlate();
+            String licencePlate = new VehicleFactoryMini().getVehicle().getLicencePlate();
             super.declareQueueAndBind(licencePlate, context, declared -> {
                 context.assertTrue(declared.succeeded());
                 async.countDown();
@@ -71,7 +71,7 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
 
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessage(context, getJson());
+        super.publishMessage(true, context, getJson());
     }
 
     @Override

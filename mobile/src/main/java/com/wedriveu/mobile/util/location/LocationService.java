@@ -6,7 +6,7 @@ import com.google.android.gms.location.LocationRequest;
 
 /**
  * Handles the user location based on the phone GPS module.
- * @author Nicola Lasagni
+ * @author Marco Baldassarri
  *
  */
 public interface LocationService {

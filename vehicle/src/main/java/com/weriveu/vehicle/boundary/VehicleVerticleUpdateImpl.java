@@ -1,8 +1,8 @@
 package com.weriveu.vehicle.boundary;
 
-import com.wedriveu.shared.entity.UpdateToService;
+import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.utils.Log;
+import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.AbstractVerticle;

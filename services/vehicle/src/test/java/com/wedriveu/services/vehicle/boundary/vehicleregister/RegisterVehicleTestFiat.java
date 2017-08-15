@@ -42,7 +42,7 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
         vertx = Vertx.vertx();
         super.setup(vertx, completed -> {
             async.countDown();
-            String licencePlate = new VehicleFactoryFiat().getVehicle().getCarLicencePlate();
+            String licencePlate = new VehicleFactoryFiat().getVehicle().getLicencePlate();
             super.declareQueueAndBind(licencePlate, context, declared -> {
                 context.assertTrue(declared.succeeded());
                 async.countDown();
@@ -55,13 +55,11 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
     @SuppressWarnings("Duplicates")
     private void deployVerticles(TestContext context) {
         vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, completed -> {
-           async.complete();
+            async.complete();
         });
         vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
             vertx.eventBus().send(Messages.VehicleService.BOOT, null);
-
         }));
-
     }
 
     @After
@@ -71,7 +69,7 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
 
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessage(context, getJson());
+        super.publishMessage(true, context, getJson());
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.wedriveu.mobile.service.scheduling;
 import com.rabbitmq.client.Channel;
 import com.wedriveu.mobile.model.User;
 import com.wedriveu.mobile.service.ServiceConsumerStrategy;
-import com.wedriveu.shared.entity.VehicleResponse;
+import com.wedriveu.shared.rabbitmq.message.VehicleResponse;
 import com.wedriveu.shared.rabbitmq.communication.RabbitMqCommunication;
 import com.wedriveu.shared.util.Constants;
 

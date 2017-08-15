@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Nicola Lasagni on 19/07/2016.
+ * @author Marco Baldassarri on 19/07/2016.
  */
 public class LocationServiceImpl extends LocationCallback implements LocationService,
                                             GoogleApiClient.ConnectionCallbacks,

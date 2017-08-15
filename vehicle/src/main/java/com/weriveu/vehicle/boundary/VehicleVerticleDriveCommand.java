@@ -1,6 +1,6 @@
 package com.weriveu.vehicle.boundary;
 
-import com.wedriveu.shared.entity.DriveCommand;
+import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 
 /**
  * @author Michele Donati on 11/08/2017.

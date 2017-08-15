@@ -1,10 +1,10 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.shared.entity.VehicleBookRequest;
-import com.wedriveu.shared.entity.VehicleBookResponse;
+import com.wedriveu.shared.rabbitmq.message.VehicleBookRequest;
+import com.wedriveu.shared.rabbitmq.message.VehicleBookResponse;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.utils.Log;
-import com.wedriveu.shared.utils.Position;
+import com.wedriveu.shared.util.Log;
+import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import com.weriveu.vehicle.boundary.VehicleVerticleBookImpl;

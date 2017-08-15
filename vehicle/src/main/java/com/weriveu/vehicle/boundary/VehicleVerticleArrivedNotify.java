@@ -1,6 +1,6 @@
 package com.weriveu.vehicle.boundary;
 
-import com.wedriveu.shared.entity.ArrivedNotify;
+import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 
 /**
  * @author Michele Donati on 11/08/2017.

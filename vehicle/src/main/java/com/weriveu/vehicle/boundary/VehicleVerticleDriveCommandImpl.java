@@ -1,9 +1,9 @@
 package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.shared.entity.DriveCommand;
+import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.utils.Log;
+import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;

@@ -15,7 +15,7 @@ public interface Constants {
 
     //Vehicle Service Queues
     String VEHICLE_SERVICE_QUEUE_NEAREST = "service.vehicle.queue.nearest";
-    String VEHICLE_SERVICE_QUEUE_FINDER = "service.vehicle.queue.finder";
+    String VEHICLE_SERVICE_QUEUE_FINDER = "service.vehicle.queue.finder.%s";
     String VEHICLE_SERVICE_QUEUE_REGISTER = "service.vehicle.queue.register";
     String NEAREST_EVENT_BUS_ADDRESS = NearestConsumerVerticle.class.getCanonicalName();
     String EVENT_BUS_FINDER_ADDRESS = VehicleFinderVerticle.class.getCanonicalName();

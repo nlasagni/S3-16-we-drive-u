@@ -2,11 +2,11 @@ package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.shared.entity.RegisterToServiceRequest;
-import com.wedriveu.shared.entity.RegisterToServiceResponse;
+import com.wedriveu.shared.rabbitmq.message.RegisterToServiceRequest;
+import com.wedriveu.shared.rabbitmq.message.RegisterToServiceResponse;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.utils.Log;
-import com.wedriveu.shared.utils.Position;
+import com.wedriveu.shared.util.Log;
+import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import com.weriveu.vehicle.boundary.VehicleVerticleRegisterImpl;

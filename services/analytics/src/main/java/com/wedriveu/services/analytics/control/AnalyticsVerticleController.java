@@ -3,7 +3,7 @@ package com.wedriveu.services.analytics.control;
 import com.wedriveu.services.analytics.entity.AnalyticsStore;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.entity.VehicleListObject;
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
@@ -25,7 +25,7 @@ public class AnalyticsVerticleController extends AbstractVerticle {
     private void storeVehicleList(Message message) {
         VehicleListObject vehicleList = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleListObject.class);
         for(Vehicle vehicle: vehicleList.getVehicleList()){
-            analyticsStore.addVehicle(vehicle.getCarLicencePlate(), vehicle.getStatus());
+            analyticsStore.addVehicle(vehicle.getLicencePlate(), vehicle.getStatus());
         }
     }
 }

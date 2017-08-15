@@ -1,11 +1,11 @@
 package com.wedriveu.services.analytics;
 
 import com.wedriveu.services.analytics.control.AnalyticsVerticleDeployer;
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.util.Log;
 import io.vertx.core.Vertx;
 
 /**
- * @Author Stefano Bernagozzi
+ * @author Stefano Bernagozzi
  */
 
 

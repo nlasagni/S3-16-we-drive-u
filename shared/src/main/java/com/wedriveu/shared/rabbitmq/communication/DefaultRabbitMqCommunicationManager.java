@@ -77,7 +77,9 @@ public class DefaultRabbitMqCommunicationManager implements RabbitMqCommunicatio
 
             @Override
             public void handleShutdownSignal(String consumerTag, ShutdownSignalException sig) {
-                strategy.handleShutdown(sig);
+                if (sig != null) {
+                    strategy.handleShutdown(sig);
+                }
             }
         });
     }

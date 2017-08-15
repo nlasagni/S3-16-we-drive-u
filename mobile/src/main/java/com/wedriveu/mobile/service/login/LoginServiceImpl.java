@@ -8,8 +8,8 @@ import com.wedriveu.mobile.model.User;
 import com.wedriveu.mobile.service.ServiceExceptionHandler;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
 import com.wedriveu.mobile.service.ServiceResult;
-import com.wedriveu.shared.entity.LoginRequest;
-import com.wedriveu.shared.entity.LoginResponse;
+import com.wedriveu.shared.rabbitmq.message.LoginRequest;
+import com.wedriveu.shared.rabbitmq.message.LoginResponse;
 import com.wedriveu.shared.rabbitmq.communication.DefaultRabbitMqCommunicationManager;
 import com.wedriveu.shared.rabbitmq.communication.RabbitMqCommunicationManager;
 import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqCommunicationConfig;
@@ -62,7 +62,7 @@ public class LoginServiceImpl implements LoginService {
             protected Void doInBackground(Void... voids) {
                 ServiceResult<User> result;
                 try {
-                    ExceptionHandler exceptionHandler = new ServiceExceptionHandler(mActivity, callback);
+                    ExceptionHandler exceptionHandler = new ServiceExceptionHandler();
                     RabbitMqCommunicationConfig config =
                             new RabbitMqCommunicationConfig.Builder()
                                     .host(Constants.RabbitMQ.Broker.HOST)
