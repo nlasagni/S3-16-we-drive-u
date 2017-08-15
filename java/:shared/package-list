@@ -1,0 +1,5 @@
+com.wedriveu.shared.rabbitmq.communication
+com.wedriveu.shared.rabbitmq.communication.config
+com.wedriveu.shared.rabbitmq.communication.strategy
+com.wedriveu.shared.rabbitmq.message
+com.wedriveu.shared.util

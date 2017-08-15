@@ -1,0 +1,17 @@
+com.wedriveu.mobile.app
+com.wedriveu.mobile.booking.presenter
+com.wedriveu.mobile.booking.presenter.model
+com.wedriveu.mobile.booking.view
+com.wedriveu.mobile.login.router
+com.wedriveu.mobile.login.view
+com.wedriveu.mobile.login.viewmodel
+com.wedriveu.mobile.model
+com.wedriveu.mobile.service
+com.wedriveu.mobile.service.login
+com.wedriveu.mobile.service.scheduling
+com.wedriveu.mobile.store
+com.wedriveu.mobile.tripscheduling.router
+com.wedriveu.mobile.tripscheduling.view
+com.wedriveu.mobile.tripscheduling.viewmodel
+com.wedriveu.mobile.util
+com.wedriveu.mobile.util.location

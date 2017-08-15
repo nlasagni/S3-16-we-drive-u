@@ -1,0 +1,6 @@
+com.wedriveu.services.vehicle.app
+com.wedriveu.services.vehicle.boundary.nearest
+com.wedriveu.services.vehicle.boundary.vehicleregister
+com.wedriveu.services.vehicle.control
+com.wedriveu.services.vehicle.entity
+com.wedriveu.services.vehicle.rabbitmq
