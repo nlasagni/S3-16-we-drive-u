@@ -37,7 +37,7 @@ import static com.wedriveu.shared.util.Constants.ZERO;
  */
 public class VehicleFinderVerticle extends VerticleConsumer {
 
-    private static final long TIME_OUT = 60000;
+    private static final long TIME_OUT = 30000;
 
     private static RabbitMQClient client;
     private String username;

@@ -1,5 +1,6 @@
 package com.wedriveu.services.shared.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wedriveu.shared.rabbitmq.message.Position;
 
@@ -13,6 +14,7 @@ import java.util.Date;
  * @author Marco Baldassarri
  * @author Michele
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Vehicle {
 
     public static final String STATUS_AVAILABLE = "available";

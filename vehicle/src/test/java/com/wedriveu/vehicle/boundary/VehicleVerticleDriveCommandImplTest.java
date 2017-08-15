@@ -2,6 +2,7 @@ package com.wedriveu.vehicle.boundary;
 
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
@@ -13,10 +14,13 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.Repeat;
+import io.vertx.ext.unit.junit.RepeatRule;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rabbitmq.RabbitMQClient;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,7 +37,12 @@ public class VehicleVerticleDriveCommandImplTest {
     private static final double maxBoundPositionLat = 44.145501;
     private static final double minorBoundPositionLon = 12.247497;
     private static final double maxBoundPositionLon = 12.247498;
-    private static final long TIME_OUT = 10000;
+    private static final int REPEAT_LIMIT = 10;
+    private static final long TIME_OUT = 1000;
+    private int checkCounter;
+
+    @Rule
+    public RepeatRule repeater = new RepeatRule();
 
     private double randomLatitudeUser =
             ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat);
@@ -63,6 +72,7 @@ public class VehicleVerticleDriveCommandImplTest {
         eventBus = vertx.eventBus();
         vehicleControl = new VehicleControlImpl(license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleDriveCommandImpl(vehicleControl);
+        checkCounter = 10;
         setUpAsyncComponents(context);
     }
 
@@ -90,8 +100,12 @@ public class VehicleVerticleDriveCommandImplTest {
     }
 
     @Test
+    @Repeat(value = VehicleVerticleDriveCommandImplTest.REPEAT_LIMIT, silent = true)
     public void drive(TestContext context) throws Exception {
         final Async async = context.async(2);
+        vehicleControl.getVehicle().setPosition(position);
+        Log.info(this.getClass().getSimpleName(),
+                "Reset vehicle position: " + vehicleControl.getVehicle().position().toString());
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND,
                 createCommandJsonObject(),
@@ -100,7 +114,6 @@ public class VehicleVerticleDriveCommandImplTest {
                     checkVehiclePosition(context, async);
                     async.countDown();
                 });
-        async.awaitSuccess();
     }
 
     private JsonObject createCommandJsonObject() {
@@ -113,12 +126,24 @@ public class VehicleVerticleDriveCommandImplTest {
     }
 
     private void checkVehiclePosition(TestContext context, Async async) {
+        Position user = new Position(randomLatitudeUser, randomLongitudeUser);
         Position desired = new Position(randomLatitudeDestination, randomLongitudeDestination);
-        vertx.setTimer(TIME_OUT, onTime -> {
+        Log.info(this.getClass().getSimpleName(),
+                "Desired Lat: " + desired.getLatitude() + ", Long: " + desired.getLongitude());
+        Log.info(this.getClass().getSimpleName(),
+                "User Lat: " + user.getLatitude() + ", Long: " + user.getLongitude());
+        vertx.setPeriodic(TIME_OUT, onTime -> {
+            checkCounter--;
             Position vehiclePosition = vehicleControl.getVehicle().position();
             double vehicleDistance = desired.getDistanceInKm(vehiclePosition);
-            context.assertTrue(vehicleDistance <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS());
-            async.complete();
+            Log.info(this.getClass().getSimpleName(), "VehicleDistance: " +vehicleDistance);
+            if (vehicleDistance <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS()) {
+                vertx.cancelTimer(onTime);
+                async.complete();
+            } else if (checkCounter == 0) {
+               context.fail();
+               async.complete();
+            }
         });
     }
 
