@@ -1,6 +1,7 @@
 package com.wedriveu.services.booking;
 
-import com.wedriveu.services.shared.util.Log;
+
+import com.wedriveu.shared.util.Log;
 
 public class Main {
 

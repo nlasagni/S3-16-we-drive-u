@@ -1,9 +1,9 @@
 package com.wedriveu.services.authentication.boundary;
 
-import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.shared.rabbitmq.message.LoginRequest;
 import com.wedriveu.shared.rabbitmq.message.LoginResponse;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;

@@ -2,7 +2,7 @@ package com.wedriveu.services.booking.entity;
 
 import com.wedriveu.services.shared.entity.Booking;
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
-import com.wedriveu.services.shared.util.Log;
+import com.wedriveu.shared.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;

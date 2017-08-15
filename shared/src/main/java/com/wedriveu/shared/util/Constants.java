@@ -128,6 +128,23 @@ public interface Constants {
              * to the vehicle after register request
              */
             String REGISTER_RESPONSE = "vehicle.response.add.%s";
+
+
+            /**
+             * The routing key used by the Analytics Service to retrieve
+             * the entire list of vehicles from the VehicleService.
+             */
+            String ANALYTICS_VEHICLE_REQUEST_ALL = "vehicle.request.all";
+
+
+            /**
+             * The routing key used by the VehicleService to send the
+             * list of Vehicles to the Analytics Service, given the requester backOffice ID.
+             */
+            String ANALYTICS_VEHICLES_RESPONSE_ALL = "vehicle.response.all";
+
+
+
             /**
              * The routing key used by vehicle-service to communicate a request of booking to a vehicle,
              * must be completed with the license plate, see {@linkplain String#format(String, Object...)}.
@@ -213,8 +230,6 @@ public interface Constants {
     String ANALYTICS_VEHICLE_LIST_RETRIEVER_START_MESSAGE = "Vehicle List Request Sent, Listen";
     String ANALYTICS_VEHICLE_LIST_RETRIEVER_VERTICLE_ADDRESS = "VehicleListRetrieverVerticle";
     String ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS = "VehicleListRequestVerticle";
-    String ROUTING_KEY_VEHICLE_REQUEST_ALL = "vehicle.request.all";
-    String ROUTING_KEY_VEHICLE_RESPONSE_ALL = "vehicle.response.all";
     String ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS = "AnalyticsVerticleController";
     String ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE = "Started all services, start requesting vehicle list";
     String EVENT_BUS_AVAILABLE_ADDRESS = "service.vehicle.eventbus";

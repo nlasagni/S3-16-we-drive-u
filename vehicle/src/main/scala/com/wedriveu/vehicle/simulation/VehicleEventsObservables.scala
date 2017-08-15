@@ -1,13 +1,9 @@
 package com.wedriveu.vehicle.simulation
 
-import java.math.RoundingMode
-
 import rx.lang.scala.Observable
 import java.util.concurrent.ThreadLocalRandom
-import java.text.DecimalFormat
 
-import com.wedriveu.services.shared.util.Log
-import com.wedriveu.shared.util.Position
+import com.wedriveu.shared.util.{Log, Position}
 
 /**
   * @author Michele Donati on 28/07/2017.

@@ -1,7 +1,7 @@
 package com.wedriveu.services.shared.rabbitmq;
 
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
-import com.wedriveu.services.shared.util.Log;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.rabbitmq.RabbitMQClient;
