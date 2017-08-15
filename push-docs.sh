@@ -2,7 +2,7 @@
 
 if [ "$TRAVIS_REPO_SLUG" == "nlasagni/S3-16-we-drive-u" ] &&
     [ "$TRAVIS_PULL_REQUEST" == "false" ] &&
-    [ "$TRAVIS_BRANCH" == "hotfix-0.2.2" ]; then
+    [ "$TRAVIS_BRANCH" == "master" ]; then
 
   echo -e "Publishing docs...\n"
   cp -R latest-docs/java $HOME/latest-javadoc
