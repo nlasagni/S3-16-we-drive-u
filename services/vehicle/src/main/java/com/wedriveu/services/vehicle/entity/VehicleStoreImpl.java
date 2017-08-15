@@ -3,8 +3,10 @@ package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wedriveu.services.shared.entity.AnalyticsVehicleList;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.util.PositionUtils;
+import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import com.wedriveu.shared.rabbitmq.message.Position;
@@ -43,7 +45,9 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         eventBus.consumer(Messages.NearestControl.AVAILABLE_REQUEST, this::getAllAvailableVehiclesInRange);
         eventBus.consumer(Messages.NearestControl.GET_VEHICLE, this::getVehicle);
         eventBus.consumer(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, this::addVehicle);
+
         eventBus.consumer(Messages.VehicleStore.CLEAR_VEHICLES, msg -> clearVehicles());
+        eventBus.consumer(Messages.Analytics.GET_VEHICLES_REQUEST, this::getVehicleList);
         createJsonFile();
     }
 
@@ -131,6 +135,15 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         return new ArrayList<>();
     }
 
+    private void getVehicleList(Message message) {
+        ObjectMapper mapper = new ObjectMapper();
+        AnalyticsVehicleList vehicleList = new AnalyticsVehicleList();
+        vehicleList.setVehiclesList(readFromVehiclesDb(mapper));
+        if (vehicleList.getVehiclesList() != null) {
+            eventBus.send(Messages.VehicleStore.GET_VEHICLE_LIST_COMPLETED, VertxJsonMapper.mapInBodyFrom(vehicleList));
+        }
+    }
+
     @Override
     public void updateVehicleInVehicleList(String carLicencePlate, String status, Position position, Date lastUpdate) {
         ObjectMapper mapper = new ObjectMapper();
@@ -214,7 +227,8 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private List<Vehicle> readFromVehiclesDb(ObjectMapper mapper) {
         try {
             List<Vehicle> vehicles =
-                    mapper.readValue(file, new TypeReference<List<Vehicle>>() {});
+                    mapper.readValue(file, new TypeReference<List<Vehicle>>() {
+                    });
             return vehicles;
         } catch (IOException e) {
             return null;

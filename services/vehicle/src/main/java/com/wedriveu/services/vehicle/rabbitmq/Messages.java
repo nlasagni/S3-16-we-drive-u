@@ -43,8 +43,10 @@ public interface Messages {
         String AVAILABLE_COMPLETED = "store.available.completed";
         String GET_VEHICLE_COMPLETED = "store.get.vehicle.completed";
         String REGISTER_VEHICLE_COMPLETED = "vehicle.register.completed";
+
         String CLEAR_VEHICLES = "vehicle.clear";
         String CLEAR_VEHICLES_COMPLETED = "vehicle.clear.completed";
+        String GET_VEHICLE_LIST_COMPLETED = "store.get.vehicle.list.completed";
     }
 
     /**
@@ -53,6 +55,10 @@ public interface Messages {
      */
     interface VehicleRegister {
         String REGISTER_VEHICLE_REQUEST = "vehicle.register.request";
+    }
+
+    interface Analytics {
+        String GET_VEHICLES_REQUEST = "analytics.get.vehicles.request";
     }
 
 }
