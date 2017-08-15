@@ -43,6 +43,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         eventBus.consumer(Messages.NearestControl.AVAILABLE_REQUEST, this::getAllAvailableVehiclesInRange);
         eventBus.consumer(Messages.NearestControl.GET_VEHICLE, this::getVehicle);
         eventBus.consumer(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, this::addVehicle);
+        eventBus.consumer(Messages.VehicleStore.CLEAR_VEHICLES, msg -> clearVehicles());
         createJsonFile();
     }
 
@@ -76,6 +77,14 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         eventBus.send(Messages.VehicleStore.REGISTER_VEHICLE_COMPLETED, responseJson);
     }
 
+    @Override
+    public void clearVehicles() {
+        List<Vehicle> vehicles = getVehicleList();
+        for (Vehicle vehicle : vehicles) {
+            deleteVehicleFromDb(vehicle.getLicencePlate());
+        }
+        eventBus.send(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, null);
+    }
 
     @Override
     public void getAllAvailableVehiclesInRange(Message message) {

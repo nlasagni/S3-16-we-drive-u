@@ -55,7 +55,10 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
     @SuppressWarnings("Duplicates")
     private void deployVerticles(TestContext context) {
         vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, completed -> {
-            async.complete();
+            vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
+            vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
+                async.complete();
+            });
         });
         vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
             vertx.eventBus().send(Messages.VehicleService.BOOT, null);

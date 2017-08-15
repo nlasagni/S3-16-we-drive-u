@@ -1,9 +1,11 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
 import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
+import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -53,14 +55,14 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
 
     @SuppressWarnings("Duplicates")
     private void deployVerticles(TestContext context) {
-        vertx.deployVerticle(new RegisterConsumerVerticle(), context.asyncAssertSuccess(onDeployConsumer -> {
-            async.countDown();
-            vertx.deployVerticle(new RegisterPublisherVerticle(), context.asyncAssertSuccess(onDeployPublisher -> {
-                async.countDown();
-                vertx.deployVerticle(new VehicleStoreImpl(), context.asyncAssertSuccess(onDeployStore -> {
-                    async.complete();
-                }));
-            }));
+        vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, completed -> {
+            vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
+            vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
+                async.complete();
+            });
+        });
+        vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
+            vertx.eventBus().send(Messages.VehicleService.BOOT, null);
         }));
     }
 
