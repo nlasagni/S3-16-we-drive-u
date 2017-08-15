@@ -32,6 +32,8 @@ public interface Messages {
      */
     interface VehicleFinder {
         String VEHICLE_RESPONSE = "finder.vehicle.response";
+        String VEHICLE_RESPONSE_RESULT = "vehicleResponseResult";
+        String NO_VEHICLE = "finder.vehicle.none";
     }
 
     /**
@@ -41,6 +43,8 @@ public interface Messages {
         String AVAILABLE_COMPLETED = "store.available.completed";
         String GET_VEHICLE_COMPLETED = "store.get.vehicle.completed";
         String REGISTER_VEHICLE_COMPLETED = "vehicle.register.completed";
+        String CLEAR_VEHICLES = "vehicle.clear";
+        String CLEAR_VEHICLES_COMPLETED = "vehicle.clear.completed";
     }
 
     /**

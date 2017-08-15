@@ -1,5 +1,6 @@
 package com.wedriveu.services.shared.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wedriveu.shared.rabbitmq.message.Position;
 
@@ -13,6 +14,7 @@ import java.util.Date;
  * @author Marco Baldassarri
  * @author Michele
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Vehicle {
 
     public static final String STATUS_AVAILABLE = "available";
@@ -23,7 +25,7 @@ public class Vehicle {
     public static final String NO_ELIGIBLE_VEHICLE_RESPONSE = "No vehicles nearby, " +
                                                         "please try again later or change your address";
 
-    private String licencePlate;
+    private String licensePlate;
     private String status;
     private Position position;
     private Date lastUpdate;
@@ -32,14 +34,14 @@ public class Vehicle {
     private URL imageUrl;
     private String notEligibleVehicleFound;
 
-    public Vehicle(@JsonProperty String licencePlate,
+    public Vehicle(@JsonProperty String licensePlate,
                    @JsonProperty String status,
                    @JsonProperty Position position,
                    @JsonProperty Date lastUpdate,
                    @JsonProperty String name,
                    @JsonProperty String description,
                    @JsonProperty URL imageUrl) {
-        this.licencePlate = licencePlate;
+        this.licensePlate = licensePlate;
         this.status = status;
         this.position = position;
         this.lastUpdate = lastUpdate;
@@ -48,11 +50,11 @@ public class Vehicle {
         this.imageUrl = imageUrl;
     }
 
-    public Vehicle(@JsonProperty String licencePlate,
+    public Vehicle(@JsonProperty String licensePlate,
                    @JsonProperty String status,
                    @JsonProperty Position position,
                    @JsonProperty Date lastUpdate) {
-        this.licencePlate = licencePlate;
+        this.licensePlate = licensePlate;
         this.status = status;
         this.position = position;
         this.lastUpdate = lastUpdate;
@@ -93,12 +95,12 @@ public class Vehicle {
         this.imageUrl = imageUrl;
     }
 
-    public String getLicencePlate() {
-        return licencePlate;
+    public String getLicensePlate() {
+        return licensePlate;
     }
 
-    public void setLicencePlate(String licencePlate) {
-        this.licencePlate = licencePlate;
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 
     public String getStatus() {
@@ -128,7 +130,7 @@ public class Vehicle {
     @Override
     public String toString() {
         return "Vehicle{" +
-                "licencePlate='" + licencePlate + '\'' +
+                "licensePlate='" + licensePlate + '\'' +
                 ", state='" + status + '\'' +
                 ", position=" + position +
                 ", lastUpdate=" + lastUpdate +
@@ -136,15 +138,19 @@ public class Vehicle {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Vehicle vehicle = (Vehicle) o;
-        return licencePlate.equals(vehicle.licencePlate);
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof Vehicle)) {
+            return false;
+        }
+        Vehicle vehicle = (Vehicle) other;
+        return licensePlate != null && licensePlate.equals(vehicle.licensePlate);
     }
 
     @Override
     public int hashCode() {
-        return licencePlate.hashCode();
+        return licensePlate.hashCode();
     }
 }

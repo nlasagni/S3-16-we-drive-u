@@ -34,6 +34,10 @@ public class VehicleElectionVerticle extends VerticlePublisher {
         Vehicle responseVehicle = new JsonObject(body.getString(VEHICLE)).mapTo(Vehicle.class);
         JsonObject responseJson = new JsonObject();
         dataToUser.put(BODY, responseJson.mapFrom(responseVehicle).encode());
+        publishToUser(username, dataToUser);
+    }
+
+    private void publishToUser(String username, JsonObject dataToUser) {
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE, username),
                 dataToUser, onPublish -> {

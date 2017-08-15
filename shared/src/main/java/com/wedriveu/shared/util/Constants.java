@@ -19,6 +19,11 @@ public interface Constants {
          * The json key with which retrieve the content of a message.
          */
         String BODY = "body";
+
+        /**
+         * The eventbus message key for passing a verticle deploymentId.
+         */
+        String DEPLOYMENT_ID = "deploymentId";
     }
 
     /**
@@ -175,7 +180,7 @@ public interface Constants {
 
 
     interface Vehicle {
-        String LICENCE_PLATE = "licencePlate";
+        String LICENSE_PLATE = "licensePlate";
 
     }
 

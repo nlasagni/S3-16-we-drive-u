@@ -36,6 +36,12 @@ public interface VehicleStore {
      */
     List<Vehicle> getVehicleList();
 
+
+    /**
+     * Delete all the vehicles from the store.
+     */
+    void clearVehicles();
+
     /**
      * @param carLicencePlate Indicates the id of the vehicle to update.
      * @param state           Indicates the new state to update.

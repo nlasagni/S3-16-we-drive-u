@@ -1,7 +1,6 @@
 package com.wedriveu.services.vehicle.boundary;
 
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
