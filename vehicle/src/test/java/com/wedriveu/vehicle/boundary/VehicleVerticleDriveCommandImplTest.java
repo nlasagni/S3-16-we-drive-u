@@ -37,12 +37,8 @@ public class VehicleVerticleDriveCommandImplTest {
     private static final double maxBoundPositionLat = 44.145501;
     private static final double minorBoundPositionLon = 12.247497;
     private static final double maxBoundPositionLon = 12.247498;
-    private static final int REPEAT_LIMIT = 10;
     private static final long TIME_OUT = 1000;
     private int checkCounter;
-
-    @Rule
-    public RepeatRule repeater = new RepeatRule();
 
     private double randomLatitudeUser =
             ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat);
@@ -100,7 +96,6 @@ public class VehicleVerticleDriveCommandImplTest {
     }
 
     @Test
-    @Repeat(value = VehicleVerticleDriveCommandImplTest.REPEAT_LIMIT, silent = true)
     public void drive(TestContext context) throws Exception {
         final Async async = context.async(2);
         vehicleControl.getVehicle().setPosition(position);
@@ -126,17 +121,11 @@ public class VehicleVerticleDriveCommandImplTest {
     }
 
     private void checkVehiclePosition(TestContext context, Async async) {
-        Position user = new Position(randomLatitudeUser, randomLongitudeUser);
         Position desired = new Position(randomLatitudeDestination, randomLongitudeDestination);
-        Log.info(this.getClass().getSimpleName(),
-                "Desired Lat: " + desired.getLatitude() + ", Long: " + desired.getLongitude());
-        Log.info(this.getClass().getSimpleName(),
-                "User Lat: " + user.getLatitude() + ", Long: " + user.getLongitude());
         vertx.setPeriodic(TIME_OUT, onTime -> {
             checkCounter--;
             Position vehiclePosition = vehicleControl.getVehicle().position();
             double vehicleDistance = desired.getDistanceInKm(vehiclePosition);
-            Log.info(this.getClass().getSimpleName(), "VehicleDistance: " +vehicleDistance);
             if (vehicleDistance <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS()) {
                 vertx.cancelTimer(onTime);
                 async.complete();
