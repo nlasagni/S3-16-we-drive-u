@@ -64,15 +64,19 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         JsonObject responseJson = new JsonObject();
         JsonObject vehicleRequesterJson = (JsonObject) message.body();
         Vehicle vehicleRequester = vehicleRequesterJson.mapTo(Vehicle.class);
-        List<Vehicle> vehicles = getVehicleList();
-        responseJson.put(LICENSE_PLATE, vehicleRequesterJson.getValue(LICENSE_PLATE));
-        Optional existingVehicle = vehicles.stream().filter(x -> x.equals(vehicleRequester)).findFirst();
-        if (existingVehicle.isPresent()) {
+        if (vehicleRequester == null || vehicleRequester.getLicensePlate() == null) {
             responseJson.put(REGISTER_RESULT, false);
         } else {
-            responseJson.put(REGISTER_RESULT, true);
-            vehicles.add(vehicleRequester);
-            writeJsonVehicleFile((ArrayList<Vehicle>) vehicles);
+            List<Vehicle> vehicles = getVehicleList();
+            responseJson.put(LICENSE_PLATE, vehicleRequesterJson.getValue(LICENSE_PLATE));
+            Optional existingVehicle = vehicles.stream().filter(x -> x.equals(vehicleRequester)).findFirst();
+            if (existingVehicle.isPresent()) {
+                responseJson.put(REGISTER_RESULT, false);
+            } else {
+                responseJson.put(REGISTER_RESULT, true);
+                vehicles.add(vehicleRequester);
+                writeJsonVehicleFile((ArrayList<Vehicle>) vehicles);
+            }
         }
         eventBus.send(Messages.VehicleStore.REGISTER_VEHICLE_COMPLETED, responseJson);
     }
