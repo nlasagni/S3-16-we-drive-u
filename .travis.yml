@@ -35,8 +35,6 @@ script:
   - './gradlew'
 after_success:
   - 'bash deploy-services.sh'
-after_failure:
-  - 'bash dump-test-report.sh'
 deploy:
   provider: pages
   skip_cleanup: true
