@@ -3,7 +3,7 @@ dependencies {
 }
 
 jar {
-    archiveName = "${rootProject.name}-${parent.name}-${this.path}-${rootProject.version}.jar"
+    archiveName = "${rootProject.name}-${parent.name}-${this.name}-${rootProject.version}.jar"
     destinationDir = new File("$releasesServiceFolder")
     manifest {
         attributes 'Implementation-Version': project.version,

@@ -14,6 +14,7 @@ allprojects {
     repositories {
         jcenter()
     }
+
 }
 
 
@@ -53,6 +54,7 @@ configure(subprojects.grep {!java7ModulePaths.contains(it.path)}) {
         compile "org.slf4j:slf4j-api:$slf4jVersion"
         compile project(path: ':shared')
     }
+
 }
 
 defaultTasks 'clean', 'build', 'javadoc', 'scaladoc'

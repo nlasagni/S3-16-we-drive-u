@@ -14,7 +14,7 @@ import scala.beans.BeanProperty
 
 class SelfDrivingVehicle(@BeanProperty var plate: String,
                          private var state: String,
-                         var position: Position,
+                         @BeanProperty var position: Position,
                          var battery: Double,
                          var speed: Double){
 
