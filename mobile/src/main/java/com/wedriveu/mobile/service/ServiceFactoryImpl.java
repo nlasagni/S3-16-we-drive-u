@@ -1,12 +1,14 @@
 package com.wedriveu.mobile.service;
 
+import android.app.Activity;
 import com.wedriveu.mobile.service.login.LoginService;
 import com.wedriveu.mobile.service.login.LoginServiceImpl;
 import com.wedriveu.mobile.service.scheduling.SchedulingService;
 import com.wedriveu.mobile.service.scheduling.SchedulingServiceImpl;
+import com.wedriveu.mobile.store.UserStore;
 
 /**
- * Created by nicolalasagni on 18/07/2017.
+ * @author Nicola Lasagni on 18/07/2017.
  */
 public class ServiceFactoryImpl implements ServiceFactory {
 
@@ -21,13 +23,13 @@ public class ServiceFactoryImpl implements ServiceFactory {
         return instance;
     }
     @Override
-    public LoginService createLoginService() {
-        return new LoginServiceImpl();
+    public LoginService createLoginService(Activity activity) {
+        return new LoginServiceImpl(activity);
     }
 
     @Override
-    public SchedulingService createSchedulingService() {
-        return new SchedulingServiceImpl();
+    public SchedulingService createSchedulingService(Activity activity, UserStore userStore) {
+        return new SchedulingServiceImpl(activity, userStore);
     }
 
 }

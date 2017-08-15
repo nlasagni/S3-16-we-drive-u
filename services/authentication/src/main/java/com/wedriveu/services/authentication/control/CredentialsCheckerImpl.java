@@ -1,9 +1,9 @@
 package com.wedriveu.services.authentication.control;
 
-import com.wedriveu.services.authentication.entity.User;
 import com.wedriveu.services.authentication.entity.UserStore;
 import com.wedriveu.services.authentication.entity.UserStoreImpl;
-import com.wedriveu.services.shared.utilities.Log;
+import com.wedriveu.services.shared.entity.User;
+import com.wedriveu.services.shared.util.Log;
 
 import java.io.IOException;
 

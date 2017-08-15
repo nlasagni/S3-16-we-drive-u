@@ -1,23 +1,54 @@
-package com.wedriveu.services.booking.entity; /**
- * Created by Michele on 12/07/2017.
- */
+package com.wedriveu.services.booking.entity;
+
+import com.wedriveu.services.shared.entity.Booking;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Michele Donati
- * This inteface models the <em>com.wedriveu.services.booking.entity.Booking' database domain</em>.
+ * @author Nicola Lasagni
+ * This inteface models the <em>com.wedriveu.services.shared.entity.Booking' database store</em>.
  */
 public interface BookingStore {
 
     /**
-     * Maps a <em>com.wedriveu.services.booking.entity.Booking</em> object in a JSon object.
+     * Adds a booking to the storeEntities.
+     *
+     * @param booking The booking to be added to the storeEntities.
+     * @return A boolean indicating the success or the failure of this operation.
      */
-    void mapEntityToJson();
+    boolean addBooking(Booking booking);
 
     /**
      *
-     * @param bookingId Identifies the <em>com.wedriveu.services.booking.entity.Booking</em>'s <em>ID</em> that must be retreived.
-     * @return Returns the <em>com.wedriveu.services.booking.entity.Booking</em>, only if founded.
+     * @param bookingId Identifies the <em>com.wedriveu.services.shared.entity.Booking</em>'s <em>ID</em> that must be retreived.
+     * @return Returns the {@linkplain Booking} with the provided id, only if found.
      */
-    Booking getBooking(int bookingId);
+    Optional<Booking> getBooking(int bookingId);
+
+    /**
+     * Updates the status of a {@linkplain Booking}.
+     *
+     * @param bookingId     The id of the {@linkplain Booking} to be updated.
+     * @param bookingStatus The new status of the {@linkplain Booking}.
+     * @return A boolean indicating the success or the failure of this operation.
+     */
+    boolean updateBookingStatus(int bookingId, String bookingStatus);
+
+    /**
+     * Fetches all {@linkplain Booking} stored that are inside the range of specified dates.
+     *
+     * @param fromDate Starting date of the range.
+     * @param toDate   End date of the range.
+     * @return All the {@linkplain Booking}s inside the range of specified dates.
+     */
+    List<Booking> getBookingsByDate(Date fromDate, Date toDate);
+
+    /**
+     * Clears the {@linkplain BookingStore}.
+     */
+    void clear();
 
 }

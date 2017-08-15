@@ -14,8 +14,12 @@ import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.service.ServiceFactoryImpl;
+import com.wedriveu.mobile.service.ServiceOperationCallback;
+import com.wedriveu.mobile.service.ServiceResult;
 import com.wedriveu.mobile.service.scheduling.SchedulingService;
-import com.wedriveu.mobile.service.scheduling.SchedulingServiceCallback;
+import com.wedriveu.mobile.store.StoreFactoryImpl;
+import com.wedriveu.mobile.store.UserStore;
+import com.wedriveu.mobile.store.VehicleStore;
 import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
 import com.wedriveu.mobile.util.Constants;
@@ -25,13 +29,14 @@ import com.wedriveu.mobile.util.location.LocationServiceImpl;
 import static android.app.Activity.RESULT_CANCELED;
 
 /**
- * Created by Marco on 18/07/2017.
+ * @author Marco on 18/07/2017.
+ * @author Nicola Lasagni on 29/07/2017
  */
-public class SchedulingViewModelImpl extends Fragment implements SchedulingViewModel, SchedulingServiceCallback {
+public class SchedulingViewModelImpl extends Fragment implements SchedulingViewModel {
 
     private SchedulingRouter mRouter;
     private SchedulingService mSchedulingService;
-    private SchedulingView mSchedulingView;
+    private VehicleStore mVehicleStore;
     private Place mPlace;
 
     public static SchedulingViewModelImpl newInstance() {
@@ -51,15 +56,23 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSchedulingService = ServiceFactoryImpl.getInstance().createSchedulingService();
-        LocationService mLocationService = LocationServiceImpl.getInstance(getActivity());
+        Activity activity = getActivity();
+        UserStore userStore = StoreFactoryImpl.getInstance().createUserStore(getContext());
+        mSchedulingService = ServiceFactoryImpl.getInstance().createSchedulingService(activity, userStore);
+        LocationService mLocationService = LocationServiceImpl.getInstance(activity);
+        mVehicleStore = StoreFactoryImpl.getInstance().createVehicleStore(getContext());
         mLocationService.addLocationListener(mSchedulingService);
     }
 
     @Override
     public void onSearchVehicleButtonClick() {
         mRouter.showProgressDialog();
-        mSchedulingService.findNearestVehicle(mPlace, this);
+        mSchedulingService.findNearestVehicle(mPlace, new ServiceOperationCallback<Vehicle>() {
+            @Override
+            public void onServiceOperationFinished(ServiceResult<Vehicle> result) {
+                onFindNearestVehicleFinished(result.getResult(), result.getErrorMessage());
+            }
+        });
     }
 
     @Override
@@ -75,25 +88,25 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        SchedulingView schedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
         if (resultCode == Activity.RESULT_OK) {
             mPlace = PlaceAutocomplete.getPlace(getActivity(), data);
-            mSchedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
-            mSchedulingView.showSelectedAddress(mPlace);
+            schedulingView.showSelectedAddress(mPlace);
         } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-           mSchedulingView.renderError(getString(R.string.place_autocomplete_error));
+           schedulingView.renderError(getString(R.string.place_autocomplete_error));
         } else if (resultCode == RESULT_CANCELED) {
-            mSchedulingView.renderError(getString(R.string.place_autocomplete_error));
+            schedulingView.renderError(getString(R.string.place_autocomplete_error));
         }
     }
 
-    @Override
-    public void onFindNearestVehicleFinished(Vehicle vehicle, String errorMessage) {
+    private void onFindNearestVehicleFinished(Vehicle vehicle, String errorMessage) {
         mRouter.dismissProgressDialog();
         if (!TextUtils.isEmpty(errorMessage)) {
-            mSchedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
-            mSchedulingView.renderError(errorMessage);
+            SchedulingView schedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
+            schedulingView.renderError(errorMessage);
         } else {
-            mRouter.showBooking(vehicle);
+            mVehicleStore.storeVehicle(vehicle);
+            mRouter.showBooking();
         }
     }
 

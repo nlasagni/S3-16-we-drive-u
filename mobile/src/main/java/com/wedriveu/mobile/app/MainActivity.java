@@ -7,15 +7,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import com.wedriveu.mobile.R;
+import com.wedriveu.mobile.booking.presenter.BookingPresenter;
+import com.wedriveu.mobile.booking.presenter.BookingPresenterImpl;
+import com.wedriveu.mobile.booking.view.BookingView;
+import com.wedriveu.mobile.booking.view.BookingViewImpl;
 import com.wedriveu.mobile.login.router.LoginRouter;
 import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.login.view.LoginViewImpl;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModelImpl;
-import com.wedriveu.mobile.model.Vehicle;
+import com.wedriveu.mobile.store.StoreFactoryImpl;
+import com.wedriveu.mobile.store.UserStore;
 import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingViewImpl;
@@ -41,17 +45,25 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mFragmentManager = getSupportFragmentManager();
+        mLocationService = LocationServiceImpl.getInstance(this);
+        UserStore userStore = StoreFactoryImpl.getInstance().createUserStore(this);
         if (savedInstanceState == null) {
-            LoginViewImpl loginViewFragment = LoginViewImpl.newInstance(LoginViewModel.TAG);
-            LoginViewModelImpl loginViewModel = LoginViewModelImpl.newInstance(LoginView.TAG);
-            FragmentTransaction transaction = mFragmentManager.beginTransaction();
-            transaction.add(loginViewModel, LoginViewModel.TAG);
-            transaction.replace(R.id.fragment_container, loginViewFragment, LoginView.TAG);
-            transaction.commit();
-            mLocationService = LocationServiceImpl.getInstance(this);
+            if (userStore.getUser() != null) {
+                showTripScheduling();
+            } else {
+                showLogin();
+            }
         }
+    }
+
+    private void showLogin() {
+        LoginViewImpl loginViewFragment = LoginViewImpl.newInstance(LoginViewModel.TAG);
+        LoginViewModelImpl loginViewModel = LoginViewModelImpl.newInstance(LoginView.TAG);
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.add(loginViewModel, LoginViewModel.TAG);
+        transaction.replace(R.id.fragment_container, loginViewFragment, LoginView.TAG);
+        transaction.commit();
     }
 
     @Override
@@ -117,9 +129,12 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     }
 
     @Override
-    public void showBooking(Vehicle vehicle) {
+    public void showBooking() {
         //TODO show booking fragment
-        Log.i("SHOW_BOOKING", vehicle.toString());
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.add(BookingPresenterImpl.newInstance(), BookingPresenter.ID);
+        transaction.replace(R.id.fragment_container, new BookingViewImpl(), BookingView.ID);
+        transaction.commit();
     }
 
 }
