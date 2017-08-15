@@ -79,9 +79,11 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     @Override
     public void clearVehicles() {
-        List<Vehicle> vehicles = getVehicleList();
-        for (Vehicle vehicle : vehicles) {
-            deleteVehicleFromDb(vehicle.getLicencePlate());
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(file, new ArrayList<Vehicle>());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         eventBus.send(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, null);
     }

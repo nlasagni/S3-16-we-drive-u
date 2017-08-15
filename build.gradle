@@ -39,6 +39,12 @@ configure(subprojects.grep {!java7ModulePaths.contains(it.path)}) {
     javadoc.destinationDir = new File("$docsFolderJava/${it.path}")
     scaladoc.destinationDir = new File("$docsFolderScala/${it.path}")
 
+    test {
+        testLogging {
+            exceptionFormat = 'full'
+        }
+    }
+
     dependencies {
         testCompile "junit:junit:$junitVersion"
         testCompile "org.scala-lang:scala-library:$scalaVersion"
