@@ -46,6 +46,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         eventBus.consumer(Messages.NearestControl.GET_VEHICLE, this::getVehicle);
         eventBus.consumer(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, this::addVehicle);
 
+
         eventBus.consumer(Messages.VehicleStore.CLEAR_VEHICLES, msg -> clearVehicles());
         eventBus.consumer(Messages.Analytics.GET_VEHICLES_REQUEST, this::getVehicleList);
         createJsonFile();
