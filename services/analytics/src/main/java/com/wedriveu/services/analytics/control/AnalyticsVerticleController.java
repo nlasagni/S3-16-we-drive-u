@@ -1,8 +1,8 @@
 package com.wedriveu.services.analytics.control;
 
 import com.wedriveu.services.analytics.entity.AnalyticsStore;
-import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.entity.VehicleListObject;
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.services.shared.model.VehicleListObject;
 import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import io.vertx.core.AbstractVerticle;

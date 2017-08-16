@@ -1,6 +1,6 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.shared.entity.VehicleListObject;
+import com.wedriveu.services.shared.model.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;

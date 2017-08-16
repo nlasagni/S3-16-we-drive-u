@@ -1,7 +1,7 @@
 package com.wedriveu.services.analytics.vehicleServiceFake;
 
-import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.entity.VehicleListObject;
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.services.shared.model.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;

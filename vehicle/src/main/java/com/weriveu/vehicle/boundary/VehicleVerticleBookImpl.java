@@ -2,7 +2,7 @@ package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.VehicleBookRequest;
 import com.wedriveu.shared.rabbitmq.message.VehicleBookResponse;
 import com.wedriveu.shared.util.Constants;

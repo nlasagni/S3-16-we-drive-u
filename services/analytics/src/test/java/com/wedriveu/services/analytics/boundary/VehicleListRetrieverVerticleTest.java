@@ -1,8 +1,8 @@
 package com.wedriveu.services.analytics.boundary;
 
 import com.wedriveu.services.analytics.vehicleServiceFake.VehicleListGeneratorRequestHandler;
-import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.entity.VehicleListObject;
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.services.shared.model.VehicleListObject;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.shared.util.Constants;

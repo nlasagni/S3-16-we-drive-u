@@ -1,6 +1,6 @@
 package com.wedriveu.services.vehicle.entity;
 
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.util.Position;
 import io.vertx.core.eventbus.Message;
 
@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This inteface models the <em>com.wedriveu.services.shared.entity.Vehicle' database domain</em>.
+ * This inteface models the <em>Vehicle' database domain</em>.
  *
  * @author Michele Donati
  * @author Marco Baldassarri
@@ -27,7 +27,7 @@ public interface VehicleStore {
     void getAllAvailableVehiclesInRange(Message message);
 
     /**
-     * @param message Identifies the <em>com.wedriveu.services.shared.entity.Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.
+     * @param message Identifies the <em>Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.
      */
     void getVehicle(Message message);
 

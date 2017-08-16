@@ -1,4 +1,4 @@
-package com.wedriveu.services.shared.rabbitmq.nearest;
+package com.wedriveu.services.shared.message;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
