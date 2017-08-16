@@ -36,8 +36,9 @@ public abstract class VerticleConsumer extends AbstractVerticle {
 
     protected void startConsumerWithDurableQueue(String exchange, String routingKey, String eventBusAddress)
             throws IOException, TimeoutException {
-        startConsumer(exchange, routingKey, eventBusAddress);
+        startConsumer(true, exchange, routingKey, eventBusAddress);
     }
+
 
     protected void startConsumerWithFuture(String exchange, String routingKey, String eventBusAddress, Future future)
             throws IOException, TimeoutException {
@@ -59,7 +60,7 @@ public abstract class VerticleConsumer extends AbstractVerticle {
         });
     }
 
-    protected void startConsumer(String exchange, String routingKey, String eventBusAddress)
+    protected void startConsumer(Boolean durable, String exchange, String routingKey, String eventBusAddress)
             throws IOException, TimeoutException {
         startConsumerWithFuture(exchange, routingKey, eventBusAddress, null);
     }
