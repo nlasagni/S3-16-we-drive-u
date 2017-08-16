@@ -60,4 +60,10 @@ public interface Messages {
         String GET_VEHICLES_REQUEST = "analytics.get.vehicles.request";
     }
 
+    interface Booking {
+        String BOOK_REQUEST = "booking.book.request.to.vehicle";
+        String BOOK_RESPONSE = "booking.book.response.to.control";
+        String UNDEPLOY = "booking.book.vehicle.verticle.undeploy";
+    }
+
 }

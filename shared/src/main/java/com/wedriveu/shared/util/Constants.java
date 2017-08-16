@@ -151,6 +151,15 @@ public interface Constants {
 
 
             /**
+             * The routing key used by booking-service to communicate a request of booking.
+             */
+            String BOOKING_SERVICE_BOOK_REQUEST = "vehicle.request.book";
+            /**
+             * The routing key used vehicle-service to communicate the response of a booking request to booking-service.
+             */
+            String BOOKING_SERVICE_BOOK_RESPONSE = "vehicle.response.book";
+
+            /**
              * The routing key used by vehicle-service to communicate a request of booking to a vehicle,
              * must be completed with the license plate, see {@linkplain String#format(String, Object...)}.
              */

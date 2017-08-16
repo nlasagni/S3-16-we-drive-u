@@ -1,7 +1,7 @@
 package com.weriveu.vehicle.boundary;
 
-import com.wedriveu.shared.rabbitmq.message.VehicleBookRequest;
-import com.wedriveu.shared.rabbitmq.message.VehicleBookResponse;
+import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
+import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 
 /**
  * @author Michele Donati on 11/08/2017.
@@ -17,6 +17,6 @@ public interface VehicleVerticleBook {
      * @param request This indicates the request object sended.
      * @return Returns a response object to the service.
      */
-    public VehicleBookResponse book(VehicleBookRequest request);
+    public BookVehicleResponse book(BookVehicleRequest request);
 
 }

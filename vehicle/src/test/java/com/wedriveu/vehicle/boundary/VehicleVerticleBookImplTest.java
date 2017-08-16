@@ -1,7 +1,7 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.shared.rabbitmq.message.VehicleBookRequest;
-import com.wedriveu.shared.rabbitmq.message.VehicleBookResponse;
+import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
+import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
@@ -112,7 +112,7 @@ public class VehicleVerticleBookImplTest {
         MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
             Log.info(TAG, responseJson.toString());
-            VehicleBookResponse response = responseJson.mapTo(VehicleBookResponse.class);
+            BookVehicleResponse response = responseJson.mapTo(BookVehicleResponse.class);
             context.assertTrue(response.getBooked());
             async.complete();
         });
@@ -123,7 +123,7 @@ public class VehicleVerticleBookImplTest {
     }
 
     private JsonObject createRequestJsonObject() {
-        VehicleBookRequest request = new VehicleBookRequest();
+        BookVehicleRequest request = new BookVehicleRequest();
         request.setUsername(USERNAME);
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(request).toString());

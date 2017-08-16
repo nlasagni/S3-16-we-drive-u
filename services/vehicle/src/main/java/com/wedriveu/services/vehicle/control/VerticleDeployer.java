@@ -52,6 +52,8 @@ public class VerticleDeployer extends AbstractVerticle {
         vertx.deployVerticle(new AnalyticsPublisherVerticle(), analyticsPublisherFuture.completer());
         futures.add(analyticsPublisherFuture);
 
+        //TODO deploy BookingControl, BookConsumerVerticle, BookPublisherVerticle
+
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {
                 startFuture.complete();
