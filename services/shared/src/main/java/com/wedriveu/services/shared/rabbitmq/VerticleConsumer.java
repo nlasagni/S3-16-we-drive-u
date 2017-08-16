@@ -42,7 +42,7 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     protected void startConsumer(boolean durableQueue, String exchange, String routingKey, String eventBusAddress)
             throws IOException, TimeoutException {
         startConsumer(onStart -> {
-            declareQueue(onQueue -> {
+            declareQueue(durableQueue, onQueue -> {
                 if (onQueue.succeeded()) {
                     bindQueueToExchange(exchange,
                             routingKey, onBind -> {
@@ -66,8 +66,8 @@ public abstract class VerticleConsumer extends AbstractVerticle {
         });
     }
 
-    private void declareQueue(Handler<AsyncResult<Void>> handler) {
-        client.queueDeclare(queueName, true, false, false, onDeclareCompleted -> {
+    private void declareQueue(boolean durableQueue, Handler<AsyncResult<Void>> handler) {
+        client.queueDeclare(queueName, durableQueue, false, false, onDeclareCompleted -> {
             if (onDeclareCompleted.succeeded()) {
                 handler.handle(Future.succeededFuture());
             } else {
