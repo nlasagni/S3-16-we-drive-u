@@ -76,7 +76,7 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
     }
 
     @Override
-    protected void checkResponse(JsonObject responseJson) {
+    protected void checkResponse(TestContext context, JsonObject responseJson) {
         assertThat(responseJson.getBoolean(REGISTER_RESULT), instanceOf(Boolean.class));
     }
 

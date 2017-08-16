@@ -41,8 +41,8 @@ public class NearestConsumerVerticle extends VerticleConsumer {
     public void registerConsumer(String eventBus) {
         vertx.eventBus().consumer(eventBus, msg -> {
             JsonObject message = (JsonObject) msg.body();
-            JsonObject response = new JsonObject(message.getString(Constants.EventBus.BODY));
-            searchAvailableVehicles(response);
+            JsonObject nearestRequest = new JsonObject(message.getString(Constants.EventBus.BODY));
+            searchAvailableVehicles(nearestRequest);
         });
     }
 
