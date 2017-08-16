@@ -1,7 +1,7 @@
 package com.wedriveu.services.vehicle.entity;
 
 import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.shared.rabbitmq.message.Position;
+import com.wedriveu.shared.util.Position;
 import io.vertx.core.eventbus.Message;
 
 import java.util.Date;

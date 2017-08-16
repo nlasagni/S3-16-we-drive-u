@@ -2,7 +2,7 @@ package com.wedriveu.services.vehicle.boundary.vehicleregister.entity;
 
 
 import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.shared.rabbitmq.message.Position;
+import com.wedriveu.shared.util.Position;
 
 import java.net.MalformedURLException;
 import java.net.URL;

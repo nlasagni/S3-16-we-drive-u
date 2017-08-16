@@ -2,7 +2,7 @@ package com.wedriveu.services.shared.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wedriveu.shared.rabbitmq.message.Position;
+import com.wedriveu.shared.util.Position;
 
 import java.net.URL;
 import java.util.Date;
