@@ -36,10 +36,10 @@ public abstract class VerticleConsumer extends AbstractVerticle {
 
     protected void startConsumerWithDurableQueue(String exchange, String routingKey, String eventBusAddress)
             throws IOException, TimeoutException {
-        startConsumer(true, exchange, routingKey, eventBusAddress);
+        startConsumer(exchange, routingKey, eventBusAddress);
     }
 
-    protected void startConsumer(boolean durableQueue, String exchange, String routingKey, String eventBusAddress)
+    protected void startConsumerWithFuture(String exchange, String routingKey, String eventBusAddress, Future future)
             throws IOException, TimeoutException {
         startConsumer(onStart -> {
             declareQueue(onQueue -> {
@@ -49,6 +49,9 @@ public abstract class VerticleConsumer extends AbstractVerticle {
                                 if (onBind.succeeded()) {
                                     registerConsumer(eventBusAddress);
                                     basicConsume(eventBusAddress);
+                                    if (future != null) {
+                                        future.complete();
+                                    }
                                 }
                             });
                 }
@@ -56,6 +59,14 @@ public abstract class VerticleConsumer extends AbstractVerticle {
         });
     }
 
+    protected void startConsumer(String exchange, String routingKey, String eventBusAddress)
+            throws IOException, TimeoutException {
+        startConsumerWithFuture(exchange, routingKey, eventBusAddress, null);
+    }
+    protected void startConsumer(boolean durable, String exchange, String routingKey, String eventBusAddress)
+            throws IOException, TimeoutException {
+        startConsumerWithFuture(exchange, routingKey, eventBusAddress, null);
+    }
     private void startConsumer(Handler<AsyncResult<Void>> handler) throws java.io.IOException, TimeoutException {
         client.start(onStartCompleted -> {
             if (onStartCompleted.succeeded()) {

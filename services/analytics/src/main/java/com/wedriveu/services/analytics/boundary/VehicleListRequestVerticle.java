@@ -19,7 +19,7 @@ public class VehicleListRequestVerticle extends VerticlePublisher {
 
     private void startConsumer() {
         //Log.log("started vertx eventbus consumer in VehicleListRequestVerticle, attending start to receive");
-        vertx.eventBus().consumer(ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS, this::requestVehicleListToVehicleService);
+        vertx.eventBus().consumer(ANALYTICS_VEHICLE_LIST_REQUEST_EVENTBUS, this::requestVehicleListToVehicleService);
     }
 
     private void requestVehicleListToVehicleService(Message message) {
