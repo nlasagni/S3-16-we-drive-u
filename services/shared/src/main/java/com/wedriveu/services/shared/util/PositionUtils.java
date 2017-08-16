@@ -1,6 +1,6 @@
 package com.wedriveu.services.shared.util;
 
-import com.wedriveu.shared.rabbitmq.message.Position;
+import com.wedriveu.shared.util.Position;
 
 import static com.wedriveu.shared.util.Constants.Position.EARTH_RADIUS;
 import static com.wedriveu.shared.util.Constants.Position.RANGE;

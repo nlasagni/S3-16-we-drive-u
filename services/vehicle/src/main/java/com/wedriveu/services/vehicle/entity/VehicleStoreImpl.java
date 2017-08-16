@@ -7,7 +7,7 @@ import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.util.PositionUtils;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
-import com.wedriveu.shared.rabbitmq.message.Position;
+import com.wedriveu.shared.util.Position;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
