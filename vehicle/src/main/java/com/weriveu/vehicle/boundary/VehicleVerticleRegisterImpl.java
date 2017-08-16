@@ -140,8 +140,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     private String calculateNewLicensePlate(VehicleControl vehicle) {
         String newLicense = UUID.randomUUID().toString();
         if(vehicle.getVehicle().plate().equals(newLicense)) {
-            String license = calculateNewLicensePlate(vehicle);
-            return license;
+            return calculateNewLicensePlate(vehicle);
         }
         vehicle.getVehicle().setPlate(newLicense);
         return newLicense;

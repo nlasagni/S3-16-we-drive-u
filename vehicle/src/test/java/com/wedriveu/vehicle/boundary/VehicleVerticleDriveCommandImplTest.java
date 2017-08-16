@@ -10,17 +10,13 @@ import com.wedriveu.vehicle.shared.VehicleConstants$;
 import com.weriveu.vehicle.boundary.VehicleVerticleDriveCommandImpl;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.Repeat;
-import io.vertx.ext.unit.junit.RepeatRule;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rabbitmq.RabbitMQClient;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -50,7 +46,6 @@ public class VehicleVerticleDriveCommandImplTest {
             ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon);
 
     private Vertx vertx;
-    private EventBus eventBus;
     private RabbitMQClient rabbitMQClient;
     private VehicleVerticleDriveCommandImpl vehicleVerticle;
     private VehicleControl vehicleControl;
@@ -60,14 +55,14 @@ public class VehicleVerticleDriveCommandImplTest {
     private double battery = 100.0;
     private double speed = 80.0;
     private VehicleStopView stopUi = new VehicleStopViewImpl(1);
-    private boolean debugVar = false;
+    private boolean debugVar = true;
 
     @Before
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
-        eventBus = vertx.eventBus();
-        vehicleControl = new VehicleControlImpl(license, state, position, battery, speed, stopUi, debugVar);
-        vehicleVerticle = new VehicleVerticleDriveCommandImpl(vehicleControl);
+        vehicleControl =
+                new VehicleControlImpl("","",license, state, position, battery, speed, stopUi, debugVar);
+        vehicleVerticle = new VehicleVerticleDriveCommandImpl(vehicleControl, debugVar);
         checkCounter = 10;
         setUpAsyncComponents(context);
     }

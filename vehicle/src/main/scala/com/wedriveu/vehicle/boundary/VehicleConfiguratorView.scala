@@ -40,6 +40,7 @@ trait VehicleConfiguratorView {
 
     setLocationRelativeTo(null)
     var vehiclesCounter: Int = 1
+    var indexForImages: Int = 0
     val panel: JPanel = new JPanel()
     val parametersLabel: JLabel = new JLabel("Configuration Parameters")
     val batteryLabel: JLabel = new JLabel("Battery (%):")
@@ -161,12 +162,15 @@ trait VehicleConfiguratorView {
           JOptionPane.ERROR_MESSAGE)
       }
       else {
+        if(indexForImages == 6) {indexForImages = 0}
         new VehicleCreator(speedTextField.getText.toDouble,
           batteryTextField.getText.toDouble,
           checkBoxYesBreak.isSelected,
           checkBoxYesStolen.isSelected,
-          vehiclesCounter)
+          vehiclesCounter,
+          indexForImages)
         vehiclesCounter += 1
+        indexForImages += 1
       }
       case command if command == yesCommandBreak => if(checkBoxNoBreak.isSelected) {
         checkBoxNoBreak.setSelected(false)

@@ -85,7 +85,9 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   }
 
   private def createVehicleControl(debugVar: Boolean): VehicleControl = {
-     new VehicleControlImpl(licenseFirstTest,
+     new VehicleControlImpl("",
+       "",
+       licenseFirstTest,
       stateFirstTest,
       new Position(latitude, longitude),
       VehicleConstants.maxBatteryValue,
@@ -95,7 +97,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   }
 
   private def createVehicleBehaviour(vehicleControl: VehicleControl, debugVar: Boolean): VehicleBehaviours = {
-    new VehicleBehavioursImpl(vehicleControl.getVehicle(), new VehicleStopViewImpl(1), debugVar)
+    new VehicleBehavioursImpl(vehicleControl, vehicleControl.getVehicle(), new VehicleStopViewImpl(1), debugVar)
   }
 
 }

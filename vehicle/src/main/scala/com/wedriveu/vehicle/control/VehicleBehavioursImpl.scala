@@ -50,7 +50,10 @@ trait VehicleBehaviours {
   def setVehicleStolen(): Unit
 }
 
-class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: VehicleStopView,var debugVar:Boolean)
+class VehicleBehavioursImpl(vehicleControl: VehicleControl,
+                            selfDrivingVehicle: SelfDrivingVehicle,
+                            stopUi: VehicleStopView,
+                            var debugVar:Boolean)
   extends VehicleBehaviours {
    val zeroBattery: Double = 0.0
    val batteryThreshold: Double = 20.0
@@ -75,9 +78,9 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
    val startRechargeProcessLog: String = "Started the recharge process, 10 seconds until finish..."
    val endRechargeProcessLog: String = "Ended recharge process. Vehicle battery percentage = "
    val errorRechargeProcessLog: String = "Error in the recharge process, vehicle status = "
-   val vehicleSetToBrokenLog: String = "Vehicle is broken, please sends substitute"
+   val vehicleSetToBrokenLog: String = "Vehicle is broken, please send substitute"
    val vehicleIsAlreadyStolenLog: String = "The vehicle is stolen actually, but it is also broken"
-   val vehicleSetToStolenLog: String = "Vehicle is stolen, please contacts authorities"
+   val vehicleSetToStolenLog: String = "Vehicle is stolen, please contact authorities"
    val cantRechargeLog: String = "Can't recharge, vehicle is broken/stolen."
 
    var deltaLat: Double = .0
@@ -179,10 +182,22 @@ class VehicleBehavioursImpl(selfDrivingVehicle: SelfDrivingVehicle, stopUi: Vehi
                                          notRealisticVar: Boolean): Unit = {
     testVar = notRealisticVar
     movementAndPositionChange(userPosition)
-    userOnBoard = true
-    //TODO Here i will notify the service and the user that i'm arrived to the user
-    movementAndPositionChange(destinationPosition)
-    userOnBoard = false
+    if(userPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
+      <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
+      vehicleControl.setUserOnBoard(true)
+
+      //TODO Notificare l'utente con la richiesta di entrare in macchina.
+
+      movementAndPositionChange(destinationPosition)
+      if(destinationPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
+        <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
+        vehicleControl.setUserOnBoard(false)
+        if(!testVar) {
+          vehicleControl.getArrivedNotifyVerticle().sendArrivedNotify()
+        }
+      }
+    }
+
     //TODO Here i will notify the service that i'm arrived to destination
   }
 
