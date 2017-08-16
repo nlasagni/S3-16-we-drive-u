@@ -2,12 +2,13 @@ package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.VehicleBookRequest;
 import com.wedriveu.shared.rabbitmq.message.VehicleBookResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
+import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
@@ -123,6 +124,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
                         if (!onPublish.succeeded()) {
                             Log.error(TAG, SEND_ERROR, onPublish.cause());
                         }
+                        vehicle.getVehicle().setState(VehicleConstants$.MODULE$.stateBooked());
                     });
         }catch (JsonProcessingException e) {
             Log.error(TAG, SEND_ERROR, e);
@@ -137,6 +139,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
         vehicle.setUsername(request.getUsername());
         VehicleBookResponse response = new VehicleBookResponse();
         response.setBooked(vehicle.getVehicle().getState().equals(Vehicle.STATUS_AVAILABLE));
+        response.setSpeed(vehicle.getVehicle().speed());
         return response;
     }
 

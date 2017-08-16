@@ -1,6 +1,6 @@
 package com.wedriveu.services.analytics.vehicleServiceFake;
 
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.shared.util.Position;

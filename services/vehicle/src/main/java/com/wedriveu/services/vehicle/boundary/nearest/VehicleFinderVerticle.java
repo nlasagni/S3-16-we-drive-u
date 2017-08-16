@@ -1,7 +1,7 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
 
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponseCanDrive;

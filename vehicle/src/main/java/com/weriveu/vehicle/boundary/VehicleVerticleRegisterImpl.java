@@ -1,7 +1,7 @@
 package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.shared.rabbitmq.message.RegisterToServiceRequest;
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.RegisterToServiceResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
@@ -14,6 +14,9 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -100,10 +103,12 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             try {
+                System.out.println("VERTICLE = CONSUMO IL MESSAGGIO!");
                 JsonObject message = new JsonObject(msg.body().toString());
                 RegisterToServiceResponse registerToServiceResponse =
                         objectMapper.readValue(message.getString(Constants.EventBus.BODY),
                                 RegisterToServiceResponse.class);
+                System.out.println("VERTICLE = IL MESSAGGIO è " + registerToServiceResponse.toString());
                 checkResponse(registerToServiceResponse);
             } catch (IOException e) {
                 Log.error(TAG, READ_ERROR, e);
@@ -117,15 +122,30 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
                 Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
                 createRequest(),
                 onPublish -> {
-            onPublish.succeeded();
+            if(onPublish.succeeded()){
+                Log.info("VERTICLE","HO MANDATO IL MESSAGGIO");
+            }
         });
     }
 
     private JsonObject createRequest() {
-        RegisterToServiceRequest request = new RegisterToServiceRequest();
-        request.setLicense(vehicle.getVehicle().plate());
+    //    RegisterToServiceRequest request = new RegisterToServiceRequest();
+    //    request.setLicense(vehicle.getVehicle().plate());
+        Vehicle vehicleTest = new Vehicle();
+        vehicleTest.setDescription(vehicle.getVehicle().description());
+        try {
+            vehicleTest.setImageUrl(new URL(vehicle.getVehicle().imageUrl()));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        vehicleTest.setLicensePlate(vehicle.getVehicle().plate());
+        vehicleTest.setStatus(vehicle.getVehicle().getState());
+        vehicleTest.setPosition(vehicle.getVehicle().getPosition());
+        vehicleTest.setLastUpdate(new Date());
+        vehicleTest.setName("Super Car");
+
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(request).toString());
+        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(vehicleTest).toString());
         return jsonObject;
     }
 
@@ -134,6 +154,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
             String newLicensePlate = calculateNewLicensePlate(vehicle);
             registerToService(newLicensePlate);
         }
+        System.out.println("MI SONO REGISTRATO");
         vehicle.getVehicle().setState(vehicleConstants.stateAvailable());
     }
 

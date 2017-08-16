@@ -113,7 +113,7 @@ public class VehicleVerticleBookImplTest {
             JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
             Log.info(TAG, responseJson.toString());
             VehicleBookResponse response = responseJson.mapTo(VehicleBookResponse.class);
-            context.assertTrue(response.getBooked());
+            context.assertTrue(response.getBooked() && (response.getSpeed() == speed));
             async.complete();
         });
         consumer.exceptionHandler(event -> {

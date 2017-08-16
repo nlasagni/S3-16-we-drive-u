@@ -1,7 +1,7 @@
 package com.wedriveu.services.analytics.control;
 
 import com.wedriveu.services.analytics.entity.AnalyticsStore;
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Log;

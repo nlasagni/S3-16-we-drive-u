@@ -9,6 +9,7 @@ package com.wedriveu.shared.rabbitmq.message;
 public class VehicleBookResponse {
 
     private boolean booked;
+    private double speed;
 
     public boolean getBooked() {
         return booked;
@@ -18,6 +19,15 @@ public class VehicleBookResponse {
         this.booked = booked;
     }
 
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double newSpeed) {
+        this.speed = newSpeed;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -25,19 +35,25 @@ public class VehicleBookResponse {
 
         VehicleBookResponse that = (VehicleBookResponse) o;
 
-        return booked == that.booked;
+        if (booked != that.booked) return false;
+        return Double.compare(that.speed, speed) == 0;
     }
 
     @Override
     public int hashCode() {
-        return (booked ? 1 : 0);
+        int result;
+        long temp;
+        result = (booked ? 1 : 0);
+        temp = Double.doubleToLongBits(speed);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 
     @Override
     public String toString() {
         return "VehicleBookResponse{" +
                 "booked=" + booked +
+                ", speed=" + speed +
                 '}';
     }
-
 }

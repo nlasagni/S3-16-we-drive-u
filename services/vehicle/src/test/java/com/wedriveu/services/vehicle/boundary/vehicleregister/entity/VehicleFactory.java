@@ -1,7 +1,7 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister.entity;
 
 
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
 
 /**
  * Simple factory pattern to get different Vehicle implementations.
