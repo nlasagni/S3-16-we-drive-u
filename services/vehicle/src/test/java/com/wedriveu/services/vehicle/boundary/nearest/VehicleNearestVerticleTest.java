@@ -76,7 +76,7 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
     }
 
     @Override
-    protected void checkResponse(JsonObject responseJson) {
+    protected void checkResponse(TestContext context, JsonObject responseJson) {
         Vehicle responseVehicle = responseJson.mapTo(Vehicle.class);
         assertThat(responseVehicle, instanceOf(Vehicle.class));
     }

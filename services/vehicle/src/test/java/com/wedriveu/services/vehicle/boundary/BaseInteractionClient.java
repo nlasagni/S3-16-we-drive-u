@@ -104,7 +104,7 @@ public abstract class BaseInteractionClient {
         vertx.eventBus().consumer(eventBusAddress, msg -> {
             context.assertNotNull(msg.body());
             JsonObject responseJson = new JsonObject(((JsonObject) msg.body()).getString(BODY));
-            checkResponse(responseJson);
+            checkResponse(context, responseJson);
             async.complete();
         }).exceptionHandler(event -> {
             context.fail(event.getCause());
@@ -113,7 +113,7 @@ public abstract class BaseInteractionClient {
 
     }
 
-    protected abstract void checkResponse(JsonObject responseJson);
+    protected abstract void checkResponse(TestContext context, JsonObject responseJson);
 
     protected abstract JsonObject getJson();
 }

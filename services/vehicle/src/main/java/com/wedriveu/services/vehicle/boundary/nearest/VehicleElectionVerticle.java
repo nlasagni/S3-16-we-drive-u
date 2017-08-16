@@ -2,9 +2,9 @@ package com.wedriveu.services.vehicle.boundary.nearest;
 
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
-import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;

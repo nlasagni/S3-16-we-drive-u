@@ -3,17 +3,17 @@ package com.wedriveu.services.analytics.vehicleServiceFake;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
-import com.wedriveu.services.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.wedriveu.shared.util.Constants.ROUTING_KEY_VEHICLE_RESPONSE_ALL;
 import static com.wedriveu.shared.util.Constants.RabbitMQ;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_VEHICLES_RESPONSE_ALL;
 
 /**
  * @author Stefano Bernagozzi
@@ -50,7 +50,7 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher{
                     new Position(13.2, 16.2),
                     new Date(2017, 8, 24, 9, 37, 22)));
         JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new VehicleListObject(vehicleList));
-        publish(RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_VEHICLE_RESPONSE_ALL,vehicleListJson, published -> { });
+        publish(RabbitMQ.Exchanges.ANALYTICS,ANALYTICS_VEHICLES_RESPONSE_ALL,vehicleListJson, published -> { });
         Log.log("sent request for all vehicles to vehicle service in VehicleListGeneratorResponseHandler");
     }
 

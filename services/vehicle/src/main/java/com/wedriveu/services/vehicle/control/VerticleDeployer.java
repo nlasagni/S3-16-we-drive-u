@@ -1,5 +1,7 @@
 package com.wedriveu.services.vehicle.control;
 
+import com.wedriveu.services.vehicle.boundary.analytics.AnalyticsConsumerVerticle;
+import com.wedriveu.services.vehicle.boundary.analytics.AnalyticsPublisherVerticle;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleElectionVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterConsumerVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterPublisherVerticle;
@@ -41,6 +43,14 @@ public class VerticleDeployer extends AbstractVerticle {
         Future registerPublisherFuture = Future.future();
         vertx.deployVerticle(new RegisterPublisherVerticle(), registerPublisherFuture.completer());
         futures.add(registerPublisherFuture);
+
+        Future analyticsConsumerFuture = Future.future();
+        vertx.deployVerticle(new AnalyticsConsumerVerticle(), analyticsConsumerFuture.completer());
+        futures.add(analyticsConsumerFuture);
+
+        Future analyticsPublisherFuture = Future.future();
+        vertx.deployVerticle(new AnalyticsPublisherVerticle(), analyticsPublisherFuture.completer());
+        futures.add(analyticsPublisherFuture);
 
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {

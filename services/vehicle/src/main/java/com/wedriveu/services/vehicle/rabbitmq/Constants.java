@@ -1,5 +1,6 @@
 package com.wedriveu.services.vehicle.rabbitmq;
 
+import com.wedriveu.services.vehicle.boundary.analytics.AnalyticsConsumerVerticle;
 import com.wedriveu.services.vehicle.boundary.nearest.NearestConsumerVerticle;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterConsumerVerticle;
@@ -20,5 +21,5 @@ public interface Constants {
     String NEAREST_EVENT_BUS_ADDRESS = NearestConsumerVerticle.class.getCanonicalName();
     String EVENT_BUS_FINDER_ADDRESS = VehicleFinderVerticle.class.getCanonicalName();
     String EVENT_BUS_REGISTER_ADDRESS = RegisterConsumerVerticle.class.getCanonicalName();
-
+    String EVENT_BUS_ANALYTICS_ADDRESS = AnalyticsConsumerVerticle.class.getCanonicalName();
 }
