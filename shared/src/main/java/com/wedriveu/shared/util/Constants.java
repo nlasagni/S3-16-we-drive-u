@@ -213,17 +213,29 @@ public interface Constants {
     String VEHICLE_TO_SERVICE = "ToService";
 
 
-    //analytics service
+    //analytics messages
     String VEHICLE_REQUEST_ALL_MESSAGE = "Requesting All Vehicles From Analytics Service";
     String ANALYTICS_VEHICLE_LIST_RETRIEVER_START_MESSAGE = "Vehicle List Request Sent, Listen";
-    String ANALYTICS_VEHICLE_LIST_RETRIEVER_VERTICLE_ADDRESS = "VehicleListRetrieverVerticle";
-    String ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS = "VehicleListRequestVerticle";
+    String ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE = "Started all services, start requesting vehicle list";
+
+    //analytics routing keys
     String ROUTING_KEY_VEHICLE_REQUEST_ALL = "vehicle.request.all";
     String ROUTING_KEY_VEHICLE_RESPONSE_ALL = "vehicle.response.all";
-    String ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS = "AnalyticsVerticleController";
-    String ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE = "Started all services, start requesting vehicle list";
-    String EVENT_BUS_AVAILABLE_ADDRESS = "service.vehicle.eventbus";
-    String ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS = "test.analytics.vehicleListRequest";
+    String ROUTING_KEY_ANALYTICS_REQUEST_VEHICLES = "analytics.request.vehicles";
+    String ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES = "analytics.response.vehicles";
+    String ROUTING_KEY_ANALYTICS_VEHICLE_UPDATE = "analytics.vehicle.event.updated";
+
+    //ANALYTICS EVENTBUSES
+    String ANALYTICS_VEHICLE_LIST_REQUEST_EVENTBUS = "analytics.eventbus.VehicleListRequestVerticle";
+    String ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS = "analytics.eventbus.AnalyticsVerticleController";
+    String ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS = "analytics.eventbus.test.vehicleListRequest";
+    String ANALYTCS_VEHICLE_COUNTER_UPDATE_EVENTBUS = "analytics.eventbus.vehicleCounterUpdate";
+    //String ANALYTCS_VEHICLE_COUNTER_BACKOFFICE_UPDATE_EVENTBUS = "analytics.eventbus.vehicleCounterBackofficeUpdate";
+    String ANALYTICS_VEHICLE_COUNTER_REQUEST_EVENTBUS = "analytics.eventbus.vehicleCounterRequest";
+    String ANALYTICS_VEHICLE_COUNTER_RESPONSE_EVENTBUS = "analytics.eventbus.vehicleCounterResponse";
+    String ANALYTICS_VEHICLE_STORE_UPDATE_REQUEST_EVENTBUS = "analytics.eventbus.vehicleStoreUpdate";
+    String ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS = "analytics.eventbus.availableAddress";
+
 
 
 }
