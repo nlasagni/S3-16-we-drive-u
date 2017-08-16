@@ -8,6 +8,7 @@ import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import com.weriveu.vehicle.boundary.VehicleVerticleBookImpl;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -51,7 +52,8 @@ public class VehicleVerticleBookImplTest {
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
-        vehicleControl = new VehicleControlImpl(license, state, position, battery, speed, stopUi, debugVar);
+        vehicleControl =
+                new VehicleControlImpl("","",license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleBookImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -70,7 +72,9 @@ public class VehicleVerticleBookImplTest {
                         Constants.RabbitMQ.Exchanges.VEHICLE,
                         String.format(Constants.RabbitMQ.RoutingKey.BOOK_RESPONSE, license),
                         onQueueBind -> {
-                            vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy ->
+                            vertx.deployVerticle(vehicleVerticle,
+                                    new DeploymentOptions().setWorker(true),
+                                    context.asyncAssertSuccess(onDeploy ->
                                     async.complete()
                             ));
                             async.countDown();

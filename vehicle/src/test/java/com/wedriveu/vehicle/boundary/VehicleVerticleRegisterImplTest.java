@@ -10,6 +10,7 @@ import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import com.weriveu.vehicle.boundary.VehicleVerticleRegisterImpl;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -55,7 +56,8 @@ public class VehicleVerticleRegisterImplTest {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
         objectMapper = new ObjectMapper();
-        vehicleControl = new VehicleControlImpl(license, state, position, battery, speed, stopUi, debugVar);
+        vehicleControl =
+                new VehicleControlImpl("","",license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleRegisterImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -74,7 +76,9 @@ public class VehicleVerticleRegisterImplTest {
                             Constants.RabbitMQ.Exchanges.VEHICLE,
                             Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
                             onQueueBind ->{
-                        vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy -> {
+                        vertx.deployVerticle(vehicleVerticle,
+                                new DeploymentOptions().setWorker(true),
+                                context.asyncAssertSuccess(onDeploy -> {
                             async.complete();}
                         ));
                         async.countDown();

@@ -13,7 +13,6 @@ import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 public interface VehicleVerticleArrivedNotify {
     /**
      * This method permits to send the notify "Arrived to destination" to the service.
-     * @param notify This indicates the notify object to send to the service.
      */
-    void sendArrivedNotify(ArrivedNotify notify);
+    void sendArrivedNotify();
 }

@@ -8,6 +8,7 @@ import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import com.weriveu.vehicle.boundary.VehicleVerticleCanDriveImpl;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -52,7 +53,8 @@ public class VehicleVerticleCanDriveImplTest {
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
-        vehicleControl = new VehicleControlImpl(license, state, position, battery, speed, stopUi, debugVar);
+        vehicleControl =
+                new VehicleControlImpl("","",license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleCanDriveImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -71,7 +73,9 @@ public class VehicleVerticleCanDriveImplTest {
                         Constants.RabbitMQ.Exchanges.VEHICLE,
                         String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, USERNAME),
                         onQueueBind -> {
-                    vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy ->
+                    vertx.deployVerticle(vehicleVerticle,
+                            new DeploymentOptions().setWorker(true),
+                            context.asyncAssertSuccess(onDeploy ->
                             async.complete()
                     ));
                     async.countDown();

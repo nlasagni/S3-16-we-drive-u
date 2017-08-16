@@ -20,8 +20,9 @@ import java.io.IOException;
 public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements VehicleVerticleDriveCommand {
 
     private VehicleControl vehicle;
+    private boolean testVar;
     private static final String TAG = VehicleVerticleDriveCommandImpl.class.getSimpleName();
-    private static final String EVENT_BUS_ADDRESS = "vehicle.book";
+    private static final String EVENT_BUS_ADDRESS = "vehicle.drivecommandbus";
     private static final String READ_ERROR = "Error occurred while reading request.";
     private static String QUEUE_NAME = "vehicle.drivecommand.";
 
@@ -29,8 +30,9 @@ public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements
     private EventBus eventBus;
     private ObjectMapper objectMapper;
 
-    public VehicleVerticleDriveCommandImpl(VehicleControl vehicle) {
+    public VehicleVerticleDriveCommandImpl(VehicleControl vehicle, boolean testVar) {
         this.vehicle = vehicle;
+        this.testVar = testVar;
         QUEUE_NAME+=this.vehicle.getVehicle().plate();
     }
 
@@ -108,7 +110,7 @@ public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements
     public void drive(DriveCommand driveCommand) {
         vehicle.changePositionUponBooking(driveCommand.getUserPosition(),
                 driveCommand.getDestinationPosition(),
-                true);
+                this.testVar);
     }
 
 }
