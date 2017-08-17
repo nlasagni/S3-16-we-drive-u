@@ -2,6 +2,7 @@ package com.wedriveu.services.analytics.vehicleServiceFake;
 
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
@@ -31,7 +32,7 @@ public class VehicleListGeneratorRequestHandler extends VerticleConsumer{
                 futureRequest.fail(v.cause());
             }
         });
-        startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS, ROUTING_KEY_VEHICLE_REQUEST_ALL, ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS, futureConsumer);
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, ROUTING_KEY_VEHICLE_REQUEST_ALL, ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS, futureConsumer);
 
     }
 
