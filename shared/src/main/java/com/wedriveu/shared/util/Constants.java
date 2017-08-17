@@ -149,7 +149,7 @@ public interface Constants {
             String ANALYTICS_VEHICLES_RESPONSE_ALL = "vehicle.response.all";
 
 
-
+            String START_DRIVING = "vehicle.event.drive";
             /**
              * The routing key used by booking-service to communicate a request of booking.
              */

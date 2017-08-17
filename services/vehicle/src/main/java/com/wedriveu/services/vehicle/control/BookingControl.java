@@ -1,26 +1,15 @@
 package com.wedriveu.services.vehicle.control;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponseCanDrive;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
+import com.wedriveu.services.vehicle.entity.BookVehicleResponseWrapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
-import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.rabbitmq.message.DriveCommand;
+import com.wedriveu.shared.util.Position;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.wedriveu.services.shared.entity.Vehicle.NO_ELIGIBLE_VEHICLE_RESPONSE;
-import static com.wedriveu.shared.util.Constants.*;
-import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 
 
 /**
@@ -32,21 +21,62 @@ import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
  */
 public class BookingControl extends AbstractVerticle {
 
+    private static final long HOUR_IN_MILLISECONDS = 3600000;
     private EventBus eventBus;
+    private BookVehicleResponse vehicleResponse;
+    private BookVehicleResponseWrapper vehicleResponseWrapper;
 
     @Override
     public void start() throws Exception {
         this.eventBus = vertx.eventBus();
-        eventBus.consumer(Messages.Booking.BOOK_RESPONSE, this::getDriveTimes);
+        eventBus.consumer(Messages.Booking.BOOK_RESPONSE, this::handleBookResponse);
         eventBus.consumer(Messages.Booking.UNDEPLOY, this::undeployBookVehicleVerticle);
+        eventBus.consumer(Messages.VehicleStore.GET_VEHICLE_COMPLETED_BOOKING, this::getVehicleCompleted);
     }
 
-    private void getDriveTimes(Message message) {
-        BookVehicleResponse vehicleResponse = (BookVehicleResponse) message.body();
-        //if booked then send the vehicleResponse to the BookPublisherVerticle as it is
-        //if not booked, calculate drive times, add them to the vehicleResponse
-        // and then send the vehicleResponse to the BookPublisherVerticle
+    private void handleBookResponse(Message message) {
+        vehicleResponseWrapper = (BookVehicleResponseWrapper) message.body();
+        vehicleResponse = vehicleResponseWrapper.getResponse();
+        if(vehicleResponse.getBooked()) {
+            notifyServices();
+        } else {
+            eventBus.send(Messages.BookingControl.GET_VEHICLE_BOOKING, vehicleResponse);
+        }
     }
+
+
+    private void getVehicleCompleted(Message message) {
+        Vehicle vehicle = (Vehicle) message.body();
+        fillDriveTimes(vehicle);
+        sendStartDrivingCommand();
+        notifyServices();
+    }
+
+    // Notifies Booking and Analytics Service
+    private void notifyServices() {
+        eventBus.publish(Messages.BookingControl.PUBLISH_RESULT, vehicleResponse);
+    }
+
+    private void sendStartDrivingCommand() {
+        DriveCommand driveCommand = new DriveCommand();
+        driveCommand.setUserPosition(vehicleResponseWrapper.getUserPosition());
+        driveCommand.setDestinationPosition(vehicleResponseWrapper.getDestinationPosition());
+        eventBus.send(Messages.BookingControl.START_DRIVING, VertxJsonMapper.mapInBodyFrom(driveCommand));
+
+    }
+
+    private void fillDriveTimes(Vehicle vehicle) {
+        Position userPosition = vehicleResponseWrapper.getUserPosition();
+        Position destinationPosition = vehicleResponseWrapper.getDestinationPosition();
+        Position vehiclePosition = vehicle.getPosition();
+        double distanceToUser = Position.getDistanceInKm(userPosition, vehiclePosition);
+        double distanceToDestination = Position.getDistanceInKm(destinationPosition, vehiclePosition);
+        long timeMillisUser = getTimeInMilliseconds(distanceToUser);
+        long timeMillisDestination = getTimeInMilliseconds(distanceToDestination);
+        vehicleResponse.setDriveTimeToUser(timeMillisUser);
+        vehicleResponse.setDriveTimeToDestination(timeMillisDestination);
+    }
+
 
     private void undeployBookVehicleVerticle(Message message) {
         String deploymentId = (String) message.body();
@@ -55,6 +85,11 @@ public class BookingControl extends AbstractVerticle {
         }
     }
 
+
+    private long getTimeInMilliseconds(double distance) {
+        double hourTime = distance / vehicleResponse.getSpeed();
+        return (long) hourTime * HOUR_IN_MILLISECONDS;
+    }
 }
 
 

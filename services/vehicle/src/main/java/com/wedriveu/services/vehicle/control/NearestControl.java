@@ -55,7 +55,7 @@ public class NearestControl extends AbstractVerticle {
         Vehicle noEligibleVehicle = new Vehicle();
         noEligibleVehicle.setNotEligibleVehicleFound(NO_ELIGIBLE_VEHICLE_RESPONSE);
         jsonObject.put(VEHICLE, JsonObject.mapFrom(noEligibleVehicle).toString());
-        vertx.eventBus().send(Messages.VehicleStore.GET_VEHICLE_COMPLETED, jsonObject);
+        vertx.eventBus().send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST, jsonObject);
     }
 
     private void handleVehicleResponses(Message message) {
@@ -80,7 +80,7 @@ public class NearestControl extends AbstractVerticle {
     }
 
     private void sendReplyToUser(List<VehicleResponseCanDrive> eligibleVehicles) {
-        vertx.eventBus().send(Messages.NearestControl.GET_VEHICLE, getBestVehicle(eligibleVehicles));
+        vertx.eventBus().send(Messages.NearestControl.GET_VEHICLE_NEAREST, getBestVehicle(eligibleVehicles));
     }
 
     private List<VehicleResponseCanDrive> getEligibleVehicles(List<VehicleResponseCanDrive> responseList) {

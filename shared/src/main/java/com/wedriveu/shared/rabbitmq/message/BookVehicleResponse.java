@@ -1,5 +1,7 @@
 package com.wedriveu.shared.rabbitmq.message;
 
+import com.wedriveu.shared.util.Position;
+
 /**
  * @author Michele Donati on 11/08/2017.
  * @author Marco on 16/08/2017
