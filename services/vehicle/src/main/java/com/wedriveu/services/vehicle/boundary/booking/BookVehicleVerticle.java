@@ -44,19 +44,6 @@ public class BookVehicleVerticle extends VerticleConsumer {
     public void start() throws Exception {
         super.start();
         eventBus.consumer(Messages.VehicleStore.AVAILABLE_COMPLETED, this::handleBookingRequest);
-        vertx.eventBus().consumer(Messages.BookingControl.PUBLISH_RESULT, this::notifyBookingService);
-    }
-
-    private void notifyBookingService(Message message) {
-        BookVehicleResponse vehicleResponse = (BookVehicleResponse) message.body();
-        startRabbitMQClient(clientStarted -> {
-            client.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                    BOOKING_SERVICE_BOOK_RESPONSE,
-                    VertxJsonMapper.mapInBodyFrom(vehicleResponse), onPublish -> {
-                        Log.info(TAG, "Response published to BookingService");
-                    });
-
-        });
     }
 
     private void handleBookingRequest(Message message) {
@@ -68,7 +55,6 @@ public class BookVehicleVerticle extends VerticleConsumer {
         } catch (TimeoutException e) {
             Log.error(TAG, ERROR_MESSAGE, e);
         }
-        //TODO write publisher
         publishBookRequest();
     }
 
@@ -112,6 +98,7 @@ public class BookVehicleVerticle extends VerticleConsumer {
         response.setDestinationPosition(vehicleRequest.getDestinationPosition());
         JsonObject data = VertxJsonMapper.mapFrom(response);
         eventBus.send(Messages.Booking.BOOK_RESPONSE, data);
+        eventBus.send(Messages.Booking.UNDEPLOY, deploymentID());
     }
 
 }
