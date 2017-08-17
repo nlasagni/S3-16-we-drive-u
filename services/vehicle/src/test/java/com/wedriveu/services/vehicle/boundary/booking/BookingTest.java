@@ -1,12 +1,16 @@
-package com.wedriveu.services.vehicle.boundary.analytics;
+package com.wedriveu.services.vehicle.boundary.booking;
 
 import com.wedriveu.services.shared.entity.AnalyticsVehicleList;
 import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
-import com.wedriveu.services.vehicle.boundary.nearest.entity.UserDataFactoryA;
+import com.wedriveu.services.vehicle.boundary.booking.entity.BookingRequest;
+import com.wedriveu.services.vehicle.boundary.booking.entity.BookingRequestFactory;
+import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryFiat;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
+import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
+import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -17,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
 import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.*;
@@ -24,16 +29,16 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(VertxUnitRunner.class)
-public class AnalyticsVerticleTest extends BaseInteractionClient {
+public class BookingTest extends BaseInteractionClient {
 
-    private static final String EVENT_BUS_ADDRESS = AnalyticsVerticleTest.class.getCanonicalName();
-    private static final String QUEUE = "vehicle.queue.analytics.test";
+    private static final String EVENT_BUS_ADDRESS = BookingTest.class.getCanonicalName();
+    private static final String QUEUE = "vehicle.queue.booking.test";
     private static final int ASYNC_COUNT = 3;
     private Async async;
     private Vertx vertx;
 
-    public AnalyticsVerticleTest() {
-        super(QUEUE, VEHICLE, ANALYTICS_VEHICLE_REQUEST_ALL, ANALYTICS_VEHICLES_RESPONSE_ALL, EVENT_BUS_ADDRESS);
+    public BookingTest() {
+        super(QUEUE, VEHICLE, BOOKING_SERVICE_BOOK_REQUEST, BOOKING_SERVICE_BOOK_RESPONSE, EVENT_BUS_ADDRESS);
     }
 
     @Before
@@ -77,21 +82,16 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
 
     @Override
     protected void checkResponse(TestContext context, JsonObject responseJson) {
-        AnalyticsVehicleList vehicles = responseJson.mapTo(AnalyticsVehicleList.class);
+        BookVehicleResponse bookVehicleResponse = responseJson.mapTo(BookVehicleResponse.class);
         context.assertNotNull(responseJson);
-        context.assertNotNull(vehicles.getVehiclesList());
-        vehicles.getVehiclesList().forEach(vehicle -> {
-            context.assertNotNull(vehicle.getLicensePlate());
-            context.assertNotNull(vehicle.getPosition());
-        });
-        assertThat(vehicles, instanceOf(AnalyticsVehicleList.class));
+        context.assertNotNull(bookVehicleResponse);
+        assertThat(bookVehicleResponse, instanceOf(BookVehicleResponse.class));
     }
 
     @Override
     protected JsonObject getJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.put(BODY, "");
-        return jsonObject;
+        BookVehicleRequest bookingRequest = new BookingRequest().getBookingVehicleRequest();
+        return VertxJsonMapper.mapInBodyFrom(bookingRequest);
     }
 
 }

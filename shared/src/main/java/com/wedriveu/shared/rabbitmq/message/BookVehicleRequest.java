@@ -5,7 +5,7 @@ import com.wedriveu.shared.util.Position;
 /**
  * @author Michele Donati on 11/08/2017.
  *
- * This class represents a "book" request that the service sends to the available vehicles.
+ * This class represents a "book" request that the BookingService sends to the VehicleService.
  */
 
 public class BookVehicleRequest {

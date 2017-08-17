@@ -1,12 +1,15 @@
-package com.wedriveu.services.vehicle.boundary.analytics;
+package com.wedriveu.services.vehicle.boundary.booking.util;
 
-import com.wedriveu.services.shared.entity.AnalyticsVehicleList;
 import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
-import com.wedriveu.services.vehicle.boundary.nearest.entity.UserDataFactoryA;
+import com.wedriveu.services.vehicle.boundary.booking.entity.BookingRequest;
+import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
+import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
+import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
+import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -17,23 +20,32 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+/**
+ * Please Run BookingTest.java before
+ */
 @RunWith(VertxUnitRunner.class)
-public class AnalyticsVerticleTest extends BaseInteractionClient {
+public class VehicleBookingResponseTest extends BaseInteractionClient {
 
-    private static final String EVENT_BUS_ADDRESS = AnalyticsVerticleTest.class.getCanonicalName();
-    private static final String QUEUE = "vehicle.queue.analytics.test";
+    private static final String EVENT_BUS_ADDRESS = VehicleBookingResponseTest.class.getCanonicalName();
+    private static final String QUEUE = "vehicle.queue.booking.test.consumer";
     private static final int ASYNC_COUNT = 3;
+    private static final int SPEED = 50;
+    private static final boolean BOOKED = false;
     private Async async;
     private Vertx vertx;
+    private final BookVehicleRequest bookingRequest;
+    private JsonObject responseJson;
 
-    public AnalyticsVerticleTest() {
-        super(QUEUE, VEHICLE, ANALYTICS_VEHICLE_REQUEST_ALL, ANALYTICS_VEHICLES_RESPONSE_ALL, EVENT_BUS_ADDRESS);
+    public VehicleBookingResponseTest() {
+
+        super(QUEUE, VEHICLE, BOOK_REQUEST, BOOK_RESPONSE, EVENT_BUS_ADDRESS);
+
+        bookingRequest = new BookingRequest().getBookingVehicleRequest();
     }
 
     @Before
@@ -43,7 +55,8 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
         vertx = Vertx.vertx();
         super.setup(vertx, completed -> {
             async.countDown();
-            super.declareQueueAndBind("", context, declared -> {
+            Vehicle vehicle = new VehicleFactoryMini().getVehicle();
+            super.declareQueueAndBind(vehicle.getLicensePlate(), context, declared -> {
                 context.assertTrue(declared.succeeded());
                 async.countDown();
                 deployVerticles(context);
@@ -70,28 +83,33 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
         super.stop(context);
     }
 
-    @Test
-    public void publishMessage(TestContext context) throws Exception {
-        super.publishMessage(false, context, getJson());
-    }
-
     @Override
     protected void checkResponse(TestContext context, JsonObject responseJson) {
-        AnalyticsVehicleList vehicles = responseJson.mapTo(AnalyticsVehicleList.class);
+        this.responseJson = responseJson;
+        checkResponseJson(context);
+        publishResponseToVehicleService(context);
+    }
+
+    @Test
+    public void checkResponseJson(TestContext context) {
+        VehicleReservationRequest reservationRequest = responseJson.mapTo(VehicleReservationRequest.class);
         context.assertNotNull(responseJson);
-        context.assertNotNull(vehicles.getVehiclesList());
-        vehicles.getVehiclesList().forEach(vehicle -> {
-            context.assertNotNull(vehicle.getLicensePlate());
-            context.assertNotNull(vehicle.getPosition());
-        });
-        assertThat(vehicles, instanceOf(AnalyticsVehicleList.class));
+        context.assertNotNull(reservationRequest.getUsername());
+        context.assertEquals(reservationRequest.getUsername(), bookingRequest.getUsername());
+        assertThat(reservationRequest, instanceOf(VehicleReservationRequest.class));
+    }
+
+
+    private void publishResponseToVehicleService(TestContext context){
+        super.publishMessage(true, context, getJson());
     }
 
     @Override
     protected JsonObject getJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.put(BODY, "");
-        return jsonObject;
+        BookVehicleResponse bookVehicleResponse = new BookVehicleResponse();
+        bookVehicleResponse.setBooked(BOOKED);
+        bookVehicleResponse.setSpeed(SPEED);
+        return VertxJsonMapper.mapInBodyFrom(bookingRequest);
     }
 
 }

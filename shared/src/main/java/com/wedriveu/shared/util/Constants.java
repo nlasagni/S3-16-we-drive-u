@@ -37,11 +37,13 @@ public interface Constants {
             /**
              * The HOST of the RabbitMQ broker.
              */
-            String HOST = "uniboguys.duckdns.org";
+            //String HOST = "uniboguys.duckdns.org";
+            String HOST = "localhost";
             /**
              * The PASSWORD of the RabbitMQ broker.
              */
-            String PASSWORD = "FmzevdBBmpcdvPHLDJQR";
+            //String PASSWORD = "FmzevdBBmpcdvPHLDJQR";
+            String PASSWORD = "guest";
             /**
              * The PORT of the RabbitMQ broker.
              */
