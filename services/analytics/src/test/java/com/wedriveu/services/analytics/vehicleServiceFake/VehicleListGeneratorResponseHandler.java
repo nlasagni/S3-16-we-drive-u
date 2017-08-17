@@ -3,6 +3,7 @@ package com.wedriveu.services.analytics.vehicleServiceFake;
 import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Log;
@@ -50,7 +51,7 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher{
                     new Position(13.2, 16.2),
                     new Date(2017, 8, 24, 9, 37, 22)));
         JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new VehicleListObject(vehicleList));
-        publish(RabbitMQ.Exchanges.ANALYTICS,ANALYTICS_VEHICLES_RESPONSE_ALL,vehicleListJson, published -> { });
+        publish(Constants.RabbitMQ.Exchanges.VEHICLE,ANALYTICS_VEHICLES_RESPONSE_ALL,vehicleListJson, published -> { });
         Log.log("sent request for all vehicles to vehicle service in VehicleListGeneratorResponseHandler");
     }
 

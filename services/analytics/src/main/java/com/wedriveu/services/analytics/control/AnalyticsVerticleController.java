@@ -9,7 +9,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS;
+import static com.wedriveu.shared.util.Constants.ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS;
 
 /**
  * @author Stefano Bernagozzi
@@ -18,7 +18,7 @@ public class AnalyticsVerticleController extends AbstractVerticle {
     private AnalyticsStore analyticsStore;
     @Override
     public void start() throws Exception{
-        vertx.eventBus().consumer(ANALYTICS_CONTROLLER_VEHICLE_LIST_VERTICLE_ADDRESS, this::storeVehicleList);
+        vertx.eventBus().consumer(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS, this::storeVehicleList);
         Log.log("future AnalyticsVerticleController complete");
     }
 
