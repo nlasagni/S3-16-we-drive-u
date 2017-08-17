@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.wedriveu.shared.util.Constants.*;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Stefano Bernagozzi
@@ -37,7 +37,7 @@ public class VehicleListRequestVerticleTest{
     @Test
     public void testRequest() {
         CompositeFuture.all(futures).setHandler(completed -> {
-            vertx.eventBus().send(ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS, ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE);
+            vertx.eventBus().send(ANALYTICS_VEHICLE_LIST_REQUEST_EVENTBUS, ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE);
             vertx.eventBus().consumer(ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS, msg->{
                String messageReceived = (String)((JsonObject) msg.body()).getValue(Constants.EventBus.BODY);
                assertTrue(messageReceived.equals(VEHICLE_REQUEST_ALL_MESSAGE));

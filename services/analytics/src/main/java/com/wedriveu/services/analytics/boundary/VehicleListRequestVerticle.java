@@ -1,6 +1,7 @@
 package com.wedriveu.services.analytics.boundary;
 
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import static com.wedriveu.shared.util.Constants.*;
@@ -19,13 +20,13 @@ public class VehicleListRequestVerticle extends VerticlePublisher {
 
     private void startConsumer() {
         //Log.log("started vertx eventbus consumer in VehicleListRequestVerticle, attending start to receive");
-        vertx.eventBus().consumer(ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS, this::requestVehicleListToVehicleService);
+        vertx.eventBus().consumer(ANALYTICS_VEHICLE_LIST_REQUEST_EVENTBUS, this::requestVehicleListToVehicleService);
     }
 
     private void requestVehicleListToVehicleService(Message message) {
         JsonObject dataToUser = new JsonObject();
         dataToUser.put(EventBus.BODY, VEHICLE_REQUEST_ALL_MESSAGE);
-        publish(RabbitMQ.Exchanges.ANALYTICS,ANALYTICS_VEHICLE_REQUEST_ALL,dataToUser, published -> { });
+        publish(Constants.RabbitMQ.Exchanges.VEHICLE,ANALYTICS_VEHICLE_REQUEST_ALL,dataToUser, published -> { });
         //Log.log("sent request for all vehicles to vehicle service in VehicleListRequestVerticle");
     }
 }
