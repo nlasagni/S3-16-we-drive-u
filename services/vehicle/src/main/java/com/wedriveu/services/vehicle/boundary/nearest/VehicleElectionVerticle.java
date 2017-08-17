@@ -1,6 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;

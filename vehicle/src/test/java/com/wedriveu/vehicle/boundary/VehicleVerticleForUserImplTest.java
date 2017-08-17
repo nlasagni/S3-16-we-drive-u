@@ -2,14 +2,18 @@ package com.wedriveu.vehicle.boundary;
 
 import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
+import com.wedriveu.shared.rabbitmq.message.EnterVehicleRequest;
+import com.wedriveu.shared.rabbitmq.message.EnterVehicleResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
+import com.wedriveu.vehicle.shared.VehicleConstants;
 import com.wedriveu.vehicle.shared.VehicleConstants$;
-import com.weriveu.vehicle.boundary.VehicleVerticleArrivedNotifyImpl;
 import com.weriveu.vehicle.boundary.VehicleVerticleDriveCommandImpl;
+import com.weriveu.vehicle.boundary.VehicleVerticleForUser;
+import com.weriveu.vehicle.boundary.VehicleVerticleForUserImpl;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -27,21 +31,23 @@ import org.junit.runner.RunWith;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * @author Michele Donati on 16/08/2017.
+ * @author Michele Donati on 17/08/2017.
  */
 
 @RunWith(VertxUnitRunner.class)
-public class VehicleChangePositionAndNotifyTest {
+public class VehicleVerticleForUserImplTest {
 
-    private static final String TAG = VehicleChangePositionAndNotifyTest.class.getSimpleName();
+    private static final String TAG = VehicleVerticleForUserImplTest.class.getSimpleName();
     private static final String JSON_QUEUE_KEY = "queue";
-    private static final String EVENT_BUS_ADDRESS = VehicleChangePositionAndNotifyTest.class.getCanonicalName();
+    private static final String EVENT_BUS_ADDRESS = VehicleVerticleForUserImplTest.class.getCanonicalName();
 
     private static final double minorBoundPositionLat = 44.145500;
     private static final double maxBoundPositionLat = 44.145501;
     private static final double minorBoundPositionLon = 12.247497;
     private static final double maxBoundPositionLon = 12.247498;
     private static final int timeToSleep = 1000;
+    private static final long TIME_OUT = 1000;
+    private int checkCounter;
 
     private double randomLatitudeUser =
             ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat);
@@ -52,14 +58,15 @@ public class VehicleChangePositionAndNotifyTest {
     private double randomLongitudeDestination =
             ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon);
 
+    private Position userPosition = new Position(randomLatitudeUser, randomLongitudeUser);
     private Vertx vertx;
     private EventBus eventBus;
     private RabbitMQClient rabbitMQClient;
     private VehicleVerticleDriveCommandImpl vehicleVerticleDriveCommand;
-    private VehicleVerticleArrivedNotifyImpl vehicleVerticleArrivedNotify;
+    private VehicleVerticleForUserImpl vehicleVerticleForUser;
     private VehicleControl vehicleControl;
     private String requestId;
-    private String license = "VEHICLE7";
+    private String license = "VEHICLE8";
     private String state = "available";
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
@@ -71,16 +78,17 @@ public class VehicleChangePositionAndNotifyTest {
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
+        checkCounter = 10;
         vehicleControl =
                 new VehicleControlImpl("","",license, state, position, battery, speed, stopUi, debugVar);
-        vehicleControl.setUserOnBoard(true);
+        vehicleControl.setUsername("Michele");
         vehicleVerticleDriveCommand = new VehicleVerticleDriveCommandImpl(vehicleControl, false);
-        vehicleVerticleArrivedNotify = new VehicleVerticleArrivedNotifyImpl(vehicleControl);
+        vehicleVerticleForUser = new VehicleVerticleForUserImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
 
     private void setUpAsyncComponents(TestContext context) {
-        Async async = context.async(4);
+        Async async = context.async(5);
         JsonObject config = new JsonObject();
         config.put(Constants.RabbitMQ.ConfigKey.HOST, Constants.RabbitMQ.Broker.HOST);
         config.put(Constants.RabbitMQ.ConfigKey.PASSWORD, Constants.RabbitMQ.Broker.PASSWORD);
@@ -91,17 +99,19 @@ public class VehicleChangePositionAndNotifyTest {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
                 rabbitMQClient.queueBind(requestId,
                         Constants.RabbitMQ.Exchanges.VEHICLE,
-                        Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
+                        String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST_ENTER_USER,
+                                vehicleControl.getUsername()),
                         onQueueBind -> {
                             vertx.deployVerticle(vehicleVerticleDriveCommand,
                                     new DeploymentOptions().setWorker(true),
-                                    context.asyncAssertSuccess(onDeploy ->{}
-                            ));
-                            vertx.deployVerticle(vehicleVerticleArrivedNotify,
+                                    context.asyncAssertSuccess(onDeploy ->
+                                            async.countDown()
+                                    ));
+                            vertx.deployVerticle(vehicleVerticleForUser,
                                     new DeploymentOptions().setWorker(true),
                                     context.asyncAssertSuccess(onDeploy ->
-                                    async.complete()
-                            ));
+                                            async.complete()
+                                    ));
                             async.countDown();
                             context.assertTrue(onQueueBind.succeeded());
                         });
@@ -119,17 +129,21 @@ public class VehicleChangePositionAndNotifyTest {
     }
 
     @Test
-    public void driveAndAwaitNotify(TestContext context) throws Exception {
+    public void driveAndAwaitUserGetInside(TestContext context) throws Exception {
         final Async async = context.async(2);
-        vehicleControl.getVehicle().setPosition(position);
-        Log.info(this.getClass().getSimpleName(),
-                "Reset vehicle position: " + vehicleControl.getVehicle().position().toString());
+        vehicleControl.getBehavioursControl().setTestUserVar(true);
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND,
                 createCommandJsonObject(),
                 onPublish -> {
+                    if(onPublish.succeeded()) {
+                        while(!(userPosition.getDistanceInKm(vehicleControl.getVehicle().getPosition())
+                                <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS())){}
+                        vehicleVerticleForUser
+                                .enterInVehicle(new Position(randomLatitudeDestination, randomLongitudeDestination));
+                        checkUserRequest(context, async);
+                    }
                     context.assertTrue(onPublish.succeeded());
-                    checkVehicleNotify(context, async);
                     async.countDown();
                 });
     }
@@ -143,30 +157,38 @@ public class VehicleChangePositionAndNotifyTest {
         return jsonObject;
     }
 
-    private void checkVehicleNotify(TestContext context, Async async) {
-        Position desired = new Position(randomLatitudeDestination, randomLongitudeDestination);
-        try {
-            Thread.sleep(timeToSleep);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Position vehiclePosition = vehicleControl.getVehicle().position();
-        double vehicleDistance = desired.getDistanceInKm(vehiclePosition);
-        if (vehicleDistance <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS()) {
-            this.vehicleVerticleArrivedNotify.sendArrivedNotify();
-        }
+    private void checkUserRequest(TestContext context, Async async) {
         rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
         MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
             Log.info(TAG, responseJson.toString());
-            ArrivedNotify notify =  responseJson.mapTo(ArrivedNotify.class);
-            context.assertTrue(notify.getLicense().equals(license));
-            async.complete();
+            EnterVehicleRequest request = responseJson.mapTo(EnterVehicleRequest.class);
+            sendResponse(context, async);
         });
-        consumer.exceptionHandler(event -> {
-            context.fail(event.getCause());
-            async.complete();
-        });
+    }
+
+    private void sendResponse(TestContext context, Async async) {
+        rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
+                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE_ENTER_USER, vehicleControl.getUsername()),
+                createResponse(),
+                onPublish -> {
+                    context.assertTrue(onPublish.succeeded());
+                    onPublish.succeeded();
+                    try {
+                        Thread.sleep(timeToSleep);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    context.assertTrue(vehicleControl.getUserOnBoard());
+                    async.complete();
+                });
+    }
+
+    private JsonObject createResponse() {
+        EnterVehicleResponse response = new EnterVehicleResponse();
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(response).toString());
+        return jsonObject;
     }
 
 }

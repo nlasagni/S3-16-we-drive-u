@@ -1,5 +1,7 @@
 package com.wedriveu.services.shared.entity;
 
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
+
 import java.util.List;
 
 /**

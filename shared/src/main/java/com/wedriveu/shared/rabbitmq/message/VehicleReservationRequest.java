@@ -6,7 +6,7 @@ package com.wedriveu.shared.rabbitmq.message;
  * This class represents a "book" request that the service sends to the available vehicles.
  */
 
-public class VehicleBookRequest {
+public class VehicleReservationRequest {
 
     private String username;
 
@@ -23,7 +23,7 @@ public class VehicleBookRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        VehicleBookRequest that = (VehicleBookRequest) o;
+        VehicleReservationRequest that = (VehicleReservationRequest) o;
 
         return username.equals(that.username);
     }
@@ -35,7 +35,7 @@ public class VehicleBookRequest {
 
     @Override
     public String toString() {
-        return "VehicleBookRequest{" +
+        return "VehicleReservationRequest{" +
                 "username='" + username + '\'' +
                 '}';
     }
