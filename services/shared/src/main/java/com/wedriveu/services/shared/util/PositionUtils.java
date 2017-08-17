@@ -12,7 +12,6 @@ import static com.wedriveu.shared.util.Constants.Position.RANGE;
 public class PositionUtils {
 
 
-
     public static double getDistanceInKm(Position from, Position to) {
         double earthRadius = EARTH_RADIUS;
         return earthRadius * Math.acos(Math.sin(from.getLatitude()) * Math.sin(to.getLatitude())

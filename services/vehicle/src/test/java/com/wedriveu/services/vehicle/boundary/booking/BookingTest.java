@@ -1,13 +1,9 @@
 package com.wedriveu.services.vehicle.boundary.booking;
 
-import com.wedriveu.services.shared.entity.AnalyticsVehicleList;
-import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.booking.entity.BookingRequest;
-import com.wedriveu.services.vehicle.boundary.booking.entity.BookingRequestFactory;
-import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryFiat;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
@@ -21,13 +17,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
-import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.*;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOKING_SERVICE_BOOK_REQUEST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOKING_SERVICE_BOOK_RESPONSE;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+/**
+ * BookingService simulator, it sends the VehicleService the booking data and starts
+ * waiting for a proper booking response.
+ * During this test, {@link com.wedriveu.services.vehicle.boundary.booking.util.VehicleBookingResponseTest} has to be
+ * up and running in order to interact with a simulated Vehicle during the booking process.
+ */
 @RunWith(VertxUnitRunner.class)
 public class BookingTest extends BaseInteractionClient {
 

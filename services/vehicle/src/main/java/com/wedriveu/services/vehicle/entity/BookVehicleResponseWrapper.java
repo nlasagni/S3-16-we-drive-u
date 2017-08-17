@@ -5,10 +5,9 @@ import com.wedriveu.shared.util.Position;
 
 /**
  * @author Marco on 17/08/2017
- *
+ * <p>
  * This class represents a "book" response wrapper to properly facilitate communication between internal verticles
  * inside the VehicleService once the Vehicle sends the response back.
- *
  */
 
 public class BookVehicleResponseWrapper {

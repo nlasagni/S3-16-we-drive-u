@@ -2,6 +2,7 @@ package com.wedriveu.services.shared.rabbitmq;
 
 /**
  * Shared Vert.x Verticle messages used by all the Services set.
+ *
  * @author Marco Baldassarri
  * @since 11/08/2017
  */

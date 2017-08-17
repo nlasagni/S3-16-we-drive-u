@@ -21,11 +21,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.*;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOK_REQUEST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOK_RESPONSE;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
+ * Vehicle simulator to listen to booking requests and send back a proper response.
  * Please Run BookingTest.java before
  */
 @RunWith(VertxUnitRunner.class)
@@ -36,9 +38,9 @@ public class VehicleBookingResponseTest extends BaseInteractionClient {
     private static final int ASYNC_COUNT = 3;
     private static final int SPEED = 50;
     private static final boolean BOOKED = false;
+    private final BookVehicleRequest bookingRequest;
     private Async async;
     private Vertx vertx;
-    private final BookVehicleRequest bookingRequest;
     private JsonObject responseJson;
 
     public VehicleBookingResponseTest() {
@@ -99,8 +101,7 @@ public class VehicleBookingResponseTest extends BaseInteractionClient {
         assertThat(reservationRequest, instanceOf(VehicleReservationRequest.class));
     }
 
-
-    private void publishResponseToVehicleService(TestContext context){
+    private void publishResponseToVehicleService(TestContext context) {
         super.publishMessage(true, context, getJson());
     }
 

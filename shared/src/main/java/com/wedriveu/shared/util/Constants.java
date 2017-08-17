@@ -37,13 +37,11 @@ public interface Constants {
             /**
              * The HOST of the RabbitMQ broker.
              */
-            //String HOST = "uniboguys.duckdns.org";
-            String HOST = "localhost";
+            String HOST = "uniboguys.duckdns.org";
             /**
              * The PASSWORD of the RabbitMQ broker.
              */
-            //String PASSWORD = "FmzevdBBmpcdvPHLDJQR";
-            String PASSWORD = "guest";
+            String PASSWORD = "FmzevdBBmpcdvPHLDJQR";
             /**
              * The PORT of the RabbitMQ broker.
              */
@@ -129,28 +127,25 @@ public interface Constants {
              * The routing key used by a vehicle to register itself to the vehicleService system.
              */
             String REGISTER_REQUEST = "vehicle.request.add";
-
             /**
              * The routing key used by the vehicleService to send back the response
              * to the vehicle after register request
              */
             String REGISTER_RESPONSE = "vehicle.response.add.%s";
-
-
             /**
              * The routing key used by the Analytics Service to retrieve
              * the entire list of vehicles from the VehicleService.
              */
             String ANALYTICS_VEHICLE_REQUEST_ALL = "vehicle.request.all";
-
-
             /**
              * The routing key used by the VehicleService to send the
              * list of Vehicles to the Analytics Service, given the requester backOffice ID.
              */
             String ANALYTICS_VEHICLES_RESPONSE_ALL = "vehicle.response.all";
-
-
+            /**
+             * The routing key used by the VehicleService to tell the Vehicle to start driving
+             * after the booking process succeeded.
+             */
             String START_DRIVING = "vehicle.event.drive";
             /**
              * The routing key used by booking-service to communicate a request of booking.
@@ -160,7 +155,6 @@ public interface Constants {
              * The routing key used vehicle-service to communicate the response of a booking request to booking-service.
              */
             String BOOKING_SERVICE_BOOK_RESPONSE = "vehicle.response.book";
-
             /**
              * The routing key used by vehicle-service to communicate a request of booking to a vehicle,
              * must be completed with the license plate, see {@linkplain String#format(String, Object...)}.

@@ -11,7 +11,6 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
-import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE;
 import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 

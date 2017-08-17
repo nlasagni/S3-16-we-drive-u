@@ -33,7 +33,7 @@ public class ExchangeManagerVerticle extends AbstractVerticle {
     }
 
     private void declareExchange(String exchangeName) {
-        client.exchangeDeclare(exchangeName,DIRECT, false, false, onDeclareCompleted -> {
+        client.exchangeDeclare(exchangeName, DIRECT, false, false, onDeclareCompleted -> {
             if (onDeclareCompleted.succeeded()) {
                 vertx.eventBus().send(SharedMessages.VehicleService.EXCHANGE_BINDED, null);
             } else {

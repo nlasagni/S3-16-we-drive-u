@@ -22,7 +22,7 @@ import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 
 
 /**
- * This Controller serves all the interaction requests with the
+ * This Controller serves some interaction requests with the
  * {@linkplain com.wedriveu.services.vehicle.entity.VehicleStore} database. It handles the database replies
  * by deploying and interacting with other Verticles.
  *

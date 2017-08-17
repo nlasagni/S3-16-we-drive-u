@@ -6,7 +6,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 /**
- *
  * Basic RabbitMQ Client Factory for requesting RabbitMQ client where needed.
  *
  * @author Marco Baldassarri

@@ -1,6 +1,5 @@
 package com.wedriveu.services.shared.vertx;
 
-import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
 import io.vertx.core.json.JsonObject;
 
 import static com.wedriveu.shared.util.Constants.EventBus.BODY;

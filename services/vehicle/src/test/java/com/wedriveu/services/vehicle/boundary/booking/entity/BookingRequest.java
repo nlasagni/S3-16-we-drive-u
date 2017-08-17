@@ -1,13 +1,8 @@
 package com.wedriveu.services.vehicle.boundary.booking.entity;
 
 
-import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
 import com.wedriveu.shared.util.Position;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
 
 /**
  * @author Marco on 02/08/2017.
@@ -22,7 +17,6 @@ public class BookingRequest implements BookingRequestFactory {
     private static final double LONGITUDE_DESTINATION = 12.243219;
     private static final Position POSITION_USER = new Position(LATITUDE_USER, LONGITUDE_USER);
     private static final Position POSITION_DESTINATION = new Position(LATITUDE_DESTINATION, LONGITUDE_DESTINATION);
-
 
 
     @Override

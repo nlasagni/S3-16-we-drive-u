@@ -6,22 +6,22 @@ import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.entity.BookVehicleResponseWrapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
-import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import static com.wedriveu.services.vehicle.rabbitmq.Constants.*;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.*;
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_BOOK_VEHICLE_ADDRESS;
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_BOOK_VEHICLE;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOK_REQUEST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOK_RESPONSE;
 
 
 /**
@@ -32,10 +32,11 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.*;
  */
 public class BookVehicleVerticle extends VerticleConsumer {
 
-    private BookVehicleRequest vehicleRequest;
     private static final String TAG = BookVehicleVerticle.class.getSimpleName();
     private static final String ERROR_MESSAGE = "Error starting BookVehicle consumer";
+    private BookVehicleRequest vehicleRequest;
     private RabbitMQClient client;
+
     public BookVehicleVerticle() {
         super(VEHICLE_SERVICE_QUEUE_BOOK_VEHICLE);
     }
@@ -65,12 +66,13 @@ public class BookVehicleVerticle extends VerticleConsumer {
             client.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
                     String.format(BOOK_REQUEST,
                             vehicleRequest.getLicencePlate()),
-                    VertxJsonMapper.mapInBodyFrom(requestData), onPublish -> {});
+                    VertxJsonMapper.mapInBodyFrom(requestData), onPublish -> {
+                    });
         });
     }
 
     private void startRabbitMQClient(Handler<AsyncResult<Void>> resultHandler) {
-        if(!client.isConnected()) {
+        if (!client.isConnected()) {
             client = RabbitMQClientFactory.createClient(vertx);
             client.start(resultHandler);
         }

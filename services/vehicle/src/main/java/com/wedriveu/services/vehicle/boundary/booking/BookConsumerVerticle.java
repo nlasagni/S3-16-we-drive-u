@@ -1,9 +1,7 @@
 package com.wedriveu.services.vehicle.boundary.booking;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
-import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.json.JsonObject;
 
@@ -13,12 +11,10 @@ import java.util.concurrent.TimeoutException;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_BOOK_ADDRESS;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_BOOK;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOKING_SERVICE_BOOK_REQUEST;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOK_REQUEST;
 
 
 /**
- * Vert.x RabbitMQ Consumer that listens for Analytics Service requests. It asks for the whole list of Vehicles
- * currently saved in the database file.
+ * Vert.x RabbitMQ Consumer that listens for BookingService "book" request.
  *
  * @author Marco Baldassarri on 15/08/2017.
  */

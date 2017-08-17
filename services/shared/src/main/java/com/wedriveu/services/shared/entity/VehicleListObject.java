@@ -8,17 +8,16 @@ import java.util.ArrayList;
  * @author Stefano Bernagozzi
  */
 public class VehicleListObject {
-    public ArrayList<Vehicle> getVehicleList() {
-        return vehicleList;
-    }
-
-    @JsonProperty ("vehicleList")
+    @JsonProperty("vehicleList")
     private ArrayList<Vehicle> vehicleList;
 
-    public VehicleListObject (ArrayList<Vehicle> vehicleList) {
+    public VehicleListObject(ArrayList<Vehicle> vehicleList) {
         this.vehicleList = vehicleList;
     }
 
+    public ArrayList<Vehicle> getVehicleList() {
+        return vehicleList;
+    }
 
     @Override
     public boolean equals(Object o) {
