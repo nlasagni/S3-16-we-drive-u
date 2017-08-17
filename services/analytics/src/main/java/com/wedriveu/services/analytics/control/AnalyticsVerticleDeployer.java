@@ -38,6 +38,15 @@ public class AnalyticsVerticleDeployer extends AbstractVerticle {
         vertx.deployVerticle(new VehicleUpdateHandlerVerticle(), vehicleUpdate.completer());
         futures.add(vehicleUpdate);
 
+        Future counterRequest = Future.future();
+        vertx.deployVerticle(new VehicleCounterRequestHandlerVerticle(), counterRequest.completer());
+        futures.add(counterRequest);
+
+        Future counterSend = Future.future();
+        vertx.deployVerticle(new VehicleCounterSendToBackOfficeVerticle(), counterSend.completer());
+        futures.add(counterSend);
+
+
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {
                 Log.log("starting event message queue");
