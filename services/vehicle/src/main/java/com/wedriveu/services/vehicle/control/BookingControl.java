@@ -38,7 +38,7 @@ public class BookingControl extends AbstractVerticle {
         vehicleResponseWrapper = (BookVehicleResponseWrapper) message.body();
         vehicleResponse = vehicleResponseWrapper.getResponse();
         if(vehicleResponse.getBooked()) {
-            notifyServices();
+            notifyBookingService();
         } else {
             eventBus.send(Messages.BookingControl.GET_VEHICLE_BOOKING, vehicleResponse);
         }
@@ -49,12 +49,12 @@ public class BookingControl extends AbstractVerticle {
         Vehicle vehicle = (Vehicle) message.body();
         fillDriveTimes(vehicle);
         sendStartDrivingCommand();
-        notifyServices();
+        notifyBookingService();
     }
 
     // Notifies Booking and Analytics Service
-    private void notifyServices() {
-        eventBus.publish(Messages.BookingControl.PUBLISH_RESULT, vehicleResponse);
+    private void notifyBookingService() {
+        eventBus.send(Messages.BookingControl.PUBLISH_RESULT, vehicleResponse);
     }
 
     private void sendStartDrivingCommand() {

@@ -21,9 +21,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.*;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_VEHICLE_REQUEST_ALL;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOK_REQUEST;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOK_RESPONSE;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.*;
 
 
 /**
@@ -53,7 +51,7 @@ public class BookVehicleVerticle extends VerticleConsumer {
         BookVehicleResponse vehicleResponse = (BookVehicleResponse) message.body();
         startRabbitMQClient(clientStarted -> {
             client.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                    String.format(BOOK_REQUEST, vehicleRequest.getLicencePlate()),
+                    BOOKING_SERVICE_BOOK_RESPONSE,
                     VertxJsonMapper.mapInBodyFrom(vehicleResponse), onPublish -> {
                         Log.info(TAG, "Response published to BookingService");
                     });
