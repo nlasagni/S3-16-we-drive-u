@@ -32,7 +32,7 @@ public class VehicleListRetrieverVerticle extends VerticleConsumer{
                 futureRetriever.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, ROUTING_KEY_VEHICLE_RESPONSE_ALL, ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS, futureConsumer);
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, ROUTING_KEY_VEHICLE_RESPONSE_ALL, ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_VEHICLE_LIST_RETRIEVER_VERTICLE, futureConsumer);
     }
 
     @Override

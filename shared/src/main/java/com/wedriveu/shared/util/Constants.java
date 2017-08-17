@@ -251,7 +251,9 @@ public interface Constants {
     String ANALYTICS_VEHICLE_COUNTER_REQUEST_EVENTBUS = "analytics.eventbus.vehicleCounterRequest";
     String ANALYTICS_VEHICLE_COUNTER_RESPONSE_EVENTBUS = "analytics.eventbus.vehicleCounterResponse";
     String ANALYTICS_VEHICLE_STORE_UPDATE_REQUEST_EVENTBUS = "analytics.eventbus.vehicleStoreUpdate";
-    String ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS = "analytics.eventbus.availableAddress";
+    String ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_VEHICLE_LIST_RETRIEVER_VERTICLE = "analytics.eventbus.availableAddress.vehicleListRetriever";
+    String ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER = "analytics.eventbus.availableAddress.vehicleUpdateHandler";
+    String ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_FAKE_GENERATOR = "analytics.eventbus.availableAddress.fakeGenerator";
 
 
 

@@ -6,6 +6,7 @@ import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
 import com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithmImpl;
 import com.wedriveu.services.shared.entity.*;
 import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import io.vertx.core.AbstractVerticle;
@@ -52,11 +53,11 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle{
     }
 
     private void updateVehicleStore(Message message) {
-        Vehicle vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), Vehicle.class);
-        if (analyticsStore.getVehicleByLicensePlate(vehicle.getLicensePlate()) != null) {
-            analyticsStore.updateVehicle(vehicle.getLicensePlate(), vehicle.getStatus());
+        UpdateToService vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), UpdateToService.class);
+        if (analyticsStore.getVehicleByLicensePlate(vehicle.getLicense()) != null) {
+            analyticsStore.updateVehicle(vehicle.getLicense(), vehicle.getStatus());
         } else {
-            analyticsStore.addVehicle(vehicle.getLicensePlate(), vehicle.getStatus());
+            analyticsStore.addVehicle(vehicle.getLicense(), vehicle.getStatus());
         }
         sendVehicleUpdates();
     }

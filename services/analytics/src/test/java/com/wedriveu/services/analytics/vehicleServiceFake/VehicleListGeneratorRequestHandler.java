@@ -32,7 +32,7 @@ public class VehicleListGeneratorRequestHandler extends VerticleConsumer{
                 futureRequest.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, ROUTING_KEY_VEHICLE_REQUEST_ALL, ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS, futureConsumer);
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, ROUTING_KEY_VEHICLE_REQUEST_ALL, ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_FAKE_GENERATOR, futureConsumer);
 
     }
 
