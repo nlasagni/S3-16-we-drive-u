@@ -5,7 +5,6 @@ import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
 import com.wedriveu.vehicle.simulation.{RechargingLatchManager, RechargingLatchManagerImpl}
-
 import scala.util.control.Breaks._
 
 /**
@@ -37,17 +36,17 @@ trait VehicleBehaviours {
     */
   def getDebuggingVar(): Boolean
 
-  /** This method is used to retrieve informations about if the user is on board of the vehicle.
-    *
-    * @return True if the user is on board, False otherwise.
-    */
-  def isUserOnBoard(): Boolean
-
   /** This method checks the vehicle's state, and if it isn't Stolen, sets it to Broken. */
   def checkVehicleAndSetItBroken(): Unit
 
   /** This method sets the vehicle status to Stolen. This state has priority over Broken status. */
   def setVehicleStolen(): Unit
+
+  /** This method permits to set test variables in order to handle tests.
+    *
+    * @param userVar The value of the variable.
+    */
+  def setTestUserVar(userVar: Boolean): Unit
 }
 
 class VehicleBehavioursImpl(vehicleControl: VehicleControl,
@@ -85,10 +84,12 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
 
    var deltaLat: Double = .0
    var deltaLon: Double = .0
-   var userOnBoard: Boolean = false
    var debugging: Boolean = false
    var rechargingLatchManager: RechargingLatchManager = null
    var testVar: Boolean = false
+   var testUserVar: Boolean = false
+   var verticlesTestVar: Boolean = false
+   var destinationPosition: Position = _
 
   //This algorithm calculates the distance in Km between the points, then estimates the journey time and calculates
   //the coordinates reached during the journey.
@@ -103,6 +104,8 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
       val estimatedJourneyTimeInSeconds: Long =
         ((distanceInKm / selfDrivingVehicle.speed) * conversionInSeconds).asInstanceOf[Long]
       stopUi.writeMessageLog(timeInSecondsLog + estimatedJourneyTimeInSeconds)
+      Log.info("CALCOLO MOVIMENTO: ","DEBUGVAR = " + debugVar)
+      Log.info("CALCOLO MOVIMENTO: ","testVar = " + testVar)
       breakable {
         for (time <- timeOfJourney to estimatedJourneyTimeInSeconds by timeStep) {
           if (checkVehicleIsBrokenOrStolen()) {
@@ -122,6 +125,15 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
             deltaLon = position.getLongitude - selfDrivingVehicle.position.getLongitude
             calculateMovement(estimatedJourneyTimeInSeconds, estimatedJourneyTimeInSeconds, deltaLat, deltaLon)
             debugging = true
+          }
+        }
+        if(!verticlesTestVar) {
+          if (vehicleControl.getUserOnBoard() && !testUserVar) {
+            if (destinationPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
+              <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
+              vehicleControl.setUserOnBoard(false)
+              vehicleControl.getArrivedNotifyVerticle().sendArrivedNotify()
+            }
           }
         }
       }
@@ -180,25 +192,14 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
   override def positionChangeUponBooking(userPosition: Position,
                                          destinationPosition: Position,
                                          notRealisticVar: Boolean): Unit = {
-    testVar = notRealisticVar
+    verticlesTestVar = notRealisticVar
+    this.destinationPosition = destinationPosition
     movementAndPositionChange(userPosition)
     if(userPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
       <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
-      vehicleControl.setUserOnBoard(true)
-
-      //TODO Notificare l'utente con la richiesta di entrare in macchina.
-
-      movementAndPositionChange(destinationPosition)
-      if(destinationPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
-        <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
-        vehicleControl.setUserOnBoard(false)
-        if(!testVar) {
-          vehicleControl.getArrivedNotifyVerticle().sendArrivedNotify()
-        }
-      }
+      vehicleControl.getVehicleVerticleForUser().enterInVehicle(destinationPosition)
     }
 
-    //TODO Here i will notify the service that i'm arrived to destination
   }
 
   //This method calculates a random pair of latitude and longitude to simulate the position of the recharging station,
@@ -252,10 +253,8 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
 
   override def getDebuggingVar(): Boolean = debugging
 
-  override def isUserOnBoard(): Boolean = userOnBoard
-
   override def checkVehicleAndSetItBroken(): Unit = {
-    val result = selfDrivingVehicle.checkVehicleIsStolenAndSetBroken
+    val result = selfDrivingVehicle.checkVehicleIsStolenAndSetBroken()
     if(result) {
       stopUi.writeMessageLog(vehicleSetToBrokenLog)
     }
@@ -267,6 +266,10 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
   override def setVehicleStolen(): Unit = {
     selfDrivingVehicle.setState(VehicleConstants.stateStolen)
     stopUi.writeMessageLog(vehicleSetToStolenLog)
+  }
+
+  override def setTestUserVar(userVar: Boolean): Unit = {
+    this.testUserVar = userVar
   }
 
 }

@@ -172,6 +172,14 @@ public interface Constants {
              * The routing key used by vehicle-service to communicate a drive command to a vehicle.
              */
             String VEHICLE_DRIVE_COMMAND = "vehicle.event.drive";
+            /**
+             * The routing key used by vehicle to request the user to get inside.
+             */
+            String VEHICLE_REQUEST_ENTER_USER = "vehicle.request.enter.user.%s";
+            /**
+             * The routing key used by the user to respond to the enter request of the vehicle.
+             */
+            String VEHICLE_RESPONSE_ENTER_USER = "vehicle.response.enter.user.%s";
         }
 
         /**

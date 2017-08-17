@@ -50,7 +50,7 @@ public class VehicleVerticleRegisterImplTest {
     private double battery = 100.0;
     private double speed = 50.0;
     private VehicleStopView stopUi = new VehicleStopViewImpl(1);
-    private boolean debugVar = false;
+    private boolean debugVar = true;
 
     @Before
     public void setUp(TestContext context) throws Exception {
@@ -60,13 +60,7 @@ public class VehicleVerticleRegisterImplTest {
         vehicleControl =
                 new VehicleControlImpl("http://www.google.com",
                         "",
-                        license,
-                        state,
-                        position,
-                        battery,
-                        speed,
-                        stopUi,
-                        debugVar);
+                        license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleRegisterImpl(vehicleControl);
         setUpAsyncComponents(context);
     }

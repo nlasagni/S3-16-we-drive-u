@@ -73,7 +73,8 @@ public class VehicleChangePositionAndNotifyTest {
         eventBus = vertx.eventBus();
         vehicleControl =
                 new VehicleControlImpl("","",license, state, position, battery, speed, stopUi, debugVar);
-        vehicleVerticleDriveCommand = new VehicleVerticleDriveCommandImpl(vehicleControl, true);
+        vehicleControl.setUserOnBoard(true);
+        vehicleVerticleDriveCommand = new VehicleVerticleDriveCommandImpl(vehicleControl, false);
         vehicleVerticleArrivedNotify = new VehicleVerticleArrivedNotifyImpl(vehicleControl);
         setUpAsyncComponents(context);
     }

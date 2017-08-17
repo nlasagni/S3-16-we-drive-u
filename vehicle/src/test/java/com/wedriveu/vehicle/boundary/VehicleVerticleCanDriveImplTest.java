@@ -47,7 +47,7 @@ public class VehicleVerticleCanDriveImplTest {
     private double battery = 100.0;
     private double speed = 50.0;
     private VehicleStopView stopUi = new VehicleStopViewImpl(1);
-    private boolean debugVar = false;
+    private boolean debugVar = true;
 
     @Before
     public void setUp(TestContext context) throws Exception {

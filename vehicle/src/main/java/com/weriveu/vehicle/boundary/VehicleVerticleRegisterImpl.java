@@ -103,12 +103,10 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             try {
-                System.out.println("VERTICLE = CONSUMO IL MESSAGGIO!");
                 JsonObject message = new JsonObject(msg.body().toString());
                 RegisterToServiceResponse registerToServiceResponse =
                         objectMapper.readValue(message.getString(Constants.EventBus.BODY),
                                 RegisterToServiceResponse.class);
-                System.out.println("VERTICLE = IL MESSAGGIO è " + registerToServiceResponse.toString());
                 checkResponse(registerToServiceResponse);
             } catch (IOException e) {
                 Log.error(TAG, READ_ERROR, e);
@@ -123,14 +121,11 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
                 createRequest(),
                 onPublish -> {
             if(onPublish.succeeded()){
-                Log.info("VERTICLE","HO MANDATO IL MESSAGGIO");
             }
         });
     }
 
     private JsonObject createRequest() {
-    //    RegisterToServiceRequest request = new RegisterToServiceRequest();
-    //    request.setLicense(vehicle.getVehicle().plate());
         Vehicle vehicleTest = new Vehicle();
         vehicleTest.setDescription(vehicle.getVehicle().description());
         try {
@@ -142,7 +137,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
         vehicleTest.setStatus(vehicle.getVehicle().getState());
         vehicleTest.setPosition(vehicle.getVehicle().getPosition());
         vehicleTest.setLastUpdate(new Date());
-        vehicleTest.setName("Super Car");
+        vehicleTest.setName("");
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(vehicleTest).toString());
@@ -154,7 +149,6 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
             String newLicensePlate = calculateNewLicensePlate(vehicle);
             registerToService(newLicensePlate);
         }
-        System.out.println("MI SONO REGISTRATO");
         vehicle.getVehicle().setState(vehicleConstants.stateAvailable());
     }
 
