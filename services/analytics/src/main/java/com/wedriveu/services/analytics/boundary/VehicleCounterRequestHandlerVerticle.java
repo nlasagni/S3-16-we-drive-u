@@ -1,10 +1,9 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
-import com.wedriveu.services.shared.utilities.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -16,12 +15,11 @@ import static com.wedriveu.shared.util.Constants.*;
  */
 public class VehicleCounterRequestHandlerVerticle extends VerticleConsumer{
     public VehicleCounterRequestHandlerVerticle() {
-        super("VehicleCounterRequestHandlerVerticle");
+        super(Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ ROUTING_KEY_ANALYTICS_REQUEST_VEHICLES);
     }
 
     @Override
     public void start(Future futureRetriever) throws Exception {
-        setQueueName(Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ ROUTING_KEY_ANALYTICS_REQUEST_VEHICLES);
         super.start();
         Future<Void> futureConsumer = Future.future();
         futureConsumer.setHandler(v->{
@@ -33,7 +31,7 @@ public class VehicleCounterRequestHandlerVerticle extends VerticleConsumer{
                 futureRetriever.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS, ROUTING_KEY_ANALYTICS_REQUEST_VEHICLES, EVENT_BUS_AVAILABLE_ADDRESS, futureConsumer);
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS, ROUTING_KEY_ANALYTICS_REQUEST_VEHICLES, ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_COUNTER_REQUEST, futureConsumer);
     }
 
     @Override
