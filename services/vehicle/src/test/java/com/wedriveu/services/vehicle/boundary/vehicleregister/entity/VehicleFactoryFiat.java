@@ -34,12 +34,7 @@ public class VehicleFactoryFiat implements VehicleFactory {
         vehicle.setLastUpdate(LAST_UPDATE);
         vehicle.setName(NAME);
         vehicle.setDescription(DESCRIPTION);
-        try {
-            URL url = new URL(IMAGE_URL);
-            vehicle.setImageUrl(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        vehicle.setImageUrl(IMAGE_URL);
         return vehicle;
     }
 }

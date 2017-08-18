@@ -5,7 +5,7 @@ import com.wedriveu.services.analytics.entity.AnalyticsStoreImpl;
 import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
 import com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithmImpl;
 import com.wedriveu.services.shared.entity.*;
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import io.vertx.core.AbstractVerticle;
