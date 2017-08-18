@@ -1,6 +1,6 @@
 package com.wedriveu.services.booking.entity;
 
-import com.wedriveu.services.shared.entity.Booking;
+import com.wedriveu.services.shared.model.Booking;
 
 import java.util.Date;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * @author Michele Donati
  * @author Nicola Lasagni
- * This inteface models the <em>com.wedriveu.services.shared.entity.Booking' database store</em>.
+ * This inteface models the <em>Booking' database store</em>.
  */
 public interface BookingStore {
 
@@ -23,7 +23,7 @@ public interface BookingStore {
 
     /**
      *
-     * @param bookingId Identifies the <em>com.wedriveu.services.shared.entity.Booking</em>'s <em>ID</em> that must be retreived.
+     * @param bookingId Identifies the <em>Booking</em>'s <em>ID</em> that must be retreived.
      * @return Returns the {@linkplain Booking} with the provided id, only if found.
      */
     Optional<Booking> getBooking(int bookingId);

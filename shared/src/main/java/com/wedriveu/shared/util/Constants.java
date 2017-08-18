@@ -105,6 +105,10 @@ public interface Constants {
              */
             String VEHICLE = "vehicle";
             /**
+             * Exchange used for booking communications.
+             */
+            String BOOKING = "booking";
+            /**
              * Exchange used for analytics communications.
              */
             String ANALYTICS = "analytics";
@@ -195,6 +199,46 @@ public interface Constants {
              * The routing key used by the user to respond to the enter request of the vehicle.
              */
             String VEHICLE_RESPONSE_ENTER_USER = "vehicle.response.enter.user.%s";
+            /**
+             * The routing key used to communicate to the booking-service a create booking request.
+             */
+            String CREATE_BOOKING_REQUEST = "booking.request.create";
+            /**
+             * The routing key used by booking-service to communicate if it has created the booking.
+             */
+            String CREATE_BOOKING_RESPONSE = "booking.response.create.%s";
+            /**
+             * The routing key used to communicate to the booking-service a change booking request.
+             */
+            String CHANGE_BOOKING_REQUEST = "booking.request.change";
+            /**
+             * The routing key used by booking-service to communicate if it has changed the booking.
+             */
+            String CHANGE_BOOKING_RESPONSE = "booking.response.change";
+            /**
+             * The routing key used to communicate to the booking-service a complete booking request.
+             */
+            String COMPLETE_BOOKING_REQUEST = "booking.request.complete";
+            /**
+             * The routing key used by booking-service to communicate if it has completed the booking.
+             */
+            String COMPLETE_BOOKING_RESPONSE = "booking.response.complete";
+            /**
+             * The routing key used to communicate to the booking-service a find bookings by date request.
+             */
+            String FIND_BOOKING_BY_DATE_REQUEST = "booking.request.bydate";
+            /**
+             * The routing key used by booking-service to communicate the bookings found.
+             */
+            String FIND_BOOKING_BY_DATE_RESPONSE = "booking.response.bydate";
+            /**
+             * The routing key used to communicate to the booking-service a find bookings by position request.
+             */
+            String FIND_BOOKING_POSITION_REQUEST = "booking.request.position";
+            /**
+             * The routing key used by booking-service to communicate the bookings found.
+             */
+            String FIND_BOOKING_POSITION_RESPONSE = "booking.response.position";
         }
 
         /**

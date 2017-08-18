@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.entity.User;
 import com.wedriveu.shared.util.Log;
+import com.wedriveu.services.shared.model.User;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.wedriveu.services.shared.entity;
+package com.wedriveu.services.shared.store;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
