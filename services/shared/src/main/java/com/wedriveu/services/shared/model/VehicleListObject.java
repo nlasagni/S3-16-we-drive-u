@@ -1,7 +1,6 @@
-package com.wedriveu.services.shared.entity;
+package com.wedriveu.services.shared.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wedriveu.shared.rabbitmq.message.Vehicle;
 
 import java.util.ArrayList;
 

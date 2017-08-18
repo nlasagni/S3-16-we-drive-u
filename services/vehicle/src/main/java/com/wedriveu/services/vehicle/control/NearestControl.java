@@ -1,8 +1,13 @@
 package com.wedriveu.services.vehicle.control;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+<<<<<<< HEAD
 import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponseCanDrive;
+=======
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.services.shared.message.VehicleResponseCanDrive;
+>>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
@@ -16,7 +21,11 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+<<<<<<< HEAD
 import static com.wedriveu.shared.rabbitmq.message.Vehicle.NO_ELIGIBLE_VEHICLE_RESPONSE;
+=======
+import static com.wedriveu.services.shared.model.Vehicle.NO_ELIGIBLE_VEHICLE_RESPONSE;
+>>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
 import static com.wedriveu.shared.util.Constants.*;
 import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 

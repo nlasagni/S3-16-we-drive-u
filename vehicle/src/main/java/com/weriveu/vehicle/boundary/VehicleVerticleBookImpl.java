@@ -2,9 +2,15 @@ package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+<<<<<<< HEAD
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
+=======
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.VehicleBookRequest;
+import com.wedriveu.shared.rabbitmq.message.VehicleBookResponse;
+>>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;

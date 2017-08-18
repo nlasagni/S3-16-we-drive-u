@@ -1,4 +1,4 @@
-package com.wedriveu.services.shared.rabbitmq;
+package com.wedriveu.services.shared.message;
 
 /**
  * Shared Vert.x Verticle messages used by all the Services set.

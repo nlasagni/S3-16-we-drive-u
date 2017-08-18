@@ -1,19 +1,18 @@
 package com.wedriveu.services.analytics.vehicleServiceFake;
 
-import com.wedriveu.shared.rabbitmq.message.Vehicle;
-import com.wedriveu.services.shared.entity.VehicleListObject;
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.services.shared.model.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_VEHICLES_RESPONSE_ALL;
 
 /**

@@ -1,3 +1,14 @@
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala', 'src/main/java']
+        }
+        java {
+            srcDirs = []
+        }
+    }
+}
+
 dependencies {
     compile project(path: ':services:shared')
 }
@@ -7,7 +18,7 @@ jar {
     destinationDir = new File("$releasesServiceFolder")
     manifest {
         attributes 'Implementation-Version': project.version,
-                'Main-Class': 'com.wedriveu.services.booking.Main'
+                'Main-Class': 'com.wedriveu.services.booking.app.Main'
     }
     from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
 }
