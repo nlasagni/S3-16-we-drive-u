@@ -1,7 +1,7 @@
 package com.wedriveu.services.analytics.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wedriveu.services.shared.entity.VehicleCounter;
+import com.wedriveu.services.shared.model.VehicleCounter;
 
 /**
  * @author Stefano Bernagozzi

@@ -43,7 +43,7 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     protected void startConsumerWithFuture(String exchange, String routingKey, String eventBusAddress, Future future)
             throws IOException, TimeoutException {
         startConsumer(onStart -> {
-            declareQueue(durableQueue, onQueue -> {
+            declareQueue(true, onQueue -> {
                 if (onQueue.succeeded()) {
                     bindQueueToExchange(exchange,
                             routingKey, onBind -> {

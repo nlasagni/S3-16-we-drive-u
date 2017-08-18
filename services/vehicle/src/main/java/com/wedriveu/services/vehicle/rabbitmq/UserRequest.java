@@ -1,11 +1,7 @@
 package com.wedriveu.services.vehicle.rabbitmq;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-<<<<<<< HEAD
-import com.wedriveu.shared.rabbitmq.message.Vehicle;
-=======
 import com.wedriveu.services.shared.model.Vehicle;
->>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
 import com.wedriveu.shared.util.Position;
 
 import java.util.List;

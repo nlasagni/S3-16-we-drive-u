@@ -177,7 +177,6 @@ public interface Constants {
              */
             String VEHICLE_DRIVE_COMMAND = "vehicle.event.drive";
             /**
-<<<<<<< HEAD
              * The routing key used by vehicle to request the user to get inside.
              */
             String VEHICLE_REQUEST_ENTER_USER = "vehicle.request.enter.user.%s";
@@ -185,7 +184,7 @@ public interface Constants {
              * The routing key used by the user to respond to the enter request of the vehicle.
              */
             String VEHICLE_RESPONSE_ENTER_USER = "vehicle.response.enter.user.%s";
-=======
+            /**
              * The routing key used to communicate to the booking-service a create booking request.
              */
             String CREATE_BOOKING_REQUEST = "booking.request.create";
@@ -225,7 +224,6 @@ public interface Constants {
              * The routing key used by booking-service to communicate the bookings found.
              */
             String FIND_BOOKING_POSITION_RESPONSE = "booking.response.position";
->>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
         }
 
         /**

@@ -3,12 +3,8 @@ package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-<<<<<<< HEAD
 import com.wedriveu.services.shared.entity.AnalyticsVehicleList;
-import com.wedriveu.shared.rabbitmq.message.Vehicle;
-=======
 import com.wedriveu.services.shared.model.Vehicle;
->>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
 import com.wedriveu.services.shared.util.PositionUtils;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
@@ -26,11 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-<<<<<<< HEAD
-import static com.wedriveu.shared.rabbitmq.message.Vehicle.STATUS_AVAILABLE;
-=======
 import static com.wedriveu.services.shared.model.Vehicle.STATUS_AVAILABLE;
->>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
 import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 

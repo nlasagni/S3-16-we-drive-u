@@ -1,10 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
-<<<<<<< HEAD
-import com.wedriveu.shared.rabbitmq.message.Vehicle;
-=======
 import com.wedriveu.services.shared.model.Vehicle;
->>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
 import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;

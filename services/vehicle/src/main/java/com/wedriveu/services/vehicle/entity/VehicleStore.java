@@ -1,10 +1,6 @@
 package com.wedriveu.services.vehicle.entity;
 
-<<<<<<< HEAD
-import com.wedriveu.shared.rabbitmq.message.Vehicle;
-=======
 import com.wedriveu.services.shared.model.Vehicle;
->>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
 import com.wedriveu.shared.util.Position;
 import io.vertx.core.eventbus.Message;
 
@@ -12,11 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
-<<<<<<< HEAD
- * This inteface models the <em>com.wedriveu.shared.rabbitmq.message.Vehicle' database domain</em>.
-=======
  * This inteface models the <em>Vehicle' database domain</em>.
->>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
  *
  * @author Michele Donati
  * @author Marco Baldassarri

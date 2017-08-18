@@ -1,11 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
-
-<<<<<<< HEAD
-import com.wedriveu.shared.rabbitmq.message.Vehicle;
-=======
 import com.wedriveu.services.shared.model.Vehicle;
->>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.services.shared.message.VehicleResponseCanDrive;
