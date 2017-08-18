@@ -23,7 +23,7 @@ public class VehicleCounter {
         booked++;
     }
 
-    public void increaseStolen() {
+    public void increaseNetworkIssues() {
         stolen++;
     }
 

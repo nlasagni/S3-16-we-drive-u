@@ -1,7 +1,6 @@
 package com.wedriveu.services.analytics.entity;
 
 
-import com.sun.deploy.security.BrowserKeystore;
 import com.wedriveu.services.shared.entity.AnalyticsVehicle;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
@@ -83,11 +82,11 @@ public class AnalyticsStoreImplTest {
     }
 
 
-    private void addSomeVehiclesToDatabase(int available, int broken, int booked, int stolen, int recharging) {
+    private void addSomeVehiclesToDatabase(int available, int broken, int booked, int networkIssues, int recharging) {
         addVehiclesWithStatus(available, Vehicle.STATUS_AVAILABLE);
         addVehiclesWithStatus(broken, Vehicle.STATUS_BROKEN_STOLEN);
         addVehiclesWithStatus(booked, Vehicle.STATUS_BOOKED);
-        addVehiclesWithStatus(stolen, Vehicle.STATUS_BROKEN_STOLEN);
+        addVehiclesWithStatus(networkIssues, Vehicle.STATUS_NETWORK_ISSUES);
         addVehiclesWithStatus(recharging, Vehicle.STATUS_RECHARGING);
 
     }
