@@ -14,8 +14,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.UUID;
 
@@ -120,8 +118,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
                 Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
                 createRequest(),
                 onPublish -> {
-            if(onPublish.succeeded()){
-            }
+            onPublish.succeeded();
         });
     }
 
@@ -146,7 +143,8 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
             registerToService(newLicensePlate);
         }
         vehicle.getVehicle().setState(vehicleConstants.stateAvailable());
-        eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, new JsonObject());
+        eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
+                new JsonObject());
     }
 
     private String calculateNewLicensePlate(VehicleControl vehicle) {

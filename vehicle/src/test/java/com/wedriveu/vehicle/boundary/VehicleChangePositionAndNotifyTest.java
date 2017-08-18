@@ -153,9 +153,7 @@ public class VehicleChangePositionAndNotifyTest {
         }
         Position vehiclePosition = vehicleControl.getVehicle().position();
         double vehicleDistance = desired.getDistanceInKm(vehiclePosition);
-        if (vehicleDistance <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS()) {
-            this.vehicleVerticleArrivedNotify.sendArrivedNotify();
-        }
+        if (vehicleDistance <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS()) {}
         rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
         MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));

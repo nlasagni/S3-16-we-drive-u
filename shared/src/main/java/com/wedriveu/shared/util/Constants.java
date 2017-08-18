@@ -28,17 +28,17 @@ public interface Constants {
         /**
          * The eventbus address used by the vehicle to notify the update verticle to send an update message.
          */
-        String EVENT_BUS_ADDRESS_UPDATE = "notify.update.publisher";
+        String EVENT_BUS_ADDRESS_UPDATE = "notify.update.publisher.%s";
 
         /**
          * The eventbus address used by the vehicle to notify the arrived message verticle to send an "arrived notify".
          */
-        String EVENT_BUS_ADDRESS_NOTIFY = "notify.arrived.publisher";
+        String EVENT_BUS_ADDRESS_NOTIFY = "notify.arrived.publisher.%s";
 
         /**
          * The eventbus address used by vehicle to notify the vehicle's user communication verticle publisher.
          */
-        String EVENT_BUS_ADDRESS_FOR_USER = "notify.user.publisher";
+        String EVENT_BUS_ADDRESS_FOR_USER = "notify.user.publisher.%s";
     }
 
     /**

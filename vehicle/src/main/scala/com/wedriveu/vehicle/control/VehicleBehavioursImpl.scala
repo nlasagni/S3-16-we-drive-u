@@ -1,6 +1,6 @@
 package com.wedriveu.vehicle.control
 
-import com.wedriveu.shared.util.{Constants, Log, Position}
+import com.wedriveu.shared.util.{Constants,Position}
 import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
@@ -101,9 +101,7 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
   //the coordinates reached during the journey.
   // The Thread.sleep in the method is useful to render the simulation real and for testing observables.
   override def movementAndPositionChange(position: Position): Unit = {
-    if(checkVehicleIsBrokenOrStolen()){
-      return
-    }
+    if(checkVehicleIsBrokenOrStolen()){}
     else {
       val distanceInKm: Double = selfDrivingVehicle.position.getDistanceInKm(position)
       stopUi.writeMessageLog(distanceInKmLog + distanceInKm)
@@ -116,11 +114,14 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
             break()
           }
           if(!debugVar && !testVar){
-            Thread.sleep(500)
+            Thread.sleep(250)
           }
+          eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
+            new JsonObject())
           deltaLat = position.getLatitude - selfDrivingVehicle.position.getLatitude
           deltaLon = position.getLongitude - selfDrivingVehicle.position.getLongitude
           calculateMovement(time, estimatedJourneyTimeInSeconds, deltaLat, deltaLon)
+          val distanceDone: Double = distanceInKm - selfDrivingVehicle.position.getDistanceInKm(position)
           if ((time + timeStep) > estimatedJourneyTimeInSeconds) {
             if (checkVehicleIsBrokenOrStolen()) {
               break()
@@ -136,7 +137,8 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
             if (destinationPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
               <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
               vehicleControl.setUserOnBoard(false)
-              eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, new JsonObject())
+              eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY,vehicleControl.getVehicle().plate),
+                new JsonObject())
             }
           }
         }
@@ -150,7 +152,8 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
         + selfDrivingVehicle.position.getLatitude
         + commaLog
         + selfDrivingVehicle.position.getLongitude)
-      //TODO Here i will notify the service that i'm stolen
+      eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
+        new JsonObject)
       true
     }
     else if (selfDrivingVehicle.getState().equals(VehicleConstants.stateBroken)) {
@@ -158,7 +161,8 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
         + selfDrivingVehicle.position.getLatitude
         + commaLog
         + selfDrivingVehicle.position.getLongitude)
-      //TODO Here i will notify the service that i'm broken
+      eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
+        new JsonObject)
       true
     }
     else {
@@ -201,9 +205,9 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
     movementAndPositionChange(userPosition)
     if(userPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
       <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
-      eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_FOR_USER, createMessage())
+      eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_FOR_USER, vehicleControl.getVehicle().plate),
+        createMessage())
     }
-
   }
 
   private def createMessage(): JsonObject = {
@@ -218,7 +222,8 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
     debugging = false
     val canRecharge: Boolean = selfDrivingVehicle.checkVehicleIsBrokenOrStolenAndSetRecharging()
     if (canRecharge) {
-      //TODO Here i will notify the service that i'm going to recharge
+      eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
+        new JsonObject())
       val randomNumber1 : Double = Math.random()
       val randomNumber2 : Double = Math.random()
       val distance : Double = 20.0 * Math.sqrt(randomNumber1)
@@ -240,9 +245,10 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
       stopUi.writeMessageLog(needRechargingLog + newLatitude + commaLog + newLongitude)
       movementAndPositionChange(new Position(newLatitude, newLongitude))
       stopUi.writeMessageLog(arrivedToRechargeLog)
+      eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
+        new JsonObject)
       simulateRecharging()
       debugging = true
-      //TODO At the end i will set the state available (if not broken during the process) and notify the service
     }
     else {
       stopUi.writeMessageLog(cantRechargeLog)
@@ -251,7 +257,7 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
 
   private def simulateRecharging(): Unit = {
     stopUi.writeMessageLog(startRechargeProcessLog)
-    rechargingLatchManager = new RechargingLatchManagerImpl(selfDrivingVehicle)
+    rechargingLatchManager = new RechargingLatchManagerImpl(selfDrivingVehicle, vertx)
     rechargingLatchManager.startLatchedThread()
     if(selfDrivingVehicle.battery < VehicleConstants.maxBatteryValue) {
       stopUi.writeMessageLog(errorRechargeProcessLog + selfDrivingVehicle.getState())
@@ -266,7 +272,8 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
   override def checkVehicleAndSetItBroken(): Unit = {
     val result = selfDrivingVehicle.checkVehicleIsStolenAndSetBroken()
     if(result) {
-      eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, new JsonObject())
+      eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
+        new JsonObject())
       stopUi.writeMessageLog(vehicleSetToBrokenLog)
     }
     else {
@@ -276,7 +283,8 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
 
   override def setVehicleStolen(): Unit = {
     selfDrivingVehicle.setState(VehicleConstants.stateStolen)
-    eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, new JsonObject())
+    eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
+      new JsonObject())
     stopUi.writeMessageLog(vehicleSetToStolenLog)
   }
 

@@ -6,9 +6,7 @@ import com.wedriveu.shared.rabbitmq.message.EnterVehicleResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
-import com.wedriveu.vehicle.control.VehicleBehaviours;
 import com.wedriveu.vehicle.control.VehicleControl;
-import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
@@ -16,8 +14,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Michele Donati on 17/08/2017.
@@ -112,14 +108,13 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
             }
         });
 
-        eventBus.consumer(Constants.EventBus.EVENT_BUS_ADDRESS_FOR_USER, message -> {
-            Log.info("VERTICLE USER", "HO RICEVUTO UN MESSAGGIO PER INIZIARE A NOTIFICARE L'UTENTE");
+        eventBus.consumer(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_FOR_USER, vehicle.getVehicle().plate()),
+                message -> {
             JsonObject msg = new JsonObject(message.body().toString());
             Position destPosition = null;
             try {
                 destPosition =
                         objectMapper.readValue(msg.getString(Constants.EventBus.BODY), Position.class);
-                Log.info("VERTICLE USER", "L'OGGETTO RICEVUTO è = " + destPosition.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }

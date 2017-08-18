@@ -17,6 +17,6 @@ public interface VehicleVerticleBook {
      * @param request This indicates the request object sended.
      * @return Returns a response object to the service.
      */
-    public BookVehicleResponse book(VehicleReservationRequest request);
+    BookVehicleResponse book(VehicleReservationRequest request);
 
 }

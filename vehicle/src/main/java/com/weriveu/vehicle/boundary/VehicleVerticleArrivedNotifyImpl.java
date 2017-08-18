@@ -53,8 +53,8 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
     }
 
     private void registerConsumer(){
-        eventBus.consumer(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, message -> {
-            Log.info("VERTICLE ARRIVED: ", "HO RICEVUTO UN MESSAGGIO PER INIZIARE A NOTIFICARE IL SERVICE");
+        eventBus.consumer(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, vehicle.getVehicle().plate()),
+                message -> {
             sendArrivedNotify();
         });
     }

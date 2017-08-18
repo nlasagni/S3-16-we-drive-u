@@ -101,17 +101,17 @@ class VehicleControlImpl(vertx: Vertx,
   val received: String = " [x] Received '"
   val awaiting: String = " [x] Awaiting requests"
   var kilometersToDo: Double = .0
-  var connection: Connection = null
-  var channel: Channel = null
-  var username: String = null
+  var connection: Connection = _
+  var channel: Channel = _
+  var username: String = _
   var userOnBoard: Boolean = false
-  var vehicleVerticleCanDrive: VehicleVerticleCanDriveImpl = null
-  var vehicleVerticleBook: VehicleVerticleBookImpl = null
-  var vehicleVerticleArrivedNotify: VehicleVerticleArrivedNotifyImpl = null
-  var vehicleVerticleDriveCommand: VehicleVerticleDriveCommandImpl = null
-  var vehicleVerticleUpdate: VehicleVerticleUpdateImpl = null
-  var vehicleVerticleRegister: VehicleVerticleRegisterImpl = null
-  var vehicleVerticleForUser : VehicleVerticleForUserImpl = null
+  var vehicleVerticleCanDrive: VehicleVerticleCanDriveImpl = _
+  var vehicleVerticleBook: VehicleVerticleBookImpl = _
+  var vehicleVerticleArrivedNotify: VehicleVerticleArrivedNotifyImpl = _
+  var vehicleVerticleDriveCommand: VehicleVerticleDriveCommandImpl = _
+  var vehicleVerticleUpdate: VehicleVerticleUpdateImpl = _
+  var vehicleVerticleRegister: VehicleVerticleRegisterImpl = _
+  var vehicleVerticleForUser : VehicleVerticleForUserImpl = _
 
   stopUi.setVehicleAssociated(this)
 
@@ -164,6 +164,7 @@ class VehicleControlImpl(vertx: Vertx,
       }
     })
   }
+
 
   override def getUsername(): String = username
 

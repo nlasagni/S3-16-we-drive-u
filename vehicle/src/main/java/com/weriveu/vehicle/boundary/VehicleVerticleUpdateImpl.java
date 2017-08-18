@@ -58,8 +58,8 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
 
 
     private void registerConsumer(){
-        eventBus.consumer(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, message -> {
-            Log.info("VERTICLE UPDATE: ","HO RICEVUTO UN MESSAGGIO DI UPDATARE");
+        eventBus.consumer(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
+                message -> {
             sendUpdate();
         });
     }

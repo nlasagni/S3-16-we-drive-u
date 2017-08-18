@@ -111,7 +111,8 @@ public class VehicleVerticleArrivedNotifyImplTest {
                 context.fail(event.getCause());
             });
         });
-        eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, new JsonObject());
+        eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, vehicleControl.getVehicle().plate()),
+                new JsonObject());
         vertx.setTimer(5000, onTime -> {
             async.complete();});
         async.awaitSuccess();

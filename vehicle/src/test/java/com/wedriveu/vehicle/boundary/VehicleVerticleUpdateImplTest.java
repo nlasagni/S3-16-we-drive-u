@@ -116,7 +116,8 @@ public class VehicleVerticleUpdateImplTest {
                 context.fail(event.getCause());
             });
         });
-        eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, new JsonObject());
+        eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate()),
+                new JsonObject());
         vertx.setTimer(5000, onTime -> {
             async.complete();});
         async.awaitSuccess();
