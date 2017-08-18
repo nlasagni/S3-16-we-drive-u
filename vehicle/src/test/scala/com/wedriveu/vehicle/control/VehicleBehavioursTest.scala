@@ -5,6 +5,7 @@ import java.util.concurrent.ThreadLocalRandom
 import com.wedriveu.shared.util.Position
 import com.wedriveu.vehicle.boundary.VehicleStopViewImpl
 import com.wedriveu.vehicle.shared.VehicleConstants
+import io.vertx.core.Vertx
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
 
 /**
@@ -22,6 +23,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   val nVehicles: Int = 3
   val minorBound: Int = 30
   val maxBound: Int = 101
+  val vertx: Vertx = Vertx.vertx()
 
   //These two variables indicate the bounds for the random latitude and longitude calculation. The variation estimated
   //for containing the distance in 50 - 100 kilometers is like this (from 10.0,10.0 to 11.0,11.0 results in thousands
@@ -85,19 +87,20 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   }
 
   private def createVehicleControl(debugVar: Boolean): VehicleControl = {
-     new VehicleControlImpl("",
+     new VehicleControlImpl(vertx,
+       "",
        "",
        licenseFirstTest,
       stateFirstTest,
       new Position(latitude, longitude),
       VehicleConstants.maxBatteryValue,
       speedTest,
-      new VehicleStopViewImpl(1),
+      new VehicleStopViewImpl(vertx, 1),
       debugVar)
   }
 
   private def createVehicleBehaviour(vehicleControl: VehicleControl, debugVar: Boolean): VehicleBehaviours = {
-    new VehicleBehavioursImpl(vehicleControl, vehicleControl.getVehicle(), new VehicleStopViewImpl(1), debugVar)
+    new VehicleBehavioursImpl(vehicleControl,vertx, vehicleControl.getVehicle(), new VehicleStopViewImpl(vertx,1), debugVar)
   }
 
 }

@@ -1,16 +1,23 @@
 package com.wedriveu.vehicle.simulation
 
-import java.util.concurrent.{CountDownLatch, TimeUnit}
+import java.util.concurrent.CountDownLatch
 
+import com.wedriveu.shared.util.Constants
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
+import io.vertx.core.Vertx
+import io.vertx.core.eventbus.EventBus
+import io.vertx.core.json.JsonObject
 
 /**
   * @author Michele Donati on 07/08/2017.
   */
 
-class RechargingLatchedThread(selfDrivingVehicle: SelfDrivingVehicle, countdownLatch: CountDownLatch) extends Thread {
+class RechargingLatchedThread(selfDrivingVehicle: SelfDrivingVehicle,
+                              countdownLatch: CountDownLatch,
+                              vertx: Vertx) extends Thread {
   val oneSecondInMillis: Int = 1000
+  val eventBus: EventBus = vertx.eventBus()
 
   override def run(): Unit = {
     for(i <- 0 until 10 by 1){
@@ -28,6 +35,7 @@ class RechargingLatchedThread(selfDrivingVehicle: SelfDrivingVehicle, countdownL
     }
     selfDrivingVehicle.battery = VehicleConstants.maxBatteryValue
     selfDrivingVehicle.setState(VehicleConstants.stateAvailable)
+    eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, selfDrivingVehicle.plate), new JsonObject())
   }
 
 }

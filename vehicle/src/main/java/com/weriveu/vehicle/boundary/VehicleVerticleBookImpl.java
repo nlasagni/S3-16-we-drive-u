@@ -125,6 +125,9 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
                             Log.error(TAG, SEND_ERROR, onPublish.cause());
                         }
                         vehicle.getVehicle().setState(VehicleConstants$.MODULE$.stateBooked());
+                        eventBus.send(
+                                String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
+                                new JsonObject());
                     });
         }catch (JsonProcessingException e) {
             Log.error(TAG, SEND_ERROR, e);

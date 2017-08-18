@@ -14,8 +14,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.UUID;
 
@@ -120,19 +118,14 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
                 Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
                 createRequest(),
                 onPublish -> {
-            if(onPublish.succeeded()){
-            }
+            onPublish.succeeded();
         });
     }
 
     private JsonObject createRequest() {
         Vehicle vehicleTest = new Vehicle();
         vehicleTest.setDescription(vehicle.getVehicle().description());
-        try {
-            vehicleTest.setImageUrl(new URL(vehicle.getVehicle().imageUrl()));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        vehicleTest.setImageUrl(vehicle.getVehicle().imageUrl());
         vehicleTest.setLicensePlate(vehicle.getVehicle().plate());
         vehicleTest.setStatus(vehicle.getVehicle().getState());
         vehicleTest.setPosition(vehicle.getVehicle().getPosition());
@@ -150,6 +143,8 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
             registerToService(newLicensePlate);
         }
         vehicle.getVehicle().setState(vehicleConstants.stateAvailable());
+        eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
+                new JsonObject());
     }
 
     private String calculateNewLicensePlate(VehicleControl vehicle) {

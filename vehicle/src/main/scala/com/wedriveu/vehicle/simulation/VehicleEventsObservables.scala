@@ -28,6 +28,12 @@ trait VehicleEventsObservables {
     * @return Return a simple emit of the event.
     */
   def stolenEventObservable(): Observable[String]
+
+  /** This method permits to unsubsribe the control system to vehicle broken events. */
+  def unsubscribeToBrokenEvents(): Unit
+
+  /** This method permits to unsubsribe the control system to vehicle stolen events. */
+  def unsubscribeToStolenEvents(): Unit
 }
 
 class VehicleEventsObservablesImpl extends VehicleEventsObservables {
@@ -52,6 +58,9 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
 
   var randomLatitudeDestination: Double = .0
   var randomLongitudeDestination: Double = .0
+  var unsubscribeToMovements: Boolean = false
+  var unsubscribeToBrokens: Boolean = false
+  var unsubscribeToStolens: Boolean = false
 
   override def movementAndChangePositionObservable(): Observable[Position] = {
     Observable(
@@ -59,6 +68,9 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
         new Thread(new Runnable() {
           def run(): Unit = {
             while(true) {
+              if(unsubscribeToMovements){
+                subscriber.unsubscribe()
+              }
               if (subscriber.isUnsubscribed) {
                 subscriber.onCompleted()
                 return
@@ -84,11 +96,14 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
         new Thread(new Runnable() {
           def run(): Unit = {
             while(true) {
+              calculateRandomNumber(startBrokenRange, endBrokenRange, vehicleBrokenLog)
+              if(unsubscribeToBrokens){
+                subscriber.unsubscribe()
+              }
               if (subscriber.isUnsubscribed) {
                 subscriber.onCompleted()
                 return
               }
-              calculateRandomNumber(startBrokenRange, endBrokenRange, vehicleBrokenLog)
               subscriber.onNext(brokenEventLog)
             }
           }
@@ -103,11 +118,14 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
         new Thread(new Runnable() {
           def run(): Unit = {
             while(true) {
+              calculateRandomNumber(startStolenRange, endStolenRange, vehicleStolenLog)
+              if(unsubscribeToStolens){
+                subscriber.unsubscribe()
+              }
               if (subscriber.isUnsubscribed) {
                 subscriber.onCompleted()
                 return
               }
-              calculateRandomNumber(startStolenRange, endStolenRange, vehicleStolenLog)
               subscriber.onNext(stolenEventLog)
             }
           }
@@ -121,6 +139,14 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
     val result = startRange + randomNumber.nextInt(( endRange - startRange) + 1);
     Thread.sleep(result*oneSecondInMillis)
     Log.log(vehicleLog)
+  }
+
+  override def unsubscribeToBrokenEvents(): Unit = {
+    unsubscribeToBrokens = true
+  }
+
+  override def unsubscribeToStolenEvents(): Unit = {
+    unsubscribeToStolens = true
   }
 
 }

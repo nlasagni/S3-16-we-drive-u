@@ -7,6 +7,7 @@ import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
@@ -23,6 +24,7 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
     private static final String NOT_FAILURE_MESSAGE = "The vehicle is not broken/stolen";
 
     private RabbitMQClient rabbitMQClient;
+    private EventBus eventBus;
     private VehicleConstants$ vehicleConstants = VehicleConstants$.MODULE$;
 
     public VehicleVerticleUpdateImpl(VehicleControl vehicle) {
@@ -31,6 +33,7 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
+        eventBus = vertx.eventBus();
         startService(startFuture);
     }
 
@@ -44,12 +47,21 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
         Future<Void> endFuture = Future.future();
         startClient(initFuture);
         initFuture.compose(v -> {
+            registerConsumer();
             future.complete();
         }, endFuture);
     }
 
     private void startClient(Future<Void> future) {
         rabbitMQClient.start(future.completer());
+    }
+
+
+    private void registerConsumer(){
+        eventBus.consumer(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
+                message -> {
+            sendUpdate();
+        });
     }
 
     @Override
