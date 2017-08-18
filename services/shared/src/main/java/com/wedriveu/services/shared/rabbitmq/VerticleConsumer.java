@@ -2,6 +2,7 @@ package com.wedriveu.services.shared.rabbitmq;
 
 
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -53,21 +54,23 @@ public abstract class VerticleConsumer extends AbstractVerticle {
                                     if (future != null) {
                                         future.complete();
                                     }
+                                } else {
+                                    Log.error(queueName + " bind ", onBind.cause().getLocalizedMessage(), onBind.cause());
                                 }
                             });
+                }
+                else {
+                    Log.error(queueName, onQueue.cause().getLocalizedMessage(), onQueue.cause());
                 }
             });
         });
     }
 
-    protected void startConsumer(Boolean durable, String exchange, String routingKey, String eventBusAddress)
-            throws IOException, TimeoutException {
-        startConsumerWithFuture(exchange, routingKey, eventBusAddress, null);
-    }
     protected void startConsumer(boolean durable, String exchange, String routingKey, String eventBusAddress)
             throws IOException, TimeoutException {
         startConsumerWithFuture(exchange, routingKey, eventBusAddress, null);
     }
+
     private void startConsumer(Handler<AsyncResult<Void>> handler) throws java.io.IOException, TimeoutException {
         client.start(onStartCompleted -> {
             if (onStartCompleted.succeeded()) {

@@ -23,7 +23,6 @@ public class VertxJsonMapper {
         return mapTo(body, classType);
     }
 
-
     public static <T> JsonObject mapFrom(T object) throws IllegalArgumentException{
         if (object == null) {
             throw new IllegalArgumentException(MAP_FROM_ILLEGAL_ARGUMENT);

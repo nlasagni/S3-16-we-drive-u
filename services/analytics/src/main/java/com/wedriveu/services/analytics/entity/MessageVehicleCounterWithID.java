@@ -1,7 +1,7 @@
 package com.wedriveu.services.analytics.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wedriveu.services.shared.entity.VehicleCounter;
+import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 
 /**
  * @author Stefano Bernagozzi
@@ -12,7 +12,10 @@ public class MessageVehicleCounterWithID {
     @JsonProperty("vehicleCounter")
     VehicleCounter vehicleCounter;
 
-    public MessageVehicleCounterWithID(String backofficeID, VehicleCounter vehicleCounter){
+    public MessageVehicleCounterWithID(    @JsonProperty("backofficeID")
+                                                   String backofficeID,
+                                           @JsonProperty("vehicleCounter")
+                                                   VehicleCounter vehicleCounter){
         this.backofficeID = backofficeID;
         this.vehicleCounter = vehicleCounter;
     }

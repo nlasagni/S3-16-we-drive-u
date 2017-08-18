@@ -6,6 +6,7 @@ import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
 import com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithmImpl;
 import com.wedriveu.services.shared.entity.*;
 import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import io.vertx.core.AbstractVerticle;
@@ -43,20 +44,22 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle{
     }
 
     private void handleVehicleCounterRequest(Message message) {
-        String backofficeID = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), String.class);
-        vertx.eventBus().send(ANALYTCS_VEHICLE_COUNTER_UPDATE_EVENTBUS,
+        JsonObject dataToUser = new JsonObject(message.body().toString());
+        String backofficeId = dataToUser.getValue(EventBus.BODY).toString();
+        vertx.eventBus().send(ANALYTICS_VEHICLE_COUNTER_RESPONSE_EVENTBUS,
                 VertxJsonMapper.mapInBodyFrom(new MessageVehicleCounterWithID(
-                        backofficeID,
+                        backofficeId,
                         analyticsStore.getVehicleCounter())));
+        System.out.println("sent " + analyticsStore.getVehicleCounter().toString());
 
     }
 
     private void updateVehicleStore(Message message) {
-        Vehicle vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), Vehicle.class);
-        if (analyticsStore.getVehicleByLicensePlate(vehicle.getLicensePlate()) != null) {
-            analyticsStore.updateVehicle(vehicle.getLicensePlate(), vehicle.getStatus());
+        UpdateToService vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), UpdateToService.class);
+        if (analyticsStore.getVehicleByLicensePlate(vehicle.getLicense()) != null) {
+            analyticsStore.updateVehicle(vehicle.getLicense(), vehicle.getStatus());
         } else {
-            analyticsStore.addVehicle(vehicle.getLicensePlate(), vehicle.getStatus());
+            analyticsStore.addVehicle(vehicle.getLicense(), vehicle.getStatus());
         }
         sendVehicleUpdates();
     }

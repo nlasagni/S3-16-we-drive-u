@@ -1,6 +1,6 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.analytics.vehicleServiceFake.VehicleListGeneratorRequestHandler;
+import com.wedriveu.services.analytics.vehicleService.VehicleListGeneratorRequestHandler;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleListRequestVerticleTest{
+public class AnalyticsVehicleListRequestPublisherTest {
     private List<Future> futures;
     private Vertx vertx;
     @Before
@@ -26,7 +26,7 @@ public class VehicleListRequestVerticleTest{
         vertx = Vertx.vertx();
         futures = new ArrayList<>();
         Future requestFuture = Future.future();
-        vertx.deployVerticle(new VehicleListRequestVerticle(), requestFuture.completer());
+        vertx.deployVerticle(new AnalyticsVehicleListRequestPublisher(), requestFuture.completer());
         futures.add(requestFuture);
 
         Future generatorRequestHandlerFuture = Future.future();

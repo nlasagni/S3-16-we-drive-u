@@ -216,6 +216,8 @@ public interface Constants {
      */
     String VEHICLE = "vehicle";
 
+    String BACKOFFICE = "backoffice";
+
 
     /**
      * The predefined range of kilometers used to simulate the vehicle recharging movement
@@ -251,8 +253,15 @@ public interface Constants {
     String ANALYTICS_VEHICLE_COUNTER_REQUEST_EVENTBUS = "analytics.eventbus.vehicleCounterRequest";
     String ANALYTICS_VEHICLE_COUNTER_RESPONSE_EVENTBUS = "analytics.eventbus.vehicleCounterResponse";
     String ANALYTICS_VEHICLE_STORE_UPDATE_REQUEST_EVENTBUS = "analytics.eventbus.vehicleStoreUpdate";
-    String ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS = "analytics.eventbus.availableAddress";
+    String ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_VEHICLE_LIST_RETRIEVER_VERTICLE = "analytics.eventbus.availableAddress.vehicleListRetriever";
+    String ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER = "analytics.eventbus.availableAddress.vehicleUpdateHandler";
+    String ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_FAKE_GENERATOR = "analytics.eventbus.availableAddress.fakeGenerator";
+    String ANALYTICS_EVENTBUS_TEST_VEHICLE_UPDATE_HANDLER = "analytics.eventbus.availableAddress.test.vehicleUpdateHandler";
+    String ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_COUNTER_REQUEST = "analytics.eventbus.availableAddress.counterRequest";
 
-
+    String BACKOFFICE_CONTROLLER_EVENTBUS = "backoffice.eventbus.controller";
+    String BACKOFFICE_EVENTBUS_AVAILABLE_ADDRESS_CONTROLLER = "backoffice.eventbus.availableAddress.controller";
+    String BACKOFFICE_EVENTBUS_AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_NO_ID = "backoffice.eventbus.availableAddress.rabbitmqListenerUpdateNoId";
+    String BACKOFFICE_EVENTBUS_AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_WITH_ID = "backoffice.eventbus.availableAddress.rabbitmqListenerUpdateWithId";
 
 }

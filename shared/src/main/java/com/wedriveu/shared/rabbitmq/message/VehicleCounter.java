@@ -1,4 +1,4 @@
-package com.wedriveu.services.shared.entity;
+package com.wedriveu.shared.rabbitmq.message;
 
 /**
  * @author Stefano Bernagozzi
@@ -23,7 +23,7 @@ public class VehicleCounter {
         booked++;
     }
 
-    public void increaseStolen() {
+    public void increaseNetworkIssues() {
         stolen++;
     }
 
