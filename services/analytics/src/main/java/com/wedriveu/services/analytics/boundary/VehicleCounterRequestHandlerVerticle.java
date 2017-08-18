@@ -41,8 +41,11 @@ public class VehicleCounterRequestHandlerVerticle extends VerticleConsumer{
     }
 
     private void sendToController(Message message) {
-        String backofficeID = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), String.class);
-        vertx.eventBus().send(ANALYTICS_VEHICLE_COUNTER_REQUEST_EVENTBUS, VertxJsonMapper.mapInBodyFrom(backofficeID));
+        JsonObject dataToUser = new JsonObject(message.body().toString());
+        String backofficeId = dataToUser.getValue(EventBus.BODY).toString();
+        Log.log(backofficeId);
+        dataToUser.put(Constants.EventBus.BODY, backofficeId);
+        vertx.eventBus().send(ANALYTICS_VEHICLE_COUNTER_REQUEST_EVENTBUS, dataToUser);
     }
 
 }

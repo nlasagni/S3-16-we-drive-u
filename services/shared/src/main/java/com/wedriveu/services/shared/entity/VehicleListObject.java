@@ -15,7 +15,7 @@ public class VehicleListObject {
     @JsonProperty ("vehicleList")
     private ArrayList<Vehicle> vehicleList;
 
-    public VehicleListObject (ArrayList<Vehicle> vehicleList) {
+    public VehicleListObject (@JsonProperty ("vehicleList") ArrayList<Vehicle> vehicleList) {
         this.vehicleList = vehicleList;
     }
 

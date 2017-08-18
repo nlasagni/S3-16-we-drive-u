@@ -31,7 +31,7 @@ public class GraphicViewer extends JFrame{
         textLabel.setPreferredSize(new Dimension(175, 120));
         getContentPane().add(textLabel, BorderLayout.PAGE_START);
 
-        textField = new JTextField("insert your backoffice id");
+        textField = new JTextField("backoffice1");
         textField.setPreferredSize(new Dimension(175, 50));
         getContentPane().add(textField, BorderLayout.CENTER);
 

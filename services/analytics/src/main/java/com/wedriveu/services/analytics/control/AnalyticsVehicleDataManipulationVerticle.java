@@ -44,11 +44,13 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle{
     }
 
     private void handleVehicleCounterRequest(Message message) {
-        String backofficeID = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), String.class);
-        vertx.eventBus().send(ANALYTCS_VEHICLE_COUNTER_UPDATE_EVENTBUS,
+        JsonObject dataToUser = new JsonObject(message.body().toString());
+        String backofficeId = dataToUser.getValue(EventBus.BODY).toString();
+        vertx.eventBus().send(ANALYTICS_VEHICLE_COUNTER_RESPONSE_EVENTBUS,
                 VertxJsonMapper.mapInBodyFrom(new MessageVehicleCounterWithID(
-                        backofficeID,
+                        backofficeId,
                         analyticsStore.getVehicleCounter())));
+        System.out.println("sent " + analyticsStore.getVehicleCounter().toString());
 
     }
 

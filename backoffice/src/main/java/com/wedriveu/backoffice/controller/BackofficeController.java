@@ -6,6 +6,7 @@ import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -48,20 +49,20 @@ public class BackofficeController extends AbstractVerticle{
         futureModel = backOfficeModel.getFuture();
         futureModel.setHandler(res-> {
             Future listener1 = Future.future();
-            vertx.deployVerticle(new RabbitmqListenerUpdate(backOfficeModel.getBackofficeID()), listener1.completer());
+            vertx.deployVerticle(new RabbitmqListenerUpdate("." + backOfficeModel.getBackofficeID() + ".updates", ""), listener1.completer());
             Future listener2 = Future.future();
-            vertx.deployVerticle(new RabbitmqListenerUpdate(""),listener2.completer() );
+            vertx.deployVerticle(new RabbitmqListenerUpdate("." + backOfficeModel.getBackofficeID(), "." + backOfficeModel.getBackofficeID()),listener2.completer() );
+            Future listener3 = Future.future();
+            vertx.deployVerticle(new RabbitmqInitialRequest(backOfficeModel.getBackofficeID()), listener3);
             futures.add(listener1);
             futures.add(listener2);
-
-            CompositeFuture.all(futures).setHandler(futureRes->{
-               vertx.deployVerticle(new RabbitmqInitialRequest(backOfficeModel.getBackofficeID()));
-            });
         });
     }
 
     private void updateCounter(Message message) {
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
         backOfficeModel.updateCounter(vehicleCounter);
+        graphicViewer.updateText(vehicleCounter);
+        Log.log("updating counter in BackofficeController");
     }
 }

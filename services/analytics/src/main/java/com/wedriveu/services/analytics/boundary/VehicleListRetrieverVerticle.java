@@ -42,6 +42,7 @@ public class VehicleListRetrieverVerticle extends VerticleConsumer{
     }
 
     private void sendToController(Message message) {
+        System.out.println(message.toString());
         VehicleListObject vehicleListObject = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleListObject.class);
         vertx.eventBus().send(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS, VertxJsonMapper.mapInBodyFrom(vehicleListObject));
         Log.log("sent vehicle list to analytics controller");

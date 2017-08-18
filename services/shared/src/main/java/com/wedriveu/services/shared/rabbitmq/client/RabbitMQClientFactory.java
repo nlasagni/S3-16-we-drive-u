@@ -14,7 +14,7 @@ import io.vertx.rabbitmq.RabbitMQClient;
  */
 public class RabbitMQClientFactory {
 
-    public static RabbitMQClient createClient(Vertx vertx) {
+    public static synchronized RabbitMQClient createClient(Vertx vertx) {
         JsonObject config = new JsonObject();
         config.put(Constants.RabbitMQ.ConfigKey.HOST, Constants.RabbitMQ.Broker.HOST);
         config.put(Constants.RabbitMQ.ConfigKey.PASSWORD, Constants.RabbitMQ.Broker.PASSWORD);
