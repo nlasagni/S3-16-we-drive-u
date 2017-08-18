@@ -128,11 +128,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     private JsonObject createRequest() {
         Vehicle vehicleTest = new Vehicle();
         vehicleTest.setDescription(vehicle.getVehicle().description());
-        try {
-            vehicleTest.setImageUrl(new URL(vehicle.getVehicle().imageUrl()));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        vehicleTest.setImageUrl(vehicle.getVehicle().imageUrl());
         vehicleTest.setLicensePlate(vehicle.getVehicle().plate());
         vehicleTest.setStatus(vehicle.getVehicle().getState());
         vehicleTest.setPosition(vehicle.getVehicle().getPosition());
@@ -150,6 +146,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
             registerToService(newLicensePlate);
         }
         vehicle.getVehicle().setState(vehicleConstants.stateAvailable());
+        eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, new JsonObject());
     }
 
     private String calculateNewLicensePlate(VehicleControl vehicle) {

@@ -24,6 +24,21 @@ public interface Constants {
          * The eventbus message key for passing a verticle deploymentId.
          */
         String DEPLOYMENT_ID = "deploymentId";
+
+        /**
+         * The eventbus address used by the vehicle to notify the update verticle to send an update message.
+         */
+        String EVENT_BUS_ADDRESS_UPDATE = "notify.update.publisher";
+
+        /**
+         * The eventbus address used by the vehicle to notify the arrived message verticle to send an "arrived notify".
+         */
+        String EVENT_BUS_ADDRESS_NOTIFY = "notify.arrived.publisher";
+
+        /**
+         * The eventbus address used by vehicle to notify the vehicle's user communication verticle publisher.
+         */
+        String EVENT_BUS_ADDRESS_FOR_USER = "notify.user.publisher";
     }
 
     /**

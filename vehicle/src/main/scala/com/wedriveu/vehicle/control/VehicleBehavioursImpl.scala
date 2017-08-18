@@ -1,10 +1,14 @@
 package com.wedriveu.vehicle.control
 
-import com.wedriveu.shared.util.{Log, Position}
+import com.wedriveu.shared.util.{Constants, Log, Position}
 import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
 import com.wedriveu.vehicle.simulation.{RechargingLatchManager, RechargingLatchManagerImpl}
+import io.vertx.core.Vertx
+import io.vertx.core.eventbus.EventBus
+import io.vertx.core.json.JsonObject
+
 import scala.util.control.Breaks._
 
 /**
@@ -50,10 +54,12 @@ trait VehicleBehaviours {
 }
 
 class VehicleBehavioursImpl(vehicleControl: VehicleControl,
+                            vertx: Vertx,
                             selfDrivingVehicle: SelfDrivingVehicle,
                             stopUi: VehicleStopView,
                             var debugVar:Boolean)
   extends VehicleBehaviours {
+   val eventBus: EventBus = vertx.eventBus()
    val zeroBattery: Double = 0.0
    val batteryThreshold: Double = 20.0
    // This value is given by the mathematical transformation of the speed in Km/h to Km/10s
@@ -104,8 +110,6 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
       val estimatedJourneyTimeInSeconds: Long =
         ((distanceInKm / selfDrivingVehicle.speed) * conversionInSeconds).asInstanceOf[Long]
       stopUi.writeMessageLog(timeInSecondsLog + estimatedJourneyTimeInSeconds)
-      Log.info("CALCOLO MOVIMENTO: ","DEBUGVAR = " + debugVar)
-      Log.info("CALCOLO MOVIMENTO: ","testVar = " + testVar)
       breakable {
         for (time <- timeOfJourney to estimatedJourneyTimeInSeconds by timeStep) {
           if (checkVehicleIsBrokenOrStolen()) {
@@ -132,7 +136,7 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
             if (destinationPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
               <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
               vehicleControl.setUserOnBoard(false)
-              vehicleControl.getArrivedNotifyVerticle().sendArrivedNotify()
+              eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, new JsonObject())
             }
           }
         }
@@ -197,9 +201,15 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
     movementAndPositionChange(userPosition)
     if(userPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
       <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
-      vehicleControl.getVehicleVerticleForUser().enterInVehicle(destinationPosition)
+      eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_FOR_USER, createMessage())
     }
 
+  }
+
+  private def createMessage(): JsonObject = {
+    val jsonObject: JsonObject = new JsonObject()
+    jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(destinationPosition).toString)
+    jsonObject
   }
 
   //This method calculates a random pair of latitude and longitude to simulate the position of the recharging station,
@@ -256,6 +266,7 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
   override def checkVehicleAndSetItBroken(): Unit = {
     val result = selfDrivingVehicle.checkVehicleIsStolenAndSetBroken()
     if(result) {
+      eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, new JsonObject())
       stopUi.writeMessageLog(vehicleSetToBrokenLog)
     }
     else {
@@ -265,6 +276,7 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
 
   override def setVehicleStolen(): Unit = {
     selfDrivingVehicle.setState(VehicleConstants.stateStolen)
+    eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, new JsonObject())
     stopUi.writeMessageLog(vehicleSetToStolenLog)
   }
 

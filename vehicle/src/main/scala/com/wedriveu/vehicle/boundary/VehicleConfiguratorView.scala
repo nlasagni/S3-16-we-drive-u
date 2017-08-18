@@ -168,7 +168,7 @@ trait VehicleConfiguratorView {
           checkBoxYesBreak.isSelected,
           checkBoxYesStolen.isSelected,
           vehiclesCounter,
-          indexForImages)
+          indexForImages).start()
         vehiclesCounter += 1
         indexForImages += 1
       }

@@ -49,7 +49,7 @@ public class VehicleVerticleRegisterImplTest {
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
-    private VehicleStopView stopUi = new VehicleStopViewImpl(1);
+    private VehicleStopView stopUi;
     private boolean debugVar = true;
 
     @Before
@@ -57,8 +57,10 @@ public class VehicleVerticleRegisterImplTest {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
         objectMapper = new ObjectMapper();
+        stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl("http://www.google.com",
+                new VehicleControlImpl(vertx,
+                        "http://www.google.com",
                         "",
                         license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleRegisterImpl(vehicleControl);

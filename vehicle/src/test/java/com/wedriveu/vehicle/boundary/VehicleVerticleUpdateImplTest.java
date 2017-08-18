@@ -45,15 +45,16 @@ public class VehicleVerticleUpdateImplTest {
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
-    private VehicleStopView stopUi = new VehicleStopViewImpl(1);
+    private VehicleStopView stopUi;
     private boolean debugVar = true;
 
     @Before
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
+        stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl("","",license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleUpdateImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -115,7 +116,7 @@ public class VehicleVerticleUpdateImplTest {
                 context.fail(event.getCause());
             });
         });
-        vehicleVerticle.sendUpdate();
+        eventBus.send(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, new JsonObject());
         vertx.setTimer(5000, onTime -> {
             async.complete();});
         async.awaitSuccess();

@@ -111,6 +111,20 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
                 Log.error(TAG, READ_ERROR, e);
             }
         });
+
+        eventBus.consumer(Constants.EventBus.EVENT_BUS_ADDRESS_FOR_USER, message -> {
+            Log.info("VERTICLE USER", "HO RICEVUTO UN MESSAGGIO PER INIZIARE A NOTIFICARE L'UTENTE");
+            JsonObject msg = new JsonObject(message.body().toString());
+            Position destPosition = null;
+            try {
+                destPosition =
+                        objectMapper.readValue(msg.getString(Constants.EventBus.BODY), Position.class);
+                Log.info("VERTICLE USER", "L'OGGETTO RICEVUTO è = " + destPosition.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            enterInVehicle(destPosition);
+        });
     }
 
     @Override

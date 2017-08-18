@@ -1,13 +1,13 @@
 package com.wedriveu.vehicle.control
 
 import com.rabbitmq.client._
-import com.wedriveu.shared.util.{Log, Position}
+import com.wedriveu.shared.util.Position
 import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
 import com.wedriveu.vehicle.simulation.{VehicleEventsObservables, VehicleEventsObservablesImpl}
 import com.weriveu.vehicle.boundary._
-import io.vertx.core.{AsyncResult, DeploymentOptions, Handler, Vertx}
+import io.vertx.core.{DeploymentOptions, Vertx}
 
 /**
   * @author Michele Donati on 28/07/2017.
@@ -53,20 +53,6 @@ trait VehicleControl {
     */
   def setUsername(newUsername: String): Unit
 
-  /** This method permits to retrieve the verticle used for notify the vehicle service that the vehicle is arrived to
-    * destination.
-    *
-    * @return Tthe verticle instance.
-    */
-  def getArrivedNotifyVerticle(): VehicleVerticleArrivedNotifyImpl
-
-  /** This method permits to retrieve the verticle used for mae a request to he user to get inside the vehicle, which is
-    * arrived at user position.
-    *
-    * @return The verticle instance.
-    */
-  def getVehicleVerticleForUser(): VehicleVerticleForUserImpl
-
   /** This method permits to retrieve the variable which indicates if the user is on board or not.
     *
     * @return True if the user is on board, False otherwise.
@@ -90,9 +76,16 @@ trait VehicleControl {
     * @return The behaviours instance.
     */
   def getBehavioursControl(): VehicleBehaviours
+
+  /** This method permits to unsubsribe the control system to vehicle broken events. */
+  def unsubscribeToBrokenEvents(): Unit
+
+  /** This method permits to unsubsribe the control system to vehicle stolen events. */
+  def unsubscribeToStolenEvents(): Unit
 }
 
-class VehicleControlImpl(imageUrl: String,
+class VehicleControlImpl(vertx: Vertx,
+                         imageUrl: String,
                          description: String,
                          license: String,
                          state: String,
@@ -104,7 +97,7 @@ class VehicleControlImpl(imageUrl: String,
   val vehicleGiven : SelfDrivingVehicle =
     new SelfDrivingVehicle(imageUrl, description, license, state, position, battery, speed)
   val vehicleEventsObservables: VehicleEventsObservables = new VehicleEventsObservablesImpl
-  val vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(this, vehicleGiven, stopUi, debugVar)
+  val vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(this, vertx, vehicleGiven, stopUi, debugVar)
   val received: String = " [x] Received '"
   val awaiting: String = " [x] Awaiting requests"
   var kilometersToDo: Double = .0
@@ -123,7 +116,6 @@ class VehicleControlImpl(imageUrl: String,
   stopUi.setVehicleAssociated(this)
 
   override def startVehicleEngine(): Unit = {
-    val vertx: Vertx = Vertx.vertx()
     vehicleVerticleCanDrive = new VehicleVerticleCanDriveImpl(this)
     vertx.deployVerticle(vehicleVerticleCanDrive, new DeploymentOptions().setWorker(true))
 
@@ -139,11 +131,11 @@ class VehicleControlImpl(imageUrl: String,
     vehicleVerticleUpdate = new VehicleVerticleUpdateImpl(this)
     vertx.deployVerticle(vehicleVerticleUpdate, new DeploymentOptions().setWorker(true))
 
-    vehicleVerticleRegister = new VehicleVerticleRegisterImpl(this)
-    vertx.deployVerticle(vehicleVerticleRegister, new DeploymentOptions().setWorker(true))
-
     vehicleVerticleForUser = new VehicleVerticleForUserImpl(this)
     vertx.deployVerticle(vehicleVerticleForUser, new DeploymentOptions().setWorker(true))
+
+    vehicleVerticleRegister = new VehicleVerticleRegisterImpl(this)
+    vertx.deployVerticle(vehicleVerticleRegister, new DeploymentOptions().setWorker(true))
   }
 
   private def executeBehaviour(callback:() => Unit) = callback()
@@ -173,10 +165,6 @@ class VehicleControlImpl(imageUrl: String,
     })
   }
 
-  override def getArrivedNotifyVerticle(): VehicleVerticleArrivedNotifyImpl = vehicleVerticleArrivedNotify
-
-  override def getVehicleVerticleForUser(): VehicleVerticleForUserImpl = vehicleVerticleForUser
-
   override def getUsername(): String = username
 
   override def setUsername(newUsername: String): Unit = {
@@ -204,13 +192,16 @@ class VehicleControlImpl(imageUrl: String,
   override def changePositionUponBooking(userPosition: Position,
                                          destinationPosition: Position,
                                          notRealisticVar: Boolean): Unit = {
-    executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition, notRealisticVar)
     if (!(vehicleGiven.getState().equals(VehicleConstants.stateRecharging))
-      && !(vehicleGiven.getState().equals(VehicleConstants.stateBroken))
-      && !(vehicleGiven.getState().equals(VehicleConstants.stateStolen))
-      && !userOnBoard
-      && !debugVar) {
-      executeBehaviour(vehicleBehaviours.goToRecharge)
+      || !(vehicleGiven.getState().equals(VehicleConstants.stateBroken))) {
+      executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition, notRealisticVar)
+      if (!(vehicleGiven.getState().equals(VehicleConstants.stateRecharging))
+        && !(vehicleGiven.getState().equals(VehicleConstants.stateBroken))
+        && !(vehicleGiven.getState().equals(VehicleConstants.stateStolen))
+        && !userOnBoard
+        && !debugVar) {
+        executeBehaviour(vehicleBehaviours.goToRecharge)
+      }
     }
   }
 
@@ -219,5 +210,13 @@ class VehicleControlImpl(imageUrl: String,
   }
 
   override def getBehavioursControl(): VehicleBehaviours = vehicleBehaviours
+
+  override def unsubscribeToBrokenEvents(): Unit = {
+    vehicleEventsObservables.unsubscribeToBrokenEvents()
+  }
+
+  override def unsubscribeToStolenEvents(): Unit = {
+    vehicleEventsObservables.unsubscribeToStolenEvents()
+  }
 
 }

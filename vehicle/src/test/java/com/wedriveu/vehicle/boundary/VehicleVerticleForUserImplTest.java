@@ -71,7 +71,7 @@ public class VehicleVerticleForUserImplTest {
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 80.0;
-    private VehicleStopView stopUi = new VehicleStopViewImpl(1);
+    private VehicleStopView stopUi;
     private boolean debugVar = true;
 
     @Before
@@ -79,8 +79,9 @@ public class VehicleVerticleForUserImplTest {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
         checkCounter = 10;
+        stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl("","",license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
         vehicleControl.setUsername("Michele");
         vehicleVerticleDriveCommand = new VehicleVerticleDriveCommandImpl(vehicleControl, false);
         vehicleVerticleForUser = new VehicleVerticleForUserImpl(vehicleControl);
@@ -139,8 +140,6 @@ public class VehicleVerticleForUserImplTest {
                     if(onPublish.succeeded()) {
                         while(!(userPosition.getDistanceInKm(vehicleControl.getVehicle().getPosition())
                                 <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS())){}
-                        vehicleVerticleForUser
-                                .enterInVehicle(new Position(randomLatitudeDestination, randomLongitudeDestination));
                         checkUserRequest(context, async);
                     }
                     context.assertTrue(onPublish.succeeded());

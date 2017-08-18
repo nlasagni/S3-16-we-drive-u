@@ -64,15 +64,16 @@ public class VehicleChangePositionAndNotifyTest {
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 80.0;
-    private VehicleStopView stopUi = new VehicleStopViewImpl(1);
+    private VehicleStopView stopUi;
     private boolean debugVar = true;
 
     @Before
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
+        stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl("","",license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
         vehicleControl.setUserOnBoard(true);
         vehicleVerticleDriveCommand = new VehicleVerticleDriveCommandImpl(vehicleControl, false);
         vehicleVerticleArrivedNotify = new VehicleVerticleArrivedNotifyImpl(vehicleControl);
