@@ -1,7 +1,7 @@
 package com.wedriveu.services.analytics.entity;
 
 import com.wedriveu.services.shared.entity.AnalyticsVehicle;
-import com.wedriveu.services.shared.entity.VehicleCounter;
+import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 
 import java.util.Optional;
 

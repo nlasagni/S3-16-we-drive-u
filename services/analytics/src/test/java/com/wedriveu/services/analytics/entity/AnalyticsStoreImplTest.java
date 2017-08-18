@@ -4,7 +4,7 @@ package com.wedriveu.services.analytics.entity;
 import com.wedriveu.services.shared.entity.AnalyticsVehicle;
 import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
 import com.wedriveu.services.shared.entity.JsonFileEntityListStoreStrategyImpl;
-import com.wedriveu.services.shared.entity.VehicleCounter;
+import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import org.junit.Before;
 import org.junit.Test;
 
