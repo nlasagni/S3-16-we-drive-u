@@ -101,7 +101,9 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
   //the coordinates reached during the journey.
   // The Thread.sleep in the method is useful to render the simulation real and for testing observables.
   override def movementAndPositionChange(position: Position): Unit = {
-    if(checkVehicleIsBrokenOrStolen()){}
+    if(checkVehicleIsBrokenOrStolen()){
+      return
+    }
     else {
       val distanceInKm: Double = selfDrivingVehicle.position.getDistanceInKm(position)
       stopUi.writeMessageLog(distanceInKmLog + distanceInKm)
