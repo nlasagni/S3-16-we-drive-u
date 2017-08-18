@@ -1,9 +1,8 @@
 package com.wedriveu.services.analytics.entity
 
 
-import com.wedriveu.services.shared.entity.AnalyticsVehicle
+import com.wedriveu.services.shared.model.{AnalyticsVehicle, Vehicle}
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter
-import com.wedriveu.services.shared.entity.Vehicle
 
 import scala.collection.JavaConverters._
 

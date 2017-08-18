@@ -31,7 +31,7 @@ public class VehicleCounter {
         recharging++;
     }
 
-    public int getStolen() {
+    public int getNetworkIssues() {
         return stolen;
     }
 
@@ -62,7 +62,7 @@ public class VehicleCounter {
         if (getBroken() != that.getBroken()) return false;
         if (getBooked() != that.getBooked()) return false;
         if (getRecharging() != that.getRecharging()) return false;
-        return getStolen() == that.getStolen();
+        return getNetworkIssues() == that.getNetworkIssues();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class VehicleCounter {
         result = 31 * result + getBroken();
         result = 31 * result + getBooked();
         result = 31 * result + getRecharging();
-        result = 31 * result + getStolen();
+        result = 31 * result + getNetworkIssues();
         return result;
     }
 

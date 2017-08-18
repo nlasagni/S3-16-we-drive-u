@@ -130,15 +130,15 @@ trait VehicleConfiguratorView {
 
     override def actionPerformed(e: ActionEvent): Unit = e.getActionCommand match {
       case command if command == startCommand => if(batteryTextField.getText.isEmpty
-        || ((batteryTextField.getText.toDouble) < valueUnderZero)
-        || ((batteryTextField.getText.toDouble) > valueOverOneHundred) ){
+        || (batteryTextField.getText.toDouble < valueUnderZero)
+        || (batteryTextField.getText.toDouble > valueOverOneHundred) ){
         JOptionPane.showMessageDialog(this, errorInBatteryValueMessage,
           errorInBatteryValueMessageTitle,
           JOptionPane.ERROR_MESSAGE)
       }
       else if(speedTextField.getText.isEmpty
-        || ((speedTextField.getText.toDouble) < speedMinorBound)
-        || ((speedTextField.getText.toDouble) > speedMaxBound)) {
+        || (speedTextField.getText.toDouble < speedMinorBound)
+        || (speedTextField.getText.toDouble > speedMaxBound)) {
         JOptionPane.showMessageDialog(this, errorInSpeedValueMessage,
           errorInSpeedValueMessageTitle,
           JOptionPane.ERROR_MESSAGE)
@@ -168,7 +168,7 @@ trait VehicleConfiguratorView {
           checkBoxYesBreak.isSelected,
           checkBoxYesStolen.isSelected,
           vehiclesCounter,
-          indexForImages)
+          indexForImages).start()
         vehiclesCounter += 1
         indexForImages += 1
       }

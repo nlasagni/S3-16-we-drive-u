@@ -4,7 +4,7 @@ package com.wedriveu.services.authentication.entity;
  * Created by Michele on 12/07/2017.
  */
 
-import com.wedriveu.services.shared.entity.User;
+import com.wedriveu.services.shared.model.User;
 
 /**
  * @author Michele Donati

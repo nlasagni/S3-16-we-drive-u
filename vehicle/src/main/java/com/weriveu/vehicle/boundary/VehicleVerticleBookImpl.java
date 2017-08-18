@@ -2,12 +2,13 @@ package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.shared.rabbitmq.message.VehicleBookRequest;
-import com.wedriveu.shared.rabbitmq.message.VehicleBookResponse;
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
+import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
+import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
@@ -98,11 +99,11 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
 
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-            VehicleBookResponse response = null;
+            BookVehicleResponse response = null;
             try {
                 JsonObject message = new JsonObject(msg.body().toString());
-                VehicleBookRequest bookRequest =
-                        objectMapper.readValue(message.getString(Constants.EventBus.BODY), VehicleBookRequest.class);
+                VehicleReservationRequest bookRequest =
+                        objectMapper.readValue(message.getString(Constants.EventBus.BODY), VehicleReservationRequest.class);
                 response = book(bookRequest);
             } catch (IOException e) {
                 Log.error(TAG, READ_ERROR, e);
@@ -111,7 +112,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
         });
     }
 
-    private void sendResponse(VehicleBookResponse response){
+    private void sendResponse(BookVehicleResponse response){
         try {
             String responseString = objectMapper.writeValueAsString(response);
             JsonObject responseJson = new JsonObject();
@@ -123,6 +124,10 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
                         if (!onPublish.succeeded()) {
                             Log.error(TAG, SEND_ERROR, onPublish.cause());
                         }
+                        vehicle.getVehicle().setState(VehicleConstants$.MODULE$.stateBooked());
+                        eventBus.send(
+                                String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
+                                new JsonObject());
                     });
         }catch (JsonProcessingException e) {
             Log.error(TAG, SEND_ERROR, e);
@@ -130,13 +135,14 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
     }
 
     @Override
-    public VehicleBookResponse book(VehicleBookRequest request) throws IllegalStateException {
+    public BookVehicleResponse book(VehicleReservationRequest request) throws IllegalStateException {
         if (checkIllegalState()) {
             throw new IllegalStateException(ENGINE_ILLEGAL_STATE);
         }
         vehicle.setUsername(request.getUsername());
-        VehicleBookResponse response = new VehicleBookResponse();
+        BookVehicleResponse response = new BookVehicleResponse();
         response.setBooked(vehicle.getVehicle().getState().equals(Vehicle.STATUS_AVAILABLE));
+        response.setSpeed(vehicle.getVehicle().speed());
         return response;
     }
 

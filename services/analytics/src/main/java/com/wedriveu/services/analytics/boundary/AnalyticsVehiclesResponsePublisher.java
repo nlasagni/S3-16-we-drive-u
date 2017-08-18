@@ -1,7 +1,6 @@
 package com.wedriveu.services.analytics.boundary;
 
 import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
-import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Constants;

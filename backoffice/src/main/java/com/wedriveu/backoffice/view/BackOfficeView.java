@@ -55,7 +55,7 @@ public class BackOfficeView extends JFrame{
                 "Broken: " + vehicleCounter.getBroken() + "<br>" +
                 "Booked: " + vehicleCounter.getBooked() + "<br>" +
                 "Recharging: " + vehicleCounter.getRecharging() + "<br>" +
-                "Network Issues: " + vehicleCounter.getStolen() + "<br>" +
+                "Network Issues: " + vehicleCounter.getNetworkIssues() + "<br>" +
                 "</body></html>");
     }
 

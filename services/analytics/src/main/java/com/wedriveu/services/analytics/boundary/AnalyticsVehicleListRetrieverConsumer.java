@@ -1,9 +1,9 @@
 package com.wedriveu.services.analytics.boundary;
 
+import com.wedriveu.services.shared.model.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Log;
-import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;

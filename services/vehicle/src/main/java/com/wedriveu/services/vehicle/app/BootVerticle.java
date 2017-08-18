@@ -1,7 +1,7 @@
 package com.wedriveu.services.vehicle.app;
 
 import com.wedriveu.services.shared.rabbitmq.ExchangeManagerVerticle;
-import com.wedriveu.services.shared.rabbitmq.SharedMessages;
+import com.wedriveu.services.shared.message.SharedMessages;
 import com.wedriveu.services.vehicle.boundary.nearest.NearestConsumerVerticle;
 import com.wedriveu.services.vehicle.control.VerticleDeployer;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;

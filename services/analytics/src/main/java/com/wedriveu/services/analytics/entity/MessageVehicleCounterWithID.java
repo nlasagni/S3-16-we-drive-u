@@ -3,6 +3,7 @@ package com.wedriveu.services.analytics.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 
+
 /**
  * @author Stefano Bernagozzi
  */

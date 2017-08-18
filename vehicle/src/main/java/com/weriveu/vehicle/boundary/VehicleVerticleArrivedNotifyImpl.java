@@ -6,6 +6,7 @@ import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
@@ -20,6 +21,7 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
     private static final String SEND_ERROR = "Error occurred while sending request.";
 
     private RabbitMQClient rabbitMQClient;
+    private EventBus eventBus;
 
     public VehicleVerticleArrivedNotifyImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
@@ -27,6 +29,7 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
+        eventBus = vertx.eventBus();
         startService(startFuture);
     }
 
@@ -40,12 +43,20 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
         Future<Void> endFuture = Future.future();
         startClient(initFuture);
         initFuture.compose(v -> {
+            registerConsumer();
             future.complete();
         }, endFuture);
     }
 
     private void startClient(Future<Void> future) {
         rabbitMQClient.start(future.completer());
+    }
+
+    private void registerConsumer(){
+        eventBus.consumer(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, vehicle.getVehicle().plate()),
+                message -> {
+            sendArrivedNotify();
+        });
     }
 
     @Override

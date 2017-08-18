@@ -4,8 +4,10 @@ import com.wedriveu.services.analytics.entity.AnalyticsStore;
 import com.wedriveu.services.analytics.entity.AnalyticsStoreImpl;
 import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
 import com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithmImpl;
-import com.wedriveu.services.shared.entity.*;
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.services.shared.model.AnalyticsVehicle;
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.services.shared.model.VehicleListObject;
+import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
@@ -14,6 +16,7 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 import static com.wedriveu.shared.util.Constants.*;
+
 
 /**
  * @author Stefano Bernagozzi

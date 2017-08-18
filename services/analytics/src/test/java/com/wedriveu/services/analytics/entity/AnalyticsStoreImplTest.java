@@ -1,10 +1,11 @@
 package com.wedriveu.services.analytics.entity;
 
 
-import com.wedriveu.services.shared.entity.AnalyticsVehicle;
-import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
-import com.wedriveu.services.shared.entity.JsonFileEntityListStoreStrategyImpl;
+
+import com.wedriveu.services.shared.model.AnalyticsVehicle;
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.services.shared.store.EntityListStoreStrategy;
+import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class AnalyticsStoreImplTest {
                 counter.getBooked() == bookedVehicles &&
                 counter.getBroken() == brokenVehicles &&
                 counter.getRecharging() == rechargingVehicles &&
-                counter.getStolen() == stolenVehicles);
+                counter.getNetworkIssues() == stolenVehicles);
 
     }
 

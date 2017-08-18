@@ -1,7 +1,7 @@
 package com.weriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.shared.rabbitmq.message.RegisterToServiceRequest;
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.RegisterToServiceResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
@@ -14,6 +14,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -122,10 +123,17 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     }
 
     private JsonObject createRequest() {
-        RegisterToServiceRequest request = new RegisterToServiceRequest();
-        request.setLicense(vehicle.getVehicle().plate());
+        Vehicle vehicleTest = new Vehicle();
+        vehicleTest.setDescription(vehicle.getVehicle().description());
+        vehicleTest.setImageUrl(vehicle.getVehicle().imageUrl());
+        vehicleTest.setLicensePlate(vehicle.getVehicle().plate());
+        vehicleTest.setStatus(vehicle.getVehicle().getState());
+        vehicleTest.setPosition(vehicle.getVehicle().getPosition());
+        vehicleTest.setLastUpdate(new Date());
+        vehicleTest.setName("");
+
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(request).toString());
+        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(vehicleTest).toString());
         return jsonObject;
     }
 
@@ -135,6 +143,8 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
             registerToService(newLicensePlate);
         }
         vehicle.getVehicle().setState(vehicleConstants.stateAvailable());
+        eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
+                new JsonObject());
     }
 
     private String calculateNewLicensePlate(VehicleControl vehicle) {

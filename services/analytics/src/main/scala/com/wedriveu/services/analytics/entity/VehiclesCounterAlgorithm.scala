@@ -1,6 +1,6 @@
 package com.wedriveu.services.analytics.entity
 
-import com.wedriveu.services.shared.entity.AnalyticsVehicle
+import com.wedriveu.services.shared.model.AnalyticsVehicle
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter
 
 /**

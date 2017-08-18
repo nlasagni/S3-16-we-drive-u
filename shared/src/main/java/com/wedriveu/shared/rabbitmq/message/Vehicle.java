@@ -1,4 +1,4 @@
-package com.wedriveu.services.shared.entity;
+package com.wedriveu.shared.rabbitmq.message;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,7 +31,7 @@ public class Vehicle {
     private Date lastUpdate;
     private String name;
     private String description;
-    private URL imageUrl;
+    private String imageUrl;
     private String notEligibleVehicleFound;
 
     public Vehicle(@JsonProperty String licensePlate,
@@ -40,7 +40,7 @@ public class Vehicle {
                    @JsonProperty Date lastUpdate,
                    @JsonProperty String name,
                    @JsonProperty String description,
-                   @JsonProperty URL imageUrl) {
+                   @JsonProperty String imageUrl) {
         this.licensePlate = licensePlate;
         this.status = status;
         this.position = position;
@@ -87,11 +87,11 @@ public class Vehicle {
         this.description = description;
     }
 
-    public URL getImageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(URL imageUrl) {
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 

@@ -1,12 +1,12 @@
 package com.wedriveu.services.analytics.vehicleService;
 
-import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.entity.VehicleListObject;
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.services.shared.model.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 

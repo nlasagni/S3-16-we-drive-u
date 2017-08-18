@@ -1,5 +1,7 @@
 package com.wedriveu.services.shared.entity;
 
+import com.wedriveu.services.shared.model.Vehicle;
+
 import java.util.List;
 
 /**
