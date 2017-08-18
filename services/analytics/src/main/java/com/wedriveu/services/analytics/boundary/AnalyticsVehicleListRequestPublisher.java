@@ -11,7 +11,7 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_V
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleListRequestVerticle extends VerticlePublisher {
+public class AnalyticsVehicleListRequestPublisher extends VerticlePublisher {
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
@@ -21,11 +21,9 @@ public class VehicleListRequestVerticle extends VerticlePublisher {
             startFuture.complete();
             startConsumer();
         });
-        //Log.log("future VehicleListRequestVerticle complete");
     }
 
     private void startConsumer() {
-        //Log.log("started vertx eventbus consumer in VehicleListRequestVerticle, attending start to receive");
         vertx.eventBus().consumer(ANALYTICS_VEHICLE_LIST_REQUEST_EVENTBUS, this::requestVehicleListToVehicleService);
     }
 
@@ -33,6 +31,5 @@ public class VehicleListRequestVerticle extends VerticlePublisher {
         JsonObject dataToUser = new JsonObject();
         dataToUser.put(EventBus.BODY, VEHICLE_REQUEST_ALL_MESSAGE);
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,ANALYTICS_VEHICLE_REQUEST_ALL,dataToUser, published -> { });
-        //Log.log("sent request for all vehicles to vehicle service in VehicleListRequestVerticle");
     }
 }

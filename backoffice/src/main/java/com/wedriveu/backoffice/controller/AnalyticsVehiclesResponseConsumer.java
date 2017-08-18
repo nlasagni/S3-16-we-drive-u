@@ -14,10 +14,10 @@ import static com.wedriveu.shared.util.Constants.*;
 /**
  * @author Stefano Bernagozzi
  */
-public class RabbitmqListenerUpdate extends VerticleConsumer{
+public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer{
     String backofficeId;
 
-    public RabbitmqListenerUpdate(String queueName, String backofficeId ) {
+    public AnalyticsVehiclesResponseConsumer(String queueName, String backofficeId ) {
         super(Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES +  queueName );
         this.backofficeId = backofficeId;
     }
@@ -29,9 +29,9 @@ public class RabbitmqListenerUpdate extends VerticleConsumer{
         futureConsumer.setHandler(v->{
             if (v.succeeded()) {
                 futureRetriever.complete();
-                Log.log("started future retriever RabbitmqListenerUpdate");
+                Log.log("started future retriever AnalyticsVehiclesResponseConsumer");
             } else {
-                Log.error("RabbitmqListenerUpdate", v.cause().getLocalizedMessage(), v.cause());
+                Log.error("AnalyticsVehiclesResponseConsumer", v.cause().getLocalizedMessage(), v.cause());
                 futureRetriever.fail(v.cause());
             }
         });
@@ -53,9 +53,8 @@ public class RabbitmqListenerUpdate extends VerticleConsumer{
     }
 
     private void sendUpdatesToController(Message message) {
-        Log.log("RabbitmqListenerUpdate received updates and send to controller");
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
         vertx.eventBus().send(BACKOFFICE_CONTROLLER_EVENTBUS, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
-        Log.log("RabbitmqListenerUpdate received updates and send to controller");
+        Log.log("AnalyticsVehiclesResponseConsumer received updates and send to controller");
     }
 }

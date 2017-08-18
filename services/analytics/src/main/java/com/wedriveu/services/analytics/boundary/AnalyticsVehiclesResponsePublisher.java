@@ -15,7 +15,7 @@ import static com.wedriveu.shared.util.Constants.*;
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleCounterSendToBackOfficeVerticle extends VerticlePublisher{
+public class AnalyticsVehiclesResponsePublisher extends VerticlePublisher{
     @Override
     public void start(Future<Void> startFuture) throws Exception {
         Future future = Future.future();
@@ -34,18 +34,9 @@ public class VehicleCounterSendToBackOfficeVerticle extends VerticlePublisher{
         MessageVehicleCounterWithID messageVehicleCounterWithID = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), MessageVehicleCounterWithID.class);
         JsonObject dataToUser = VertxJsonMapper.mapInBodyFrom(messageVehicleCounterWithID.getVehicleCounter());
         if (messageVehicleCounterWithID.getBackofficeID().equals(""))   {
-            System.out.println("sono qua");
-            publish(Constants.RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES ,dataToUser, null);
+            publish(Constants.RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES ,dataToUser, res-> {});
         } else {
-            System.out.println("sono qua 2");
-            publish(Constants.RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES + "." + messageVehicleCounterWithID.getBackofficeID(),dataToUser, res-> {
-                if (res.succeeded()) {
-                    Log.log("succeded");
-                }
-                else {
-                    Log.error("error", res.cause().getLocalizedMessage(), res.cause());
-                }
-            });
+            publish(Constants.RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES + "." + messageVehicleCounterWithID.getBackofficeID(),dataToUser, res->{});
         }
     }
 }

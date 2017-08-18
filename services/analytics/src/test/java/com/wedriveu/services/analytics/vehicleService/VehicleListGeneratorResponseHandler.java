@@ -1,4 +1,4 @@
-package com.wedriveu.services.analytics.vehicleServiceFake;
+package com.wedriveu.services.analytics.vehicleService;
 
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.entity.VehicleListObject;
@@ -13,7 +13,6 @@ import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_VEHICLES_RESPONSE_ALL;
 
 /**

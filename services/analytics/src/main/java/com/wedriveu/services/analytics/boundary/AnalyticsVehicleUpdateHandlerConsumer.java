@@ -17,8 +17,8 @@ import static com.wedriveu.shared.util.Constants.*;
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleUpdateHandlerVerticle extends VerticleConsumer{
-    public VehicleUpdateHandlerVerticle () {
+public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer{
+    public AnalyticsVehicleUpdateHandlerConsumer() {
         super(Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE);
     }
 
@@ -48,7 +48,6 @@ public class VehicleUpdateHandlerVerticle extends VerticleConsumer{
     private void sendToController(Message message) {
         Log.log("received vehicle list");
         UpdateToService vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), UpdateToService.class);
-        Log.log("vehicles " + vehicle.toString());
         vertx.eventBus().send(ANALYTCS_VEHICLE_COUNTER_UPDATE_EVENTBUS, VertxJsonMapper.mapInBodyFrom(vehicle));
     }
 

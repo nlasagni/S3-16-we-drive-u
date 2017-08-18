@@ -1,4 +1,4 @@
-package com.wedriveu.services.analytics.vehicleServiceFake;
+package com.wedriveu.services.analytics.vehicleService;
 
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;

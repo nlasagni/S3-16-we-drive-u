@@ -1,8 +1,6 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.analytics.vehicleServiceFake.VehicleUpdaterFake;
-import com.wedriveu.services.shared.entity.VehicleListObject;
-import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
+import com.wedriveu.services.analytics.vehicleService.VehicleUpdater;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
@@ -22,7 +20,7 @@ import static org.junit.Assert.*;
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleUpdateHandlerVerticleTest {
+public class AnalyticsVehicleUpdateHandlerConsumerTest {
     private List<Future> futures;
     private Vertx vertx;
 
@@ -31,11 +29,11 @@ public class VehicleUpdateHandlerVerticleTest {
         vertx = Vertx.vertx();
         futures = new ArrayList<>();
         Future retrieveFuture = Future.future();
-        vertx.deployVerticle(new VehicleUpdaterFake(), retrieveFuture.completer());
+        vertx.deployVerticle(new VehicleUpdater(), retrieveFuture.completer());
         futures.add(retrieveFuture);
 
         Future updaterFuture = Future.future();
-        vertx.deployVerticle(new VehicleUpdateHandlerVerticle(),updaterFuture.completer());
+        vertx.deployVerticle(new AnalyticsVehicleUpdateHandlerConsumer(),updaterFuture.completer());
         futures.add(updaterFuture);
     }
 

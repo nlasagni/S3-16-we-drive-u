@@ -13,8 +13,8 @@ import static com.wedriveu.shared.util.Constants.*;
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleCounterRequestHandlerVerticle extends VerticleConsumer{
-    public VehicleCounterRequestHandlerVerticle() {
+public class AnalyticsVehicleRequestConsumer extends VerticleConsumer{
+    public AnalyticsVehicleRequestConsumer() {
         super(Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ ROUTING_KEY_ANALYTICS_REQUEST_VEHICLES);
     }
 
@@ -24,7 +24,7 @@ public class VehicleCounterRequestHandlerVerticle extends VerticleConsumer{
         Future<Void> futureConsumer = Future.future();
         futureConsumer.setHandler(v->{
             if (v.succeeded()) {
-                Log.log("future in VehicleCounterRequestHandlerVerticle completed");
+                Log.log("future in AnalyticsVehicleRequestConsumer completed");
                 futureRetriever.complete();
             } else {
                 Log.error("future consumer handler", v.cause().getLocalizedMessage(), v.cause());
@@ -36,14 +36,13 @@ public class VehicleCounterRequestHandlerVerticle extends VerticleConsumer{
 
     @Override
     public void registerConsumer(String eventBus) {
-        Log.log("started vertx eventbus consumer in VehicleCounterRequestHandlerVerticle, attending start to receive");
+        Log.log("started vertx eventbus consumer in AnalyticsVehicleRequestConsumer, attending start to receive");
         vertx.eventBus().consumer(eventBus, this::sendToController);
     }
 
     private void sendToController(Message message) {
         JsonObject dataToUser = new JsonObject(message.body().toString());
         String backofficeId = dataToUser.getValue(EventBus.BODY).toString();
-        Log.log(backofficeId);
         dataToUser.put(Constants.EventBus.BODY, backofficeId);
         vertx.eventBus().send(ANALYTICS_VEHICLE_COUNTER_REQUEST_EVENTBUS, dataToUser);
     }

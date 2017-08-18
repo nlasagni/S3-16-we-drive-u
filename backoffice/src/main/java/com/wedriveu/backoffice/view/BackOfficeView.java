@@ -9,34 +9,39 @@ import java.awt.event.ActionListener;
 /**
  * @author Stefano Bernagozzi
  */
-public class GraphicViewer extends JFrame{
+public class BackOfficeView extends JFrame{
     private int maxX = 1000;
     private int maxY = 500;
     private JLabel textLabel;
     private JTextField textField;
     private JButton button;
+    private final int width = 175;
+    private String backOffice = "Backoffice";
+    private String labelDefaultText = "Loading cars Counters";
+    private String textFieldDefaultText = "backoffice1";
+    private String buttonText = "Register backoffice";
 
-    public GraphicViewer() {
+    public BackOfficeView() {
         createAndShowGUI();
     }
 
     private void createAndShowGUI() {
         //Create and set up the window.
-        setTitle("FrameDemo");
+        setTitle(backOffice);
         setSize(maxX, maxY);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        textLabel = new JLabel("Loading cars Counters");
-        textLabel.setPreferredSize(new Dimension(175, 120));
+        textLabel = new JLabel(labelDefaultText);
+        textLabel.setPreferredSize(new Dimension(width, 120));
         getContentPane().add(textLabel, BorderLayout.PAGE_START);
 
-        textField = new JTextField("backoffice1");
-        textField.setPreferredSize(new Dimension(175, 50));
+        textField = new JTextField(textFieldDefaultText);
+        textField.setPreferredSize(new Dimension(width, 50));
         getContentPane().add(textField, BorderLayout.CENTER);
 
-        button = new JButton("Register backoffice");
-        button.setPreferredSize(new Dimension(175, 50));
+        button = new JButton(buttonText);
+        button.setPreferredSize(new Dimension(width, 50));
         getContentPane().add(button, BorderLayout.PAGE_END);
 
         //Display the window.

@@ -44,26 +44,13 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     protected void startConsumerWithFuture(String exchange, String routingKey, String eventBusAddress, Future future)
             throws IOException, TimeoutException {
         startConsumer(onStart -> {
-            Log.log("exchange " + exchange);
-            Log.log("routing key  " + routingKey);
-            Log.log("event bus address " +  eventBusAddress);
-
-            if (onStart.succeeded()) {
-                Log.log("correctly started " + queueName);
-            } else {
-                Log.error("on start " + queueName, onStart.cause().getLocalizedMessage(), onStart.cause());
-            }
-
             declareQueue(onQueue -> {
                 if (onQueue.succeeded()) {
-                    Log.log("on queue succeded " + queueName);
                     bindQueueToExchange(exchange,
                             routingKey, onBind -> {
                                 if (onBind.succeeded()) {
-                                    Log.log("bind succeded " + queueName);
                                     registerConsumer(eventBusAddress);
                                     basicConsume(eventBusAddress);
-                                    Log.log("future succeded");
                                     if (future != null) {
                                         future.complete();
                                     }

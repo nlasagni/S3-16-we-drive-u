@@ -1,6 +1,6 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.analytics.vehicleServiceFake.VehicleListGeneratorRequestHandler;
+import com.wedriveu.services.analytics.vehicleService.VehicleListGeneratorRequestHandler;
 import com.wedriveu.services.shared.entity.Vehicle;
 import com.wedriveu.services.shared.entity.VehicleListObject;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleListRetrieverVerticleTest {
+public class AnalyticsVehicleListRetrieverConsumerTest {
     private List<Future> futures;
     private Vertx vertx;
     private VehicleListObject vehicleListObject;
@@ -35,7 +35,7 @@ public class VehicleListRetrieverVerticleTest {
         vertx = Vertx.vertx();
         futures = new ArrayList<>();
         Future retrieveFuture = Future.future();
-        vertx.deployVerticle(new VehicleListRetrieverVerticle(), retrieveFuture.completer());
+        vertx.deployVerticle(new AnalyticsVehicleListRetrieverConsumer(), retrieveFuture.completer());
         futures.add(retrieveFuture);
 
         Future generatorRequestHandlerFuture = Future.future();

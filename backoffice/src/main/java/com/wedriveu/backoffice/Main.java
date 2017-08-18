@@ -1,8 +1,6 @@
 package com.wedriveu.backoffice;
 
 import com.wedriveu.backoffice.controller.BackofficeController;
-import com.wedriveu.backoffice.view.GraphicViewer;
-import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import com.wedriveu.shared.util.Log;
 import io.vertx.core.Vertx;
 
