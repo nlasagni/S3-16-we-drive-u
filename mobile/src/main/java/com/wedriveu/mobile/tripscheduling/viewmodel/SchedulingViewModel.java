@@ -9,7 +9,7 @@ package com.wedriveu.mobile.tripscheduling.viewmodel;
  */
 public interface SchedulingViewModel {
 
-    String TAG = SchedulingViewModel.class.getSimpleName();
+    String ID = SchedulingViewModel.class.getSimpleName();
 
     /**
      * handles the button click to trigger the vehicle selection process

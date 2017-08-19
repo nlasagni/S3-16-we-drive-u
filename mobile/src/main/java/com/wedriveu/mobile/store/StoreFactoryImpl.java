@@ -28,4 +28,9 @@ public class StoreFactoryImpl implements StoreFactory {
         return new VehicleStoreImpl(context);
     }
 
+    @Override
+    public BookingStore createBookingStore(Context context) {
+        return new BookingStoreImpl(context);
+    }
+
 }

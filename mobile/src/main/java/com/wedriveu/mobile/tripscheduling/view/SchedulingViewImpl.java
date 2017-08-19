@@ -87,7 +87,7 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
     private SchedulingViewModel getViewModel() {
         ComponentFinder componentFinder = (ComponentFinder) getActivity();
         if (componentFinder != null) {
-            return (SchedulingViewModelImpl) componentFinder.getViewModel(SchedulingViewModel.TAG);
+            return (SchedulingViewModelImpl) componentFinder.getViewModel(SchedulingViewModel.ID);
         }
         return null;
     }

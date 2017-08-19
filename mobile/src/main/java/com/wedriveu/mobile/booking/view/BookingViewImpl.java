@@ -1,5 +1,7 @@
 package com.wedriveu.mobile.booking.view;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,8 +16,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
-import com.wedriveu.mobile.booking.presenter.BookingPresenter;
-import com.wedriveu.mobile.booking.presenter.model.BookingPresentationModel;
+import com.wedriveu.mobile.booking.viewmodel.BookingViewModel;
+import com.wedriveu.mobile.booking.viewmodel.model.BookingPresentationModel;
 
 /**
  * @author Nicola Lasagni on 29/07/2017.
@@ -70,14 +72,14 @@ public class BookingViewImpl extends Fragment implements BookingView {
     }
 
     private void acceptBooking() {
-        BookingPresenter presenter = getPresenter();
+        BookingViewModel presenter = getViewModel();
         if (presenter != null) {
             presenter.onAcceptButtonClick();
         }
     }
 
     private void declineBooking() {
-        BookingPresenter presenter = getPresenter();
+        BookingViewModel presenter = getViewModel();
         if (presenter != null) {
             presenter.onDeclineButtonClick();
         }
@@ -96,6 +98,19 @@ public class BookingViewImpl extends Fragment implements BookingView {
         }
     }
 
+    @Override
+    public void renderError(String errorMessage) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.common_warning)
+                .setMessage(errorMessage)
+                .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
+
     private void setActionBarTitle() {
         ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         if (actionBar != null) {
@@ -103,11 +118,11 @@ public class BookingViewImpl extends Fragment implements BookingView {
         }
     }
 
-    private BookingPresenter getPresenter() {
-        BookingPresenter presenter = null;
+    private BookingViewModel getViewModel() {
+        BookingViewModel presenter = null;
         ComponentFinder componentFinder = (ComponentFinder) getActivity();
         if (componentFinder != null) {
-            presenter = (BookingPresenter) componentFinder.getViewModel(BookingPresenter.ID);
+            presenter = (BookingViewModel) componentFinder.getViewModel(BookingViewModel.ID);
         }
         return presenter;
     }

@@ -76,7 +76,7 @@ public class LoginServiceImpl implements LoginService {
                     LoginResponse responseBody = subscribeForResponse(requestId, response);
                     result = createServiceResult(responseBody, request);
                     if (result.succeeded()) {
-                        String userQueue = String.format(Constants.RabbitMQ.Queue.USER, request.getUsername());
+                        String userQueue = String.format(com.wedriveu.mobile.util.Constants.Queue.USER, request.getUsername());
                         RabbitMqQueueConfig queueConfig =
                                 new RabbitMqQueueConfig.Builder()
                                         .queueName(userQueue)

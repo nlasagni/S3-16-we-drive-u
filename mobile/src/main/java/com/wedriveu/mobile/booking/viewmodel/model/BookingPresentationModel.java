@@ -1,4 +1,4 @@
-package com.wedriveu.mobile.booking.presenter.model;
+package com.wedriveu.mobile.booking.viewmodel.model;
 
 /**
  * Created by nicolalasagni on 29/07/2017.
