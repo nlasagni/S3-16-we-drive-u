@@ -17,6 +17,7 @@ object Constants {
   object Queue {
 
     private val Request = "service.booking.request"
+    private val Response = "service.booking.response"
     private val Find = Request + Dot + "find"
 
     /**
@@ -39,6 +40,10 @@ object Constants {
       * A queue to receive find position booking messages.
       */
     val FindPosition: String  = Find + Dot + "position"
+    /**
+      * A queue to receive book vehicle booking response messages.
+      */
+    val BookVehicle: String  = Response + Dot + "bookVehicle"
 
   }
 
@@ -69,50 +74,71 @@ object Constants {
         private val FindBooking = "find.booking"
         private val LicensePlate = "licensePlate"
         private val Position = "position"
-        private val ByDate = "byDate"
 
         /**
           * Address for receiving and sending messages for a create booking request.
           */
-        val CreateBookingRequest: String = Request + CreateBooking
+        val CreateBookingRequest: String = Request + Dot +CreateBooking
         /**
           * Address for receiving and sending messages for a create booking response.
           */
-        val CreateBookingResponse: String = Response + CreateBooking
+        val CreateBookingResponse: String = Response + Dot +CreateBooking
         /**
           * Address for receiving and sending messages for a change booking request.
           */
-        val ChangeBookingLicensePlateRequest: String = Request + ChangeBooking + Dot + LicensePlate
+        val ChangeBookingLicensePlateRequest: String = Request + Dot +ChangeBooking + Dot + LicensePlate
         /**
           * Address for receiving and sending messages for a change booking response.
           */
-        val ChangeBookingLicensePlateResponse: String = Response + ChangeBooking + Dot + LicensePlate
+        val ChangeBookingLicensePlateResponse: String = Response + Dot +ChangeBooking + Dot + LicensePlate
         /**
           * Address for receiving and sending messages for a complete booking request.
           */
-        val CompleteBookingRequest: String = Request + CompleteBooking
+        val CompleteBookingRequest: String = Request + Dot + CompleteBooking
         /**
           * Address for receiving and sending messages for a complete booking response.
           */
-        val CompleteBookingResponse: String = Response + CompleteBooking
+        val CompleteBookingResponse: String = Response + Dot +CompleteBooking
         /**
           * Address for receiving and sending messages for a find booking position request.
           */
-        val FindBookingPositionRequest: String = Request + FindBooking + Dot + Position
+        val FindBookingPositionRequest: String = Request + Dot +FindBooking + Dot + Position
         /**
           * Address for receiving and sending messages for a find booking position response.
           */
-        val FindBookingPositionResponse: String = Response + FindBooking + Dot + Position
-        /**
-          * Address for receiving and sending messages for a find booking by date request.
-          */
-        val FindBookingByDateRequest: String = Request + FindBooking + Dot + ByDate
-        /**
-          * Address for receiving and sending messages for a find booking by date response.
-          */
-        val FindBookingByDateResponse: String = Response + FindBooking + Dot + ByDate
+        val FindBookingPositionResponse: String = Response + Dot +FindBooking + Dot + Position
 
       }
+
+      /**
+        * Vehicle event bus addresses.
+        */
+      object Vehicle {
+
+        private val BookVehicle = "book.vehicle"
+
+        /**
+          * Address for receiving and sending messages for a book vehicle request.
+          */
+        val BookVehicleRequest: String = Request + Dot + BookVehicle
+        /**
+          * Address for receiving and sending messages for a book vehicle response.
+          */
+        val BookVehicleResponse: String = Response + Dot + BookVehicle
+
+      }
+
+    }
+
+    /**
+      * Constants for [[io.vertx.scala.core.eventbus.EventBus]] message content management.
+      */
+    object Message {
+
+      /**
+        * Key used to retrieve a specificRoutingKey value.
+        */
+      val SpecificRoutingKey: String = "specificRoutingKey"
 
     }
 
