@@ -67,6 +67,7 @@ public class AnalyticsStoreImplTest {
 
     @Test
     public void getVehicleCounter() throws Exception {
+        analyticsStore.clear();
         final int availableVehicles = 5;
         final int brokenVehicles = 6;
         final int bookedVehicles = 7;

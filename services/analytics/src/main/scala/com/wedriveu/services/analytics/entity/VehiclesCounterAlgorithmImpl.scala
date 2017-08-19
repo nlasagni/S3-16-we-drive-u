@@ -3,6 +3,7 @@ package com.wedriveu.services.analytics.entity
 
 import com.wedriveu.services.shared.model.{AnalyticsVehicle, Vehicle}
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter
+import com.wedriveu.shared.util.Log._
 
 import scala.collection.JavaConverters._
 
@@ -28,6 +29,7 @@ class VehiclesCounterAlgorithmImpl extends VehiclesCounterAlgorithm {
         case Vehicle.STATUS_BOOKED => counter.increaseBooked()
         case Vehicle.STATUS_NETWORK_ISSUES => counter.increaseNetworkIssues()
         case Vehicle.STATUS_RECHARGING => counter.increaseRecharging()
+        case _ =>
       }
       vehicleCounterRecursive(tail, counter)
     case Nil => true
