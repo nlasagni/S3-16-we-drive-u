@@ -45,21 +45,32 @@ public interface BookingStore {
     Optional<Booking> getStartedBookingByLicensePlate(String licensePlate);
 
     /**
-     * Gets the {@linkplain Booking} started by a {@linkplain com.wedriveu.services.shared.model.User}
+     * Gets the {@linkplain Booking} started by a {@linkplain com.wedriveu.services.shared.model.User} that has
+     * status {@code bookingStatus}.
      *
      * @param username Identifies username to which the booking is associated.
-     * @return Returns the started {@linkplain Booking} associated to the provided username, only if found.
+     * @param bookingStatus The status of the {@linkplain Booking} to be retrieved
+     * @return Returns the {@linkplain Booking} associated to the provided username, only if found.
      */
-    Optional<Booking> getUserStartedBooking(String username);
+    Optional<Booking> getBookingByUser(String username, String bookingStatus);
 
     /**
-     * Updates the status of a {@linkplain Booking}.
+     * Updates the status of a {@linkplain Booking} status.
      *
      * @param bookingId     The id of the {@linkplain Booking} to be updated.
      * @param bookingStatus The new status of the {@linkplain Booking}.
      * @return A boolean indicating the success or the failure of this operation.
      */
     boolean updateBookingStatus(int bookingId, String bookingStatus);
+
+    /**
+     * Updates the status of a {@linkplain Booking} license plate.
+     *
+     * @param bookingId     The id of the {@linkplain Booking} to be updated.
+     * @param licensePlate The new license plate of the {@linkplain Booking}.
+     * @return A boolean indicating the success or the failure of this operation.
+     */
+    boolean updateBookingLicensePlate(int bookingId, String licensePlate);
 
     /**
      * Fetches all {@linkplain Booking} stored that are inside the range of specified dates.
