@@ -82,13 +82,13 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
                     .IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(getActivity());
             getActivity().startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-            Log.e(SchedulingViewModel.TAG, "GooglePlayServices not installed", e);
+            Log.e(SchedulingViewModel.ID, "GooglePlayServices not installed", e);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        SchedulingView schedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
+        SchedulingView schedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.ID);
         if (resultCode == Activity.RESULT_OK) {
             mPlace = PlaceAutocomplete.getPlace(getActivity(), data);
             schedulingView.showSelectedAddress(mPlace);
@@ -102,7 +102,7 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
     private void onFindNearestVehicleFinished(Vehicle vehicle, String errorMessage) {
         mRouter.dismissProgressDialog();
         if (!TextUtils.isEmpty(errorMessage)) {
-            SchedulingView schedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.TAG);
+            SchedulingView schedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.ID);
             schedulingView.renderError(errorMessage);
         } else {
             mVehicleStore.storeVehicle(vehicle);

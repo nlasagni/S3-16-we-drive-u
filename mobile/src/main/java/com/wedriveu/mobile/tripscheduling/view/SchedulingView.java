@@ -11,7 +11,7 @@ import com.google.android.gms.location.places.Place;
  */
 public interface SchedulingView {
 
-    String TAG = SchedulingView.class.getSimpleName();
+    String ID = SchedulingView.class.getSimpleName();
 
     /**
      *
