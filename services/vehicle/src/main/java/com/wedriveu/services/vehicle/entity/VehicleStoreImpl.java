@@ -8,7 +8,9 @@ import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.util.PositionUtils;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.services.vehicle.rabbitmq.SubstitutionRequest;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
+import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Position;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
@@ -34,6 +36,8 @@ import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 
 public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
+    private static final String AVAILABLE_COMPLETED_FOR_SUBSTITUTION = "store.available.completed.substitution";
+    private static final String SUBSTITUTION_BUS_ADDRESS = "service.substitution.eventbus";
     private static final String VEHICLES_DATABASE_FILENAME = "vehicles.json";
     private static final String STORE_FOLDER = "store";
     private EventBus eventBus;
@@ -46,10 +50,16 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         eventBus.consumer(Messages.NearestControl.GET_VEHICLE_NEAREST, this::getVehicleForNearest);
         eventBus.consumer(Messages.BookingControl.GET_VEHICLE_BOOKING, this::getVehicleForBooking);
         eventBus.consumer(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, this::addVehicle);
-
-
         eventBus.consumer(Messages.VehicleStore.CLEAR_VEHICLES, msg -> clearVehicles());
         eventBus.consumer(Messages.Analytics.GET_VEHICLES_REQUEST, this::getVehicleList);
+        eventBus.consumer(Messages.VehicleStore.UPDATE_VEHICLE_STATUS, msg -> {
+            UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject)msg.body(), UpdateToService.class);
+            updateVehicleInVehicleList(update.getLicense(), update.getStatus(), update.getPosition(), new Date());
+        });
+        eventBus.consumer(SUBSTITUTION_BUS_ADDRESS, msg -> {
+            SubstitutionRequest request = VertxJsonMapper.mapFromBodyTo((JsonObject)msg.body(), SubstitutionRequest.class);
+            findSubstitutionVehicle(request);
+        });
         createJsonFile();
     }
 
@@ -269,6 +279,22 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
             }
         }
         return true;
+    }
+
+    private void findSubstitutionVehicle(SubstitutionRequest request) {
+        Position userPosition = request.getPosition();
+        List<Vehicle> vehicles = getVehicleList();
+        List<Vehicle> availableVehicles = new ArrayList<>(vehicles.size());
+        for (Vehicle vehicle : vehicles) {
+            Position vehiclePosition = vehicle.getPosition();
+            if (STATUS_AVAILABLE.equals(vehicle.getStatus()) &&
+                    vehiclePosition != null &&
+                    PositionUtils.isInRange(userPosition, vehiclePosition)) {
+                availableVehicles.add(vehicle);
+            }
+        }
+        request.setVehicleList(availableVehicles);
+        eventBus.send(AVAILABLE_COMPLETED_FOR_SUBSTITUTION, JsonObject.mapFrom(request));
     }
 
 }

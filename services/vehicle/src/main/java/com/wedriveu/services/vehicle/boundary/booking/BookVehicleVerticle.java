@@ -13,15 +13,14 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_BOOK_VEHICLE_ADDRESS;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_BOOK_VEHICLE;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOK_REQUEST;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOK_RESPONSE;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_REQUEST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_RESPONSE;
 
 
 /**
@@ -35,7 +34,6 @@ public class BookVehicleVerticle extends VerticleConsumer {
     private static final String TAG = BookVehicleVerticle.class.getSimpleName();
     private static final String ERROR_MESSAGE = "Error starting BookVehicle consumer";
     private BookVehicleRequest vehicleRequest;
-    private RabbitMQClient client;
 
     public BookVehicleVerticle() {
         super(VEHICLE_SERVICE_QUEUE_BOOK_VEHICLE);
@@ -45,6 +43,7 @@ public class BookVehicleVerticle extends VerticleConsumer {
     public void start() throws Exception {
         super.start();
         eventBus.consumer(Messages.VehicleStore.AVAILABLE_COMPLETED, this::handleBookingRequest);
+
     }
 
     private void handleBookingRequest(Message message) {
@@ -64,7 +63,7 @@ public class BookVehicleVerticle extends VerticleConsumer {
             VehicleReservationRequest requestData = new VehicleReservationRequest();
             requestData.setUsername(vehicleRequest.getUsername());
             client.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                    String.format(BOOK_REQUEST,
+                    String.format(BOOK_VEHICLE_REQUEST,
                             vehicleRequest.getLicencePlate()),
                     VertxJsonMapper.mapInBodyFrom(requestData), onPublish -> {
                     });
@@ -81,7 +80,7 @@ public class BookVehicleVerticle extends VerticleConsumer {
     private void startBookVehicleConsumer() throws IOException, TimeoutException {
         startConsumer(false,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
-                String.format(BOOK_RESPONSE, vehicleRequest.getLicencePlate()),
+                String.format(BOOK_VEHICLE_RESPONSE, vehicleRequest.getLicencePlate()),
                 EVENT_BUS_BOOK_VEHICLE_ADDRESS);
     }
 
@@ -89,6 +88,9 @@ public class BookVehicleVerticle extends VerticleConsumer {
     public void registerConsumer(String eventBus) {
         vertx.eventBus().consumer(eventBus, msg -> {
             handleVehicleBookingResponse((JsonObject) msg.body());
+        });
+        vertx.eventBus().consumer(EVENT_BUS_BOOK_VEHICLE_ADDRESS, msg -> {
+            vertx.eventBus().send("", new JsonObject());
         });
     }
 

@@ -75,6 +75,7 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
     private JsonObject createNotify() {
         ArrivedNotify notifyToSend = new ArrivedNotify();
         notifyToSend.setLicense(vehicle.getVehicle().plate());
+        notifyToSend.setUsername(vehicle.getUsername());
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(notifyToSend).toString());
         return jsonObject;

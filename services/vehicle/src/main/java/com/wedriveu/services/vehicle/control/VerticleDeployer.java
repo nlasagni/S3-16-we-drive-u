@@ -6,6 +6,8 @@ import com.wedriveu.services.vehicle.boundary.booking.BookConsumerVerticle;
 import com.wedriveu.services.vehicle.boundary.booking.BookPublisherVerticle;
 import com.wedriveu.services.vehicle.boundary.booking.StartDrivingPublisherVerticle;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleElectionVerticle;
+import com.wedriveu.services.vehicle.boundary.updates.UpdatesVerticle;
+import com.wedriveu.services.vehicle.boundary.vehiclearrived.VehicleArrivedVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterConsumerVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterPublisherVerticle;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
@@ -70,6 +72,14 @@ public class VerticleDeployer extends AbstractVerticle {
         Future startDrivingPublisherFuture = Future.future();
         vertx.deployVerticle(new StartDrivingPublisherVerticle(), startDrivingPublisherFuture.completer());
         futures.add(startDrivingPublisherFuture);
+
+        Future arrivedVerticleFuture = Future.future();
+        vertx.deployVerticle(new VehicleArrivedVerticle(), arrivedVerticleFuture.completer());
+        futures.add(arrivedVerticleFuture);
+
+        Future updateVerticleFuture = Future.future();
+        vertx.deployVerticle(new UpdatesVerticle(), updateVerticleFuture.completer());
+        futures.add(updateVerticleFuture);
 
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {

@@ -47,6 +47,7 @@ public interface Messages {
         String CLEAR_VEHICLES = "vehicle.clear";
         String CLEAR_VEHICLES_COMPLETED = "vehicle.clear.completed";
         String GET_VEHICLE_LIST_COMPLETED = "store.get.vehicle.list.completed";
+        String UPDATE_VEHICLE_STATUS = "service.updates.eventbus.address";
     }
 
     /**

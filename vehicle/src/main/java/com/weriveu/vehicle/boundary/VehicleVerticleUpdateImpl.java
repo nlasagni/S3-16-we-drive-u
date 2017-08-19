@@ -83,6 +83,7 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
         updateToService.setLicense(vehicle.getVehicle().plate());
         String state = vehicle.getVehicle().getState();
         updateToService.setStatus(state);
+        updateToService.setUserOnBoard(vehicle.getUserOnBoard());
         String message;
         if(state.equals(vehicleConstants.stateBroken()) || state.equals(vehicleConstants.stateStolen())) {
             message = FAILURE_MESSAGE;

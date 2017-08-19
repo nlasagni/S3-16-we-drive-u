@@ -18,8 +18,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOKING_SERVICE_BOOK_REQUEST;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOKING_SERVICE_BOOK_RESPONSE;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_REQUEST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_RESPONSE;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -39,7 +39,7 @@ public class BookingTest extends BaseInteractionClient {
     private Vertx vertx;
 
     public BookingTest() {
-        super(QUEUE, VEHICLE, BOOKING_SERVICE_BOOK_REQUEST, BOOKING_SERVICE_BOOK_RESPONSE, EVENT_BUS_ADDRESS);
+        super(QUEUE, VEHICLE, VEHICLE_SERVICE_BOOK_REQUEST, VEHICLE_SERVICE_BOOK_RESPONSE, EVENT_BUS_ADDRESS);
     }
 
     @Before
@@ -48,27 +48,22 @@ public class BookingTest extends BaseInteractionClient {
         async = context.async(ASYNC_COUNT);
         vertx = Vertx.vertx();
         super.setup(vertx, completed -> {
-            async.countDown();
-            super.declareQueueAndBind("", context, declared -> {
-                context.assertTrue(declared.succeeded());
-                async.countDown();
-                deployVerticles(context);
+            vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
+                vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
+                    async.countDown();
+                    super.declareQueueAndBind("", context, declared -> {
+                        context.assertTrue(declared.succeeded());
+                        async.complete();
+                    });
+                });
+                vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
+            async.countDown();
+            vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
+                vertx.eventBus().send(Messages.VehicleService.BOOT, null);
+            }));
         });
         async.awaitSuccess();
-    }
-
-    @SuppressWarnings("Duplicates")
-    private void deployVerticles(TestContext context) {
-        vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, completed -> {
-            vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
-                async.complete();
-            });
-            vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
-        });
-        vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
-            vertx.eventBus().send(Messages.VehicleService.BOOT, null);
-        }));
     }
 
     @After
