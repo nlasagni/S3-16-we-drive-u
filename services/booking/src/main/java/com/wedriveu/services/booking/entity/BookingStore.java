@@ -14,6 +14,12 @@ import java.util.Optional;
 public interface BookingStore {
 
     /**
+     *
+     * @return A new unique generated id.
+     */
+    int generateId();
+
+    /**
      * Adds a booking to the storeEntities.
      *
      * @param booking The booking to be added to the storeEntities.
@@ -26,7 +32,21 @@ public interface BookingStore {
      * @param bookingId Identifies the <em>Booking</em>'s <em>ID</em> that must be retreived.
      * @return Returns the {@linkplain Booking} with the provided id, only if found.
      */
-    Optional<Booking> getBooking(int bookingId);
+    Optional<Booking> getBookingById(int bookingId);
+
+    /**
+     *
+     * @param licensePlate Identifies the vehicle associated to the <em>Booking</em>'s <em>ID</em> that must be retreived.
+     * @return Returns the started {@linkplain Booking} with the provided license plate, only if found.
+     */
+    Optional<Booking> getStartedBookingByLicensePlate(String licensePlate);
+
+    /**
+     *
+     * @param username Identifies username to which the booking is associated.
+     * @return Returns the started {@linkplain Booking} associated to the provided username, only if found.
+     */
+    Optional<Booking> getUserStartedBooking(String username);
 
     /**
      * Updates the status of a {@linkplain Booking}.
@@ -46,9 +66,16 @@ public interface BookingStore {
      */
     List<Booking> getBookingsByDate(Date fromDate, Date toDate);
 
+    /** Deletes a booking from the store.
+     *
+     * @param id The id of the booking to be deleted.
+     * @return A boolean indicating the success or the failure of this operation.
+     */
+    boolean deleteBooking(int id);
+
     /**
      * Clears the {@linkplain BookingStore}.
      */
-    void clear();
+    void deleteAllBookings();
 
 }
