@@ -18,6 +18,7 @@ import java.util.stream.IntStream;
 public class BookingStoreImpl implements BookingStore {
 
     private static final String TAG = BookingStoreImpl.class.getSimpleName();
+    private static final String GENERATE_ID_ERROR = "Error while generating id";
     private static final String ADD_ERROR = "Error while adding booking";
     private static final String GET_ERROR = "Error while getting booking";
     private static final String GET_BY_DATE_ERROR = "Error while getting bookings by date";
@@ -46,7 +47,7 @@ public class BookingStoreImpl implements BookingStore {
                 id = 1;
             }
         } catch (Exception e) {
-            Log.error(TAG, GET_ERROR, e);
+            Log.error(TAG, GENERATE_ID_ERROR, e);
         }
         return id;
     }
@@ -104,13 +105,13 @@ public class BookingStoreImpl implements BookingStore {
     }
 
     @Override
-    public Optional<Booking> getUserStartedBooking(String username) {
+    public Optional<Booking> getBookingByUser(String username, String bookingStatus) {
         try {
             List<Booking> bookings = storeStrategy.getEntities();
             Optional<Booking> booking = Optional.empty();
             if (bookings != null) {
                 booking = bookings.stream().filter(b ->
-                    username.equals(b.getUsername()) && Booking.STATUS_STARTED.equals(b.getBookingStatus())
+                        username.equals(b.getUsername()) && bookingStatus.equals(b.getBookingStatus())
                 ).findFirst();
             }
             return booking;
@@ -129,6 +130,26 @@ public class BookingStoreImpl implements BookingStore {
                     Booking booking = bookings.get(i);
                     if (booking.getId() == bookingId) {
                         booking.setBookingStatus(bookingStatus);
+                    }
+                });
+            }
+            storeStrategy.storeEntities(bookings);
+            return true;
+        } catch (Exception e) {
+            Log.error(TAG, UPDATE_ERROR, e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateBookingLicensePlate(int bookingId, String licensePlate) {
+        try {
+            List<Booking> bookings = storeStrategy.getEntities();
+            if (bookings != null && !bookings.isEmpty()) {
+                IntStream.range(0, bookings.size()).forEach(i -> {
+                    Booking booking = bookings.get(i);
+                    if (booking.getId() == bookingId) {
+                        booking.setVehicleLicensePlate(licensePlate);
                     }
                 });
             }

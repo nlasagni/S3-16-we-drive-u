@@ -231,6 +231,10 @@ public interface Constants {
              */
             String COMPLETE_BOOKING_RESPONSE = "booking.response.complete";
             /**
+             * The routing key used by booking-service to communicate if it has completed the booking to the client.
+             */
+            String COMPLETE_BOOKING_RESPONSE_USER = "booking.response.complete.%s";
+            /**
              * The routing key used to communicate to the booking-service a find bookings by position request.
              */
             String FIND_BOOKING_POSITION_REQUEST = "booking.request.position";

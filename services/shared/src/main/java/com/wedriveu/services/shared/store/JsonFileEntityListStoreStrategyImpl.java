@@ -30,8 +30,10 @@ public class JsonFileEntityListStoreStrategyImpl<T> implements EntityListStoreSt
     private void initStore() throws Exception {
         new File(STORE_FOLDER).mkdir();
         file = new File(STORE_FOLDER + File.separator + fileName);
-        file.createNewFile();
-        storeEntities(new ArrayList<>());
+        if (!file.exists()) {
+            file.createNewFile();
+            storeEntities(new ArrayList<>());
+        }
     }
 
     @Override
@@ -47,7 +49,7 @@ public class JsonFileEntityListStoreStrategyImpl<T> implements EntityListStoreSt
 
     @Override
     public void clear() throws Exception {
-        file.delete();
+        storeEntities(new ArrayList<>());
         initStore();
     }
 

@@ -26,9 +26,25 @@ object BookingBoundaryPublisherVerticle {
     */
   val BookVehicle: String = s"scala:${classOf[BookVehiclePublisher].getName}"
   /**
-    * The [[ScalaVerticle]] name to deploy a [[CreateBookingVehiclePublisher]]
+    * The [[ScalaVerticle]] name to deploy a [[CreateBookingPublisher]]
     */
-  val CreateBooking: String = s"scala:${classOf[CreateBookingVehiclePublisher].getName}"
+  val CreateBooking: String = s"scala:${classOf[CreateBookingPublisher].getName}"
+  /**
+    * The [[ScalaVerticle]] name to deploy a [[ChangeBookingPublisher]]
+    */
+  val ChangeBooking: String = s"scala:${classOf[ChangeBookingPublisher].getName}"
+  /**
+    * The [[ScalaVerticle]] name to deploy a [[CompleteBookingVehicleServicePublisher]]
+    */
+  val CompleteBookingVehicleService: String = s"scala:${classOf[CompleteBookingVehicleServicePublisher].getName}"
+  /**
+    * The [[ScalaVerticle]] name to deploy a [[CompleteBookingUserPublisher]]
+    */
+  val CompleteBookingUser: String = s"scala:${classOf[CompleteBookingUserPublisher].getName}"
+  /**
+    * The [[ScalaVerticle]] name to deploy a [[FindBookingPositionPublisher]]
+    */
+  val FindBookingPosition: String = s"scala:${classOf[FindBookingPositionPublisher].getName}"
 
   private[this] class BookingBoundaryPublisherVerticleImpl(
     private val address: String,
@@ -74,10 +90,34 @@ object BookingBoundaryPublisherVerticle {
     Shared.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_REQUEST
   )
 
-  private[this] class CreateBookingVehiclePublisher extends BookingBoundaryPublisherVerticleImpl(
+  private[this] class CreateBookingPublisher extends BookingBoundaryPublisherVerticleImpl(
     Constants.EventBus.Address.Booking.CreateBookingResponse,
     Shared.RabbitMQ.Exchanges.BOOKING,
     Shared.RabbitMQ.RoutingKey.CREATE_BOOKING_RESPONSE
+  )
+
+  private[this] class ChangeBookingPublisher extends BookingBoundaryPublisherVerticleImpl(
+    Constants.EventBus.Address.Booking.ChangeBookingLicensePlateResponse,
+    Shared.RabbitMQ.Exchanges.BOOKING,
+    Shared.RabbitMQ.RoutingKey.CHANGE_BOOKING_RESPONSE
+  )
+
+  private[this] class CompleteBookingVehicleServicePublisher extends BookingBoundaryPublisherVerticleImpl(
+    Constants.EventBus.Address.Booking.CompleteBookingVehicleServiceResponse,
+    Shared.RabbitMQ.Exchanges.BOOKING,
+    Shared.RabbitMQ.RoutingKey.COMPLETE_BOOKING_RESPONSE
+  )
+
+  private[this] class CompleteBookingUserPublisher extends BookingBoundaryPublisherVerticleImpl(
+    Constants.EventBus.Address.Booking.CompleteBookingUserResponse,
+    Shared.RabbitMQ.Exchanges.BOOKING,
+    Shared.RabbitMQ.RoutingKey.COMPLETE_BOOKING_RESPONSE_USER
+  )
+
+  private[this] class FindBookingPositionPublisher extends BookingBoundaryPublisherVerticleImpl(
+    Constants.EventBus.Address.Booking.FindBookingPositionResponse,
+    Shared.RabbitMQ.Exchanges.BOOKING,
+    Shared.RabbitMQ.RoutingKey.FIND_BOOKING_POSITION_RESPONSE
   )
 
 }

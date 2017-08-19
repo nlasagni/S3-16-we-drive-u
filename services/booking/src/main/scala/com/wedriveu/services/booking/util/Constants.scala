@@ -98,15 +98,19 @@ object Constants {
         /**
           * Address for receiving and sending messages for a complete booking response.
           */
-        val CompleteBookingResponse: String = Response + Dot +CompleteBooking
+        val CompleteBookingVehicleServiceResponse: String = Response + Dot + CompleteBooking + "vehicleService"
+        /**
+          * Address for receiving and sending messages for a complete booking response to the user.
+          */
+        val CompleteBookingUserResponse: String = Response + Dot + CompleteBooking + "user"
         /**
           * Address for receiving and sending messages for a find booking position request.
           */
-        val FindBookingPositionRequest: String = Request + Dot +FindBooking + Dot + Position
+        val FindBookingPositionRequest: String = Request + Dot + FindBooking + Dot + Position
         /**
           * Address for receiving and sending messages for a find booking position response.
           */
-        val FindBookingPositionResponse: String = Response + Dot +FindBooking + Dot + Position
+        val FindBookingPositionResponse: String = Response + Dot + FindBooking + Dot + Position
 
       }
 

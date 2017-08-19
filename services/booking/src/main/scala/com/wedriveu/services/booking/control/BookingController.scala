@@ -7,7 +7,7 @@ import com.wedriveu.services.booking.util.{Constants, Dates}
 import com.wedriveu.services.shared.model.Booking
 import com.wedriveu.services.shared.store.{EntityListStoreStrategy, JsonFileEntityListStoreStrategyImpl}
 import com.wedriveu.services.shared.vertx.VertxJsonMapper
-import com.wedriveu.shared.rabbitmq.message.{BookVehicleResponse, CreateBookingRequest, CreateBookingResponse, VehicleReservationRequest}
+import com.wedriveu.shared.rabbitmq.message._
 import com.wedriveu.shared.util.Log
 import io.vertx.core.json.JsonObject
 import io.vertx.lang.scala.ScalaVerticle
@@ -26,31 +26,33 @@ trait BookingController {
     */
   def createBooking(bookingRequest: CreateBookingRequest): Unit
 
-  /** Changes an active [[com.wedriveu.services.shared.model.Booking]] license plate.
+  /** Changes the license plate of a [[com.wedriveu.services.shared.model.Booking]] that is in status
+    * [[Booking.STATUS_PROCESSING]].
     *
-    * @param oldLicensePlate The license plate with which identify the booking to change.
-    * @param newLicensePlate The new license plate.
+    * @param changeRequest The request data needed to change an active [[com.wedriveu.services.shared.model.Booking]]
+    *                      license plate.
     */
-  def changeActiveBookingLicensePlate(oldLicensePlate: String, newLicensePlate: String): Unit
+  def changeProcessingBookingLicensePlate(changeRequest: ChangeBookingRequest): Unit
 
   /** Completes a [[com.wedriveu.services.shared.model.Booking]].
     *
-    * @param licensePlate The license plate with which identify the booking to complete.
+    * @param completeRequest The request data needed to complete a [[com.wedriveu.services.shared.model.Booking]].
     */
-  def completeBooking(licensePlate: String): Unit
+  def completeBooking(completeRequest: CompleteBookingRequest): Unit
 
-  /** Gets the positions of a [[com.wedriveu.services.shared.model.Booking]].
+  /** Gets the positions of a [[com.wedriveu.services.shared.model.Booking]] that is in status
+    * [[Booking.STATUS_PROCESSING]].
     *
-    * @param licensePlate The license plate with which identify the booking from which get the positions.
+    * @param findRequest The request data needed to find a [[com.wedriveu.services.shared.model.Booking]] positions.
     */
-  def findActiveBookingPositions(licensePlate: String): Unit
+  def findProcessingBookingPositions(findRequest: FindBookingPositionsRequest): Unit
 
 }
 
 /** Represents a [[BookingController]] which implementation will be bounded to a [[ScalaVerticle]].
   *
   */
-trait BookingControllerVerticle extends ScalaVerticle with BookingController {}
+trait BookingControllerVerticle extends ScalaVerticle with BookingController
 
 object BookingControllerVerticle {
 
@@ -62,7 +64,7 @@ object BookingControllerVerticle {
   private[this] class BookingControllerVerticleImpl extends BookingControllerVerticle {
 
     private val InvalidOperationMessage = "Invalid message received"
-    private val BookingAlreadyStarted = "A booking process has been already started for this user."
+    private val BookingAlreadyStarted = "A booking process has not yet been completed for this user."
     private val VehicleAlreadyBooked = "This vehicle has already been booked."
     private val UnableToCreateBooking = "An error occurred while creating the booking."
 
@@ -87,10 +89,25 @@ object BookingControllerVerticle {
         (request: BookVehicleResponse) => {
           bindVehicleToBooking(request)
       })
+      registerConsumer(Constants.EventBus.Address.Booking.ChangeBookingLicensePlateRequest,
+        classOf[ChangeBookingRequest],
+        (request: ChangeBookingRequest) => {
+          changeProcessingBookingLicensePlate(request)
+        })
+      registerConsumer(Constants.EventBus.Address.Booking.CompleteBookingRequest,
+        classOf[CompleteBookingRequest],
+        (request: CompleteBookingRequest) => {
+          completeBooking(request)
+        })
+      registerConsumer(Constants.EventBus.Address.Booking.FindBookingPositionRequest,
+        classOf[FindBookingPositionsRequest],
+        (request: FindBookingPositionsRequest) => {
+          findProcessingBookingPositions(request)
+        })
     }
 
     private def registerConsumer[T](address: String, clazz: Class[T], operation: T => Unit): Unit = {
-      vertx.eventBus().consumer(Constants.EventBus.Address.Booking.CreateBookingRequest,
+      vertx.eventBus().consumer(address,
         (msg: Message[Object]) => {
           handleControllerOperationMessage(msg.body(), clazz, operation)
         })
@@ -118,7 +135,7 @@ object BookingControllerVerticle {
       sendMessage(address, null, message)
     }
 
-    private def sendErrorResponse(address: String, id: String, error: String): Unit = {
+    private def sendCreateBookingErrorResponse(address: String, id: String, error: String): Unit = {
       val bookingResponse = new CreateBookingResponse()
       bookingResponse.setSuccess(false)
       bookingResponse.setErrorMessage(error)
@@ -126,9 +143,10 @@ object BookingControllerVerticle {
     }
 
     override def createBooking(request: CreateBookingRequest): Unit = {
-      val startedBooking = store.getUserStartedBooking(request.getUsername)
-      if (startedBooking.isPresent) {
-        sendErrorResponse(
+      val startedBooking = store.getBookingByUser(request.getUsername, Booking.STATUS_STARTED)
+      val processingBooking = store.getBookingByUser(request.getUsername, Booking.STATUS_PROCESSING)
+      if (startedBooking.isPresent || processingBooking.isPresent) {
+        sendCreateBookingErrorResponse(
           Constants.EventBus.Address.Booking.CreateBookingResponse,
           request.getUsername,
           BookingAlreadyStarted)
@@ -149,7 +167,7 @@ object BookingControllerVerticle {
           vehicleRequest.setUsername(request.getUsername)
           sendMessage(Constants.EventBus.Address.Vehicle.BookVehicleRequest, vehicleRequest)
         } else {
-          sendErrorResponse(Constants.EventBus.Address.Booking.CreateBookingResponse,
+          sendCreateBookingErrorResponse(Constants.EventBus.Address.Booking.CreateBookingResponse,
             request.getUsername,
             UnableToCreateBooking)
         }
@@ -171,7 +189,7 @@ object BookingControllerVerticle {
         bookingResponse.setDriveTimeToDestination(Dates.format(arriveAtDestinationCalendar.getTime))
         sendMessage(Constants.EventBus.Address.Booking.CreateBookingResponse, booking.getUsername, bookingResponse)
       } else {
-        sendErrorResponse(
+        sendCreateBookingErrorResponse(
           Constants.EventBus.Address.Booking.CreateBookingResponse,
           booking.getUsername,
           VehicleAlreadyBooked)
@@ -179,11 +197,41 @@ object BookingControllerVerticle {
       }
     }
 
-    override def changeActiveBookingLicensePlate(oldLicensePlate: String, newLicensePlate: String): Unit = ???
+    override def changeProcessingBookingLicensePlate(changeRequest: ChangeBookingRequest): Unit = {
+      val booking = store.getBookingByUser(changeRequest.getUsername, Booking.STATUS_PROCESSING)
+      val response = new ChangeBookingResponse
+      response.setLicencePlate(changeRequest.getNewLicensePlate)
+      if (!booking.isPresent)
+        response.setSuccess(false)
+      else
+        response.setSuccess(store.updateBookingLicensePlate(booking.get().getId, changeRequest.getNewLicensePlate))
+      sendMessage(Constants.EventBus.Address.Booking.ChangeBookingLicensePlateResponse, response)
+    }
 
-    override def completeBooking(licensePlate: String): Unit = ???
+    override def completeBooking(completeRequest: CompleteBookingRequest): Unit = {
+      val username = completeRequest.getUsername
+      val booking = store.getBookingByUser(username, Booking.STATUS_PROCESSING)
+      val response = new CompleteBookingResponse
+      if (!booking.isPresent)
+        response.setSuccess(false)
+      else
+        response.setSuccess(store.updateBookingStatus(booking.get().getId, Booking.STATUS_COMPLETED))
+      sendMessage(Constants.EventBus.Address.Booking.CompleteBookingVehicleServiceResponse, response)
+      sendMessage(Constants.EventBus.Address.Booking.CompleteBookingUserResponse, username, response)
+    }
 
-    override def findActiveBookingPositions(licensePlate: String): Unit = ???
+    override def findProcessingBookingPositions(findRequest: FindBookingPositionsRequest): Unit = {
+      val booking = store.getBookingByUser(findRequest.getUsername, Booking.STATUS_PROCESSING)
+      val response = new FindBookingPositionsResponse
+      if (!booking.isPresent)
+        response.setSuccess(false)
+      else
+        response.setSuccess(true)
+        response.setLicensePlate(booking.get().getVehicleLicensePlate)
+        response.setUserPosition(booking.get().getUserPosition)
+        response.setDestinationPosition(booking.get().getDestinationPosition)
+      sendMessage(Constants.EventBus.Address.Booking.FindBookingPositionResponse, response)
+    }
 
   }
 

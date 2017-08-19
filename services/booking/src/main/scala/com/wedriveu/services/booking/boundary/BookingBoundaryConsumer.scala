@@ -1,8 +1,8 @@
 package com.wedriveu.services.booking.boundary
 
-import com.wedriveu.services.booking.util.Constants
-import com.wedriveu.shared.util.{Constants => Shared}
+import com.wedriveu.services.booking.util.{Constants, ConsumerConfig, RabbitMQConsumers}
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory
+import com.wedriveu.shared.util.{Constants => Shared}
 import io.vertx.core.json.JsonObject
 import io.vertx.lang.scala.ScalaVerticle
 import io.vertx.scala.core.eventbus.Message
@@ -82,36 +82,29 @@ object BookingBoundaryConsumerVerticle {
   private[this] abstract class BookingBoundaryConsumerVerticle extends ScalaVerticle with BookingBoundaryConsumer {
 
     private[this] var client: RabbitMQClient = _
-    private[this] var consumerConfig: BookingVerticleConsumerConfig = _
+    private[this] var bookingConsumerConfig: BookingVerticleConsumerConfig = _
     private[this] val consumerAddress: String = this.getClass.getCanonicalName
 
     override def startFuture(): Future[_] = {
-      consumerConfig = buildConfig
+      bookingConsumerConfig = buildConfig
       client = RabbitMQClient.create(vertx, RabbitMQClientFactory.createClientConfig())
       consume()
-      client.startFuture().flatMap(_ => declareQueue()).flatMap(_ => bindQueue()).flatMap(_ => basicConsume())
-    }
-
-    private def declareQueue(): Future[JsonObject] = {
-      client.queueDeclareFuture(
-        consumerConfig.queue,
-        consumerConfig.durableQueue,
-        exclusive = false,
-        autoDelete = false
-      )
-    }
-
-    private def bindQueue(): Future[Unit] = {
-      client.queueBindFuture(consumerConfig.queue, consumerConfig.exchange, consumerConfig.routingKey)
-    }
-
-    private def basicConsume(): Future[Unit] = {
-      client.basicConsumeFuture(consumerConfig.queue, consumerAddress)
+      client.startFuture().flatMap(_ => {
+        RabbitMQConsumers.createConsumer(
+          client,
+          ConsumerConfig(
+            bookingConsumerConfig.queue,
+            bookingConsumerConfig.durableQueue,
+            bookingConsumerConfig.exchange,
+            bookingConsumerConfig.routingKey,
+            consumerAddress)
+        )
+      })
     }
 
     override def consume(): Unit = {
       vertx.eventBus().consumer(consumerAddress, (message: Message[Object]) => {
-        vertx.eventBus().send(consumerConfig.eventBusAddress, message.body())
+        vertx.eventBus().send(bookingConsumerConfig.eventBusAddress, message.body())
       })
     }
 
@@ -162,7 +155,7 @@ object BookingBoundaryConsumerVerticle {
       BookingVerticleConsumerConfig(Constants.Queue.BookVehicle,
         durableQueue = true,
         Shared.RabbitMQ.Exchanges.VEHICLE,
-        Shared.RabbitMQ.RoutingKey.BOOK_VEHICLE_RESPONSE,
+        Shared.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_RESPONSE,
         Constants.EventBus.Address.Vehicle.BookVehicleResponse)
     }
   }
