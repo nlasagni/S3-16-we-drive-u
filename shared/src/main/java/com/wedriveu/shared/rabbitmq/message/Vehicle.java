@@ -8,7 +8,6 @@ import java.net.URL;
 import java.util.Date;
 
 /**
- *
  * Represents the POJO Vehicle.
  *
  * @author Marco Baldassarri
@@ -23,7 +22,7 @@ public class Vehicle {
     public static final String STATUS_BROKEN_STOLEN = "broken_stolen";
     public static final String STATUS_NETWORK_ISSUES = "net_issues";
     public static final String NO_ELIGIBLE_VEHICLE_RESPONSE = "No vehicles nearby, " +
-                                                        "please try again later or change your address";
+            "please try again later or change your address";
 
     private String licensePlate;
     private String status;

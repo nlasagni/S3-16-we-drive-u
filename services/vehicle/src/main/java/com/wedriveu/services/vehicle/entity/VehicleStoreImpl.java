@@ -43,7 +43,8 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     public void start() throws Exception {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.NearestControl.AVAILABLE_REQUEST, this::getAllAvailableVehiclesInRange);
-        eventBus.consumer(Messages.NearestControl.GET_VEHICLE, this::getVehicle);
+        eventBus.consumer(Messages.NearestControl.GET_VEHICLE_NEAREST, this::getVehicleForNearest);
+        eventBus.consumer(Messages.BookingControl.GET_VEHICLE_BOOKING, this::getVehicleForBooking);
         eventBus.consumer(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, this::addVehicle);
 
 
@@ -115,15 +116,25 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         eventBus.send(Messages.VehicleStore.AVAILABLE_COMPLETED, JsonObject.mapFrom(userData));
     }
 
-
-    @Override
-    public void getVehicle(Message message) {
+    private Vehicle getVehicleFromLicencePlate(Message message) {
         List<Vehicle> vehicles = getVehicleList();
         JsonObject vehicleData = (JsonObject) message.body();
         String carLicencePlate = vehicleData.getString(LICENSE_PLATE);
-        Vehicle requestedVehicle = getRequestedVehicle(vehicles, carLicencePlate);
-        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED,
+        return getRequestedVehicle(vehicles, carLicencePlate);
+    }
+
+    @Override
+    public void getVehicleForNearest(Message message) {
+        Vehicle requestedVehicle = getVehicleFromLicencePlate(message);
+        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST,
                 requestedVehicle == null ? null : JsonObject.mapFrom(requestedVehicle));
+    }
+
+    @Override
+    public void getVehicleForBooking(Message message) {
+        Vehicle requestedVehicle = getVehicleFromLicencePlate(message);
+        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_BOOKING,
+                requestedVehicle == null ? null : requestedVehicle);
     }
 
     @Override

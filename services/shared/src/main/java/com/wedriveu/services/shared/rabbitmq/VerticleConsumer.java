@@ -109,7 +109,8 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     public abstract void registerConsumer(String eventBus);
 
     private void basicConsume(String eventBus) {
-        client.basicConsume(queueName, eventBus, handler -> { });
+        client.basicConsume(queueName, eventBus, handler -> {
+        });
     }
 
 }

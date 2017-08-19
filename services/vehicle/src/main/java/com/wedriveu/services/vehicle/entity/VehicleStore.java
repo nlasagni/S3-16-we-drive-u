@@ -27,13 +27,15 @@ public interface VehicleStore {
     void getAllAvailableVehiclesInRange(Message message);
 
     /**
-<<<<<<< HEAD
-     * @param message Identifies the <em>com.wedriveu.shared.rabbitmq.message.Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.
-=======
      * @param message Identifies the <em>Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.
->>>>>>> WDU_75_Booking_Service_RabbitMQ_Setup
      */
-    void getVehicle(Message message);
+    void getVehicleForNearest(Message message);
+
+    /**
+     * @param message Identifies the <em>com.wedriveu.services.shared.entity.Vehicle</em>'s <em>carLicencePlate</em>
+     *                that must be retreived.
+     */
+    void getVehicleForBooking(Message message);
 
     /**
      * @return Return the entire list of vehicles in the db.

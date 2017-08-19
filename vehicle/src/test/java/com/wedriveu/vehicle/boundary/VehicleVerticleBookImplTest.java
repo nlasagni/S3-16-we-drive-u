@@ -1,5 +1,6 @@
 package com.wedriveu.vehicle.boundary;
 
+
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
 import com.wedriveu.shared.util.Constants;

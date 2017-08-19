@@ -22,7 +22,7 @@ public class VehicleElectionVerticle extends VerticlePublisher {
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
-        vertx.eventBus().consumer(Messages.VehicleStore.GET_VEHICLE_COMPLETED, this::sendVehicleToUser);
+        vertx.eventBus().consumer(Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST, this::sendVehicleToUser);
         super.start(startFuture);
     }
 

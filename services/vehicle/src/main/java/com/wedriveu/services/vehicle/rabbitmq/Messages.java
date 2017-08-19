@@ -24,7 +24,7 @@ public interface Messages {
     interface NearestControl {
         String AVAILABLE_REQUEST = "control.available";
         String DATA_TO_VEHICLE = "control.data.to.vehicle";
-        String GET_VEHICLE = "election.vehicle.request";
+        String GET_VEHICLE_NEAREST = "election.vehicle.request";
     }
 
     /**
@@ -41,7 +41,8 @@ public interface Messages {
      */
     interface VehicleStore {
         String AVAILABLE_COMPLETED = "store.available.completed";
-        String GET_VEHICLE_COMPLETED = "store.get.vehicle.completed";
+        String GET_VEHICLE_COMPLETED_NEAREST = "store.get.vehicle.completed.for.nearet";
+        String GET_VEHICLE_COMPLETED_BOOKING = "store.get.vehicle.completed.for.booking";
         String REGISTER_VEHICLE_COMPLETED = "vehicle.register.completed";
         String CLEAR_VEHICLES = "vehicle.clear";
         String CLEAR_VEHICLES_COMPLETED = "vehicle.clear.completed";
@@ -60,4 +61,17 @@ public interface Messages {
         String GET_VEHICLES_REQUEST = "analytics.get.vehicles.request";
     }
 
+    interface Booking {
+        String BOOK_REQUEST = "booking.book.request.to.vehicle";
+        String BOOK_RESPONSE = "booking.book.response.to.control";
+        String UNDEPLOY = "booking.book.vehicle.verticle.undeploy";
+
+    }
+
+    interface BookingControl {
+        String PUBLISH_RESULT = "booking.control.publish.result.to.booking.service.and.analytics";
+
+        String GET_VEHICLE_BOOKING = "booking.control.get.vehicle.from.licence.plate";
+        String START_DRIVING = "booking.control.start.driving";
+    }
 }

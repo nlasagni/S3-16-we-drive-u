@@ -13,9 +13,9 @@ import io.vertx.rabbitmq.RabbitMQClient;
 import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 
 /**
- *
  * Basic RabbitMQ communication client (publisher and consumer) for testing VehicleService
  * inbound and outbound communication.
+ *
  * @author Marco on 09/08/2017.
  */
 public abstract class BaseInteractionClient {

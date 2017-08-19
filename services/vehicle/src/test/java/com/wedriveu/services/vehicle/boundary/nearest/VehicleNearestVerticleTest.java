@@ -23,6 +23,10 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_RES
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+/**
+ * Nearest request simulator, it acts as the Android client and sends the request to the VehicleService given
+ * a proper user address and destination address.
+ */
 @RunWith(VertxUnitRunner.class)
 public class VehicleNearestVerticleTest extends BaseInteractionClient {
 
