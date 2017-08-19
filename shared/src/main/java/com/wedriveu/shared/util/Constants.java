@@ -152,18 +152,25 @@ public interface Constants {
              */
             String ANALYTICS_VEHICLES_RESPONSE_ALL = "vehicle.response.all";
 
-
+            /**
+             * The routing key used by booking-service to communicate a request of booking.
+             */
+            String VEHICLE_SERVICE_BOOK_REQUEST = "vehicle.request.book";
+            /**
+             * The routing key used vehicle-service to communicate the response of a booking request to booking-service.
+             */
+            String VEHICLE_SERVICE_BOOK_RESPONSE = "vehicle.response.book";
 
             /**
              * The routing key used by vehicle-service to communicate a request of booking to a vehicle,
              * must be completed with the license plate, see {@linkplain String#format(String, Object...)}.
              */
-            String BOOK_REQUEST = "vehicle.request.book.%s";
+            String BOOK_VEHICLE_REQUEST = "vehicle.request.book.%s";
             /**
              * The routing key used by vehicles to communicate the response of a booking request from service,
              * must be completed with the license plate, see {@linkplain String#format(String, Object...)}.
              */
-            String BOOK_RESPONSE = "vehicle.response.book.%s";
+            String BOOK_VEHICLE_RESPONSE = "vehicle.response.book.%s";
             /**
              * The routing key used by vehicles to communicate they arrived to destination.
              */
@@ -208,14 +215,6 @@ public interface Constants {
              * The routing key used by booking-service to communicate if it has completed the booking.
              */
             String COMPLETE_BOOKING_RESPONSE = "booking.response.complete";
-            /**
-             * The routing key used to communicate to the booking-service a find bookings by date request.
-             */
-            String FIND_BOOKING_BY_DATE_REQUEST = "booking.request.bydate";
-            /**
-             * The routing key used by booking-service to communicate the bookings found.
-             */
-            String FIND_BOOKING_BY_DATE_RESPONSE = "booking.response.bydate";
             /**
              * The routing key used to communicate to the booking-service a find bookings by position request.
              */
