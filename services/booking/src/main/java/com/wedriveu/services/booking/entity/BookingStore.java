@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * A store that manages {@linkplain Booking}s.
+ *
  * @author Michele Donati
  * @author Nicola Lasagni
  * This inteface models the <em>Booking' database store</em>.
@@ -14,6 +16,7 @@ import java.util.Optional;
 public interface BookingStore {
 
     /**
+     * Generates a unique id.
      *
      * @return A new unique generated id.
      */
@@ -28,7 +31,7 @@ public interface BookingStore {
     boolean addBooking(Booking booking);
 
     /**
-     *
+     * Gets a {@linkplain Booking} with the provided {@code bookingId}
      * @param bookingId Identifies the <em>Booking</em>'s <em>ID</em> that must be retreived.
      * @return Returns the {@linkplain Booking} with the provided id, only if found.
      */
@@ -42,6 +45,7 @@ public interface BookingStore {
     Optional<Booking> getStartedBookingByLicensePlate(String licensePlate);
 
     /**
+     * Gets the {@linkplain Booking} started by a {@linkplain com.wedriveu.services.shared.model.User}
      *
      * @param username Identifies username to which the booking is associated.
      * @return Returns the started {@linkplain Booking} associated to the provided username, only if found.
@@ -66,7 +70,7 @@ public interface BookingStore {
      */
     List<Booking> getBookingsByDate(Date fromDate, Date toDate);
 
-    /** Deletes a booking from the store.
+    /** Deletes a {@linkplain Booking} from the store.
      *
      * @param id The id of the booking to be deleted.
      * @return A boolean indicating the success or the failure of this operation.
