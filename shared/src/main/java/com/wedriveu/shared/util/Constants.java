@@ -244,17 +244,6 @@ public interface Constants {
              */
             String FIND_BOOKING_POSITION_RESPONSE = "booking.response.position";
         }
-
-        /**
-         * Constants related to the RabbitMQ queues.
-         */
-        interface Queue {
-            /**
-             * The user queue name, must be completed with the username,
-             * see {@linkplain String#format(String, Object...)}.
-             */
-            String USER = "user.%s";
-        }
     }
 
     interface Position {

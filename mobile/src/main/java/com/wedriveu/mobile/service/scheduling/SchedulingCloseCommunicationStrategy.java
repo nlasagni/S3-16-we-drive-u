@@ -25,7 +25,7 @@ class SchedulingCloseCommunicationStrategy implements RabbitMqCloseCommunication
     @Override
     public void closeCommunication(RabbitMqCommunication communication) throws IOException {
         String userName = mUser.getUsername();
-        String queue = String.format(Constants.RabbitMQ.Queue.USER, userName);
+        String queue = String.format(com.wedriveu.mobile.util.Constants.Queue.USER, userName);
         String routingKey = String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE, userName);
         Channel channel = communication.getChannel();
         channel.queueUnbind(queue, Constants.RabbitMQ.Exchanges.VEHICLE, routingKey);

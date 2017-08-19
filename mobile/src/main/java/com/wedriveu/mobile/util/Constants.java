@@ -31,4 +31,24 @@ public interface Constants {
      */
     String CLOSE_COMMUNICATION_ERROR = "Error occurred while closing RabbitMQ communication.";
 
+    /**
+     * Constants related to the RabbitMQ queues.
+     */
+    interface Queue {
+        /**
+         * The user queue name, must be completed with the username,
+         * see {@linkplain String#format(String, Object...)}.
+         */
+        String USER = "user.%s";
+        /**
+         * The user queue name, must be completed with the username,
+         * see {@linkplain String#format(String, Object...)}.
+         */
+        String VEHICLE = "vehicle.%s";
+        /**
+         *
+         */
+        String BOOKING = "booking.%s";
+    }
+
 }
