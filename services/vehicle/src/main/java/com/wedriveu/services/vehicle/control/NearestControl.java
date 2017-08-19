@@ -1,8 +1,8 @@
 package com.wedriveu.services.vehicle.control;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponseCanDrive;
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.services.shared.message.VehicleResponseCanDrive;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.wedriveu.services.shared.entity.Vehicle.NO_ELIGIBLE_VEHICLE_RESPONSE;
+import static com.wedriveu.services.shared.model.Vehicle.NO_ELIGIBLE_VEHICLE_RESPONSE;
 import static com.wedriveu.shared.util.Constants.*;
 import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 

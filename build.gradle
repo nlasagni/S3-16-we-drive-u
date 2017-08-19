@@ -13,6 +13,7 @@ allprojects {
 
     repositories {
         jcenter()
+        mavenCentral()
     }
 
 }
@@ -45,11 +46,13 @@ configure(subprojects.grep {!java7ModulePaths.contains(it.path)}) {
         testCompile "org.scala-lang:scala-library:$scalaVersion"
         testCompile "org.scalatest:scalatest_2.12:$scalaTestVersion"
         testCompile "io.vertx:vertx-unit:$vertx3Version"
+        testCompile "org.scalatest:scalatest_2.12:$scalaTestVersion"
         compile "org.scala-lang:scala-library:$scalaVersion"
         compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
         compile "io.vertx:vertx-core:$vertx3Version"
-        compile "io.vertx:vertx-config:$vertx3Version"
+        compile "io.vertx:vertx-lang-scala_2.12:$vertx3Version"
         compile "io.vertx:vertx-rabbitmq-client:$vertx3Version"
+        compile "io.vertx:vertx-rabbitmq-client-scala_2.12:$vertx3Version"
         compile "com.rabbitmq:amqp-client:$rabbitMQVersion"
         compile "org.slf4j:slf4j-api:$slf4jVersion"
         compile project(path: ':shared')

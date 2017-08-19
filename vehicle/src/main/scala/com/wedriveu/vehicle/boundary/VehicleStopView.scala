@@ -1,10 +1,14 @@
 package com.wedriveu.vehicle.boundary
 
-import java.awt.event.{ActionEvent, ActionListener}
+import java.awt.event.{ActionEvent, ActionListener, WindowAdapter, WindowEvent}
 import javax.swing._
 
+import com.wedriveu.shared.util.Constants
 import com.wedriveu.vehicle.control.VehicleControl
 import com.wedriveu.vehicle.shared.VehicleConstants
+import io.vertx.core.Vertx
+import io.vertx.core.eventbus.EventBus
+import io.vertx.core.json.JsonObject
 
 /**
   * @author Michele Donati on 04/08/2017.
@@ -32,13 +36,13 @@ trait VehicleStopView {
 
 }
 
-class VehicleStopViewImpl(vehicleIdentifier: Int)
+class VehicleStopViewImpl(vertx: Vertx, vehicleIdentifier: Int)
   extends JFrame("Vehicle " + vehicleIdentifier) with VehicleStopView with ActionListener {
 
+  val eventBus: EventBus = vertx.eventBus()
   val notCommandFoundError: String = "No Command Found"
   val forceBrokenStatus: String = "Vehicle forced to be broken. Vehicle state is: "
 
-  setDefaultCloseOperation(0)
   var vehicleAssociated: VehicleControl = null
   val panel: JPanel = new JPanel()
   val logLabel: JLabel = new JLabel("Log")
@@ -74,6 +78,13 @@ class VehicleStopViewImpl(vehicleIdentifier: Int)
 
   add(panel)
 
+  addWindowListener(new WindowAdapter {
+    override def windowClosing(e: WindowEvent): Unit = {
+      unsubscribeToEvents()
+      dispose()
+    }
+  })
+
   override def render(): Unit = setVisible(true)
 
   override def close(): Unit = System.exit(-1)
@@ -89,10 +100,16 @@ class VehicleStopViewImpl(vehicleIdentifier: Int)
   override def actionPerformed(e: ActionEvent): Unit = e.getActionCommand match {
     case command if command == stopCommand =>
       vehicleAssociated.getVehicle().setState(VehicleConstants.stateBroken)
+      eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleAssociated.getVehicle().plate),
+        new JsonObject())
       writeMessageLog(forceBrokenStatus + vehicleAssociated.getVehicle().getState())
-      //TODO Notify the service that i'm broken, no more seen by the system (System.exit(0))
 
     case _ => println(notCommandFoundError)
+  }
+
+  private def unsubscribeToEvents(): Unit = {
+    vehicleAssociated.unsubscribeToBrokenEvents()
+    vehicleAssociated.unsubscribeToStolenEvents()
   }
 
 }

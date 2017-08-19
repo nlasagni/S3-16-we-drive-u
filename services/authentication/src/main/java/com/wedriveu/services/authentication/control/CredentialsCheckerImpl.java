@@ -2,8 +2,8 @@ package com.wedriveu.services.authentication.control;
 
 import com.wedriveu.services.authentication.entity.UserStore;
 import com.wedriveu.services.authentication.entity.UserStoreImpl;
-import com.wedriveu.services.shared.entity.User;
 import com.wedriveu.shared.util.Log;
+import com.wedriveu.services.shared.model.User;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class CredentialsCheckerImpl implements CredentialsChecker {
         try {
             userStore = new UserStoreImpl();
         } catch (IOException e) {
-            Log.log("Error while creating UserStore");
+            Log.info("Error while creating UserStore");
         }
     }
 

@@ -1,8 +1,8 @@
 package com.wedriveu.services.analytics.entity;
 
-import com.wedriveu.services.shared.entity.AnalyticsVehicle;
-import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
-import com.wedriveu.services.shared.entity.VehicleCounter;
+import com.wedriveu.services.shared.model.AnalyticsVehicle;
+import com.wedriveu.services.shared.store.EntityListStoreStrategy;
+import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import com.wedriveu.shared.util.Log;
 
 import java.util.ArrayList;
@@ -96,7 +96,7 @@ public class AnalyticsStoreImpl implements AnalyticsStore {
     @Override
     public VehicleCounter getVehicleCounter() {
         try {
-            return vehiclesCounterAlgorithmStrategy.vehicleCounter(storeStrategy.getEntities());
+            return (VehicleCounter) vehiclesCounterAlgorithmStrategy.vehicleCounter(storeStrategy.getEntities());
         } catch (Exception e) {
             Log.error(TAG, CLEAR_ERROR, e);
         }

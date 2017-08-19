@@ -14,11 +14,15 @@ import io.vertx.rabbitmq.RabbitMQClient;
 public class RabbitMQClientFactory {
 
     public static RabbitMQClient createClient(Vertx vertx) {
+        return RabbitMQClient.create(vertx, createClientConfig());
+    }
+
+    public static JsonObject createClientConfig() {
         JsonObject config = new JsonObject();
         config.put(Constants.RabbitMQ.ConfigKey.HOST, Constants.RabbitMQ.Broker.HOST);
         config.put(Constants.RabbitMQ.ConfigKey.PASSWORD, Constants.RabbitMQ.Broker.PASSWORD);
         config.put(Constants.RabbitMQ.ConfigKey.PORT, Constants.RabbitMQ.Broker.PORT);
-        return RabbitMQClient.create(vertx, config);
+        return config;
     }
 
 }

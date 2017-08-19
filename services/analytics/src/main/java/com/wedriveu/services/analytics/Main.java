@@ -16,7 +16,7 @@ public class Main {
         Vertx vertx = Vertx.vertx();
         vertx.deployVerticle(new AnalyticsVerticleDeployer(), completed -> {
             if (completed.succeeded()) {
-                Log.log("correctly started Analytics service");
+                Log.info("correctly started Analytics service");
             } else {
                 Log.error("main analytics service", completed.cause().getLocalizedMessage(), completed.cause());
             }

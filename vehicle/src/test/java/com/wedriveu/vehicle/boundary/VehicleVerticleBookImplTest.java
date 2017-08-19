@@ -1,7 +1,8 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
+
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
+import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
@@ -45,15 +46,16 @@ public class VehicleVerticleBookImplTest {
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
-    private VehicleStopView stopUi = new VehicleStopViewImpl(1);
-    private boolean debugVar = false;
+    private VehicleStopView stopUi;
+    private boolean debugVar = true;
 
     @Before
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
+        stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl("","",license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleBookImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -70,7 +72,7 @@ public class VehicleVerticleBookImplTest {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
                 rabbitMQClient.queueBind(requestId,
                         Constants.RabbitMQ.Exchanges.VEHICLE,
-                        String.format(Constants.RabbitMQ.RoutingKey.BOOK_RESPONSE, license),
+                        String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_RESPONSE, license),
                         onQueueBind -> {
                             vertx.deployVerticle(vehicleVerticle,
                                     new DeploymentOptions().setWorker(true),
@@ -97,7 +99,7 @@ public class VehicleVerticleBookImplTest {
     public void canBeBooked(TestContext context) throws Exception {
         final Async async = context.async(2);
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                String.format(Constants.RabbitMQ.RoutingKey.BOOK_REQUEST, license),
+                String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_REQUEST, license),
                 createRequestJsonObject(),
                 onPublish -> {
                     context.assertTrue(onPublish.succeeded());
@@ -113,7 +115,7 @@ public class VehicleVerticleBookImplTest {
             JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
             Log.info(TAG, responseJson.toString());
             BookVehicleResponse response = responseJson.mapTo(BookVehicleResponse.class);
-            context.assertTrue(response.getBooked());
+            context.assertTrue(response.getBooked() && (response.getSpeed() == speed));
             async.complete();
         });
         consumer.exceptionHandler(event -> {
@@ -123,7 +125,7 @@ public class VehicleVerticleBookImplTest {
     }
 
     private JsonObject createRequestJsonObject() {
-        BookVehicleRequest request = new BookVehicleRequest();
+        VehicleReservationRequest request = new VehicleReservationRequest();
         request.setUsername(USERNAME);
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(request).toString());

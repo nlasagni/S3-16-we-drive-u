@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.shared.rabbitmq.message.RegisterToServiceRequest;
 import com.wedriveu.shared.rabbitmq.message.RegisterToServiceResponse;
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
@@ -48,16 +49,20 @@ public class VehicleVerticleRegisterImplTest {
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
-    private VehicleStopView stopUi = new VehicleStopViewImpl(1);
-    private boolean debugVar = false;
+    private VehicleStopView stopUi;
+    private boolean debugVar = true;
 
     @Before
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
         objectMapper = new ObjectMapper();
+        stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl("","",license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx,
+                        "http://www.google.com",
+                        "",
+                        license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleRegisterImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -109,9 +114,9 @@ public class VehicleVerticleRegisterImplTest {
             MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
                 JsonObject requestJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
                 Log.info(TAG, requestJson.toString());
-                RegisterToServiceRequest request = requestJson.mapTo(RegisterToServiceRequest.class);
+                Vehicle request = requestJson.mapTo(Vehicle.class);
                 RegisterToServiceResponse response = new RegisterToServiceResponse();
-                response.setRegisterOk(checkLicenseList(request.getLicense()));
+                response.setRegisterOk(checkLicenseList(request.getLicensePlate()));
                 sendResponse(response, context);
             });
             consumer.exceptionHandler(event -> {
@@ -124,14 +129,12 @@ public class VehicleVerticleRegisterImplTest {
     }
 
     private boolean checkLicenseList(String license) {
-        boolean ok = true;
         for(int i = 0; i < licenseList.length; i++) {
             if(license.equals(licenseList[i])){
-                ok = false;
-                return ok;
+                return false;
             }
         }
-        return ok;
+        return true;
     }
 
     private void sendResponse(RegisterToServiceResponse response, TestContext context) {

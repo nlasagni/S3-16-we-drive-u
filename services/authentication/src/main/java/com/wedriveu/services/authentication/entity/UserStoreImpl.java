@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.entity.User;
 import com.wedriveu.shared.util.Log;
+import com.wedriveu.services.shared.model.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,9 +75,9 @@ public class UserStoreImpl implements UserStore {
 
             mapper.writeValue(file, userListToJSon);
             String jsonInString = mapper.writeValueAsString(userListToJSon);
-            Log.log(jsonInString);
+            Log.info(jsonInString);
             jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(userListToJSon);
-            Log.log(jsonInString);
+            Log.info(jsonInString);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {
@@ -90,7 +90,7 @@ public class UserStoreImpl implements UserStore {
     private User getRequestedUuser(List<User> users, String username) {
         for (User user : users) {
             if (user.getUsername().equals(username)) {
-                Log.log("Login success! " +
+                Log.info("Login success! " +
                         "Username: " +
                         user.getUsername() +
                         ", Password: " +
@@ -98,7 +98,7 @@ public class UserStoreImpl implements UserStore {
                 return user;
             }
         }
-        Log.log("Login failed, retry!");
+        Log.info("Login failed, retry!");
         return null;
     }
 

@@ -1,6 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister.entity;
 
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.util.Position;
 
 import java.net.MalformedURLException;
@@ -33,12 +33,7 @@ public class VehicleFactoryMini implements VehicleFactory {
         vehicle.setLastUpdate(LAST_UPDATE);
         vehicle.setName(NAME);
         vehicle.setDescription(DESCRIPTION);
-        try {
-            URL url = new URL(IMAGE_URL);
-            vehicle.setImageUrl(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        vehicle.setImageUrl(IMAGE_URL);
         return vehicle;
     }
 }
