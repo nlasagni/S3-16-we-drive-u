@@ -73,15 +73,23 @@ object BookingBoundaryVerticle {
     }
 
     override def handleChangeActiveBookingLicensePlateRequest(): Future[_] = {
-      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.ChangeBooking)
+      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.ChangeBooking).flatMap({ _ =>
+        vertx.deployVerticleFuture(BookingBoundaryPublisherVerticle.ChangeBooking)
+      })
     }
 
     override def handleCompleteBookingRequest(): Future[_] = {
-      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.CompleteBooking)
+      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.CompleteBooking).flatMap({ _ =>
+        vertx.deployVerticleFuture(BookingBoundaryPublisherVerticle.CompleteBookingVehicleService)
+      }).flatMap({ _ =>
+        vertx.deployVerticleFuture(BookingBoundaryPublisherVerticle.CompleteBookingUser)
+      })
     }
 
     override def handleFindActiveBookingPositionsRequest(): Future[_] = {
-      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.FindBookingPosition)
+      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.FindBookingPosition).flatMap({ _ =>
+        vertx.deployVerticleFuture(BookingBoundaryPublisherVerticle.FindBookingPosition)
+      })
     }
 
   }
