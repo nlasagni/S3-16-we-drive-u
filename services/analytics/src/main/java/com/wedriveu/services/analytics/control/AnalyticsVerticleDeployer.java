@@ -2,7 +2,6 @@ package com.wedriveu.services.analytics.control;
 
 import com.wedriveu.services.analytics.boundary.VehicleListRequestVerticle;
 import com.wedriveu.services.analytics.boundary.VehicleListRetrieverVerticle;
-import com.wedriveu.services.analytics.boundary.*;
 import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
@@ -37,7 +36,7 @@ public class AnalyticsVerticleDeployer extends AbstractVerticle {
 
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {
-                Log.log("starting event message queue");
+                Log.info("starting event message queue");
                 vertx.eventBus().send(ANALYTICS_VEHICLE_LIST_REQUEST_EVENTBUS, ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE);
                 startFuture.complete();
             } else {

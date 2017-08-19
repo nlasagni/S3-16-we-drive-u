@@ -25,7 +25,7 @@ public class VehicleListRetrieverVerticle extends VerticleConsumer{
         Future<Void> futureConsumer = Future.future();
         futureConsumer.setHandler(v->{
             if (v.succeeded()) {
-                Log.log("future in VehicleListRetrieverVerticle completed");
+                Log.info("future in VehicleListRetrieverVerticle completed");
                 futureRetriever.complete();
             } else {
                 Log.error("future consumer handler", v.cause().getLocalizedMessage(), v.cause());
@@ -37,14 +37,14 @@ public class VehicleListRetrieverVerticle extends VerticleConsumer{
 
     @Override
     public void registerConsumer(String eventBus) {
-        Log.log("started vertx eventbus consumer in VehicleListRetrieverVerticle, attending start to receive");
+        Log.info("started vertx eventbus consumer in VehicleListRetrieverVerticle, attending start to receive");
         vertx.eventBus().consumer(eventBus, this::sendToController);
     }
 
     private void sendToController(Message message) {
         VehicleListObject vehicleListObject = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleListObject.class);
         vertx.eventBus().send(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS, VertxJsonMapper.mapInBodyFrom(vehicleListObject));
-        Log.log("sent vehicle list to analytics controller");
+        Log.info("sent vehicle list to analytics controller");
     }
 
 }

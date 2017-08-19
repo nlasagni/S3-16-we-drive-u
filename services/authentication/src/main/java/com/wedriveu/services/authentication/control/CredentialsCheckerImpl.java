@@ -23,7 +23,7 @@ public class CredentialsCheckerImpl implements CredentialsChecker {
         try {
             userStore = new UserStoreImpl();
         } catch (IOException e) {
-            Log.log("Error while creating UserStore");
+            Log.info("Error while creating UserStore");
         }
     }
 

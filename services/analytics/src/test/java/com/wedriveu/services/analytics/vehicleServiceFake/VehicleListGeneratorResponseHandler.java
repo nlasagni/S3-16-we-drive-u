@@ -22,11 +22,11 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher{
     @Override
     public void start() throws Exception {
         startConsumer();
-        Log.log("future VehicleListGeneratorResponseHandler complete");
+        Log.info("future VehicleListGeneratorResponseHandler complete");
     }
 
     private void startConsumer() {
-        Log.log("started vertx eventbus consumer in VehicleListGeneratorResponseHandler, attending start to receive");
+        Log.info("started vertx eventbus consumer in VehicleListGeneratorResponseHandler, attending start to receive");
         vertx.eventBus().consumer("mandaVeicoli", this::sendVehicleListToAnalyticsService);
     }
 
@@ -51,7 +51,7 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher{
                     new Date(2017, 8, 24, 9, 37, 22)));
         JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new VehicleListObject(vehicleList));
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,ANALYTICS_VEHICLES_RESPONSE_ALL,vehicleListJson, published -> { });
-        Log.log("sent request for all vehicles to vehicle service in VehicleListGeneratorResponseHandler");
+        Log.info("sent request for all vehicles to vehicle service in VehicleListGeneratorResponseHandler");
     }
 
 }

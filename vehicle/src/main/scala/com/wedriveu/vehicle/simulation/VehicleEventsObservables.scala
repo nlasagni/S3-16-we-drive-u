@@ -68,7 +68,7 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
                 ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
               randomLongitudeDestination =
                 ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
-              Log.log(positionToReachLog + randomLatitudeDestination + " , " + randomLongitudeDestination)
+              Log.info(positionToReachLog + randomLatitudeDestination + " , " + randomLongitudeDestination)
               subscriber.onNext(new Position(randomLatitudeDestination, randomLongitudeDestination ))
               Thread.sleep(1500000) //this is temporary
             }
@@ -120,7 +120,7 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
     val randomNumber = new scala.util.Random
     val result = startRange + randomNumber.nextInt(( endRange - startRange) + 1);
     Thread.sleep(result*oneSecondInMillis)
-    Log.log(vehicleLog)
+    Log.info(vehicleLog)
   }
 
 }
