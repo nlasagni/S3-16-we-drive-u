@@ -3,17 +3,35 @@ package com.wedriveu.shared.rabbitmq.message;
 import com.wedriveu.shared.util.Position;
 
 /**
- * A booking request from a client that wants to travel from its position
- * to a destination position with a vehicle previously selected by the system.
+ * A find position booking response which containte the positions of a booking.
  *
  * @author Nicola Lasagni on 12/08/2017.
  */
-public class CreateBookingRequest {
+public class FindBookingPositionsResponse {
 
+    private boolean success;
     private String username;
     private String licensePlate;
     private Position userPosition;
     private Position destinationPosition;
+
+    /**
+     * Is success boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isSuccess() {
+        return success;
+    }
+
+    /**
+     * Sets success.
+     *
+     * @param success the success
+     */
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 
     /**
      * Gets username.
@@ -87,30 +105,29 @@ public class CreateBookingRequest {
         this.destinationPosition = destinationPosition;
     }
 
+
     @Override
-    public boolean equals(Object other) {
-        if (this == other) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (!(other instanceof CreateBookingRequest)) {
+        if (!(o instanceof FindBookingPositionsResponse)) {
             return false;
         }
-        CreateBookingRequest otherRequest = (CreateBookingRequest) other;
-        return (username != null ? username.equals(otherRequest.username) : otherRequest.username == null) &&
-                (licensePlate != null
-                        ? licensePlate.equals(otherRequest.licensePlate)
-                        : otherRequest.licensePlate == null) &&
-                (userPosition != null
-                        ? userPosition.equals(otherRequest.userPosition)
-                        : otherRequest.userPosition == null) &&
+        FindBookingPositionsResponse that = (FindBookingPositionsResponse) o;
+        return success == that.success &&
+                (username != null ? username.equals(that.username) : that.username == null) &&
+                (licensePlate != null ? licensePlate.equals(that.licensePlate) : that.licensePlate == null) &&
+                (userPosition != null ? userPosition.equals(that.userPosition) : that.userPosition == null) &&
                 (destinationPosition != null
-                        ? destinationPosition.equals(otherRequest.destinationPosition)
-                        : otherRequest.destinationPosition == null);
+                        ? destinationPosition.equals(that.destinationPosition)
+                        : that.destinationPosition == null);
     }
 
     @Override
     public int hashCode() {
-        int result = username != null ? username.hashCode() : 0;
+        int result = (success ? 1 : 0);
+        result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (licensePlate != null ? licensePlate.hashCode() : 0);
         result = 31 * result + (userPosition != null ? userPosition.hashCode() : 0);
         result = 31 * result + (destinationPosition != null ? destinationPosition.hashCode() : 0);
@@ -119,8 +136,9 @@ public class CreateBookingRequest {
 
     @Override
     public String toString() {
-        return "CreateBookingRequest{" +
-                "username='" + username + '\'' +
+        return "FindBookingPositionsResponse{" +
+                "success=" + success +
+                ", username='" + username + '\'' +
                 ", licensePlate='" + licensePlate + '\'' +
                 ", userPosition=" + userPosition +
                 ", destinationPosition=" + destinationPosition +

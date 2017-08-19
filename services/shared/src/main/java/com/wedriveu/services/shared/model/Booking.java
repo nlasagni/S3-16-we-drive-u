@@ -56,6 +56,10 @@ public class Booking {
         return vehicleLicensePlate;
     }
 
+    public void setVehicleLicensePlate(String licensePlate) {
+        vehicleLicensePlate = licensePlate;
+    }
+
     public Position getUserPosition() {
         return userPosition;
     }
