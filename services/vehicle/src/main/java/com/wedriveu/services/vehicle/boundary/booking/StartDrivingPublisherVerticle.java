@@ -8,7 +8,7 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.START_DRIVING;
+import static com.wedriveu.services.vehicle.rabbitmq.Messages.BookingControl.START_DRIVING;
 
 
 /**
@@ -22,7 +22,7 @@ public class StartDrivingPublisherVerticle extends VerticlePublisher {
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
-        vertx.eventBus().consumer(Messages.BookingControl.START_DRIVING, this::sendStartDrivingCommand);
+        vertx.eventBus().consumer(START_DRIVING, this::sendStartDrivingCommand);
         super.start(startFuture);
     }
 

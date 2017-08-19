@@ -23,7 +23,7 @@ public abstract class VerticleConsumer extends AbstractVerticle {
 
     protected EventBus eventBus;
     private String queueName;
-    private RabbitMQClient client;
+    protected RabbitMQClient client;
 
     public VerticleConsumer(String name) {
         this.queueName = name;

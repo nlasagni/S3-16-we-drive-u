@@ -10,7 +10,7 @@ import java.util.concurrent.TimeoutException;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_BOOK_ADDRESS;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_BOOK;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOKING_SERVICE_BOOK_REQUEST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_REQUEST;
 
 
 /**
@@ -33,7 +33,7 @@ public class BookConsumerVerticle extends VerticleConsumer {
     private void startBookConsumer() throws IOException, TimeoutException {
         startConsumer(false,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
-                BOOKING_SERVICE_BOOK_REQUEST,
+                VEHICLE_SERVICE_BOOK_REQUEST,
                 EVENT_BUS_BOOK_ADDRESS);
     }
 

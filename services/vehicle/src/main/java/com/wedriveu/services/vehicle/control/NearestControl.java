@@ -31,6 +31,8 @@ import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 public class NearestControl extends AbstractVerticle {
 
     private EventBus eventBus;
+    private static final String AVAILABLE_COMPLETED_FOR_SUBSTITUTION = "store.available.completed.substitution";
+    private static final String NEAREST_VEHICLE_FOR_SUBSTITUTION = "nearest.vehicle.for.substitution";
 
     @Override
     public void start() throws Exception {
@@ -38,6 +40,7 @@ public class NearestControl extends AbstractVerticle {
         eventBus.consumer(Messages.VehicleStore.AVAILABLE_COMPLETED, this::availableVehiclesCompleted);
         eventBus.consumer(Messages.VehicleFinder.VEHICLE_RESPONSE, this::handleVehicleResponses);
         eventBus.consumer(Messages.VehicleFinder.NO_VEHICLE, this::handleNoVehicle);
+        eventBus.consumer(AVAILABLE_COMPLETED_FOR_SUBSTITUTION, this::availableVehiclesCompletedForSubstitution);
     }
 
     private void undeployFinder(String deploymentId) {
@@ -104,6 +107,16 @@ public class NearestControl extends AbstractVerticle {
         vertx.deployVerticle(new VehicleFinderVerticle(uniqueKey.toString()), completed -> {
             if (completed.succeeded()) {
                 this.eventBus.send(Messages.NearestControl.DATA_TO_VEHICLE, userData);
+            }
+        });
+    }
+
+    private void availableVehiclesCompletedForSubstitution(Message message) {
+        UUID uniqueKey = UUID.randomUUID();
+        JsonObject userData = (JsonObject) message.body();
+        vertx.deployVerticle(new VehicleFinderVerticle(uniqueKey.toString()), completed -> {
+            if (completed.succeeded()) {
+                this.eventBus.send(NEAREST_VEHICLE_FOR_SUBSTITUTION, userData);
             }
         });
     }

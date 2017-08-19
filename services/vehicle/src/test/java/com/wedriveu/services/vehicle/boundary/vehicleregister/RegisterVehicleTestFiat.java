@@ -47,28 +47,23 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
         async = context.async(ASYNC_COUNT);
         vertx = Vertx.vertx();
         super.setup(vertx, completed -> {
-            async.countDown();
-            String licencePlate = new VehicleFactoryFiat().getVehicle().getLicensePlate();
-            super.declareQueueAndBind(licencePlate, context, declared -> {
-                context.assertTrue(declared.succeeded());
-                async.countDown();
-                deployVerticles(context);
+            vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
+                vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
+                    async.countDown();
+                    String licencePlate = new VehicleFactoryFiat().getVehicle().getLicensePlate();
+                    super.declareQueueAndBind(licencePlate, context, declared -> {
+                        context.assertTrue(declared.succeeded());
+                        async.complete();
+                    });
+                });
+                vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
+            async.countDown();
+            vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
+                vertx.eventBus().send(Messages.VehicleService.BOOT, null);
+            }));
         });
         async.awaitSuccess();
-    }
-
-    @SuppressWarnings("Duplicates")
-    private void deployVerticles(TestContext context) {
-        vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, completed -> {
-            vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
-                async.complete();
-            });
-            vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
-        });
-        vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
-            vertx.eventBus().send(Messages.VehicleService.BOOT, null);
-        }));
     }
 
     @After

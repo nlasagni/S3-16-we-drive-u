@@ -9,7 +9,7 @@ import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOKING_SERVICE_BOOK_RESPONSE;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_RESPONSE;
 
 
 /**
@@ -28,7 +28,7 @@ public class BookPublisherVerticle extends VerticlePublisher {
     private void notifyBookingService(Message message) {
         BookVehicleResponse vehicleResponse = (BookVehicleResponse) message.body();
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                BOOKING_SERVICE_BOOK_RESPONSE,
+                VEHICLE_SERVICE_BOOK_RESPONSE,
                 VertxJsonMapper.mapInBodyFrom(vehicleResponse), onPublish -> {
                     if (!onPublish.succeeded()) {
                         Log.error(BookPublisherVerticle.class.getSimpleName(),

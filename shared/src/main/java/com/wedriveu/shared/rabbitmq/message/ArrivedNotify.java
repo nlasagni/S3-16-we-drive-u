@@ -9,6 +9,7 @@ package com.wedriveu.shared.rabbitmq.message;
 public class ArrivedNotify {
 
     private String license;
+    private String username;
 
     public String getLicense() {
         return license;
@@ -16,6 +17,12 @@ public class ArrivedNotify {
 
     public void setLicense(String newLicense) {
         this.license = newLicense;
+    }
+
+    public String getUsername() { return username; }
+
+    public void setUsername(String newUsername) {
+        this.username = newUsername;
     }
 
     @Override
