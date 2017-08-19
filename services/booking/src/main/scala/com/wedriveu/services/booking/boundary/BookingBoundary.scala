@@ -1,11 +1,6 @@
 package com.wedriveu.services.booking.boundary
 
-import java.util.Date
-
-import com.wedriveu.services.booking.util.Constants
-import com.wedriveu.shared.rabbitmq.message.CreateBookingRequest
 import io.vertx.lang.scala.ScalaVerticle
-import io.vertx.scala.core.eventbus.Message
 
 import scala.concurrent.Future
 
@@ -16,37 +11,29 @@ import scala.concurrent.Future
   */
 trait BookingBoundary {
 
-  /** Creates a booking.
+  /** Handles a create [[com.wedriveu.services.shared.model.Booking]] request.
     *
-    * @param bookingRequest The request data needed to create a [[com.wedriveu.services.shared.model.Booking]].
+    * @return The future containing the result of this request.
     */
-  def createBooking(bookingRequest: CreateBookingRequest): Unit
+  def handleCreateBookingRequest(): Future[_]
 
-  /** Changes an active [[com.wedriveu.services.shared.model.Booking]] license plate.
+  /** Handles a change [[com.wedriveu.services.shared.model.Booking]] license plate request.
     *
-    * @param oldLicensePlate The license plate with which identify the booking to change.
-    * @param newLicensePlate The new license plate.
+    * @return The future containing the result of this request.
     */
-  def changeActiveBookingLicensePlate(oldLicensePlate: String, newLicensePlate: String): Unit
+  def handleChangeActiveBookingLicensePlateRequest(): Future[_]
 
-  /** Completes a [[com.wedriveu.services.shared.model.Booking]].
+  /** Handles a complete [[com.wedriveu.services.shared.model.Booking]] request.
     *
-    * @param licensePlate The license plate with which identify the booking to complete.
+    * @return The future containing the result of this request.
     */
-  def completeBooking(licensePlate: String): Unit
+  def handleCompleteBookingRequest(): Future[_]
 
-  /** Gets the positions of a [[com.wedriveu.services.shared.model.Booking]].
+  /** Handles a find positions of [[com.wedriveu.services.shared.model.Booking]] request.
     *
-    * @param licensePlate The license plate with which identify the booking from which get the positions.
+    * @return The future containing the result of this request.
     */
-  def findActiveBookingPositions(licensePlate: String): Unit
-
-  /** Finds [[com.wedriveu.services.shared.model.Booking]]s in a range of dates.
-    *
-    * @param startDate The starting date filter.
-    * @param endDate The end date filter.
-    */
-  def findAllBookingsByDate(startDate: Date, endDate: Date): Unit
+  def handleFindActiveBookingPositionsRequest(): Future[_]
 
 }
 
@@ -56,7 +43,7 @@ trait BookingBoundary {
 trait BookingBoundaryVerticle extends ScalaVerticle with BookingBoundary {}
 
 
-object BookingBoundary {
+object BookingBoundaryVerticle {
 
   /**
     * The [[ScalaVerticle]] name to deploy a [[BookingBoundaryVerticle]].
@@ -66,82 +53,37 @@ object BookingBoundary {
   private[boundary] class BookingBoundaryVerticleImpl extends BookingBoundaryVerticle {
 
     override def startFuture(): Future[_] = {
-      registerForRequests()
-      registerForResponses()
-      vertx.deployVerticleFuture(BookingBoundaryConsumer.CreateBooking).flatMap({
-        _ => vertx.deployVerticleFuture(BookingBoundaryConsumer.ChangeBooking)
+      handleCreateBookingRequest().flatMap({
+        _ => handleChangeActiveBookingLicensePlateRequest()
       }).flatMap({
-        _ => vertx.deployVerticleFuture(BookingBoundaryConsumer.CompleteBooking)
+        _ => handleCompleteBookingRequest()
       }).flatMap({
-        _ => vertx.deployVerticleFuture(BookingBoundaryConsumer.FindBookingPosition)
-      }).flatMap({
-        _ => vertx.deployVerticleFuture(BookingBoundaryConsumer.FindBookingByDate)
+        _ => handleFindActiveBookingPositionsRequest()
       })
     }
 
-    private def registerForRequests(): Unit = {
-      vertx.eventBus().consumer(Constants.EventBus.Address.Booking.CreateBookingRequest,
-        handleCreateBookingRequest)
-      vertx.eventBus().consumer(Constants.EventBus.Address.Booking.ChangeBookingLicensePlateRequest,
-        handleChangeBookingRequest)
-      vertx.eventBus().consumer(Constants.EventBus.Address.Booking.FindBookingPositionRequest,
-        handleFindBookingByDestinationRequest)
-      vertx.eventBus().consumer(Constants.EventBus.Address.Booking.FindBookingByDateRequest,
-        handleFindBookingsByDateRequest)
+    override def handleCreateBookingRequest(): Future[_] = {
+      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.CreateBooking).flatMap({ _ =>
+        vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.BookVehicle)
+      }).flatMap(_ => {
+        vertx.deployVerticleFuture(BookingBoundaryPublisherVerticle.CreateBooking)
+      }).flatMap(_ => {
+        vertx.deployVerticleFuture(BookingBoundaryPublisherVerticle.BookVehicle)
+      })
     }
 
-    private def registerForResponses(): Unit = {
-      vertx.eventBus().consumer(Constants.EventBus.Address.Booking.CreateBookingResponse,
-        handleCreateBookingResponse)
-      vertx.eventBus().consumer(Constants.EventBus.Address.Booking.ChangeBookingLicensePlateResponse,
-        handleChangeBookingResponse)
-      vertx.eventBus().consumer(Constants.EventBus.Address.Booking.FindBookingPositionResponse,
-        handleFindBookingByDestinationResponse)
-      vertx.eventBus().consumer(Constants.EventBus.Address.Booking.FindBookingByDateResponse,
-        handleFindBookingsByDateResponse)
+    override def handleChangeActiveBookingLicensePlateRequest(): Future[_] = {
+      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.ChangeBooking)
     }
 
-    private def handleCreateBookingRequest(message: Message[Object]): Unit = {
-      println(s"I have received a message: ${message.body()}")
+    override def handleCompleteBookingRequest(): Future[_] = {
+      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.CompleteBooking)
     }
 
-    private def handleCreateBookingResponse(message: Message[Object]): Unit = {
-
+    override def handleFindActiveBookingPositionsRequest(): Future[_] = {
+      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.FindBookingPosition)
     }
 
-    private def handleChangeBookingRequest(message: Message[Object]): Unit = {
-      println(s"I have received a message: ${message.body()}")
-    }
-
-    private def handleChangeBookingResponse(message: Message[Object]): Unit = {
-
-    }
-
-    private def handleFindBookingByDestinationRequest(message: Message[Object]): Unit = {
-      println(s"I have received a message: ${message.body()}")
-    }
-
-    private def handleFindBookingByDestinationResponse(message: Message[Object]): Unit = {
-
-    }
-
-    private def handleFindBookingsByDateRequest(message: Message[Object]): Unit = {
-      println(s"I have received a message: ${message.body()}")
-    }
-
-    private def handleFindBookingsByDateResponse(message: Message[Object]): Unit = {
-
-    }
-
-    override def createBooking(bookingRequest: CreateBookingRequest): Unit = ???
-
-    override def changeActiveBookingLicensePlate(oldLicensePlate: String, newLicensePlate: String): Unit = ???
-
-    override def findActiveBookingPositions(licensePlate: String): Unit = ???
-
-    override def findAllBookingsByDate(startDate: Date, endDate: Date): Unit = ???
-
-    override def completeBooking(licensePlate: String): Unit = ???
   }
 
 }

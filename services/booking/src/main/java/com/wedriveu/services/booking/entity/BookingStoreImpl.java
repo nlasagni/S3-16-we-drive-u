@@ -31,6 +31,27 @@ public class BookingStoreImpl implements BookingStore {
     }
 
     @Override
+    public int generateId() {
+        int id = -1;
+        try {
+            List<Booking> bookings = storeStrategy.getEntities();
+            if (bookings != null && !bookings.isEmpty()) {
+                Optional<Booking> booking = bookings.stream().sorted((o1, o2) ->
+                    Integer.valueOf(o2.getId()).compareTo(o1.getId())
+                ).findFirst();
+                if (booking.isPresent()) {
+                    id = booking.get().getId() + 1;
+                }
+            } else {
+                id = 1;
+            }
+        } catch (Exception e) {
+            Log.error(TAG, GET_ERROR, e);
+        }
+        return id;
+    }
+
+    @Override
     public boolean addBooking(Booking booking) {
         if (booking == null) {
             return false;
@@ -50,12 +71,47 @@ public class BookingStoreImpl implements BookingStore {
     }
 
     @Override
-    public Optional<Booking> getBooking(int bookingId) {
+    public Optional<Booking> getBookingById(int bookingId) {
         try {
             List<Booking> bookings = storeStrategy.getEntities();
             Optional<Booking> booking = Optional.empty();
             if (bookings != null) {
                 booking = bookings.stream().filter(b -> b.getId() == bookingId).findFirst();
+            }
+            return booking;
+        } catch (Exception e) {
+            Log.error(TAG, GET_ERROR, e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Booking> getStartedBookingByLicensePlate(String licensePlate) {
+        try {
+            List<Booking> bookings = storeStrategy.getEntities();
+            Optional<Booking> booking = Optional.empty();
+            if (bookings != null) {
+                booking = bookings.stream().filter(b ->
+                        licensePlate.equals(b.getVehicleLicensePlate()) &&
+                                Booking.STATUS_STARTED.equals(b.getBookingStatus())
+                ).findFirst();
+            }
+            return booking;
+        } catch (Exception e) {
+            Log.error(TAG, GET_ERROR, e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Booking> getUserStartedBooking(String username) {
+        try {
+            List<Booking> bookings = storeStrategy.getEntities();
+            Optional<Booking> booking = Optional.empty();
+            if (bookings != null) {
+                booking = bookings.stream().filter(b ->
+                    username.equals(b.getUsername()) && Booking.STATUS_STARTED.equals(b.getBookingStatus())
+                ).findFirst();
             }
             return booking;
         } catch (Exception e) {
@@ -99,7 +155,23 @@ public class BookingStoreImpl implements BookingStore {
     }
 
     @Override
-    public void clear() {
+    public boolean deleteBooking(int id) {
+        try {
+            List<Booking> bookings = storeStrategy.getEntities();
+            List<Booking> updatedBookings = bookings.stream()
+                    .filter(b -> b.getId() != id)
+                    .collect(Collectors.toList());
+            storeStrategy.clear();
+            storeStrategy.storeEntities(updatedBookings);
+            return true;
+        } catch (Exception e) {
+            Log.error(TAG, GET_BY_DATE_ERROR, e);
+        }
+        return false;
+    }
+
+    @Override
+    public void deleteAllBookings() {
         try {
             storeStrategy.clear();
         } catch (Exception e) {

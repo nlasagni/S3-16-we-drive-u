@@ -24,7 +24,7 @@ trait BookingBoundaryConsumer {
     *
     * @return The [[BookingVerticleConsumerConfig]] needed to consume messages.
     */
-  def getConfig: BookingVerticleConsumerConfig
+  def buildConfig: BookingVerticleConsumerConfig
 
 }
 
@@ -56,7 +56,7 @@ private[boundary] case class BookingVerticleConsumerConfig(
 
 }
 
-object BookingBoundaryConsumer {
+object BookingBoundaryConsumerVerticle {
 
   /**
     * The [[ScalaVerticle]] name to deploy a [[CreateBookingBoundaryConsumer]]
@@ -75,9 +75,9 @@ object BookingBoundaryConsumer {
     */
   val FindBookingPosition: String = s"scala:${classOf[FindBookingPositionBoundaryConsumer].getName}"
   /**
-    * The [[ScalaVerticle]] name to deploy a [[FindBookingByDateBoundaryConsumer]]
+    * The [[ScalaVerticle]] name to deploy a [[BookVehicleBoundaryConsumer]]
     */
-  val FindBookingByDate: String = s"scala:${classOf[FindBookingByDateBoundaryConsumer].getName}"
+  val BookVehicle: String = s"scala:${classOf[BookVehicleBoundaryConsumer].getName}"
 
   private[this] abstract class BookingBoundaryConsumerVerticle extends ScalaVerticle with BookingBoundaryConsumer {
 
@@ -86,14 +86,10 @@ object BookingBoundaryConsumer {
     private[this] val consumerAddress: String = this.getClass.getCanonicalName
 
     override def startFuture(): Future[_] = {
-      consumerConfig = getConfig
+      consumerConfig = buildConfig
       client = RabbitMQClient.create(vertx, RabbitMQClientFactory.createClientConfig())
       consume()
-      startClient().flatMap(_ => declareQueue()).flatMap(_ => bindQueue()).flatMap(_ => basicConsume())
-    }
-
-    private def startClient(): Future[Unit] = {
-      client.startFuture()
+      client.startFuture().flatMap(_ => declareQueue()).flatMap(_ => bindQueue()).flatMap(_ => basicConsume())
     }
 
     private def declareQueue(): Future[JsonObject] = {
@@ -115,14 +111,14 @@ object BookingBoundaryConsumer {
 
     override def consume(): Unit = {
       vertx.eventBus().consumer(consumerAddress, (message: Message[Object]) => {
-        vertx.eventBus().send(consumerConfig.eventBusAddress, message)
+        vertx.eventBus().send(consumerConfig.eventBusAddress, message.body())
       })
     }
 
   }
 
   private[this] class CreateBookingBoundaryConsumer extends BookingBoundaryConsumerVerticle {
-    override def getConfig: BookingVerticleConsumerConfig = {
+    override def buildConfig: BookingVerticleConsumerConfig = {
       BookingVerticleConsumerConfig(Constants.Queue.Create,
         durableQueue = true,
         Shared.RabbitMQ.Exchanges.BOOKING,
@@ -132,7 +128,7 @@ object BookingBoundaryConsumer {
   }
 
   private[this] class ChangeBookingBoundaryConsumer extends BookingBoundaryConsumerVerticle {
-    override def getConfig: BookingVerticleConsumerConfig = {
+    override def buildConfig: BookingVerticleConsumerConfig = {
       BookingVerticleConsumerConfig(Constants.Queue.Change,
         durableQueue = true,
         Shared.RabbitMQ.Exchanges.BOOKING,
@@ -142,7 +138,7 @@ object BookingBoundaryConsumer {
   }
 
   private[this] class CompleteBookingBoundaryConsumer extends BookingBoundaryConsumerVerticle {
-    override def getConfig: BookingVerticleConsumerConfig = {
+    override def buildConfig: BookingVerticleConsumerConfig = {
       BookingVerticleConsumerConfig(Constants.Queue.Complete,
         durableQueue = true,
         Shared.RabbitMQ.Exchanges.BOOKING,
@@ -152,7 +148,7 @@ object BookingBoundaryConsumer {
   }
 
   private[this] class FindBookingPositionBoundaryConsumer extends BookingBoundaryConsumerVerticle {
-    override def getConfig: BookingVerticleConsumerConfig = {
+    override def buildConfig: BookingVerticleConsumerConfig = {
       BookingVerticleConsumerConfig(Constants.Queue.FindPosition,
         durableQueue = true,
         Shared.RabbitMQ.Exchanges.BOOKING,
@@ -161,13 +157,13 @@ object BookingBoundaryConsumer {
     }
   }
 
-  private[this] class FindBookingByDateBoundaryConsumer extends BookingBoundaryConsumerVerticle {
-    override def getConfig: BookingVerticleConsumerConfig = {
-      BookingVerticleConsumerConfig(Constants.Queue.FindByDate,
+  private[this] class BookVehicleBoundaryConsumer extends BookingBoundaryConsumerVerticle {
+    override def buildConfig: BookingVerticleConsumerConfig = {
+      BookingVerticleConsumerConfig(Constants.Queue.BookVehicle,
         durableQueue = true,
-        Shared.RabbitMQ.Exchanges.BOOKING,
-        Shared.RabbitMQ.RoutingKey.FIND_BOOKING_BY_DATE_REQUEST,
-        Constants.EventBus.Address.Booking.FindBookingByDateRequest)
+        Shared.RabbitMQ.Exchanges.VEHICLE,
+        Shared.RabbitMQ.RoutingKey.BOOK_VEHICLE_RESPONSE,
+        Constants.EventBus.Address.Vehicle.BookVehicleResponse)
     }
   }
 

@@ -25,7 +25,7 @@ public class VehicleListGeneratorRequestHandler extends VerticleConsumer{
         Future<Void> futureConsumer = Future.future();
         futureConsumer.setHandler(v->{
             if (v.succeeded()) {
-                Log.log("future in VehicleListGeneratorRequestHandler completed");
+                Log.info("future in VehicleListGeneratorRequestHandler completed");
                 futureRequest.complete();
             } else {
                 Log.error("future VehicleListGeneratorRequestHandler fail", v.cause().getLocalizedMessage(), v.cause());
@@ -38,7 +38,7 @@ public class VehicleListGeneratorRequestHandler extends VerticleConsumer{
 
     @Override
     public void registerConsumer(String eventBus) {
-        Log.log("started vertx eventbus consumer in VehicleListGeneratorRequestHandler, attending start to receive");
+        Log.info("started vertx eventbus consumer in VehicleListGeneratorRequestHandler, attending start to receive");
         vertx.eventBus().consumer(eventBus, this::sendToResponseHandler);
     }
 

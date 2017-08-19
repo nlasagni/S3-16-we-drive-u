@@ -27,7 +27,7 @@ public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer{
         Future<Void> futureConsumer = Future.future();
         futureConsumer.setHandler(v->{
             if (v.succeeded()) {
-                Log.log("future in VehicleListGeneratorRequestHandler completed");
+                Log.info("future in VehicleListGeneratorRequestHandler completed");
                 futureRequest.complete();
             } else {
                 Log.error("future VehicleListGeneratorRequestHandler fail", v.cause().getLocalizedMessage(), v.cause());
@@ -45,7 +45,7 @@ public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer{
     }
 
     private void sendToController(Message message) {
-        Log.log("received vehicle list");
+        Log.info("received vehicle list");
         UpdateToService vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), UpdateToService.class);
         vertx.eventBus().send(ANALYTCS_VEHICLE_COUNTER_UPDATE_EVENTBUS, VertxJsonMapper.mapInBodyFrom(vehicle));
     }

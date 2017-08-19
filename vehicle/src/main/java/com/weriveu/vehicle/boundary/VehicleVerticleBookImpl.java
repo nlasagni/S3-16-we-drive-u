@@ -89,7 +89,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
     private void bindQueueToExchange(Future<Void> future) {
         rabbitMQClient.queueBind(QUEUE_NAME,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
-                String.format(Constants.RabbitMQ.RoutingKey.BOOK_REQUEST, vehicle.getVehicle().plate()),
+                String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_REQUEST, vehicle.getVehicle().plate()),
                 future.completer());
     }
 
@@ -118,7 +118,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
             JsonObject responseJson = new JsonObject();
             responseJson.put(Constants.EventBus.BODY, responseString);
             rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                    String.format(Constants.RabbitMQ.RoutingKey.BOOK_RESPONSE, vehicle.getVehicle().plate()),
+                    String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_RESPONSE, vehicle.getVehicle().plate()),
                     responseJson,
                     onPublish -> {
                         if (!onPublish.succeeded()) {

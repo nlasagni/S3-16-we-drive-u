@@ -1,27 +1,12 @@
 package com.wedriveu.services.booking.boundary
 
+import com.wedriveu.services.booking.util.BootManager
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory
 import com.wedriveu.shared.util.{Constants => Shared}
 import io.vertx.lang.scala.ScalaVerticle
 import io.vertx.scala.rabbitmq.RabbitMQClient
 
 import scala.concurrent.Future
-
-/** This trait is used to represent an actor that boot
-  * all the boundary components.
-  *
-  * @author Nicola Lasagni on 17/08/2017.
-  *
-  */
-trait BootBoundary {
-
-  /** Boots all the boundary components.
-    *
-    * @return The future of all the boot operations
-    */
-  def boot(): Future[_]
-
-}
 
 object BootBoundary {
 
@@ -30,7 +15,7 @@ object BootBoundary {
     */
   val Verticle: String = s"scala:${classOf[BootBoundaryImpl].getName}"
 
-  private class BootBoundaryImpl() extends ScalaVerticle with BootBoundary {
+  private class BootBoundaryImpl() extends ScalaVerticle with BootManager {
 
     private[this] var client: RabbitMQClient = _
 
@@ -48,7 +33,7 @@ object BootBoundary {
           autoDelete = false
         )
       }).flatMap({
-        _ => vertx.deployVerticleFuture(BookingBoundary.Verticle)
+        _ => vertx.deployVerticleFuture(BookingBoundaryVerticle.Verticle)
       }).flatMap({
         _ => client.stopFuture()
       })

@@ -32,7 +32,7 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle{
         vertx.eventBus().consumer(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS, this::convertVehicleList);
         vertx.eventBus().consumer(ANALYTICS_VEHICLE_COUNTER_REQUEST_EVENTBUS, this::handleVehicleCounterRequest);
         vertx.eventBus().consumer(ANALYTICS_VEHICLE_STORE_UPDATE_REQUEST_EVENTBUS, this::updateVehicleStore);
-        Log.log("future AnalyticsVehicleDataManipulationVerticle complete");
+        Log.info("future AnalyticsVehicleDataManipulationVerticle complete");
     }
 
     private void convertVehicleList(Message message) {

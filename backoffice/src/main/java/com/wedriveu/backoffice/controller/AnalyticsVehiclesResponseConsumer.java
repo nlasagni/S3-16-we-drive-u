@@ -29,7 +29,7 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer{
         futureConsumer.setHandler(v->{
             if (v.succeeded()) {
                 futureRetriever.complete();
-                Log.log("started future retriever AnalyticsVehiclesResponseConsumer");
+                Log.info("started future retriever AnalyticsVehiclesResponseConsumer");
             } else {
                 Log.error("AnalyticsVehiclesResponseConsumer", v.cause().getLocalizedMessage(), v.cause());
                 futureRetriever.fail(v.cause());
@@ -44,7 +44,7 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer{
                     ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES + backofficeId,
                     eventBusAvailable,
                     futureConsumer);
-        Log.log("started consumer " + eventBusAvailable);
+        Log.info("started consumer " + eventBusAvailable);
     }
 
     @Override
@@ -55,6 +55,6 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer{
     private void sendUpdatesToController(Message message) {
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
         vertx.eventBus().send(BACKOFFICE_CONTROLLER_EVENTBUS, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
-        Log.log("AnalyticsVehiclesResponseConsumer received updates and send to controller");
+        Log.info("AnalyticsVehiclesResponseConsumer received updates and send to controller");
     }
 }

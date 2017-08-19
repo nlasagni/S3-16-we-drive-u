@@ -19,7 +19,7 @@ public class AnalyticsVerticleController extends AbstractVerticle {
     @Override
     public void start() throws Exception{
         vertx.eventBus().consumer(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS, this::storeVehicleList);
-        Log.log("future AnalyticsVerticleController complete");
+        Log.info("future AnalyticsVerticleController complete");
     }
 
     private void storeVehicleList(Message message) {

@@ -32,6 +32,6 @@ public class RabbitmqInitialRequest extends VerticlePublisher{
         JsonObject dataToUser = new JsonObject();
         dataToUser.put(Constants.EventBus.BODY, backofficeId);
         publish(Constants.RabbitMQ.Exchanges.ANALYTICS, ROUTING_KEY_ANALYTICS_REQUEST_VEHICLES,dataToUser, published -> { });
-        Log.log("sending initial request");
+        Log.info("sending initial request");
     }
 }

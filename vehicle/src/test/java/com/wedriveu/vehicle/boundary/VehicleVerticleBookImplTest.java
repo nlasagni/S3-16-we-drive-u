@@ -71,7 +71,7 @@ public class VehicleVerticleBookImplTest {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
                 rabbitMQClient.queueBind(requestId,
                         Constants.RabbitMQ.Exchanges.VEHICLE,
-                        String.format(Constants.RabbitMQ.RoutingKey.BOOK_RESPONSE, license),
+                        String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_RESPONSE, license),
                         onQueueBind -> {
                             vertx.deployVerticle(vehicleVerticle,
                                     new DeploymentOptions().setWorker(true),
@@ -98,7 +98,7 @@ public class VehicleVerticleBookImplTest {
     public void canBeBooked(TestContext context) throws Exception {
         final Async async = context.async(2);
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                String.format(Constants.RabbitMQ.RoutingKey.BOOK_REQUEST, license),
+                String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_REQUEST, license),
                 createRequestJsonObject(),
                 onPublish -> {
                     context.assertTrue(onPublish.succeeded());
