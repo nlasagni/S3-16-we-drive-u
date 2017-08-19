@@ -41,7 +41,7 @@ trait BookingController {
   def completeBooking(completeRequest: CompleteBookingRequest): Unit
 
   /** Gets the positions of a [[com.wedriveu.services.shared.model.Booking]] that is in status
-    * [[Booking.STATUS_PROCESSING]]..
+    * [[Booking.STATUS_PROCESSING]].
     *
     * @param findRequest The request data needed to find a [[com.wedriveu.services.shared.model.Booking]] positions.
     */
@@ -64,7 +64,7 @@ object BookingControllerVerticle {
   private[this] class BookingControllerVerticleImpl extends BookingControllerVerticle {
 
     private val InvalidOperationMessage = "Invalid message received"
-    private val BookingAlreadyStarted = "A booking process has been already started for this user."
+    private val BookingAlreadyStarted = "A booking process has not yet been completed for this user."
     private val VehicleAlreadyBooked = "This vehicle has already been booked."
     private val UnableToCreateBooking = "An error occurred while creating the booking."
 
@@ -94,10 +94,20 @@ object BookingControllerVerticle {
         (request: ChangeBookingRequest) => {
           changeProcessingBookingLicensePlate(request)
         })
+      registerConsumer(Constants.EventBus.Address.Booking.CompleteBookingRequest,
+        classOf[CompleteBookingRequest],
+        (request: CompleteBookingRequest) => {
+          completeBooking(request)
+        })
+      registerConsumer(Constants.EventBus.Address.Booking.FindBookingPositionRequest,
+        classOf[FindBookingPositionsRequest],
+        (request: FindBookingPositionsRequest) => {
+          findProcessingBookingPositions(request)
+        })
     }
 
     private def registerConsumer[T](address: String, clazz: Class[T], operation: T => Unit): Unit = {
-      vertx.eventBus().consumer(Constants.EventBus.Address.Booking.CreateBookingRequest,
+      vertx.eventBus().consumer(address,
         (msg: Message[Object]) => {
           handleControllerOperationMessage(msg.body(), clazz, operation)
         })
@@ -125,7 +135,7 @@ object BookingControllerVerticle {
       sendMessage(address, null, message)
     }
 
-    private def sendErrorResponse(address: String, id: String, error: String): Unit = {
+    private def sendCreateBookingErrorResponse(address: String, id: String, error: String): Unit = {
       val bookingResponse = new CreateBookingResponse()
       bookingResponse.setSuccess(false)
       bookingResponse.setErrorMessage(error)
@@ -134,8 +144,9 @@ object BookingControllerVerticle {
 
     override def createBooking(request: CreateBookingRequest): Unit = {
       val startedBooking = store.getBookingByUser(request.getUsername, Booking.STATUS_STARTED)
-      if (startedBooking.isPresent) {
-        sendErrorResponse(
+      val processingBooking = store.getBookingByUser(request.getUsername, Booking.STATUS_PROCESSING)
+      if (startedBooking.isPresent || processingBooking.isPresent) {
+        sendCreateBookingErrorResponse(
           Constants.EventBus.Address.Booking.CreateBookingResponse,
           request.getUsername,
           BookingAlreadyStarted)
@@ -156,7 +167,7 @@ object BookingControllerVerticle {
           vehicleRequest.setUsername(request.getUsername)
           sendMessage(Constants.EventBus.Address.Vehicle.BookVehicleRequest, vehicleRequest)
         } else {
-          sendErrorResponse(Constants.EventBus.Address.Booking.CreateBookingResponse,
+          sendCreateBookingErrorResponse(Constants.EventBus.Address.Booking.CreateBookingResponse,
             request.getUsername,
             UnableToCreateBooking)
         }
@@ -178,7 +189,7 @@ object BookingControllerVerticle {
         bookingResponse.setDriveTimeToDestination(Dates.format(arriveAtDestinationCalendar.getTime))
         sendMessage(Constants.EventBus.Address.Booking.CreateBookingResponse, booking.getUsername, bookingResponse)
       } else {
-        sendErrorResponse(
+        sendCreateBookingErrorResponse(
           Constants.EventBus.Address.Booking.CreateBookingResponse,
           booking.getUsername,
           VehicleAlreadyBooked)
@@ -219,7 +230,6 @@ object BookingControllerVerticle {
         response.setLicensePlate(booking.get().getVehicleLicensePlate)
         response.setUserPosition(booking.get().getUserPosition)
         response.setDestinationPosition(booking.get().getDestinationPosition)
-        response.setSuccess(store.updateBookingStatus(booking.get().getId, Booking.STATUS_COMPLETED))
       sendMessage(Constants.EventBus.Address.Booking.FindBookingPositionResponse, response)
     }
 
