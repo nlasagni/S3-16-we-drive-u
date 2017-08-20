@@ -41,6 +41,9 @@ public class VehicleServiceImpl implements VehicleService {
     private RabbitMqCommunicationManager mEnterVehicleCommunicationManager;
     private RabbitMqCommunicationManager mVehicleArrivedCommunicationManager;
     private RabbitMqCommunicationManager mVehiclePositionCommunicationManager;
+    private int enterSubscriberId;
+    private int arrivedSubscriberId;
+    private int updateSubscriberId;
 
     public VehicleServiceImpl(Activity activity, UserStore userStore, VehicleStore vehicleStore) {
         mActivity = activity;
@@ -67,7 +70,11 @@ public class VehicleServiceImpl implements VehicleService {
                     mEnterVehicleCommunicationManager.setUpCommunication(config);
                     RabbitMqConsumerStrategy<EnterVehicleRequest> strategy =
                             new EnterVehicleConsumerStrategy(mActivity, mUserStore.getUser(), callback);
-                    mEnterVehicleCommunicationManager.registerConsumer(strategy, EnterVehicleRequest.class);
+
+                    enterSubscriberId = mEnterVehicleCommunicationManager.subscribeConsumer(strategy, EnterVehicleRequest.class);
+
+                    //TODO
+                    //mEnterVehicleCommunicationManager.registerConsumer(strategy, EnterVehicleRequest.class);
                 } catch (IOException | TimeoutException e) {
                     Log.e(TAG, ENTER_ERROR, e);
                 }
@@ -87,6 +94,9 @@ public class VehicleServiceImpl implements VehicleService {
                     mEnterVehicleCommunicationManager.publishMessage(Constants.RabbitMQ.Exchanges.VEHICLE,
                             Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE_ENTER_USER,
                             enterVehicleResponse);
+
+                    mEnterVehicleCommunicationManager.unsubscribeConsumer(enterSubscriberId);
+
                     mEnterVehicleCommunicationManager.closeCommunication(new RabbitMqCloseCommunicationStrategy() {
                         @Override
                         public void closeCommunication(RabbitMqCommunication communication) throws IOException {
@@ -119,7 +129,11 @@ public class VehicleServiceImpl implements VehicleService {
                     mVehicleArrivedCommunicationManager.setUpCommunication(config);
                     RabbitMqConsumerStrategy<CompleteBookingResponse> strategy =
                             new VehicleArrivedConsumerStrategy(mActivity, mUserStore.getUser(), callback);
-                    mVehicleArrivedCommunicationManager.registerConsumer(strategy, CompleteBookingResponse.class);
+                    //TODO
+                    //mVehicleArrivedCommunicationManager.registerConsumer(strategy, CompleteBookingResponse.class);
+
+                    arrivedSubscriberId = mVehicleArrivedCommunicationManager.subscribeConsumer(strategy, CompleteBookingResponse.class);
+
                 } catch (IOException | TimeoutException e) {
                     Log.e(TAG, ARRIVED_ERROR, e);
                 }
@@ -134,6 +148,9 @@ public class VehicleServiceImpl implements VehicleService {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
+
+                    mVehicleArrivedCommunicationManager.unsubscribeConsumer(arrivedSubscriberId);
+
                     mVehicleArrivedCommunicationManager.closeCommunication(new RabbitMqCloseCommunicationStrategy() {
                         @Override
                         public void closeCommunication(RabbitMqCommunication communication) throws IOException {
@@ -166,7 +183,10 @@ public class VehicleServiceImpl implements VehicleService {
                     mVehiclePositionCommunicationManager.setUpCommunication(config);
                     RabbitMqConsumerStrategy<UpdateToService> strategy =
                             new VehicleUpdateConsumerStrategy(mActivity, mUserStore.getUser(), mVehicleStore, callback);
-                    mVehiclePositionCommunicationManager.registerConsumer(strategy, UpdateToService.class);
+
+                    //todo
+                    //mVehiclePositionCommunicationManager.registerConsumer(strategy, UpdateToService.class);
+                    updateSubscriberId = mVehiclePositionCommunicationManager.subscribeConsumer(strategy, UpdateToService.class);
                 } catch (IOException | TimeoutException e) {
                     Log.e(TAG, ARRIVED_ERROR, e);
                 }
@@ -189,6 +209,7 @@ public class VehicleServiceImpl implements VehicleService {
                                             mUserStore.getUser().getUsername()));
                         }
                     });
+                    mVehiclePositionCommunicationManager.unsubscribeConsumer(updateSubscriberId);
                 } catch (IOException | TimeoutException e) {
                     Log.e(TAG, UPDATE_ERROR, e);
                 }

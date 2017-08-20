@@ -5,8 +5,11 @@ import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqCommunicationCo
 import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqQueueConfig;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqCloseCommunicationStrategy;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqConsumerStrategy;
+import com.wedriveu.shared.util.Log;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -14,10 +17,13 @@ import java.util.concurrent.TimeoutException;
  */
 public class DefaultRabbitMqCommunicationManager implements RabbitMqCommunicationManager {
 
+    private static final long SUBSCRIBER_TIME = 1000;
     private static final String ILLEGAL_COMMUNICATION_STATE =
             "Communication has not been set up or has been closed";
 
+    private int subscribersCounter;
     private RabbitMqCommunication mCommunication;
+    private Map<Integer, Thread> subscribers = new HashMap<>();
 
     private void checkState() throws IllegalStateException {
         if (mCommunication == null ||
@@ -82,6 +88,49 @@ public class DefaultRabbitMqCommunicationManager implements RabbitMqCommunicatio
                 }
             }
         });
+    }
+
+    @Override
+    public <T> int subscribeConsumer(final RabbitMqConsumerStrategy<T> strategy,
+                                      final Class<T> messageClass) throws IOException {
+        subscribersCounter++;
+        final String queue = strategy.configureQueue(mCommunication);
+        Thread subscriber = new Thread() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Channel channel = mCommunication.getChannel();
+                        QueueingConsumer consumer = new QueueingConsumer(channel);
+                        channel.basicConsume(queue, true, consumer);
+                        QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+                        T response = null;
+                        if (delivery.getBody() != null && delivery.getBody().length > 0) {
+                            response = RabbitMqMessageMapper.mapFromByteArray(delivery.getBody(), messageClass);
+                        }
+                        strategy.handleMessage(response);
+                    } catch (InterruptedException e) {
+                        break;
+                    } catch (Exception e) {
+                        try {
+                            Thread.sleep(SUBSCRIBER_TIME);
+                        } catch (InterruptedException ie) {
+                            break;
+                        }
+                    }
+                }
+            }
+        };
+        subscriber.start();
+        subscribers.put(subscribersCounter, subscriber);
+        return subscribersCounter;
+    }
+
+    @Override
+    public void unsubscribeConsumer(int subscriberId) throws IOException {
+        if (subscribers.containsKey(subscriberId)) {
+            subscribers.get(subscriberId).interrupt();
+        }
     }
 
     @Override

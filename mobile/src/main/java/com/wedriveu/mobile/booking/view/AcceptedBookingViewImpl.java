@@ -80,7 +80,6 @@ public class AcceptedBookingViewImpl extends Fragment implements TravellingBooki
 
     @Override
     public void showVehicle(Vehicle vehicle) {
-        mGoogleMap.clear();
         if (mGoogleMap != null) {
             LatLng latLng = new LatLng(vehicle.getPosition().getLatitude(), vehicle.getPosition().getLongitude());
             String title = vehicle.getVehicleName();

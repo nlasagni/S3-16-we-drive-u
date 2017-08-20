@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.booking.router.BookingRouter;
@@ -129,10 +130,14 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
                     public void onServiceOperationFinished(ServiceResult<Vehicle> result) {
                         TravellingBookingView view = getTravellingBookingView(AcceptedBookingViewImpl.ID);
                         if (view != null) {
+                            //TODO
+                            Log.i(this.getClass().getSimpleName(), "Vehicle Update AcceptedBookingViewImpl");
                             view.showVehicle(result.getResult());
                         }
                         view = getTravellingBookingView(TravellingBookingViewImpl.ID);
                         if (view != null) {
+                            //TODO
+                            Log.i(this.getClass().getSimpleName(), "Vehicle Update TravellingBookingViewImpl");
                             view.showVehicle(result.getResult());
                         }
                     }

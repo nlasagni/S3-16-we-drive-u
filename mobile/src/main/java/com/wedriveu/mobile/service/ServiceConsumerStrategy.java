@@ -32,6 +32,8 @@ public abstract class ServiceConsumerStrategy<T> implements RabbitMqConsumerStra
 
     @Override
     public void handleMessage(T message) {
+        //TODO
+        com.wedriveu.shared.util.Log.info(this.getClass().getSimpleName(), "Received message");
         mResponse.offer(message);
     }
 
