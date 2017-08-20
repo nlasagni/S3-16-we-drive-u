@@ -4,6 +4,7 @@ import com.wedriveu.services.shared.model.Booking;
 import com.wedriveu.services.shared.store.EntityListStoreStrategy;
 import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.shared.util.Position;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +35,11 @@ public class BookingStoreTest {
                 new JsonFileEntityListStoreStrategyImpl<>(Booking.class, DATABASE_FILE_NAME);
         bookingStore = new BookingStoreImpl(storeStrategy);
         bookings = createBookings();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        bookingStore.deleteAllBookings();
     }
 
     @Test
