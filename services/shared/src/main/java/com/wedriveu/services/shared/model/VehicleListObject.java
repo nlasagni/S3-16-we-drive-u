@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author Stefano Bernagozzi
  */
 public class VehicleListObject {
-    @JsonProperty("vehicleList")
+
     private ArrayList<Vehicle> vehicleList;
 
     public ArrayList<Vehicle> getVehicleList() {
