@@ -175,6 +175,12 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
+                        <a class="class" href="MessageVehicleCounterWithID.html" title=""></a>
+                        <a href="MessageVehicleCounterWithID.html" title="">
+                          MessageVehicleCounterWithID
+                        </a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
                         <a class="trait" href="VehiclesCounterAlgorithm.html" title=""></a>
                         <a href="VehiclesCounterAlgorithm.html" title="">
                           VehiclesCounterAlgorithm
@@ -264,9 +270,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.wedriveu.services.analytics.entity.AnalyticsStoreImpl#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(storeStrategy:com.wedriveu.services.shared.entity.EntityListStoreStrategy[com.wedriveu.services.shared.entity.AnalyticsVehicle],vehiclesCounterAlgorithmStrategy:com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithm):com.wedriveu.services.analytics.entity.AnalyticsStoreImpl"></a><a id="&lt;init&gt;:AnalyticsStoreImpl"></a>
+      <a id="&lt;init&gt;(storeStrategy:com.wedriveu.services.shared.store.EntityListStoreStrategy[com.wedriveu.services.shared.model.AnalyticsVehicle],vehiclesCounterAlgorithmStrategy:com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithm):com.wedriveu.services.analytics.entity.AnalyticsStoreImpl"></a><a id="&lt;init&gt;:AnalyticsStoreImpl"></a>
       <span class="permalink">
-      <a href="../../../../../com/wedriveu/services/analytics/entity/AnalyticsStoreImpl.html#&lt;init&gt;(storeStrategy:com.wedriveu.services.shared.entity.EntityListStoreStrategy[com.wedriveu.services.shared.entity.AnalyticsVehicle],vehiclesCounterAlgorithmStrategy:com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithm):com.wedriveu.services.analytics.entity.AnalyticsStoreImpl" title="Permalink">
+      <a href="../../../../../com/wedriveu/services/analytics/entity/AnalyticsStoreImpl.html#&lt;init&gt;(storeStrategy:com.wedriveu.services.shared.store.EntityListStoreStrategy[com.wedriveu.services.shared.model.AnalyticsVehicle],vehiclesCounterAlgorithmStrategy:com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithm):com.wedriveu.services.analytics.entity.AnalyticsStoreImpl" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -275,7 +281,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">AnalyticsStoreImpl</span><span class="params">(<span name="storeStrategy">storeStrategy: <span class="extype" name="com.wedriveu.services.shared.entity.EntityListStoreStrategy">EntityListStoreStrategy</span>[<span class="extype" name="com.wedriveu.services.shared.entity.AnalyticsVehicle">AnalyticsVehicle</span>]</span>, <span name="vehiclesCounterAlgorithmStrategy">vehiclesCounterAlgorithmStrategy: <a href="VehiclesCounterAlgorithm.html" class="extype" name="com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithm">VehiclesCounterAlgorithm</a></span>)</span>
+        <span class="name">AnalyticsStoreImpl</span><span class="params">(<span name="storeStrategy">storeStrategy: <span class="extype" name="com.wedriveu.services.shared.store.EntityListStoreStrategy">EntityListStoreStrategy</span>[<span class="extype" name="com.wedriveu.services.shared.model.AnalyticsVehicle">AnalyticsVehicle</span>]</span>, <span name="vehiclesCounterAlgorithmStrategy">vehiclesCounterAlgorithmStrategy: <a href="VehiclesCounterAlgorithm.html" class="extype" name="com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithm">VehiclesCounterAlgorithm</a></span>)</span>
       </span>
       
       
@@ -404,7 +410,7 @@
         <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
@@ -458,7 +464,7 @@
         <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="symbol">classOf[java.lang.Throwable]</span>
@@ -482,9 +488,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.wedriveu.services.analytics.entity.AnalyticsStoreImpl#getVehicleByLicensePlate" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getVehicleByLicensePlate(licensePlate:String):java.util.Optional[com.wedriveu.services.shared.entity.AnalyticsVehicle]"></a><a id="getVehicleByLicensePlate(String):Optional[AnalyticsVehicle]"></a>
+      <a id="getVehicleByLicensePlate(licensePlate:String):java.util.Optional[com.wedriveu.services.shared.model.AnalyticsVehicle]"></a><a id="getVehicleByLicensePlate(String):Optional[AnalyticsVehicle]"></a>
       <span class="permalink">
-      <a href="../../../../../com/wedriveu/services/analytics/entity/AnalyticsStoreImpl.html#getVehicleByLicensePlate(licensePlate:String):java.util.Optional[com.wedriveu.services.shared.entity.AnalyticsVehicle]" title="Permalink">
+      <a href="../../../../../com/wedriveu/services/analytics/entity/AnalyticsStoreImpl.html#getVehicleByLicensePlate(licensePlate:String):java.util.Optional[com.wedriveu.services.shared.model.AnalyticsVehicle]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -493,16 +499,16 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getVehicleByLicensePlate</span><span class="params">(<span name="licensePlate">licensePlate: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="java.util.Optional">Optional</span>[<span class="extype" name="com.wedriveu.services.shared.entity.AnalyticsVehicle">AnalyticsVehicle</span>]</span>
+        <span class="name">getVehicleByLicensePlate</span><span class="params">(<span name="licensePlate">licensePlate: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="java.util.Optional">Optional</span>[<span class="extype" name="com.wedriveu.services.shared.model.AnalyticsVehicle">AnalyticsVehicle</span>]</span>
       </span>
       
       <p class="shortcomment cmt">get the vehicle by its license plate
 </p><div class="fullcomment"><div class="comment cmt"><p>get the vehicle by its license plate
 </p></div><dl class="paramcmts block"><dt class="param">licensePlate</dt><dd class="cmt"><p>the string that represents the license plate of the <em>AnalyticsVehicle</em> that wants to be returned</p></dd><dt>returns</dt><dd class="cmt"><p>a <em>AnalyticsVehicle</em> that contains the license plate and the status of the vehicle requested</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.services.analytics.entity.AnalyticsStoreImpl">AnalyticsStoreImpl</a> → <a href="AnalyticsStore.html" class="extype" name="com.wedriveu.services.analytics.entity.AnalyticsStore">AnalyticsStore</a></dd></dl></div>
     </li><li name="com.wedriveu.services.analytics.entity.AnalyticsStoreImpl#getVehicleCounter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getVehicleCounter():com.wedriveu.services.shared.entity.VehicleCounter"></a><a id="getVehicleCounter():VehicleCounter"></a>
+      <a id="getVehicleCounter():com.wedriveu.shared.rabbitmq.message.VehicleCounter"></a><a id="getVehicleCounter():VehicleCounter"></a>
       <span class="permalink">
-      <a href="../../../../../com/wedriveu/services/analytics/entity/AnalyticsStoreImpl.html#getVehicleCounter():com.wedriveu.services.shared.entity.VehicleCounter" title="Permalink">
+      <a href="../../../../../com/wedriveu/services/analytics/entity/AnalyticsStoreImpl.html#getVehicleCounter():com.wedriveu.shared.rabbitmq.message.VehicleCounter" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -511,7 +517,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getVehicleCounter</span><span class="params">()</span><span class="result">: <span class="extype" name="com.wedriveu.services.shared.entity.VehicleCounter">VehicleCounter</span></span>
+        <span class="name">getVehicleCounter</span><span class="params">()</span><span class="result">: <span class="extype" name="com.wedriveu.shared.rabbitmq.message.VehicleCounter">VehicleCounter</span></span>
       </span>
       
       <p class="shortcomment cmt">get the number of vehicles divided per status

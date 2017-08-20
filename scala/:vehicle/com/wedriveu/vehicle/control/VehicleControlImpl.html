@@ -264,9 +264,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.wedriveu.vehicle.control.VehicleControlImpl#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(license:String,state:String,position:com.wedriveu.shared.util.Position,battery:Double,speed:Double,stopUi:com.wedriveu.vehicle.boundary.VehicleStopView,debugVar:Boolean):com.wedriveu.vehicle.control.VehicleControlImpl"></a><a id="&lt;init&gt;:VehicleControlImpl"></a>
+      <a id="&lt;init&gt;(vertx:io.vertx.core.Vertx,imageUrl:String,description:String,license:String,state:String,position:com.wedriveu.shared.util.Position,battery:Double,speed:Double,stopUi:com.wedriveu.vehicle.boundary.VehicleStopView,debugVar:Boolean):com.wedriveu.vehicle.control.VehicleControlImpl"></a><a id="&lt;init&gt;:VehicleControlImpl"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#&lt;init&gt;(license:String,state:String,position:com.wedriveu.shared.util.Position,battery:Double,speed:Double,stopUi:com.wedriveu.vehicle.boundary.VehicleStopView,debugVar:Boolean):com.wedriveu.vehicle.control.VehicleControlImpl" title="Permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#&lt;init&gt;(vertx:io.vertx.core.Vertx,imageUrl:String,description:String,license:String,state:String,position:com.wedriveu.shared.util.Position,battery:Double,speed:Double,stopUi:com.wedriveu.vehicle.boundary.VehicleStopView,debugVar:Boolean):com.wedriveu.vehicle.control.VehicleControlImpl" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -275,7 +275,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">VehicleControlImpl</span><span class="params">(<span name="license">license: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="state">state: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="position">position: <span class="extype" name="com.wedriveu.shared.util.Position">Position</span></span>, <span name="battery">battery: <span class="extype" name="scala.Double">Double</span></span>, <span name="speed">speed: <span class="extype" name="scala.Double">Double</span></span>, <span name="stopUi">stopUi: <a href="../boundary/VehicleStopView.html" class="extype" name="com.wedriveu.vehicle.boundary.VehicleStopView">VehicleStopView</a></span>, <span name="debugVar">debugVar: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span>
+        <span class="name">VehicleControlImpl</span><span class="params">(<span name="vertx">vertx: <span class="extype" name="io.vertx.core.Vertx">Vertx</span></span>, <span name="imageUrl">imageUrl: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="description">description: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="license">license: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="state">state: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="position">position: <span class="extype" name="com.wedriveu.shared.util.Position">Position</span></span>, <span name="battery">battery: <span class="extype" name="scala.Double">Double</span></span>, <span name="speed">speed: <span class="extype" name="scala.Double">Double</span></span>, <span name="stopUi">stopUi: <a href="../boundary/VehicleStopView.html" class="extype" name="com.wedriveu.vehicle.boundary.VehicleStopView">VehicleStopView</a></span>, <span name="debugVar">debugVar: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span>
       </span>
       
       
@@ -369,6 +369,23 @@
       </span>
       
       
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#changePosition" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="changePosition(position:com.wedriveu.shared.util.Position):Unit"></a><a id="changePosition(Position):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#changePosition(position:com.wedriveu.shared.util.Position):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">changePosition</span><span class="params">(<span name="position">position: <span class="extype" name="com.wedriveu.shared.util.Position">Position</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">This method permits to execute the behaviour &quot;Change Position&quot;.</p><div class="fullcomment"><div class="comment cmt"><p>This method permits to execute the behaviour &quot;Change Position&quot;.
+</p></div><dl class="paramcmts block"><dt class="param">position</dt><dd class="cmt"><p>The position to reach.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.vehicle.control.VehicleControlImpl">VehicleControlImpl</a> → <a href="VehicleControl.html" class="extype" name="com.wedriveu.vehicle.control.VehicleControl">VehicleControl</a></dd></dl></div>
     </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#changePositionUponBooking" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="changePositionUponBooking(userPosition:com.wedriveu.shared.util.Position,destinationPosition:com.wedriveu.shared.util.Position,notRealisticVar:Boolean):Unit"></a><a id="changePositionUponBooking(Position,Position,Boolean):Unit"></a>
       <span class="permalink">
@@ -510,6 +527,24 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#getBehavioursControl" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getBehavioursControl():com.wedriveu.vehicle.control.VehicleBehaviours"></a><a id="getBehavioursControl():VehicleBehaviours"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#getBehavioursControl():com.wedriveu.vehicle.control.VehicleBehaviours" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getBehavioursControl</span><span class="params">()</span><span class="result">: <a href="VehicleBehaviours.html" class="extype" name="com.wedriveu.vehicle.control.VehicleBehaviours">VehicleBehaviours</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">This method permits to retrieve the behaviours control of the system
+</p><div class="fullcomment"><div class="comment cmt"><p>This method permits to retrieve the behaviours control of the system
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>The behaviours instance.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.vehicle.control.VehicleControlImpl">VehicleControlImpl</a> → <a href="VehicleControl.html" class="extype" name="com.wedriveu.vehicle.control.VehicleControl">VehicleControl</a></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -526,6 +561,23 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#getUserOnBoard" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getUserOnBoard():Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#getUserOnBoard():Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getUserOnBoard</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">This method permits to retrieve the variable which indicates if the user is on board or not.</p><div class="fullcomment"><div class="comment cmt"><p>This method permits to retrieve the variable which indicates if the user is on board or not.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>True if the user is on board, False otherwise.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.vehicle.control.VehicleControlImpl">VehicleControlImpl</a> → <a href="VehicleControl.html" class="extype" name="com.wedriveu.vehicle.control.VehicleControl">VehicleControl</a></dd></dl></div>
     </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#getUsername" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getUsername():String"></a>
       <span class="permalink">
@@ -672,6 +724,23 @@
       </span>
       
       
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#setUserOnBoard" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setUserOnBoard(newUserOnBoard:Boolean):Unit"></a><a id="setUserOnBoard(Boolean):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#setUserOnBoard(newUserOnBoard:Boolean):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setUserOnBoard</span><span class="params">(<span name="newUserOnBoard">newUserOnBoard: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">This method permits to set the internal variable if the user is on board or not.</p><div class="fullcomment"><div class="comment cmt"><p>This method permits to set the internal variable if the user is on board or not.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.vehicle.control.VehicleControlImpl">VehicleControlImpl</a> → <a href="VehicleControl.html" class="extype" name="com.wedriveu.vehicle.control.VehicleControl">VehicleControl</a></dd></dl></div>
     </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#setUsername" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="setUsername(newUsername:String):Unit"></a><a id="setUsername(String):Unit"></a>
       <span class="permalink">
@@ -785,6 +854,54 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#unsubscribeToBrokenEvents" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unsubscribeToBrokenEvents():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#unsubscribeToBrokenEvents():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unsubscribeToBrokenEvents</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">This method permits to unsubsribe the control system to vehicle broken events.</p><div class="fullcomment"><div class="comment cmt"><p>This method permits to unsubsribe the control system to vehicle broken events.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.vehicle.control.VehicleControlImpl">VehicleControlImpl</a> → <a href="VehicleControl.html" class="extype" name="com.wedriveu.vehicle.control.VehicleControl">VehicleControl</a></dd></dl></div>
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#unsubscribeToStolenEvents" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unsubscribeToStolenEvents():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#unsubscribeToStolenEvents():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unsubscribeToStolenEvents</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">This method permits to unsubsribe the control system to vehicle stolen events.</p><div class="fullcomment"><div class="comment cmt"><p>This method permits to unsubsribe the control system to vehicle stolen events.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.vehicle.control.VehicleControlImpl">VehicleControlImpl</a> → <a href="VehicleControl.html" class="extype" name="com.wedriveu.vehicle.control.VehicleControl">VehicleControl</a></dd></dl></div>
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#userOnBoard" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="userOnBoard:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#userOnBoard:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">userOnBoard</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      
     </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#username" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="username:String"></a>
       <span class="permalink">
@@ -846,6 +963,118 @@
       </span>
       <span class="symbol">
         <span class="name">vehicleGiven</span><span class="result">: <a href="../entity/SelfDrivingVehicle.html" class="extype" name="com.wedriveu.vehicle.entity.SelfDrivingVehicle">SelfDrivingVehicle</a></span>
+      </span>
+      
+      
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#vehicleVerticleArrivedNotify" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="vehicleVerticleArrivedNotify:com.weriveu.vehicle.boundary.VehicleVerticleArrivedNotifyImpl"></a><a id="vehicleVerticleArrivedNotify:VehicleVerticleArrivedNotifyImpl"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#vehicleVerticleArrivedNotify:com.weriveu.vehicle.boundary.VehicleVerticleArrivedNotifyImpl" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">vehicleVerticleArrivedNotify</span><span class="result">: <a href="../../../weriveu/vehicle/boundary/VehicleVerticleArrivedNotifyImpl.html" class="extype" name="com.weriveu.vehicle.boundary.VehicleVerticleArrivedNotifyImpl">VehicleVerticleArrivedNotifyImpl</a></span>
+      </span>
+      
+      
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#vehicleVerticleBook" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="vehicleVerticleBook:com.weriveu.vehicle.boundary.VehicleVerticleBookImpl"></a><a id="vehicleVerticleBook:VehicleVerticleBookImpl"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#vehicleVerticleBook:com.weriveu.vehicle.boundary.VehicleVerticleBookImpl" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">vehicleVerticleBook</span><span class="result">: <a href="../../../weriveu/vehicle/boundary/VehicleVerticleBookImpl.html" class="extype" name="com.weriveu.vehicle.boundary.VehicleVerticleBookImpl">VehicleVerticleBookImpl</a></span>
+      </span>
+      
+      
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#vehicleVerticleCanDrive" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="vehicleVerticleCanDrive:com.weriveu.vehicle.boundary.VehicleVerticleCanDriveImpl"></a><a id="vehicleVerticleCanDrive:VehicleVerticleCanDriveImpl"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#vehicleVerticleCanDrive:com.weriveu.vehicle.boundary.VehicleVerticleCanDriveImpl" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">vehicleVerticleCanDrive</span><span class="result">: <a href="../../../weriveu/vehicle/boundary/VehicleVerticleCanDriveImpl.html" class="extype" name="com.weriveu.vehicle.boundary.VehicleVerticleCanDriveImpl">VehicleVerticleCanDriveImpl</a></span>
+      </span>
+      
+      
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#vehicleVerticleDriveCommand" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="vehicleVerticleDriveCommand:com.weriveu.vehicle.boundary.VehicleVerticleDriveCommandImpl"></a><a id="vehicleVerticleDriveCommand:VehicleVerticleDriveCommandImpl"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#vehicleVerticleDriveCommand:com.weriveu.vehicle.boundary.VehicleVerticleDriveCommandImpl" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">vehicleVerticleDriveCommand</span><span class="result">: <a href="../../../weriveu/vehicle/boundary/VehicleVerticleDriveCommandImpl.html" class="extype" name="com.weriveu.vehicle.boundary.VehicleVerticleDriveCommandImpl">VehicleVerticleDriveCommandImpl</a></span>
+      </span>
+      
+      
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#vehicleVerticleForUser" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="vehicleVerticleForUser:com.weriveu.vehicle.boundary.VehicleVerticleForUserImpl"></a><a id="vehicleVerticleForUser:VehicleVerticleForUserImpl"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#vehicleVerticleForUser:com.weriveu.vehicle.boundary.VehicleVerticleForUserImpl" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">vehicleVerticleForUser</span><span class="result">: <a href="../../../weriveu/vehicle/boundary/VehicleVerticleForUserImpl.html" class="extype" name="com.weriveu.vehicle.boundary.VehicleVerticleForUserImpl">VehicleVerticleForUserImpl</a></span>
+      </span>
+      
+      
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#vehicleVerticleRegister" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="vehicleVerticleRegister:com.weriveu.vehicle.boundary.VehicleVerticleRegisterImpl"></a><a id="vehicleVerticleRegister:VehicleVerticleRegisterImpl"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#vehicleVerticleRegister:com.weriveu.vehicle.boundary.VehicleVerticleRegisterImpl" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">vehicleVerticleRegister</span><span class="result">: <a href="../../../weriveu/vehicle/boundary/VehicleVerticleRegisterImpl.html" class="extype" name="com.weriveu.vehicle.boundary.VehicleVerticleRegisterImpl">VehicleVerticleRegisterImpl</a></span>
+      </span>
+      
+      
+    </li><li name="com.wedriveu.vehicle.control.VehicleControlImpl#vehicleVerticleUpdate" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="vehicleVerticleUpdate:com.weriveu.vehicle.boundary.VehicleVerticleUpdateImpl"></a><a id="vehicleVerticleUpdate:VehicleVerticleUpdateImpl"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleControlImpl.html#vehicleVerticleUpdate:com.weriveu.vehicle.boundary.VehicleVerticleUpdateImpl" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">vehicleVerticleUpdate</span><span class="result">: <a href="../../../weriveu/vehicle/boundary/VehicleVerticleUpdateImpl.html" class="extype" name="com.weriveu.vehicle.boundary.VehicleVerticleUpdateImpl">VehicleVerticleUpdateImpl</a></span>
       </span>
       
       

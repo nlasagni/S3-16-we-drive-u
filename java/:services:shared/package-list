@@ -1,6 +1,8 @@
 com.wedriveu.services.shared.entity
+com.wedriveu.services.shared.message
+com.wedriveu.services.shared.model
 com.wedriveu.services.shared.rabbitmq
 com.wedriveu.services.shared.rabbitmq.client
-com.wedriveu.services.shared.rabbitmq.nearest
+com.wedriveu.services.shared.store
 com.wedriveu.services.shared.util
 com.wedriveu.services.shared.vertx

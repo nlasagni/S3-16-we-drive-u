@@ -264,9 +264,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(selfDrivingVehicle:com.wedriveu.vehicle.entity.SelfDrivingVehicle,stopUi:com.wedriveu.vehicle.boundary.VehicleStopView,debugVar:Boolean):com.wedriveu.vehicle.control.VehicleBehavioursImpl"></a><a id="&lt;init&gt;:VehicleBehavioursImpl"></a>
+      <a id="&lt;init&gt;(vehicleControl:com.wedriveu.vehicle.control.VehicleControl,vertx:io.vertx.core.Vertx,selfDrivingVehicle:com.wedriveu.vehicle.entity.SelfDrivingVehicle,stopUi:com.wedriveu.vehicle.boundary.VehicleStopView,debugVar:Boolean):com.wedriveu.vehicle.control.VehicleBehavioursImpl"></a><a id="&lt;init&gt;:VehicleBehavioursImpl"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/vehicle/control/VehicleBehavioursImpl.html#&lt;init&gt;(selfDrivingVehicle:com.wedriveu.vehicle.entity.SelfDrivingVehicle,stopUi:com.wedriveu.vehicle.boundary.VehicleStopView,debugVar:Boolean):com.wedriveu.vehicle.control.VehicleBehavioursImpl" title="Permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleBehavioursImpl.html#&lt;init&gt;(vehicleControl:com.wedriveu.vehicle.control.VehicleControl,vertx:io.vertx.core.Vertx,selfDrivingVehicle:com.wedriveu.vehicle.entity.SelfDrivingVehicle,stopUi:com.wedriveu.vehicle.boundary.VehicleStopView,debugVar:Boolean):com.wedriveu.vehicle.control.VehicleBehavioursImpl" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -275,7 +275,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">VehicleBehavioursImpl</span><span class="params">(<span name="selfDrivingVehicle">selfDrivingVehicle: <a href="../entity/SelfDrivingVehicle.html" class="extype" name="com.wedriveu.vehicle.entity.SelfDrivingVehicle">SelfDrivingVehicle</a></span>, <span name="stopUi">stopUi: <a href="../boundary/VehicleStopView.html" class="extype" name="com.wedriveu.vehicle.boundary.VehicleStopView">VehicleStopView</a></span>, <span name="debugVar">debugVar: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span>
+        <span class="name">VehicleBehavioursImpl</span><span class="params">(<span name="vehicleControl">vehicleControl: <a href="VehicleControl.html" class="extype" name="com.wedriveu.vehicle.control.VehicleControl">VehicleControl</a></span>, <span name="vertx">vertx: <span class="extype" name="io.vertx.core.Vertx">Vertx</span></span>, <span name="selfDrivingVehicle">selfDrivingVehicle: <a href="../entity/SelfDrivingVehicle.html" class="extype" name="com.wedriveu.vehicle.entity.SelfDrivingVehicle">SelfDrivingVehicle</a></span>, <span name="stopUi">stopUi: <a href="../boundary/VehicleStopView.html" class="extype" name="com.wedriveu.vehicle.boundary.VehicleStopView">VehicleStopView</a></span>, <span name="debugVar">debugVar: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span>
       </span>
       
       
@@ -567,6 +567,22 @@
       </span>
       
       
+    </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#destinationPosition" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="destinationPosition:com.wedriveu.shared.util.Position"></a><a id="destinationPosition:Position"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleBehavioursImpl.html#destinationPosition:com.wedriveu.shared.util.Position" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">destinationPosition</span><span class="result">: <span class="extype" name="com.wedriveu.shared.util.Position">Position</span></span>
+      </span>
+      
+      
     </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#distanceInKmLog" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="distanceInKmLog:String"></a>
       <span class="permalink">
@@ -644,6 +660,22 @@
       </span>
       <span class="symbol">
         <span class="name">errorRechargeProcessLog</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      
+    </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#eventBus" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="eventBus:io.vertx.core.eventbus.EventBus"></a><a id="eventBus:EventBus"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleBehavioursImpl.html#eventBus:io.vertx.core.eventbus.EventBus" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eventBus</span><span class="result">: <span class="extype" name="io.vertx.core.eventbus.EventBus">EventBus</span></span>
       </span>
       
       
@@ -750,23 +782,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#isUserOnBoard" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="isUserOnBoard():Boolean"></a>
-      <span class="permalink">
-      <a href="../../../../com/wedriveu/vehicle/control/VehicleBehavioursImpl.html#isUserOnBoard():Boolean" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">isUserOnBoard</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">This method is used to retrieve informations about if the user is on board of the vehicle.</p><div class="fullcomment"><div class="comment cmt"><p>This method is used to retrieve informations about if the user is on board of the vehicle.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>True if the user is on board, False otherwise.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.vehicle.control.VehicleBehavioursImpl">VehicleBehavioursImpl</a> → <a href="VehicleBehaviours.html" class="extype" name="com.wedriveu.vehicle.control.VehicleBehaviours">VehicleBehaviours</a></dd></dl></div>
     </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#kilometersInTenSecondsGivenSpeed" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="kilometersInTenSecondsGivenSpeed:Double"></a>
       <span class="permalink">
@@ -929,6 +944,23 @@
       </span>
       
       
+    </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#setTestUserVar" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setTestUserVar(userVar:Boolean):Unit"></a><a id="setTestUserVar(Boolean):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleBehavioursImpl.html#setTestUserVar(userVar:Boolean):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setTestUserVar</span><span class="params">(<span name="userVar">userVar: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">This method permits to set test variables in order to handle tests.</p><div class="fullcomment"><div class="comment cmt"><p>This method permits to set test variables in order to handle tests.
+</p></div><dl class="paramcmts block"><dt class="param">userVar</dt><dd class="cmt"><p>The value of the variable.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.vehicle.control.VehicleBehavioursImpl">VehicleBehavioursImpl</a> → <a href="VehicleBehaviours.html" class="extype" name="com.wedriveu.vehicle.control.VehicleBehaviours">VehicleBehaviours</a></dd></dl></div>
     </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#setVehicleStolen" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="setVehicleStolen():Unit"></a>
       <span class="permalink">
@@ -1009,6 +1041,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#testUserVar" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="testUserVar:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleBehavioursImpl.html#testUserVar:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">testUserVar</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      
     </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#testVar" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="testVar:Boolean"></a>
       <span class="permalink">
@@ -1089,22 +1137,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#userOnBoard" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="userOnBoard:Boolean"></a>
-      <span class="permalink">
-      <a href="../../../../com/wedriveu/vehicle/control/VehicleBehavioursImpl.html#userOnBoard:Boolean" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">var</span>
-      </span>
-      <span class="symbol">
-        <span class="name">userOnBoard</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      
-      
     </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#vehicleIsAlreadyStolenLog" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="vehicleIsAlreadyStolenLog:String"></a>
       <span class="permalink">
@@ -1150,6 +1182,22 @@
       </span>
       <span class="symbol">
         <span class="name">vehicleSetToStolenLog</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      
+    </li><li name="com.wedriveu.vehicle.control.VehicleBehavioursImpl#verticlesTestVar" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="verticlesTestVar:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleBehavioursImpl.html#verticlesTestVar:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">verticlesTestVar</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       
       

@@ -208,7 +208,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">VehicleCreator</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">VehicleCreator</span><span class="result"> extends <span class="extype" name="java.lang.Thread">Thread</span></span>
       </span>
       </h4>
 
@@ -217,7 +217,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="java.lang.Thread">Thread</span>, <span class="extype" name="java.lang.Runnable">Runnable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -243,7 +243,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.wedriveu.vehicle.control.VehicleCreator"><span>VehicleCreator</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.wedriveu.vehicle.control.VehicleCreator"><span>VehicleCreator</span></li><li class="in" name="java.lang.Thread"><span>Thread</span></li><li class="in" name="java.lang.Runnable"><span>Runnable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -264,9 +264,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.wedriveu.vehicle.control.VehicleCreator#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(speed:Double,battery:Double,doBreak:Boolean,doStolen:Boolean,vehiclesCounter:Int):com.wedriveu.vehicle.control.VehicleCreator"></a><a id="&lt;init&gt;:VehicleCreator"></a>
+      <a id="&lt;init&gt;(speed:Double,battery:Double,doBreak:Boolean,doStolen:Boolean,vehiclesCounter:Int,indexForImages:Int):com.wedriveu.vehicle.control.VehicleCreator"></a><a id="&lt;init&gt;:VehicleCreator"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#&lt;init&gt;(speed:Double,battery:Double,doBreak:Boolean,doStolen:Boolean,vehiclesCounter:Int):com.wedriveu.vehicle.control.VehicleCreator" title="Permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#&lt;init&gt;(speed:Double,battery:Double,doBreak:Boolean,doStolen:Boolean,vehiclesCounter:Int,indexForImages:Int):com.wedriveu.vehicle.control.VehicleCreator" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -275,7 +275,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">VehicleCreator</span><span class="params">(<span name="speed">speed: <span class="extype" name="scala.Double">Double</span></span>, <span name="battery">battery: <span class="extype" name="scala.Double">Double</span></span>, <span name="doBreak">doBreak: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="doStolen">doStolen: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="vehiclesCounter">vehiclesCounter: <span class="extype" name="scala.Int">Int</span></span>)</span>
+        <span class="name">VehicleCreator</span><span class="params">(<span name="speed">speed: <span class="extype" name="scala.Double">Double</span></span>, <span name="battery">battery: <span class="extype" name="scala.Double">Double</span></span>, <span name="doBreak">doBreak: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="doStolen">doStolen: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="vehiclesCounter">vehiclesCounter: <span class="extype" name="scala.Int">Int</span></span>, <span name="indexForImages">indexForImages: <span class="extype" name="scala.Int">Int</span></span>)</span>
       </span>
       
       
@@ -353,7 +353,23 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="java.lang.Thread#checkAccess" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="checkAccess():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#checkAccess():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">checkAccess</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
       <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#clone():Object" title="Permalink">
@@ -368,7 +384,7 @@
         <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>Thread → AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
@@ -445,6 +461,137 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="java.lang.Thread#getContextClassLoader" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getContextClassLoader():ClassLoader"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#getContextClassLoader():ClassLoader" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getContextClassLoader</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.ClassLoader">ClassLoader</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd><dt>Annotations</dt><dd>
+                <span class="name">@CallerSensitive</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="java.lang.Thread#getId" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getId():Long"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#getId():Long" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getId</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Long">Long</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#getName" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getName():String"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#getName():String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getName</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#getPriority" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getPriority():Int"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#getPriority():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getPriority</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#getStackTrace" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getStackTrace():Array[StackTraceElement]"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#getStackTrace():Array[StackTraceElement]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getStackTrace</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="java.lang.StackTraceElement">StackTraceElement</span>]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#getState" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getState():java.lang.Thread.State"></a><a id="getState():State"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#getState():java.lang.Thread.State" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getState</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Thread.State">State</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#getThreadGroup" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getThreadGroup():ThreadGroup"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#getThreadGroup():ThreadGroup" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getThreadGroup</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.ThreadGroup">ThreadGroup</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#getUncaughtExceptionHandler" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getUncaughtExceptionHandler():java.lang.Thread.UncaughtExceptionHandler"></a><a id="getUncaughtExceptionHandler():UncaughtExceptionHandler"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#getUncaughtExceptionHandler():java.lang.Thread.UncaughtExceptionHandler" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getUncaughtExceptionHandler</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Thread.UncaughtExceptionHandler">UncaughtExceptionHandler</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
@@ -461,38 +608,54 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.wedriveu.vehicle.control.VehicleCreator#initialPosition" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="initialPosition:com.wedriveu.shared.util.Position"></a><a id="initialPosition:Position"></a>
+    </li><li name="java.lang.Thread#interrupt" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="interrupt():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#initialPosition:com.wedriveu.shared.util.Position" title="Permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#interrupt():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">initialPosition</span><span class="result">: <span class="extype" name="com.wedriveu.shared.util.Position">Position</span></span>
+        <span class="name">interrupt</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      
-    </li><li name="com.wedriveu.vehicle.control.VehicleCreator#initialState" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="initialState:String"></a>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#isAlive" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isAlive():Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#initialState:String" title="Permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#isAlive():Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">initialState</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">isAlive</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#isDaemon" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isDaemon():Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#isDaemon():Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isDaemon</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
       
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
@@ -509,6 +672,88 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="java.lang.Thread#isInterrupted" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInterrupted():Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#isInterrupted():Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInterrupted</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#join" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#join():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="java.lang.Thread#join" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join(x$1:Long,x$2:Int):Unit"></a><a id="join(Long,Int):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#join(x$1:Long,x$2:Int):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="java.lang.Thread#join" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join(x$1:Long):Unit"></a><a id="join(Long):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#join(x$1:Long):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -525,22 +770,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.wedriveu.vehicle.control.VehicleCreator#newVehicle" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="newVehicle:com.wedriveu.vehicle.control.VehicleControl"></a><a id="newVehicle:VehicleControl"></a>
-      <span class="permalink">
-      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#newVehicle:com.wedriveu.vehicle.control.VehicleControl" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">newVehicle</span><span class="result">: <a href="VehicleControl.html" class="extype" name="com.wedriveu.vehicle.control.VehicleControl">VehicleControl</a></span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
@@ -573,38 +802,118 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.wedriveu.vehicle.control.VehicleCreator#randomPlate" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="randomPlate:String"></a>
+    </li><li name="com.wedriveu.vehicle.control.VehicleCreator#run" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="run():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#randomPlate:String" title="Permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#run():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">randomPlate</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">run</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      
-    </li><li name="com.wedriveu.vehicle.control.VehicleCreator#stopUi" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="stopUi:com.wedriveu.vehicle.boundary.VehicleStopView"></a><a id="stopUi:VehicleStopView"></a>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.vehicle.control.VehicleCreator">VehicleCreator</a> → Thread → Runnable</dd></dl></div>
+    </li><li name="java.lang.Thread#setContextClassLoader" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setContextClassLoader(x$1:ClassLoader):Unit"></a><a id="setContextClassLoader(ClassLoader):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#stopUi:com.wedriveu.vehicle.boundary.VehicleStopView" title="Permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#setContextClassLoader(x$1:ClassLoader):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">stopUi</span><span class="result">: <a href="../boundary/VehicleStopView.html" class="extype" name="com.wedriveu.vehicle.boundary.VehicleStopView">VehicleStopView</a></span>
+        <span class="name">setContextClassLoader</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.ClassLoader">ClassLoader</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#setDaemon" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setDaemon(x$1:Boolean):Unit"></a><a id="setDaemon(Boolean):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#setDaemon(x$1:Boolean):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setDaemon</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
       
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#setName" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setName(x$1:String):Unit"></a><a id="setName(String):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#setName(x$1:String):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setName</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#setPriority" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setPriority(x$1:Int):Unit"></a><a id="setPriority(Int):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#setPriority(x$1:Int):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setPriority</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#setUncaughtExceptionHandler" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setUncaughtExceptionHandler(x$1:java.lang.Thread.UncaughtExceptionHandler):Unit"></a><a id="setUncaughtExceptionHandler(UncaughtExceptionHandler):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#setUncaughtExceptionHandler(x$1:java.lang.Thread.UncaughtExceptionHandler):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setUncaughtExceptionHandler</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.Thread.UncaughtExceptionHandler">UncaughtExceptionHandler</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
+    </li><li name="java.lang.Thread#start" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="start():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#start():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">start</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -621,7 +930,7 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="java.lang.Thread#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
       <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#toString():String" title="Permalink">
@@ -636,7 +945,7 @@
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread → AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
@@ -709,11 +1018,144 @@
 
         
 
-        
+        <div class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="java.lang.Thread#countStackFrames" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="countStackFrames():Int"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#countStackFrames():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version ) see corresponding Javadoc for more information.">countStackFrames</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd><dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> see corresponding Javadoc for more information.</p></dd></dl></div>
+    </li><li name="java.lang.Thread#destroy" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="destroy():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#destroy():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version ) see corresponding Javadoc for more information.">destroy</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd><dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> see corresponding Javadoc for more information.</p></dd></dl></div>
+    </li><li name="java.lang.Thread#resume" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="resume():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#resume():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version ) see corresponding Javadoc for more information.">resume</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd><dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> see corresponding Javadoc for more information.</p></dd></dl></div>
+    </li><li name="java.lang.Thread#stop" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="stop(x$1:Throwable):Unit"></a><a id="stop(Throwable):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#stop(x$1:Throwable):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version ) see corresponding Javadoc for more information.">stop</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.Throwable">Throwable</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd><dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> see corresponding Javadoc for more information.</p></dd></dl></div>
+    </li><li name="java.lang.Thread#stop" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="stop():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#stop():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version ) see corresponding Javadoc for more information.">stop</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd><dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> see corresponding Javadoc for more information.</p></dd></dl></div>
+    </li><li name="java.lang.Thread#suspend" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="suspend():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/vehicle/control/VehicleCreator.html#suspend():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version ) see corresponding Javadoc for more information.">suspend</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Thread</dd><dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> see corresponding Javadoc for more information.</p></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="java.lang.Thread">
+              <h3>Inherited from <span class="extype" name="java.lang.Thread">Thread</span></h3>
+            </div><div class="parent" name="java.lang.Runnable">
+              <h3>Inherited from <span class="extype" name="java.lang.Runnable">Runnable</span></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
