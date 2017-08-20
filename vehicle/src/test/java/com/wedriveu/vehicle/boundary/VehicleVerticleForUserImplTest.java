@@ -45,7 +45,7 @@ public class VehicleVerticleForUserImplTest {
     private static final double maxBoundPositionLat = 44.145501;
     private static final double minorBoundPositionLon = 12.247497;
     private static final double maxBoundPositionLon = 12.247498;
-    private static final int timeToSleep = 1000;
+    private static final int timeToSleep = 5000;
     private static final long TIME_OUT = 1000;
     private int checkCounter;
 
