@@ -56,7 +56,6 @@ class VehicleCreator(speed: Double,
         false)
 
     newVehicle.startVehicleEngine()
-    newVehicle.subscribeToMovementAndChangePositionEvents()
     if(doBreak) {
       newVehicle.subscribeToBrokenEvents()
     }
