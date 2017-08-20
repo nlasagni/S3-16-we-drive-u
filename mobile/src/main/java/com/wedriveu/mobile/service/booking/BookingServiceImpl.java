@@ -88,6 +88,7 @@ public class BookingServiceImpl implements BookingService {
 
     private CreateBookingRequest createRequest(Booking booking) throws UnsupportedEncodingException {
         CreateBookingRequest request = new CreateBookingRequest();
+        request.setUsername(mUserStore.getUser().getUsername());
         request.setLicensePlate(booking.getLicensePlate());
         request.setUserPosition(booking.getUserPosition());
         request.setDestinationPosition(booking.getDestinationPosition());

@@ -3,6 +3,7 @@ package com.wedriveu.services.vehicle.boundary.booking;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.json.JsonObject;
 
 import java.io.IOException;
@@ -40,6 +41,10 @@ public class BookConsumerVerticle extends VerticleConsumer {
     @Override
     public void registerConsumer(String eventBus) {
         vertx.eventBus().consumer(eventBus, msg -> {
+
+            //TODO
+            Log.info(this.getClass().getSimpleName(), "Received book vehicle request");
+
             sendBookingRequestToVehicle((JsonObject) msg.body());
         });
     }

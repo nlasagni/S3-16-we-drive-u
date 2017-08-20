@@ -2,7 +2,7 @@ package com.wedriveu.services.booking.app
 
 import com.wedriveu.services.shared.vertx.VertxJsonMapper
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse
-import com.wedriveu.shared.util.{Constants => Shared}
+import com.wedriveu.shared.util.{Log, Constants => Shared}
 import io.vertx.scala.core.eventbus.{EventBus, Message}
 import io.vertx.scala.rabbitmq.RabbitMQClient
 
@@ -41,6 +41,8 @@ object BookingServiceTestSimulation {
       )
     }).flatMap(_ => {
       eventBus.consumer(eventBusAddress, (msg: Message[Object]) => {
+        //TODO
+        Log.info(this.getClass.getSimpleName, "simulated vehicle service response!!!")
         client.basicPublish(
           Shared.RabbitMQ.Exchanges.VEHICLE,
           Shared.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_RESPONSE,

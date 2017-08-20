@@ -2,7 +2,7 @@ package com.wedriveu.services.booking.boundary
 
 import com.wedriveu.services.booking.util.{Constants, ConsumerConfig, RabbitMQConsumers}
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory
-import com.wedriveu.shared.util.{Constants => Shared}
+import com.wedriveu.shared.util.{Log, Constants => Shared}
 import io.vertx.core.json.JsonObject
 import io.vertx.lang.scala.ScalaVerticle
 import io.vertx.scala.core.eventbus.Message
@@ -104,6 +104,10 @@ object BookingBoundaryConsumerVerticle {
 
     override def consume(): Unit = {
       vertx.eventBus().consumer(consumerAddress, (message: Message[Object]) => {
+
+        //TODO
+        Log.info(this.getClass.getSimpleName, "Received message: " + message.body().toString)
+
         vertx.eventBus().send(bookingConsumerConfig.eventBusAddress, message.body())
       })
     }
