@@ -2,7 +2,7 @@ package com.wedriveu.vehicle.control
 
 import java.util.UUID
 
-import com.wedriveu.shared.util.Position
+import com.wedriveu.shared.util.{Log, Position}
 import com.wedriveu.vehicle.boundary.{VehicleStopView, VehicleStopViewImpl}
 import com.wedriveu.vehicle.shared.VehicleConstants
 import io.vertx.core.Vertx
@@ -20,6 +20,10 @@ class VehicleCreator(speed: Double,
 
   override def run(): Unit = {
     val randomPlate: String = randomLicensePlateGenerator()
+
+    //TODO
+    Log.info(this.getClass.getSimpleName, "Random license plate: " + randomPlate)
+
     val initialState: String = ""
     val initialPosition: Position = new Position(VehicleConstants.initialLatitude, VehicleConstants.initialLongitude)
     val vertx: Vertx = Vertx.vertx()

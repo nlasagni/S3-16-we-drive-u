@@ -23,6 +23,9 @@ public class VehicleResponseCanDrive {
     private double distanceToUser;
 
     @JsonProperty
+    private double totalDistance;
+
+    @JsonProperty
     private double vehicleSpeed;
 
     public double getVehicleSpeed() {
@@ -39,6 +42,14 @@ public class VehicleResponseCanDrive {
 
     public void setDistanceToUser(double distanceToUser) {
         this.distanceToUser = distanceToUser;
+    }
+
+    public double getTotalDistance() {
+        return totalDistance;
+    }
+
+    public void setTotalDistance(double totalDistance) {
+        this.totalDistance = totalDistance;
     }
 
     public String getUsername() {

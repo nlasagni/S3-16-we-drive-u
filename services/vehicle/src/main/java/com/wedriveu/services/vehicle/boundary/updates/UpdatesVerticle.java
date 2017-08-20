@@ -1,5 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.updates;
 
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
@@ -91,7 +92,7 @@ public class UpdatesVerticle extends AbstractVerticle {
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject)msg.body(), UpdateToService.class);
-            if(update.getStatus().equals("broken")) {
+            if(update.getStatus().equals(Vehicle.STATUS_BROKEN_STOLEN)) {
                 Position vehiclePosition = update.getPosition();
                 SubstitutionRequest request = new SubstitutionRequest();
                 request.setPosition(vehiclePosition);

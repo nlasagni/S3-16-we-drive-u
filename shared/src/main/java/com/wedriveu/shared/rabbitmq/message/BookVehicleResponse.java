@@ -9,18 +9,18 @@ package com.wedriveu.shared.rabbitmq.message;
 
 public class BookVehicleResponse {
 
-    private String licencePlate;
+    private String licensePlate;
     private boolean booked;
     private double speed;
     private long driveTimeToUser;
     private long driveTimeToDestination;
 
-    public String getLicencePlate() {
-        return licencePlate;
+    public String getLicensePlate() {
+        return licensePlate;
     }
 
-    public void setLicencePlate(String licencePlate) {
-        this.licencePlate = licencePlate;
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 
     public double getSpeed() {
@@ -66,14 +66,14 @@ public class BookVehicleResponse {
         if (Double.compare(that.speed, speed) != 0) return false;
         if (driveTimeToUser != that.driveTimeToUser) return false;
         if (driveTimeToDestination != that.driveTimeToDestination) return false;
-        return licencePlate != null ? licencePlate.equals(that.licencePlate) : that.licencePlate == null;
+        return licensePlate != null ? licensePlate.equals(that.licensePlate) : that.licensePlate == null;
     }
 
     @Override
     public int hashCode() {
         int result;
         long temp;
-        result = licencePlate != null ? licencePlate.hashCode() : 0;
+        result = licensePlate != null ? licensePlate.hashCode() : 0;
         result = 31 * result + (booked ? 1 : 0);
         temp = Double.doubleToLongBits(speed);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
@@ -85,7 +85,7 @@ public class BookVehicleResponse {
     @Override
     public String toString() {
         return "BookVehicleResponse{" +
-                "licencePlate='" + licencePlate + '\'' +
+                "licensePlate='" + licensePlate + '\'' +
                 ", booked=" + booked +
                 ", speed=" + speed +
                 ", driveTimeToUser=" + driveTimeToUser +

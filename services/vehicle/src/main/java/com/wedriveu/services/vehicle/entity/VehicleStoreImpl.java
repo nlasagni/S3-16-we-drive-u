@@ -5,7 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.entity.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.services.shared.util.PositionUtils;
+import com.wedriveu.shared.util.Log;
+import com.wedriveu.shared.util.PositionUtils;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.SubstitutionRequest;
@@ -26,6 +27,8 @@ import java.util.Optional;
 
 import static com.wedriveu.services.shared.model.Vehicle.STATUS_AVAILABLE;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
+import static com.wedriveu.shared.util.Constants.USERNAME;
+import static com.wedriveu.shared.util.Constants.VEHICLE;
 import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 
 
@@ -77,6 +80,10 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     @Override
     public void addVehicle(Message message) {
+
+        //TODO
+        Log.info(this.getClass().getSimpleName(), "Adding new vehicle");
+
         JsonObject responseJson = new JsonObject();
         JsonObject vehicleRequesterJson = (JsonObject) message.body();
         Vehicle vehicleRequester = vehicleRequesterJson.mapTo(Vehicle.class);
@@ -135,16 +142,20 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     @Override
     public void getVehicleForNearest(Message message) {
+        JsonObject vehicleData = (JsonObject) message.body();
         Vehicle requestedVehicle = getVehicleFromLicencePlate(message);
-        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST,
-                requestedVehicle == null ? null : JsonObject.mapFrom(requestedVehicle));
+        vehicleData.put(VEHICLE, JsonObject.mapFrom(requestedVehicle).toString());
+        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST, vehicleData);
     }
 
     @Override
     public void getVehicleForBooking(Message message) {
         Vehicle requestedVehicle = getVehicleFromLicencePlate(message);
-        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_BOOKING,
-                requestedVehicle == null ? null : requestedVehicle);
+
+        //TODO
+        Log.info(this.getClass().getSimpleName(), "RequestedVehicle: " + requestedVehicle);
+
+        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_BOOKING, VertxJsonMapper.mapFrom(requestedVehicle));
     }
 
     @Override

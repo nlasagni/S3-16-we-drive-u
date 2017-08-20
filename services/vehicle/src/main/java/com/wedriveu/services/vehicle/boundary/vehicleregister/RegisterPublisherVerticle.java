@@ -35,6 +35,11 @@ public class RegisterPublisherVerticle extends VerticlePublisher {
         RegisterToServiceResponse response = new RegisterToServiceResponse();
         response.setRegisterOk(registerResult);
         JsonObject resultJson = VertxJsonMapper.mapInBodyFrom(response);
+
+        //TODO
+        Log.info(this.getClass().getSimpleName(),
+                "Send add vehicle response: " + String.format(REGISTER_RESPONSE, licencePlate));
+
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(REGISTER_RESPONSE, licencePlate),
                 resultJson, onPublish -> {

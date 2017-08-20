@@ -8,8 +8,6 @@ import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import com.wedriveu.vehicle.shared.VehicleConstants$;
-import com.weriveu.vehicle.boundary.VehicleVerticleArrivedNotifyImpl;
-import com.weriveu.vehicle.boundary.VehicleVerticleDriveCommandImpl;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -126,7 +124,7 @@ public class VehicleChangePositionAndNotifyTest {
         Log.info(this.getClass().getSimpleName(),
                 "Reset vehicle position: " + vehicleControl.getVehicle().position().toString());
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND,
+                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND, vehicleControl.getVehicle().getPlate()),
                 createCommandJsonObject(),
                 onPublish -> {
                     context.assertTrue(onPublish.succeeded());

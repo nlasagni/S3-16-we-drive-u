@@ -6,7 +6,7 @@ import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
 import com.wedriveu.vehicle.simulation.{VehicleEventsObservables, VehicleEventsObservablesImpl}
-import com.weriveu.vehicle.boundary._
+import com.wedriveu.vehicle.boundary._
 import io.vertx.core.{DeploymentOptions, Vertx}
 
 /**
@@ -87,7 +87,7 @@ trait VehicleControl {
 class VehicleControlImpl(vertx: Vertx,
                          imageUrl: String,
                          description: String,
-                         license: String,
+                         licence: String,
                          state: String,
                          position: Position,
                          battery: Double,
@@ -95,7 +95,7 @@ class VehicleControlImpl(vertx: Vertx,
                          stopUi: VehicleStopView,
                          var debugVar: Boolean) extends VehicleControl {
   val vehicleGiven : SelfDrivingVehicle =
-    new SelfDrivingVehicle(imageUrl, description, license, state, position, battery, speed)
+    new SelfDrivingVehicle(imageUrl, description, licence, state, position, battery, speed)
   val vehicleEventsObservables: VehicleEventsObservables = new VehicleEventsObservablesImpl
   val vehicleBehaviours: VehicleBehaviours = new VehicleBehavioursImpl(this, vertx, vehicleGiven, stopUi, debugVar)
   val received: String = " [x] Received '"

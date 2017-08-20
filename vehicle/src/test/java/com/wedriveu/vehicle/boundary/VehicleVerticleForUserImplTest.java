@@ -1,6 +1,5 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.rabbitmq.message.EnterVehicleRequest;
 import com.wedriveu.shared.rabbitmq.message.EnterVehicleResponse;
@@ -9,11 +8,7 @@ import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.wedriveu.vehicle.shared.VehicleConstants;
 import com.wedriveu.vehicle.shared.VehicleConstants$;
-import com.weriveu.vehicle.boundary.VehicleVerticleDriveCommandImpl;
-import com.weriveu.vehicle.boundary.VehicleVerticleForUser;
-import com.weriveu.vehicle.boundary.VehicleVerticleForUserImpl;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -134,7 +129,7 @@ public class VehicleVerticleForUserImplTest {
         final Async async = context.async(2);
         vehicleControl.getBehavioursControl().setTestUserVar(true);
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND,
+                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND, vehicleControl.getVehicle().getPlate()),
                 createCommandJsonObject(),
                 onPublish -> {
                     if(onPublish.succeeded()) {

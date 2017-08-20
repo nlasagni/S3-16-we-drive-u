@@ -163,12 +163,6 @@ public interface Constants {
             String ANALYTICS_VEHICLES_RESPONSE_ALL = "vehicle.response.all";
 
             /**
-             * The routing key used by the VehicleService to tell the Vehicle to start driving
-             * after the booking process succeeded.
-             */
-            String START_DRIVING = "vehicle.event.drive";
-
-            /**
              * The routing key used by booking-service to communicate a request of booking.
              */
             String VEHICLE_SERVICE_BOOK_REQUEST = "vehicle.request.book";
@@ -198,7 +192,7 @@ public interface Constants {
             /**
              * The routing key used by vehicle-service to communicate a drive command to a vehicle.
              */
-            String VEHICLE_DRIVE_COMMAND = "vehicle.event.drive";
+            String VEHICLE_DRIVE_COMMAND = "vehicle.event.drive.%s";
             /**
              * The routing key used by vehicle to request the user to get inside.
              */
@@ -258,7 +252,12 @@ public interface Constants {
 
     interface Vehicle {
         String LICENSE_PLATE = "licensePlate";
+        String SPEED = "speed";
+    }
 
+    interface Trip {
+        String DISTANCE_TO_USER = "distanceToUser";
+        String TOTAL_DISTANCE = "totalDistance";
     }
 
     /**
