@@ -1,6 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
@@ -41,28 +41,23 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
         async = context.async(ASYNC_COUNT);
         vertx = Vertx.vertx();
         super.setup(vertx, completed -> {
-            async.countDown();
-            String licencePlate = new VehicleFactoryMini().getVehicle().getLicensePlate();
-            super.declareQueueAndBind(licencePlate, context, declared -> {
-                context.assertTrue(declared.succeeded());
-                async.countDown();
-                deployVerticles(context);
+            vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
+                vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
+                    async.countDown();
+                    String licencePlate = new VehicleFactoryMini().getVehicle().getLicensePlate();
+                    super.declareQueueAndBind(licencePlate, context, declared -> {
+                        context.assertTrue(declared.succeeded());
+                        async.complete();
+                });
             });
+                vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
+            });
+            async.countDown();
+            vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
+                vertx.eventBus().send(Messages.VehicleService.BOOT, null);
+            }));
         });
         async.awaitSuccess();
-    }
-
-    @SuppressWarnings("Duplicates")
-    private void deployVerticles(TestContext context) {
-        vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, completed -> {
-            vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
-                async.complete();
-            });
-            vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
-        });
-        vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
-            vertx.eventBus().send(Messages.VehicleService.BOOT, null);
-        }));
     }
 
     @After
@@ -76,7 +71,7 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
     }
 
     @Override
-    protected void checkResponse(JsonObject responseJson) {
+    protected void checkResponse(TestContext context, JsonObject responseJson) {
         assertThat(responseJson.getBoolean(REGISTER_RESULT), instanceOf(Boolean.class));
     }
 

@@ -1,5 +1,7 @@
 package com.wedriveu.mobile.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,10 +11,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import com.wedriveu.mobile.R;
-import com.wedriveu.mobile.booking.presenter.BookingPresenter;
-import com.wedriveu.mobile.booking.presenter.BookingPresenterImpl;
-import com.wedriveu.mobile.booking.view.BookingView;
-import com.wedriveu.mobile.booking.view.BookingViewImpl;
+import com.wedriveu.mobile.booking.router.BookingRouter;
+import com.wedriveu.mobile.booking.view.*;
+import com.wedriveu.mobile.booking.viewmodel.BookingViewModel;
+import com.wedriveu.mobile.booking.viewmodel.BookingViewModelImpl;
 import com.wedriveu.mobile.login.router.LoginRouter;
 import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.login.view.LoginViewImpl;
@@ -36,7 +38,10 @@ import com.wedriveu.mobile.util.location.LocationServiceImpl;
  * @since 4/07/2017
  *
  */
-public class MainActivity extends AppCompatActivity implements LoginRouter, SchedulingRouter, ComponentFinder {
+public class MainActivity extends AppCompatActivity implements LoginRouter,
+                                                               SchedulingRouter,
+                                                               BookingRouter,
+                                                               ComponentFinder {
 
     private FragmentManager mFragmentManager;
     private LocationService mLocationService;
@@ -80,9 +85,27 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     public void showTripScheduling() {
         SchedulingViewModelImpl schedulingViewModel = SchedulingViewModelImpl.newInstance();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.add(schedulingViewModel, SchedulingViewModel.TAG);
-        transaction.replace(R.id.fragment_container, SchedulingViewImpl.newInstance(), SchedulingView.TAG);
+        Fragment loginViewModel = getViewModel(LoginViewModel.TAG);
+        if (loginViewModel != null) {
+            transaction.remove(loginViewModel);
+        }
+        transaction.add(schedulingViewModel, SchedulingViewModel.ID);
+        transaction.replace(R.id.fragment_container, SchedulingViewImpl.newInstance(), SchedulingView.ID);
         transaction.commit();
+    }
+
+    @Override
+    public void showPopOverDialog(String message) {
+        new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setTitle(R.string.common_warning)
+                .setMessage(message)
+                .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
     @Override
@@ -107,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            Fragment viewModel = getViewModel(SchedulingViewModel.TAG);
+            Fragment viewModel = getViewModel(SchedulingViewModel.ID);
             viewModel.onActivityResult(requestCode, resultCode, data);
         } else {
             mLocationService.onActivityResult(requestCode, resultCode, data);
@@ -130,11 +153,65 @@ public class MainActivity extends AppCompatActivity implements LoginRouter, Sche
 
     @Override
     public void showBooking() {
-        //TODO show booking fragment
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.add(BookingPresenterImpl.newInstance(), BookingPresenter.ID);
+        Fragment schedulingViewModel = getViewModel(SchedulingViewModel.ID);
+        if (schedulingViewModel != null) {
+            transaction.remove(schedulingViewModel);
+        }
+        transaction.add(BookingViewModelImpl.newInstance(), BookingViewModel.ID);
         transaction.replace(R.id.fragment_container, new BookingViewImpl(), BookingView.ID);
         transaction.commit();
+    }
+
+    @Override
+    public void goBackToTripScheduling() {
+        removeAllFragments();
+        showTripScheduling();
+    }
+
+    @Override
+    public void showBookingAcceptedView() {
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, new AcceptedBookingViewImpl(), AcceptedBookingViewImpl.ID);
+        transaction.commit();
+    }
+
+    @Override
+    public void showEnterVehicleView() {
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, new EnterVehicleView(), EnterVehicleView.ID);
+        transaction.commit();
+    }
+
+    @Override
+    public void showTravellingView() {
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, new TravellingBookingViewImpl(), TravellingBookingViewImpl.ID);
+        transaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {}
+
+    private void removeAllFragments() {
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        String[] tags = {
+                SchedulingView.ID,
+                SchedulingViewModel.ID,
+                BookingView.ID,
+                BookingViewModel.ID,
+                AcceptedBookingViewImpl.ID,
+                EnterVehicleView.ID,
+                TravellingBookingViewImpl.ID
+        };
+        for (String tag : tags) {
+            Fragment fragment = getViewModel(tag);
+            if (fragment != null) {
+                transaction.remove(fragment);
+            }
+        }
+        transaction.commit();
+        mFragmentManager.executePendingTransactions();
     }
 
 }

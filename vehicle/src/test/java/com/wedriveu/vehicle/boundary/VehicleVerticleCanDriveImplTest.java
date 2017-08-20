@@ -8,6 +8,7 @@ import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import com.weriveu.vehicle.boundary.VehicleVerticleCanDriveImpl;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -45,14 +46,16 @@ public class VehicleVerticleCanDriveImplTest {
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
-    private VehicleStopView stopUi = new VehicleStopViewImpl(1);
-    private boolean debugVar = false;
+    private VehicleStopView stopUi;
+    private boolean debugVar = true;
 
     @Before
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
-        vehicleControl = new VehicleControlImpl(license, state, position, battery, speed, stopUi, debugVar);
+        stopUi = new VehicleStopViewImpl(vertx, 1);
+        vehicleControl =
+                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleCanDriveImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -71,7 +74,9 @@ public class VehicleVerticleCanDriveImplTest {
                         Constants.RabbitMQ.Exchanges.VEHICLE,
                         String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, USERNAME),
                         onQueueBind -> {
-                    vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy ->
+                    vertx.deployVerticle(vehicleVerticle,
+                            new DeploymentOptions().setWorker(true),
+                            context.asyncAssertSuccess(onDeploy ->
                             async.complete()
                     ));
                     async.countDown();

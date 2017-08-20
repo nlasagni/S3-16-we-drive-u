@@ -28,4 +28,11 @@ public interface StoreFactory {
      */
     VehicleStore createVehicleStore(Context context);
 
+    /**
+     * Creates the {@linkplain BookingStore}
+     * @param context The context with which create the store.
+     * @return The {@linkplain BookingStore} created.
+     */
+    BookingStore createBookingStore(Context context);
+
 }

@@ -7,6 +7,7 @@ import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import com.weriveu.vehicle.boundary.VehicleVerticleArrivedNotifyImpl;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -42,17 +43,17 @@ public class VehicleVerticleArrivedNotifyImplTest {
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
-    private VehicleStopView stopUi = new VehicleStopViewImpl(1);
-    private boolean debugVar = false;
-    private ArrivedNotify notifyToSend = new ArrivedNotify();
+    private VehicleStopView stopUi;
+    private boolean debugVar = true;
 
     @Before
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
-        vehicleControl = new VehicleControlImpl(license, state, position, battery, speed, stopUi, debugVar);
+        stopUi = new VehicleStopViewImpl(vertx, 1);
+        vehicleControl =
+                new VehicleControlImpl(vertx, "","",license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleArrivedNotifyImpl(vehicleControl);
-        notifyToSend.setLicense(license);
         setUpAsyncComponents(context);
     }
 
@@ -70,7 +71,9 @@ public class VehicleVerticleArrivedNotifyImplTest {
                         Constants.RabbitMQ.Exchanges.VEHICLE,
                         Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
                         onQueueBind ->{
-                    vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy -> {
+                    vertx.deployVerticle(vehicleVerticle,
+                            new DeploymentOptions().setWorker(true),
+                            context.asyncAssertSuccess(onDeploy -> {
                         async.complete();}
                     ));
                     async.countDown();
@@ -108,7 +111,8 @@ public class VehicleVerticleArrivedNotifyImplTest {
                 context.fail(event.getCause());
             });
         });
-        vehicleVerticle.sendArrivedNotify(notifyToSend);
+        eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, vehicleControl.getVehicle().plate()),
+                new JsonObject());
         vertx.setTimer(5000, onTime -> {
             async.complete();});
         async.awaitSuccess();

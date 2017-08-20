@@ -1,7 +1,9 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
+import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.services.vehicle.rabbitmq.SubstitutionRequest;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.json.JsonObject;
 
@@ -41,8 +43,8 @@ public class NearestConsumerVerticle extends VerticleConsumer {
     public void registerConsumer(String eventBus) {
         vertx.eventBus().consumer(eventBus, msg -> {
             JsonObject message = (JsonObject) msg.body();
-            JsonObject response = new JsonObject(message.getString(Constants.EventBus.BODY));
-            searchAvailableVehicles(response);
+            JsonObject nearestRequest = new JsonObject(message.getString(Constants.EventBus.BODY));
+            searchAvailableVehicles(nearestRequest);
         });
     }
 

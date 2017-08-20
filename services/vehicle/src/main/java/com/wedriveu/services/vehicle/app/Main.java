@@ -12,7 +12,6 @@ public class Main {
         vertx.deployVerticle(new BootVerticle(), deployed -> {
             vertx.eventBus().send(Messages.VehicleService.BOOT, null);
         });
-
     }
 
 }

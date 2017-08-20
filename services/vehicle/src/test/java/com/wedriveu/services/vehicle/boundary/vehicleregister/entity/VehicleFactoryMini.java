@@ -1,7 +1,7 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister.entity;
 
-import com.wedriveu.services.shared.entity.Vehicle;
-import com.wedriveu.shared.rabbitmq.message.Position;
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.shared.util.Position;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class VehicleFactoryMini implements VehicleFactory {
 
-    private static final String LICENCE_PLATE = "AAA";
+    private static final String LICENCE_PLATE = "1dc3c39c-b6e2-491c-9e9e-bd520767685a";
     private static final String STATUS = "available";
     //via sacchi 3, Cesena
     private static final double LATITUDE = 44.139761;
@@ -33,12 +33,7 @@ public class VehicleFactoryMini implements VehicleFactory {
         vehicle.setLastUpdate(LAST_UPDATE);
         vehicle.setName(NAME);
         vehicle.setDescription(DESCRIPTION);
-        try {
-            URL url = new URL(IMAGE_URL);
-            vehicle.setImageUrl(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        vehicle.setImageUrl(IMAGE_URL);
         return vehicle;
     }
 }

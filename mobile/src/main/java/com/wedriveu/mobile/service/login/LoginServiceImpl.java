@@ -8,14 +8,14 @@ import com.wedriveu.mobile.model.User;
 import com.wedriveu.mobile.service.ServiceExceptionHandler;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
 import com.wedriveu.mobile.service.ServiceResult;
-import com.wedriveu.shared.rabbitmq.message.LoginRequest;
-import com.wedriveu.shared.rabbitmq.message.LoginResponse;
 import com.wedriveu.shared.rabbitmq.communication.DefaultRabbitMqCommunicationManager;
 import com.wedriveu.shared.rabbitmq.communication.RabbitMqCommunicationManager;
 import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqCommunicationConfig;
 import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqQueueConfig;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqCloseCommunicationStrategy;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqConsumerStrategy;
+import com.wedriveu.shared.rabbitmq.message.LoginRequest;
+import com.wedriveu.shared.rabbitmq.message.LoginResponse;
 import com.wedriveu.shared.util.Constants;
 
 import java.io.IOException;
@@ -76,7 +76,7 @@ public class LoginServiceImpl implements LoginService {
                     LoginResponse responseBody = subscribeForResponse(requestId, response);
                     result = createServiceResult(responseBody, request);
                     if (result.succeeded()) {
-                        String userQueue = String.format(Constants.RabbitMQ.Queue.USER, request.getUsername());
+                        String userQueue = String.format(com.wedriveu.mobile.util.Constants.Queue.USER, request.getUsername());
                         RabbitMqQueueConfig queueConfig =
                                 new RabbitMqQueueConfig.Builder()
                                         .queueName(userQueue)

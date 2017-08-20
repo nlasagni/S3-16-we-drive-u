@@ -1,8 +1,9 @@
 package com.wedriveu.services.analytics.control;
 
-import com.wedriveu.services.analytics.boundary.VehicleListRequestVerticle;
-import com.wedriveu.services.analytics.boundary.VehicleListRetrieverVerticle;
-import com.wedriveu.services.shared.util.Log;
+import com.wedriveu.services.analytics.boundary.AnalyticsVehicleListRequestPublisher;
+import com.wedriveu.services.analytics.boundary.AnalyticsVehicleListRetrieverConsumer;
+import com.wedriveu.services.analytics.boundary.*;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -10,8 +11,7 @@ import io.vertx.core.Future;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wedriveu.shared.util.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE;
-import static com.wedriveu.shared.util.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS;
+import static com.wedriveu.shared.util.Constants.*;
 
 /**
  * @author Stefano Bernagozzi
@@ -23,23 +23,34 @@ public class AnalyticsVerticleDeployer extends AbstractVerticle {
 
         List<Future> futures = new ArrayList<>();
         Future requestFuture = Future.future();
-        vertx.deployVerticle(new VehicleListRequestVerticle(), requestFuture.completer());
+        vertx.deployVerticle(new AnalyticsVehicleListRequestPublisher(), requestFuture.completer());
         futures.add(requestFuture);
 
         Future retrieverFuture = Future.future();
-        vertx.deployVerticle(new VehicleListRetrieverVerticle(), retrieverFuture.completer());
+        vertx.deployVerticle(new AnalyticsVehicleListRetrieverConsumer(), retrieverFuture.completer());
         futures.add(retrieverFuture);
 
         Future controlFuture = Future.future();
-        vertx.deployVerticle(new AnalyticsVerticleController(), controlFuture.completer());
+        vertx.deployVerticle(new AnalyticsVehicleDataManipulationVerticle(), controlFuture.completer());
         futures.add(controlFuture);
 
+        Future vehicleUpdate = Future.future();
+        vertx.deployVerticle(new AnalyticsVehicleUpdateHandlerConsumer(), vehicleUpdate.completer());
+        futures.add(vehicleUpdate);
+
+        Future counterRequest = Future.future();
+        vertx.deployVerticle(new AnalyticsVehicleRequestConsumer(), counterRequest.completer());
+        futures.add(counterRequest);
+
+        Future counterSend = Future.future();
+        vertx.deployVerticle(new AnalyticsVehiclesResponsePublisher(), counterSend.completer());
+        futures.add(counterSend);
 
 
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {
-                Log.log("starting event message queue");
-                vertx.eventBus().send(ANALYTICS_VEHICLE_LIST_REQUEST_VERTICLE_ADDRESS, ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE);
+                Log.info("starting event message queue");
+                vertx.eventBus().send(ANALYTICS_VEHICLE_LIST_REQUEST_EVENTBUS, ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE);
                 startFuture.complete();
             } else {
                 Log.error("failing starting some verticle", completed.cause().getLocalizedMessage(), completed.cause());

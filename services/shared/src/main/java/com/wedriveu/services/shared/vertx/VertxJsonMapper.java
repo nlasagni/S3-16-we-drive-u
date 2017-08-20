@@ -11,14 +11,14 @@ public class VertxJsonMapper {
     private static final String MAP_TO_ILLEGAL_ARGUMENT = "error, provided JsonObject to be mapped is null";
     private static final String MAP_FROM_ILLEGAL_ARGUMENT = "error, provided object to be mapped is null";
 
-    public static <T> T mapTo(JsonObject jsonObject, Class<T> classType)throws IllegalArgumentException {
+    public static <T> T mapTo(JsonObject jsonObject, Class<T> classType) throws IllegalArgumentException {
         if (jsonObject == null) {
             throw new IllegalArgumentException(MAP_TO_ILLEGAL_ARGUMENT);
         }
         return jsonObject.mapTo(classType);
     }
 
-    public static <T> T mapFromBodyTo(JsonObject jsonObject, Class<T> classType)throws IllegalArgumentException {
+    public static <T> T mapFromBodyTo(JsonObject jsonObject, Class<T> classType) throws IllegalArgumentException {
         JsonObject body = new JsonObject(jsonObject.getString(BODY));
         return mapTo(body, classType);
     }
@@ -37,4 +37,5 @@ public class VertxJsonMapper {
         jsonObject.put(BODY, body.toString());
         return jsonObject;
     }
+
 }

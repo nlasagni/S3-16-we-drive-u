@@ -1,5 +1,7 @@
 package com.wedriveu.shared.rabbitmq.message;
 
+import com.wedriveu.shared.util.Position;
+
 /**
  * This class represents a vehicle request performed by a client to get an available vehicle.
  *

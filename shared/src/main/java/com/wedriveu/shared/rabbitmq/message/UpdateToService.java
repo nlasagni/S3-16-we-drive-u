@@ -14,6 +14,7 @@ public class UpdateToService {
     private String status;
     private String license;
     private String failureMessage;
+    private boolean userOnBoard;
 
     public Position getPosition() {
         return position;
@@ -47,6 +48,14 @@ public class UpdateToService {
         this.failureMessage = newFailureMessage;
     }
 
+    public boolean getUserOnBoard(){
+        return userOnBoard;
+    }
+
+    public void setUserOnBoard(boolean newUserOnBoard){
+        this.userOnBoard = newUserOnBoard;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,6 +78,7 @@ public class UpdateToService {
         return result;
     }
 
+
     @Override
     public String toString() {
         return "UpdateToService{" +
@@ -76,7 +86,7 @@ public class UpdateToService {
                 ", status='" + status + '\'' +
                 ", license='" + license + '\'' +
                 ", failureMessage='" + failureMessage + '\'' +
+                ", userOnBoard=" + userOnBoard +
                 '}';
     }
-
 }

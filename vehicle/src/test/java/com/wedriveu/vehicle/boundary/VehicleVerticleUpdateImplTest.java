@@ -8,6 +8,7 @@ import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import com.weriveu.vehicle.boundary.VehicleVerticleUpdateImpl;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -44,14 +45,16 @@ public class VehicleVerticleUpdateImplTest {
     private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
-    private VehicleStopView stopUi = new VehicleStopViewImpl(1);
-    private boolean debugVar = false;
+    private VehicleStopView stopUi;
+    private boolean debugVar = true;
 
     @Before
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
-        vehicleControl = new VehicleControlImpl(license, state, position, battery, speed, stopUi, debugVar);
+        stopUi = new VehicleStopViewImpl(vertx, 1);
+        vehicleControl =
+                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleUpdateImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -70,7 +73,9 @@ public class VehicleVerticleUpdateImplTest {
                         Constants.RabbitMQ.Exchanges.VEHICLE,
                         Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE,
                         onQueueBind ->{
-                    vertx.deployVerticle(vehicleVerticle, context.asyncAssertSuccess(onDeploy -> {
+                    vertx.deployVerticle(vehicleVerticle,
+                            new DeploymentOptions().setWorker(true),
+                            context.asyncAssertSuccess(onDeploy -> {
                         async.complete();}
                     ));
                     async.countDown();
@@ -111,7 +116,8 @@ public class VehicleVerticleUpdateImplTest {
                 context.fail(event.getCause());
             });
         });
-        vehicleVerticle.sendUpdate();
+        eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate()),
+                new JsonObject());
         vertx.setTimer(5000, onTime -> {
             async.complete();});
         async.awaitSuccess();

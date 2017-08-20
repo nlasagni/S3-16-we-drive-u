@@ -1,7 +1,5 @@
 package com.weriveu.vehicle.boundary;
 
-import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
-
 /**
  * @author Michele Donati on 11/08/2017.
  */
@@ -13,7 +11,6 @@ import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 public interface VehicleVerticleArrivedNotify {
     /**
      * This method permits to send the notify "Arrived to destination" to the service.
-     * @param notify This indicates the notify object to send to the service.
      */
-    void sendArrivedNotify(ArrivedNotify notify);
+    void sendArrivedNotify();
 }

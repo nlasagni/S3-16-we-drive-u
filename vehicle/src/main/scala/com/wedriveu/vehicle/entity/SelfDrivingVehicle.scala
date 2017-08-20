@@ -12,7 +12,9 @@ import scala.beans.BeanProperty
   * @author Michele Donati on 28/07/2017.
   */
 
-class SelfDrivingVehicle(@BeanProperty var plate: String,
+class SelfDrivingVehicle(var imageUrl: String,
+                         var description: String,
+                         @BeanProperty var plate: String,
                          private var state: String,
                          @BeanProperty var position: Position,
                          var battery: Double,

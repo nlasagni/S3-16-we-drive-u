@@ -8,7 +8,9 @@ sourceSets {
         }
     }
 }
-
+dependencies {
+    compile project(path: ':services:shared')
+}
 jar {
     archiveName = "${rootProject.name}-${this.name}-${rootProject.version}.jar"
     destinationDir = new File("$releasesClientFolder")

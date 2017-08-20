@@ -1,15 +1,16 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
-
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
-import com.wedriveu.services.shared.rabbitmq.nearest.VehicleResponseCanDrive;
+import com.wedriveu.services.shared.message.VehicleResponseCanDrive;
 import com.wedriveu.services.shared.util.PositionUtils;
+import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.services.vehicle.rabbitmq.SubstitutionRequest;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
-import com.wedriveu.shared.rabbitmq.message.Position;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Position;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
@@ -42,6 +43,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     private static RabbitMQClient client;
     private String username;
     private List<Vehicle> availableVehicles;
+    private List<Vehicle> availableVehiclesForSubstitution;
     private Position userPosition;
     private Position destPosition;
     private int counter;
@@ -49,6 +51,9 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     private UserRequest userRequest;
     private JsonArray responseJsonArray;
     private VehicleResponseCanDrive vehicleResponseCanDrive;
+    private SubstitutionRequest substitutionRequest;
+
+    private static final String NEAREST_VEHICLE_FOR_SUBSTITUTION = "nearest.vehicle.for.substitution";
 
     public VehicleFinderVerticle(String id) {
         super(String.format(VEHICLE_SERVICE_QUEUE_FINDER, id));
@@ -58,6 +63,18 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     public void start() throws Exception {
         super.start();
         eventBus.consumer(Messages.NearestControl.DATA_TO_VEHICLE, this::sendDataToVehicle);
+        eventBus.consumer(NEAREST_VEHICLE_FOR_SUBSTITUTION, this::handleSubstitution);
+    }
+
+    private void handleSubstitution(Message message) {
+        substitutionRequest = VertxJsonMapper.mapFromBodyTo((JsonObject)message.body(), SubstitutionRequest.class);
+        availableVehiclesForSubstitution = substitutionRequest.getVehicleList();
+        startVehicleCommunication();
+        try {
+            startFinderConsumer();
+        } catch (IOException | TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendDataToVehicle(Message message) {

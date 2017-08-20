@@ -1,8 +1,8 @@
 package com.wedriveu.mobile.service.login;
 
 import com.wedriveu.mobile.service.ServiceConsumerStrategy;
-import com.wedriveu.shared.rabbitmq.message.LoginResponse;
 import com.wedriveu.shared.rabbitmq.communication.RabbitMqCommunication;
+import com.wedriveu.shared.rabbitmq.message.LoginResponse;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;

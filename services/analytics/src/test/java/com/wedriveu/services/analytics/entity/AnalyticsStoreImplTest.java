@@ -1,10 +1,12 @@
 package com.wedriveu.services.analytics.entity;
 
 
-import com.wedriveu.services.shared.entity.AnalyticsVehicle;
-import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
-import com.wedriveu.services.shared.entity.JsonFileEntityListStoreStrategyImpl;
-import com.wedriveu.services.shared.entity.VehicleCounter;
+
+import com.wedriveu.services.shared.model.AnalyticsVehicle;
+import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.services.shared.store.EntityListStoreStrategy;
+import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
+import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +32,7 @@ public class AnalyticsStoreImplTest {
         EntityListStoreStrategy<AnalyticsVehicle> storeStrategy =
                 new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, DATABASE_FILE_NAME);
         analyticsStore = new AnalyticsStoreImpl(storeStrategy, vehiclesCounterAlgorithm);
-        vehicle = new AnalyticsVehicle(VEHICLE_1_LICENSE_PLATE, "available");
+        vehicle = new AnalyticsVehicle(VEHICLE_1_LICENSE_PLATE, Vehicle.STATUS_AVAILABLE);
     }
 
     @Test
@@ -53,7 +55,7 @@ public class AnalyticsStoreImplTest {
     @Test
     public void updateVehicle() throws Exception {
         boolean insertionSucceded = insertVehicleIntoDatabase();
-        final String NEW_STATUS = "broken";
+        final String NEW_STATUS = Vehicle.STATUS_BROKEN_STOLEN;
         boolean updateSucceded = analyticsStore.updateVehicle(vehicle.getLicensePlate(), NEW_STATUS);
         Optional<AnalyticsVehicle> vehicleFromStore = analyticsStore.getVehicleByLicensePlate(vehicle.getLicensePlate());
         assertTrue(insertionSucceded &&
@@ -65,6 +67,7 @@ public class AnalyticsStoreImplTest {
 
     @Test
     public void getVehicleCounter() throws Exception {
+        analyticsStore.clear();
         final int availableVehicles = 5;
         final int brokenVehicles = 6;
         final int bookedVehicles = 7;
@@ -76,17 +79,17 @@ public class AnalyticsStoreImplTest {
                 counter.getBooked() == bookedVehicles &&
                 counter.getBroken() == brokenVehicles &&
                 counter.getRecharging() == rechargingVehicles &&
-                counter.getStolen() == stolenVehicles);
+                counter.getNetworkIssues() == stolenVehicles);
 
     }
 
 
-    private void addSomeVehiclesToDatabase(int available, int broken, int booked, int stolen, int recharging) {
-        addVehiclesWithStatus(available, "available");
-        addVehiclesWithStatus(broken, "broken");
-        addVehiclesWithStatus(booked, "booked");
-        addVehiclesWithStatus(stolen, "stolen");
-        addVehiclesWithStatus(recharging, "recharging");
+    private void addSomeVehiclesToDatabase(int available, int broken, int booked, int networkIssues, int recharging) {
+        addVehiclesWithStatus(available, Vehicle.STATUS_AVAILABLE);
+        addVehiclesWithStatus(broken, Vehicle.STATUS_BROKEN_STOLEN);
+        addVehiclesWithStatus(booked, Vehicle.STATUS_BOOKED);
+        addVehiclesWithStatus(networkIssues, Vehicle.STATUS_NETWORK_ISSUES);
+        addVehiclesWithStatus(recharging, Vehicle.STATUS_RECHARGING);
 
     }
 

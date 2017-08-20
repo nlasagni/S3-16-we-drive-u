@@ -1,9 +1,10 @@
 package com.wedriveu.services.booking.entity;
 
-import com.wedriveu.services.shared.entity.Booking;
-import com.wedriveu.services.shared.entity.EntityListStoreStrategy;
-import com.wedriveu.services.shared.entity.JsonFileEntityListStoreStrategyImpl;
-import com.wedriveu.shared.rabbitmq.message.Position;
+import com.wedriveu.services.shared.model.Booking;
+import com.wedriveu.services.shared.store.EntityListStoreStrategy;
+import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
+import com.wedriveu.shared.util.Position;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,18 +37,23 @@ public class BookingStoreTest {
         bookings = createBookings();
     }
 
+    @After
+    public void tearDown() throws Exception {
+        bookingStore.deleteAllBookings();
+    }
+
     @Test
     public void addBooking() throws Exception {
         Booking booking = bookings.get(0);
         boolean result = bookingStore.addBooking(booking);
-        assertTrue(result && bookingStore.getBooking(booking.getId()) != null);
+        assertTrue(result && bookingStore.getBookingById(booking.getId()) != null);
     }
 
     @Test
     public void getBooking() throws Exception {
         Booking booking = bookings.get(0);
         boolean result = bookingStore.addBooking(booking);
-        Optional<Booking> storedBooking = bookingStore.getBooking(booking.getId());
+        Optional<Booking> storedBooking = bookingStore.getBookingById(booking.getId());
         assertTrue(result &&
                 storedBooking.isPresent() &&
                 storedBooking.get().getId() == booking.getId());
@@ -58,7 +64,7 @@ public class BookingStoreTest {
         Booking booking = bookings.get(0);
         bookingStore.addBooking(booking);
         boolean updateResult = bookingStore.updateBookingStatus(booking.getId(), Booking.STATUS_COMPLETED);
-        Optional<Booking> storedBooking = bookingStore.getBooking(booking.getId());
+        Optional<Booking> storedBooking = bookingStore.getBookingById(booking.getId());
         assertTrue(updateResult &&
                 storedBooking.isPresent() &&
                 storedBooking.get().getBookingStatus().equals(Booking.STATUS_COMPLETED));
@@ -74,8 +80,8 @@ public class BookingStoreTest {
 
     @Test
     public void clear() throws Exception {
-        bookingStore.clear();
-        assertTrue(!bookingStore.getBooking(0).isPresent());
+        bookingStore.deleteAllBookings();
+        assertTrue(!bookingStore.getBookingById(0).isPresent());
     }
 
     private List<Booking> createBookings() {

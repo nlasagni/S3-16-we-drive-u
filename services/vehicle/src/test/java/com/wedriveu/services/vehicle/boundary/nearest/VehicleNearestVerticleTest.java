@@ -1,6 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
-import com.wedriveu.services.shared.entity.Vehicle;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.nearest.entity.UserDataFactoryA;
@@ -23,6 +23,10 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_RES
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+/**
+ * Nearest request simulator, it acts as the Android client and sends the request to the VehicleService given
+ * a proper user address and destination address.
+ */
 @RunWith(VertxUnitRunner.class)
 public class VehicleNearestVerticleTest extends BaseInteractionClient {
 
@@ -41,28 +45,23 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
         async = context.async(ASYNC_COUNT);
         vertx = Vertx.vertx();
         super.setup(vertx, completed -> {
-            async.countDown();
-            String username = new UserDataFactoryA().getUserData().getUsername();
-            super.declareQueueAndBind(username, context, declared -> {
-                context.assertTrue(declared.succeeded());
-                async.countDown();
-                deployVerticles(context);
+            vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
+                vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
+                    async.countDown();
+                    String username = new UserDataFactoryA().getUserData().getUsername();
+                    super.declareQueueAndBind(username, context, declared -> {
+                        context.assertTrue(declared.succeeded());
+                        async.complete();
+                    });
+                });
+                vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
+            async.countDown();
+            vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
+                vertx.eventBus().send(Messages.VehicleService.BOOT, null);
+            }));
         });
         async.awaitSuccess();
-    }
-
-    @SuppressWarnings("Duplicates")
-    private void deployVerticles(TestContext context) {
-        vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, completed -> {
-            vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
-                async.complete();
-            });
-            vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
-        });
-        vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
-            vertx.eventBus().send(Messages.VehicleService.BOOT, null);
-        }));
     }
 
     @After
@@ -76,7 +75,7 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
     }
 
     @Override
-    protected void checkResponse(JsonObject responseJson) {
+    protected void checkResponse(TestContext context, JsonObject responseJson) {
         Vehicle responseVehicle = responseJson.mapTo(Vehicle.class);
         assertThat(responseVehicle, instanceOf(Vehicle.class));
     }

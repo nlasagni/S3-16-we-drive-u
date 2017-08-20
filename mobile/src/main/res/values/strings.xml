@@ -29,4 +29,10 @@
     <string name="vehicle_arrives_at">Arrives at destination at: %s</string>
     <string name="vehicle_decline">DECLINE</string>
     <string name="vehicle_accept">ACCEPT</string>
+    <!-- BOOKING -->
+    <string name="booking_accepted">Booking Accepted\nYour vehicle will arrive soon</string>
+    <string name="vehicle_arrived">Your vehicle has arrived!</string>
+    <string name="enter_vehicle">Enter vehicle</string>
+    <string name="destination">You\'ll arrive at your destination soon!</string>
+    <string name="arrived_at_destination">Yay! You\'re arrived at destination, hope to see you again!</string>
 </resources>
