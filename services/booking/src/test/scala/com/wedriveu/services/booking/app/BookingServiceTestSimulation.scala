@@ -24,7 +24,7 @@ object BookingServiceTestSimulation {
     client.exchangeDeclareFuture(
       Shared.RabbitMQ.Exchanges.VEHICLE,
       Shared.RabbitMQ.Exchanges.Type.DIRECT,
-      durable = false,
+      durable = true,
       autoDelete = false
     ).flatMap(_ => {
       client.queueDeclareFuture(
