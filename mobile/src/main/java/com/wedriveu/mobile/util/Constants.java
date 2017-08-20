@@ -41,10 +41,20 @@ public interface Constants {
          */
         String USER = "user.%s";
         /**
-         * The user queue name, must be completed with the username,
+         * The enter vehicle queue name, must be completed with the username,
          * see {@linkplain String#format(String, Object...)}.
          */
-        String VEHICLE = "vehicle.%s";
+        String ENTER_VEHICLE = "vehicle.enter.%s";
+        /**
+         * The enter vehicle queue name, must be completed with the username,
+         * see {@linkplain String#format(String, Object...)}.
+         */
+        String VEHICLE_UPDATE = "vehicle.update.%s";
+        /**
+         * The enter vehicle queue name, must be completed with the username,
+         * see {@linkplain String#format(String, Object...)}.
+         */
+        String VEHICLE_ARRIVED = "vehicle.arrived.%s";
         /**
          *
          */

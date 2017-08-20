@@ -1,5 +1,7 @@
 package com.wedriveu.mobile.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,11 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.booking.router.BookingRouter;
-import com.wedriveu.mobile.booking.view.AcceptedBookingView;
+import com.wedriveu.mobile.booking.view.*;
 import com.wedriveu.mobile.booking.viewmodel.BookingViewModel;
 import com.wedriveu.mobile.booking.viewmodel.BookingViewModelImpl;
-import com.wedriveu.mobile.booking.view.BookingView;
-import com.wedriveu.mobile.booking.view.BookingViewImpl;
 import com.wedriveu.mobile.login.router.LoginRouter;
 import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.login.view.LoginViewImpl;
@@ -95,6 +95,20 @@ public class MainActivity extends AppCompatActivity implements LoginRouter,
     }
 
     @Override
+    public void showPopOverDialog(String message) {
+        new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setTitle(R.string.common_warning)
+                .setMessage(message)
+                .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
+
+    @Override
     public void showProgressDialog() {
         View progressDialog = findViewById(R.id.progress_dialog);
         progressDialog.setVisibility(View.VISIBLE);
@@ -158,7 +172,21 @@ public class MainActivity extends AppCompatActivity implements LoginRouter,
     @Override
     public void showBookingAcceptedView() {
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, new AcceptedBookingView(), AcceptedBookingView.ID);
+        transaction.replace(R.id.fragment_container, new AcceptedBookingViewImpl(), AcceptedBookingViewImpl.ID);
+        transaction.commit();
+    }
+
+    @Override
+    public void showEnterVehicleView() {
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, new EnterVehicleView(), EnterVehicleView.ID);
+        transaction.commit();
+    }
+
+    @Override
+    public void showTravellingView() {
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, new TravellingBookingViewImpl(), TravellingBookingViewImpl.ID);
         transaction.commit();
     }
 
@@ -172,10 +200,12 @@ public class MainActivity extends AppCompatActivity implements LoginRouter,
                 SchedulingViewModel.ID,
                 BookingView.ID,
                 BookingViewModel.ID,
-                AcceptedBookingView.ID
+                AcceptedBookingViewImpl.ID,
+                EnterVehicleView.ID,
+                TravellingBookingViewImpl.ID
         };
         for (String tag : tags) {
-            Fragment fragment = getViewModel(SchedulingViewModel.ID);
+            Fragment fragment = getViewModel(tag);
             if (fragment != null) {
                 transaction.remove(fragment);
             }

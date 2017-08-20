@@ -12,9 +12,9 @@ public class Booking {
     private Position userPosition;
     private Position destinationPosition;
 
-    public Booking(@JsonProperty("") String licensePlate,
-                   @JsonProperty("") Position userPosition,
-                   @JsonProperty("") Position destinationPosition) {
+    public Booking(@JsonProperty("licensePlate") String licensePlate,
+                   @JsonProperty("userPosition") Position userPosition,
+                   @JsonProperty("destinationPosition") Position destinationPosition) {
         this.licensePlate = licensePlate;
         this.userPosition = userPosition;
         this.destinationPosition = destinationPosition;

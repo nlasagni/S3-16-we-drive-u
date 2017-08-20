@@ -7,10 +7,11 @@ import com.wedriveu.mobile.service.login.LoginService;
 import com.wedriveu.mobile.service.login.LoginServiceImpl;
 import com.wedriveu.mobile.service.scheduling.SchedulingService;
 import com.wedriveu.mobile.service.scheduling.SchedulingServiceImpl;
-import com.wedriveu.mobile.service.vehicle.EnterVehicleService;
-import com.wedriveu.mobile.service.vehicle.EnterVehicleServiceImpl;
+import com.wedriveu.mobile.service.vehicle.VehicleService;
+import com.wedriveu.mobile.service.vehicle.VehicleServiceImpl;
 import com.wedriveu.mobile.store.BookingStore;
 import com.wedriveu.mobile.store.UserStore;
+import com.wedriveu.mobile.store.VehicleStore;
 
 /**
  * @author Nicola Lasagni on 18/07/2017.
@@ -43,8 +44,8 @@ public class ServiceFactoryImpl implements ServiceFactory {
     }
 
     @Override
-    public EnterVehicleService createEnterVehicleService(Activity activity, UserStore userStore, BookingStore bookingStore) {
-        return new EnterVehicleServiceImpl(activity, userStore, bookingStore);
+    public VehicleService createVehicleService(Activity activity, UserStore userStore, VehicleStore vehicleStore) {
+        return new VehicleServiceImpl(activity, userStore, vehicleStore);
     }
 
 }

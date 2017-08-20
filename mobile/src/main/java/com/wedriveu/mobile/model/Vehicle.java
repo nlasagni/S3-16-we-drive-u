@@ -1,6 +1,7 @@
 package com.wedriveu.mobile.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wedriveu.shared.util.Position;
 
 /**
  * Describes a Vehicle
@@ -16,6 +17,7 @@ public class Vehicle {
     private String pictureURL;
     private String arriveAtUserTime;
     private String arriveAtDestinationTime;
+    private Position position;
 
     public Vehicle(@JsonProperty("licencePlate") String licencePlate,
                    @JsonProperty("vehicleName") String vehicleName,
@@ -67,4 +69,11 @@ public class Vehicle {
                 '}';
     }
 
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
 }

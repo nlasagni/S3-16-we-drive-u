@@ -17,4 +17,14 @@ public interface BookingRouter extends DialogProvider {
      */
     void showBookingAcceptedView();
 
+    /**
+     *
+     */
+    void showEnterVehicleView();
+
+    /**
+     *
+     */
+    void showTravellingView();
+
 }

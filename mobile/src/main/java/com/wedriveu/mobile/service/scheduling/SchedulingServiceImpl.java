@@ -13,13 +13,13 @@ import com.wedriveu.mobile.service.ServiceExceptionHandler;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
 import com.wedriveu.mobile.service.ServiceResult;
 import com.wedriveu.mobile.store.UserStore;
-import com.wedriveu.shared.rabbitmq.message.VehicleRequest;
-import com.wedriveu.shared.rabbitmq.message.VehicleResponse;
 import com.wedriveu.shared.rabbitmq.communication.DefaultRabbitMqCommunicationManager;
 import com.wedriveu.shared.rabbitmq.communication.RabbitMqCommunicationManager;
 import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqCommunicationConfig;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqCloseCommunicationStrategy;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqConsumerStrategy;
+import com.wedriveu.shared.rabbitmq.message.VehicleRequest;
+import com.wedriveu.shared.rabbitmq.message.VehicleResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Position;
 

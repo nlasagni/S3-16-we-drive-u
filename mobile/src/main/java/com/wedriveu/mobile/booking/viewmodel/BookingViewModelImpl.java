@@ -8,21 +8,24 @@ import android.support.v4.app.Fragment;
 import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.booking.router.BookingRouter;
-import com.wedriveu.mobile.booking.viewmodel.model.BookingPresentationModel;
+import com.wedriveu.mobile.booking.view.AcceptedBookingViewImpl;
 import com.wedriveu.mobile.booking.view.BookingView;
-import com.wedriveu.mobile.model.User;
+import com.wedriveu.mobile.booking.view.TravellingBookingView;
+import com.wedriveu.mobile.booking.view.TravellingBookingViewImpl;
+import com.wedriveu.mobile.booking.viewmodel.model.BookingPresentationModel;
 import com.wedriveu.mobile.model.Vehicle;
-import com.wedriveu.mobile.service.ServiceFactory;
 import com.wedriveu.mobile.service.ServiceFactoryImpl;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
 import com.wedriveu.mobile.service.ServiceResult;
 import com.wedriveu.mobile.service.booking.BookingService;
-import com.wedriveu.mobile.service.vehicle.EnterVehicleService;
+import com.wedriveu.mobile.service.vehicle.VehicleService;
 import com.wedriveu.mobile.store.BookingStore;
 import com.wedriveu.mobile.store.StoreFactoryImpl;
 import com.wedriveu.mobile.store.UserStore;
 import com.wedriveu.mobile.store.VehicleStore;
+import com.wedriveu.shared.rabbitmq.message.CompleteBookingResponse;
 import com.wedriveu.shared.rabbitmq.message.CreateBookingResponse;
+import com.wedriveu.shared.rabbitmq.message.EnterVehicleRequest;
 
 /**
  * @author Nicola Lasagni on 29/07/2017.
@@ -33,7 +36,7 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
 
     private BookingRouter mRouter;
     private BookingService mBookingService;
-    private EnterVehicleService mEnterVehicleService;
+    private VehicleService mVehicleService;
     private BookingStore mBookingStore;
     private VehicleStore mVehicleStore;
 
@@ -54,12 +57,11 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        BookingStore bookingStore = StoreFactoryImpl.getInstance().createBookingStore(getContext());
         UserStore userStore = StoreFactoryImpl.getInstance().createUserStore(getContext());
-        mBookingService = ServiceFactoryImpl.getInstance().createBookingService(getActivity(), userStore);
-        mEnterVehicleService = ServiceFactoryImpl.getInstance().createEnterVehicleService(getActivity(), userStore, bookingStore);
         mVehicleStore = StoreFactoryImpl.getInstance().createVehicleStore(getContext());
         mBookingStore = StoreFactoryImpl.getInstance().createBookingStore(getContext());
+        mBookingService = ServiceFactoryImpl.getInstance().createBookingService(getActivity(), userStore);
+        mVehicleService = ServiceFactoryImpl.getInstance().createVehicleService(getActivity(), userStore, mVehicleStore);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -97,8 +99,8 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
             public void onServiceOperationFinished(ServiceResult<CreateBookingResponse> result) {
                 mRouter.dismissProgressDialog();
                 if (result.getResult() == null || !result.getResult().isSuccess()) {
-                    BookingView bookingView = getBookingView();
-                    bookingView.renderError(result.getErrorMessage());
+                    mRouter.showPopOverDialog(result.getErrorMessage());
+                    goToTripScheduling();
                 } else {
                     Vehicle vehicle = mVehicleStore.getVehicle();
                     Vehicle newVehicle =
@@ -110,7 +112,46 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
                                     result.getResult().getDriveTimeToDestination());
                     mVehicleStore.storeVehicle(newVehicle);
                     mRouter.showBookingAcceptedView();
+                    subscribeToVehicleUpdates();
+                    subscribeToEnterVehicle();
+                }
+            }
+        });
+    }
 
+    private void subscribeToVehicleUpdates() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mVehicleService.subscribeToVehiclePositionChanged(new ServiceOperationCallback<Vehicle>() {
+                    @Override
+                    public void onServiceOperationFinished(ServiceResult<Vehicle> result) {
+                        TravellingBookingView view = getTravellingBookingView(AcceptedBookingViewImpl.ID);
+                        if (view != null) {
+                            view.showVehicle(result.getResult());
+                        }
+                        view = getTravellingBookingView(TravellingBookingViewImpl.ID);
+                        if (view != null) {
+                            view.showVehicle(result.getResult());
+                        }
+                    }
+                });
+            }
+        }, RENDER_DELAY);
+    }
+
+    private void subscribeToEnterVehicle() {
+        mVehicleService.subscribeToEnterVehicle(new ServiceOperationCallback<EnterVehicleRequest>() {
+            @Override
+            public void onServiceOperationFinished(ServiceResult<EnterVehicleRequest> result) {
+
+                if (result.getResult() == null ||
+                        !result.getResult().getLicensePlate().equals(mBookingStore.getBooking().getLicensePlate())) {
+                    mRouter.showPopOverDialog(result.getErrorMessage());
+                    mRouter.goBackToTripScheduling();
+                } else {
+                    mRouter.showEnterVehicleView();
                 }
             }
         });
@@ -118,6 +159,10 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
 
     @Override
     public void onDeclineButtonClick() {
+        goToTripScheduling();
+    }
+
+    private void goToTripScheduling() {
         mBookingStore.clear();
         mVehicleStore.clear();
         mRouter.goBackToTripScheduling();
@@ -125,7 +170,41 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
 
     @Override
     public void onEnterVehicleButtonClick() {
+        mRouter.showProgressDialog();
+        mVehicleService.enterVehicleAndUnsubscribe(new ServiceOperationCallback<Void>() {
+            @Override
+            public void onServiceOperationFinished(ServiceResult<Void> result) {
+                mRouter.showTravellingView();
+                subscribeToVehicleArrived();
+            }
+        });
+    }
 
+    private void subscribeToVehicleArrived() {
+        mVehicleService.subscribeToVehicleArrived(new ServiceOperationCallback<CompleteBookingResponse>() {
+            @Override
+            public void onServiceOperationFinished(ServiceResult<CompleteBookingResponse> result) {
+                mVehicleService.unsubscribeToVehicleArrived();
+                mVehicleService.unsubscribeToVehiclePositionChanged();
+                String message;
+                if (result.getResult() == null || !result.getResult().isSuccess()) {
+                    message = result.getErrorMessage();
+                } else {
+                    message = getString(R.string.arrived_at_destination);
+                }
+                mRouter.showPopOverDialog(message);
+                goToTripScheduling();
+            }
+        });
+    }
+
+    private TravellingBookingView getTravellingBookingView(String tag) {
+        TravellingBookingView view = null;
+        ComponentFinder componentFinder = (ComponentFinder) getActivity();
+        if (componentFinder != null) {
+            view = (TravellingBookingView) componentFinder.getView(tag);
+        }
+        return view;
     }
 
     private BookingView getBookingView() {

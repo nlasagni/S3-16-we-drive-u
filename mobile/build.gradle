@@ -58,6 +58,7 @@ dependencies {
     //Location
     compile "com.google.android.gms:play-services-location:$androidPlayServicesVersion"
     compile "com.google.android.gms:play-services-places:$androidPlayServicesVersion"
+    compile "com.google.android.gms:play-services-maps:$androidPlayServicesVersion"
     //Other
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.github.bumptech.glide:glide:$androidGlideVersion"
