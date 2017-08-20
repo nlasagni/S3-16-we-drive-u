@@ -1,11 +1,9 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.shared.rabbitmq.message.EnterVehicleRequest;
-import com.wedriveu.shared.rabbitmq.message.EnterVehicleResponse;
+import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
-import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -16,25 +14,26 @@ import io.vertx.rabbitmq.RabbitMQClient;
 import java.io.IOException;
 
 /**
- * @author Michele Donati on 17/08/2017.
+ * @author Michele Donati on 11/08/2017.
  */
 
-public class VehicleVerticleForUserImpl extends AbstractVerticle implements VehicleVerticleForUser {
+public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements VehicleVerticleDriveCommand {
 
     private VehicleControl vehicle;
-    private static final String TAG = VehicleVerticleForUserImpl.class.getSimpleName();
-    private static final String EVENT_BUS_ADDRESS = "vehicle.enter";
-    private static final String READ_ERROR = "Error occurred while reading response.";
-    private static String QUEUE_NAME = "vehicle.enter.";
+    private boolean testVar;
+    private static final String TAG = VehicleVerticleDriveCommandImpl.class.getSimpleName();
+    private static final String EVENT_BUS_ADDRESS = "vehicle.drivecommandbus";
+    private static final String READ_ERROR = "Error occurred while reading request.";
+    private String queue;
 
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
     private ObjectMapper objectMapper;
-    private Position destinationPosition;
 
-    public VehicleVerticleForUserImpl(VehicleControl vehicle) {
+    public VehicleVerticleDriveCommandImpl(VehicleControl vehicle, boolean testVar) {
         this.vehicle = vehicle;
-        QUEUE_NAME+=this.vehicle.getVehicle().plate();
+        this.testVar = testVar;
+        queue = "vehicle.drivecommand." + this.vehicle.getVehicle().plate();
     }
 
     @Override
@@ -76,7 +75,7 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
     }
 
     private void declareQueue(Future<JsonObject> future) {
-        rabbitMQClient.queueDeclare(QUEUE_NAME,
+        rabbitMQClient.queueDeclare(queue,
                 true,
                 false,
                 false,
@@ -84,61 +83,38 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
     }
 
     private void bindQueueToExchange(Future<Void> future) {
-        rabbitMQClient.queueBind(QUEUE_NAME,
+        rabbitMQClient.queueBind(queue,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
-                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE_ENTER_USER, vehicle.getUsername()),
+                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND, vehicle.getVehicle().getPlate()),
                 future.completer());
     }
 
     private void basicConsume(Future<Void> future) {
-        rabbitMQClient.basicConsume(QUEUE_NAME, EVENT_BUS_ADDRESS, future.completer());
+        rabbitMQClient.basicConsume(queue, EVENT_BUS_ADDRESS, future.completer());
     }
 
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
+
+            //TODO
+            Log.info(this.getClass().getSimpleName(), "Drive command received: " + msg.body().toString());
+
             try {
                 JsonObject message = new JsonObject(msg.body().toString());
-                EnterVehicleResponse enterVehicleResponse =
-                        objectMapper.readValue(message.getString(Constants.EventBus.BODY),
-                                EnterVehicleResponse.class);
-                vehicle.setUserOnBoard(true);
-                vehicle.changePosition(destinationPosition);
+                DriveCommand driveCommand =
+                        objectMapper.readValue(message.getString(Constants.EventBus.BODY), DriveCommand.class);
+                drive(driveCommand);
             } catch (IOException e) {
                 Log.error(TAG, READ_ERROR, e);
             }
         });
-
-        eventBus.consumer(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_FOR_USER, vehicle.getVehicle().plate()),
-                message -> {
-            JsonObject msg = new JsonObject(message.body().toString());
-            Position destPosition = null;
-            try {
-                destPosition =
-                        objectMapper.readValue(msg.getString(Constants.EventBus.BODY), Position.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            enterInVehicle(destPosition);
-        });
     }
 
     @Override
-    public void enterInVehicle(Position destinationPosition) {
-        this.destinationPosition = destinationPosition;
-        rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST_ENTER_USER, vehicle.getUsername()),
-                createRequest(),
-                onPublish -> {
-                    onPublish.succeeded();
-                });
-    }
-
-    private JsonObject createRequest() {
-        EnterVehicleRequest request = new EnterVehicleRequest();
-        request.setLicensePlate(vehicle.getVehicle().plate());
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(request).toString());
-        return jsonObject;
+    public void drive(DriveCommand driveCommand) {
+        vehicle.changePositionUponBooking(driveCommand.getUserPosition(),
+                driveCommand.getDestinationPosition(),
+                this.testVar);
     }
 
 }

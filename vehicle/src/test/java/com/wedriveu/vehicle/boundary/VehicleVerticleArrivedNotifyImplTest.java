@@ -6,7 +6,6 @@ import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.weriveu.vehicle.boundary.VehicleVerticleArrivedNotifyImpl;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;

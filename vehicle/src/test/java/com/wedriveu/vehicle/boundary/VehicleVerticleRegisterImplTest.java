@@ -2,7 +2,6 @@ package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.shared.rabbitmq.message.RegisterToServiceRequest;
 import com.wedriveu.shared.rabbitmq.message.RegisterToServiceResponse;
 import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.shared.util.Constants;
@@ -10,7 +9,6 @@ import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.weriveu.vehicle.boundary.VehicleVerticleRegisterImpl;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;

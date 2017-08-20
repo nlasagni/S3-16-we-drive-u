@@ -1,4 +1,4 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 import com.wedriveu.shared.rabbitmq.message.CanDriveRequest;
 import com.wedriveu.shared.rabbitmq.message.CanDriveResponse;

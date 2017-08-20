@@ -1,15 +1,15 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
+
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
-import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
-
+import com.wedriveu.shared.rabbitmq.message.CanDriveRequest;
+import com.wedriveu.shared.rabbitmq.message.CanDriveResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
+import com.wedriveu.vehicle.control.CanDriveChecker;
+import com.wedriveu.vehicle.control.CanDriveCheckerImpl;
 import com.wedriveu.vehicle.control.VehicleControl;
-import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
@@ -19,31 +19,33 @@ import io.vertx.rabbitmq.RabbitMQClient;
 import java.io.IOException;
 
 /**
- * @author Michele Donati on 11/08/2017.
+ * @author Michele Donati on 09/08/2017.
  */
 
-public class VehicleVerticleBookImpl extends AbstractVerticle implements VehicleVerticleBook {
+public class VehicleVerticleCanDriveImpl extends AbstractVerticle implements VehicleVerticleCanDrive {
 
     private VehicleControl vehicle;
-    private static final String TAG = VehicleVerticleBookImpl.class.getSimpleName();
-    private static final String EVENT_BUS_ADDRESS = "vehicle.book";
+    private static final String TAG = VehicleVerticleCanDriveImpl.class.getSimpleName();
+    private static final String EVENT_BUS_ADDRESS = "vehicle.candrive";
     private static final String READ_ERROR = "Error occurred while reading request.";
     private static final String SEND_ERROR = "Error occurred while sending response.";
     private static final String ENGINE_ILLEGAL_STATE = "The Engine has not been started yet or it has been stopped.";
-    private static String QUEUE_NAME = "vehicle.book.";
+    private String queue;
 
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
     private ObjectMapper objectMapper;
+    private CanDriveChecker checker;
 
-    public VehicleVerticleBookImpl(VehicleControl vehicle) {
+    public VehicleVerticleCanDriveImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
-        QUEUE_NAME+=this.vehicle.getVehicle().plate();
+        queue = "vehicle.candrive." + this.vehicle.getVehicle().plate();
     }
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
         eventBus = vertx.eventBus();
+        checker = new CanDriveCheckerImpl(vehicle.getVehicle());
         objectMapper = new ObjectMapper();
         startService(startFuture);
     }
@@ -80,7 +82,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
     }
 
     private void declareQueue(Future<JsonObject> future) {
-        rabbitMQClient.queueDeclare(QUEUE_NAME,
+        rabbitMQClient.queueDeclare(queue,
                 true,
                 false,
                 false,
@@ -88,24 +90,28 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
     }
 
     private void bindQueueToExchange(Future<Void> future) {
-        rabbitMQClient.queueBind(QUEUE_NAME,
+        rabbitMQClient.queueBind(queue,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
-                String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_REQUEST, vehicle.getVehicle().plate()),
+                String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_REQUEST, vehicle.getVehicle().plate()),
                 future.completer());
     }
 
     private void basicConsume(Future<Void> future) {
-        rabbitMQClient.basicConsume(QUEUE_NAME, EVENT_BUS_ADDRESS, future.completer());
+        rabbitMQClient.basicConsume(queue, EVENT_BUS_ADDRESS, future.completer());
     }
 
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-            BookVehicleResponse response = null;
+            CanDriveResponse response = null;
             try {
                 JsonObject message = new JsonObject(msg.body().toString());
-                VehicleReservationRequest bookRequest =
-                        objectMapper.readValue(message.getString(Constants.EventBus.BODY), VehicleReservationRequest.class);
-                response = book(bookRequest);
+                CanDriveRequest canDriveRequest =
+                        objectMapper.readValue(message.getString(Constants.EventBus.BODY), CanDriveRequest.class);
+
+                //TODO
+                Log.info(this.getClass().getSimpleName(), "Received can drive request " + canDriveRequest.toString());
+
+                response = canDrive(canDriveRequest);
             } catch (IOException e) {
                 Log.error(TAG, READ_ERROR, e);
             }
@@ -113,36 +119,39 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
         });
     }
 
-    private void sendResponse(BookVehicleResponse response){
+    private void sendResponse(CanDriveResponse response) {
         try {
+
             String responseString = objectMapper.writeValueAsString(response);
             JsonObject responseJson = new JsonObject();
             responseJson.put(Constants.EventBus.BODY, responseString);
+
+            //TODO
+            Log.info(this.getClass().getSimpleName(), "Send can drive response " + responseJson.toString());
+
             rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                    String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_RESPONSE, vehicle.getVehicle().plate()),
+                    String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, vehicle.getUsername()),
                     responseJson,
                     onPublish -> {
                         if (!onPublish.succeeded()) {
                             Log.error(TAG, SEND_ERROR, onPublish.cause());
                         }
-                        vehicle.getVehicle().setState(VehicleConstants$.MODULE$.stateBooked());
-                        eventBus.send(
-                                String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
-                                new JsonObject());
                     });
-        }catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             Log.error(TAG, SEND_ERROR, e);
         }
     }
 
     @Override
-    public BookVehicleResponse book(VehicleReservationRequest request) throws IllegalStateException {
+    public CanDriveResponse canDrive(CanDriveRequest canDriveRequest) throws IllegalStateException {
         if (checkIllegalState()) {
             throw new IllegalStateException(ENGINE_ILLEGAL_STATE);
         }
-        vehicle.setUsername(request.getUsername());
-        BookVehicleResponse response = new BookVehicleResponse();
-        response.setBooked(vehicle.getVehicle().getState().equals(Vehicle.STATUS_AVAILABLE));
+        Double distance = canDriveRequest.getDistanceInKm();
+        vehicle.setUsername(canDriveRequest.getUsername());
+        CanDriveResponse response = new CanDriveResponse();
+        response.setLicense(vehicle.getVehicle().plate());
+        response.setOk(checker.checkJourney(distance));
         response.setSpeed(vehicle.getVehicle().speed());
         return response;
     }

@@ -1,4 +1,4 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.shared.rabbitmq.message.Vehicle;
@@ -27,7 +27,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     private static final String TAG = VehicleVerticleRegisterImpl.class.getSimpleName();
     private static final String EVENT_BUS_ADDRESS = "vehicle.register";
     private static final String READ_ERROR = "Error occurred while reading response.";
-    private static String QUEUE_NAME = "vehicle.register.";
+    private String queue;
 
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
@@ -37,7 +37,11 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
 
     public VehicleVerticleRegisterImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
-        QUEUE_NAME+=this.vehicle.getVehicle().plate();
+        //TODO
+        Log.info(this.getClass().getSimpleName(), "Queue before: " + queue);
+        queue = "vehicle.register." + this.vehicle.getVehicle().plate();
+        //TODO
+        Log.info(this.getClass().getSimpleName(), "Queue after: " + queue);
     }
 
     @Override
@@ -80,7 +84,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     }
 
     private void declareQueue(Future<JsonObject> future) {
-        rabbitMQClient.queueDeclare(QUEUE_NAME,
+        rabbitMQClient.queueDeclare(queue,
                 true,
                 false,
                 false,
@@ -88,14 +92,20 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     }
 
     private void bindQueueToExchange(Future<Void> future) {
-        rabbitMQClient.queueBind(QUEUE_NAME,
+
+        //TODO
+        Log.info(this.getClass().getSimpleName(),
+                "Waiting response on " +
+                        String.format(Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE, vehicle.getVehicle().plate()));
+
+        rabbitMQClient.queueBind(queue,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE, vehicle.getVehicle().plate()),
                 future.completer());
     }
 
     private void basicConsume(Future<Void> future) {
-        rabbitMQClient.basicConsume(QUEUE_NAME, EVENT_BUS_ADDRESS, future.completer());
+        rabbitMQClient.basicConsume(queue, EVENT_BUS_ADDRESS, future.completer());
     }
 
     private void registerConsumer() {
@@ -114,6 +124,11 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
 
     @Override
     public void registerToService(String license) {
+
+        //TODO
+        Log.info(this.getClass().getSimpleName(),
+                "Attempt to register with licensePlate " + createRequest().toString());
+
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
                 createRequest(),
@@ -138,6 +153,10 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     }
 
     private void checkResponse(RegisterToServiceResponse response) {
+        //TODO
+        Log.info(this.getClass().getSimpleName(),
+                "Register response " + response.toString());
+
         if(!response.getRegisterOk()){
             String newLicensePlate = calculateNewLicensePlate(vehicle);
             registerToService(newLicensePlate);
