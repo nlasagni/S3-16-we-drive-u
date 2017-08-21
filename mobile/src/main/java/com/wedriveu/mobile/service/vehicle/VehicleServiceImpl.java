@@ -7,6 +7,7 @@ import com.rabbitmq.client.ExceptionHandler;
 import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.service.ServiceExceptionHandler;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
+import com.wedriveu.mobile.service.ServiceResult;
 import com.wedriveu.mobile.store.UserStore;
 import com.wedriveu.mobile.store.VehicleStore;
 import com.wedriveu.shared.rabbitmq.communication.DefaultRabbitMqCommunicationManager;
@@ -84,15 +85,16 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void enterVehicleAndUnsubscribe(ServiceOperationCallback<Void> callback) {
+    public void enterVehicleAndUnsubscribe(final ServiceOperationCallback<Void> callback) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 EnterVehicleResponse enterVehicleResponse = new EnterVehicleResponse();
                 enterVehicleResponse.setResponse(ENTER_CONFIRMATION);
                 try {
+                    String licensePlate = mVehicleStore.getVehicle().getLicencePlate();
                     mEnterVehicleCommunicationManager.publishMessage(Constants.RabbitMQ.Exchanges.VEHICLE,
-                            Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE_ENTER_USER,
+                            String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE_ENTER_USER, licensePlate),
                             enterVehicleResponse);
 
                     mEnterVehicleCommunicationManager.unsubscribeConsumer(enterSubscriberId);
@@ -109,6 +111,11 @@ public class VehicleServiceImpl implements VehicleService {
                     Log.e(TAG, ENTER_ERROR, e);
                 }
                 return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                callback.onServiceOperationFinished(new ServiceResult<>(result, null));
             }
         }.execute();
     }
