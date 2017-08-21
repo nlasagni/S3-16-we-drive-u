@@ -2,7 +2,6 @@ package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.shared.rabbitmq.message.EnterVehicleRequest;
-import com.wedriveu.shared.rabbitmq.message.EnterVehicleResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
@@ -86,7 +85,8 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
     private void bindQueueToExchange(Future<Void> future) {
         rabbitMQClient.queueBind(queue,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
-                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE_ENTER_USER, vehicle.getUsername()),
+                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE_ENTER_USER,
+                        vehicle.getVehicle().getPlate()),
                 future.completer());
     }
 
@@ -96,16 +96,11 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
 
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-            try {
-                JsonObject message = new JsonObject(msg.body().toString());
-                EnterVehicleResponse enterVehicleResponse =
-                        objectMapper.readValue(message.getString(Constants.EventBus.BODY),
-                                EnterVehicleResponse.class);
-                vehicle.setUserOnBoard(true);
-                vehicle.changePosition(destinationPosition);
-            } catch (IOException e) {
-                Log.error(TAG, READ_ERROR, e);
-            }
+            //TODO
+            Log.info(this.getClass().getSimpleName(), "USER ENTERED!!");
+
+            vehicle.setUserOnBoard(true);
+            vehicle.goToDestination(destinationPosition);
         });
 
         eventBus.consumer(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_FOR_USER, vehicle.getVehicle().plate()),
@@ -129,7 +124,8 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
                 String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST_ENTER_USER, vehicle.getUsername()),
                 createRequest(),
                 onPublish -> {
-                    onPublish.succeeded();
+                    //TODO
+                    Log.info(this.getClass().getSimpleName(), "ASKED USER TO ENTER...");
                 });
     }
 

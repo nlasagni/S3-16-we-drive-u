@@ -120,9 +120,8 @@ public class VehicleChangePositionAndNotifyTest {
     @Test
     public void driveAndAwaitNotify(TestContext context) throws Exception {
         final Async async = context.async(2);
+        vehicleControl.setUserOnBoard(true);
         vehicleControl.getVehicle().setPosition(position);
-        Log.info(this.getClass().getSimpleName(),
-                "Reset vehicle position: " + vehicleControl.getVehicle().position().toString());
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND, vehicleControl.getVehicle().getPlate()),
                 createCommandJsonObject(),
@@ -135,8 +134,11 @@ public class VehicleChangePositionAndNotifyTest {
 
     private JsonObject createCommandJsonObject() {
         DriveCommand newCommand = new DriveCommand();
-        newCommand.setUserPosition(new Position(randomLatitudeUser, randomLongitudeUser));
-        newCommand.setDestinationPosition(new Position(randomLatitudeDestination, randomLongitudeDestination));
+        //TODO 44.147 12.248
+        newCommand.setUserPosition(new Position(44.147, 12.248));
+        newCommand.setDestinationPosition(position);
+        // newCommand.setUserPosition(new Position(randomLatitudeUser, randomLongitudeUser));
+        //newCommand.setDestinationPosition(new Position(randomLatitudeDestination, randomLongitudeDestination));
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(newCommand).toString());
         return jsonObject;

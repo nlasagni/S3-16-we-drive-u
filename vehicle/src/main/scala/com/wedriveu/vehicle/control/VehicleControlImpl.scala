@@ -1,7 +1,7 @@
 package com.wedriveu.vehicle.control
 
 import com.rabbitmq.client._
-import com.wedriveu.shared.util.Position
+import com.wedriveu.shared.util.{Log, Position}
 import com.wedriveu.vehicle.boundary.VehicleStopView
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
@@ -69,7 +69,7 @@ trait VehicleControl {
     *
     * @param position The position to reach.
     */
-  def changePosition(position: Position): Unit
+  def goToDestination(position: Position): Unit
 
   /** This method permits to retrieve the behaviours control of the system
     *
@@ -151,14 +151,16 @@ class VehicleControlImpl(vertx: Vertx,
 
   override def subscribeToMovementAndChangePositionEvents(): Unit = {
     vehicleEventsObservables.movementAndChangePositionObservable().subscribe(event => {
-      if(!(vehicleGiven.getState().equals(VehicleConstants.stateRecharging))
-        || !(vehicleGiven.getState().equals(VehicleConstants.stateBroken))) {
+      if(!vehicleGiven.getState().equals(VehicleConstants.stateRecharging)
+        || !vehicleGiven.getState().equals(VehicleConstants.stateBroken)) {
         executeBehaviour(vehicleBehaviours.movementAndPositionChange, event)
-        if (!(vehicleGiven.getState().equals(VehicleConstants.stateRecharging))
-          && !(vehicleGiven.getState().equals(VehicleConstants.stateBroken))
-          && !(vehicleGiven.getState().equals(VehicleConstants.stateStolen))
+        if (!vehicleGiven.getState().equals(VehicleConstants.stateRecharging)
+          && !vehicleGiven.getState().equals(VehicleConstants.stateBroken)
+          && !vehicleGiven.getState().equals(VehicleConstants.stateStolen)
           && !userOnBoard
           && !debugVar) {
+          //TODO
+          Log.info(this.getClass.getSimpleName, "subscribeToMovementAndChangePositionEvents GO TO RECHARGE")
           executeBehaviour(vehicleBehaviours.goToRecharge)
         }
       }
@@ -193,21 +195,32 @@ class VehicleControlImpl(vertx: Vertx,
   override def changePositionUponBooking(userPosition: Position,
                                          destinationPosition: Position,
                                          notRealisticVar: Boolean): Unit = {
-    if (!(vehicleGiven.getState().equals(VehicleConstants.stateRecharging))
-      || !(vehicleGiven.getState().equals(VehicleConstants.stateBroken))) {
+    if (!vehicleGiven.getState().equals(VehicleConstants.stateRecharging) ||
+        !vehicleGiven.getState().equals(VehicleConstants.stateBroken)) {
       executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition, notRealisticVar)
-      if (!(vehicleGiven.getState().equals(VehicleConstants.stateRecharging))
-        && !(vehicleGiven.getState().equals(VehicleConstants.stateBroken))
-        && !(vehicleGiven.getState().equals(VehicleConstants.stateStolen))
-        && !userOnBoard
-        && !debugVar) {
-        executeBehaviour(vehicleBehaviours.goToRecharge)
-      }
+//      if (!vehicleGiven.getState().equals(VehicleConstants.stateRecharging)
+//        && !vehicleGiven.getState().equals(VehicleConstants.stateBroken)
+//        && !vehicleGiven.getState().equals(VehicleConstants.stateStolen)
+//        && !userOnBoard
+//        && !debugVar) {
+//        //TODO
+//        Log.info(this.getClass.getSimpleName, "changePositionUponBooking GO TO RECHARGE")
+//        executeBehaviour(vehicleBehaviours.goToRecharge)
+//      }
     }
   }
 
-  override def changePosition(position: Position): Unit = {
+  override def goToDestination(position: Position): Unit = {
     executeBehaviour(vehicleBehaviours.movementAndPositionChange, position)
+    if (!vehicleGiven.getState().equals(VehicleConstants.stateRecharging)
+        && !vehicleGiven.getState().equals(VehicleConstants.stateBroken)
+        && !vehicleGiven.getState().equals(VehicleConstants.stateStolen)
+        && !userOnBoard
+        && !debugVar) {
+      //TODO
+      Log.info(this.getClass.getSimpleName, "changePositionUponBooking GO TO RECHARGE")
+      executeBehaviour(vehicleBehaviours.goToRecharge)
+    }
   }
 
   override def getBehavioursControl(): VehicleBehaviours = vehicleBehaviours

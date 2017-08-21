@@ -87,7 +87,11 @@ class VehicleStopViewImpl(vertx: Vertx, vehicleIdentifier: Int)
 
   override def render(): Unit = setVisible(true)
 
-  override def close(): Unit = System.exit(-1)
+  override def close(): Unit = {
+    eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleAssociated.getVehicle().plate),
+      new JsonObject())
+    writeMessageLog(forceBrokenStatus + vehicleAssociated.getVehicle().getState())
+  }
 
   override def writeMessageLog(messageToLog: String): Unit = {
     logsTextArea.setText(logsTextArea.getText.concat(messageToLog + "\n"))
