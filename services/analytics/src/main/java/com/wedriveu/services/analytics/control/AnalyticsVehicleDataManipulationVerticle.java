@@ -8,9 +8,8 @@ import com.wedriveu.services.shared.model.AnalyticsVehicle;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
-import com.wedriveu.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
+import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -21,13 +20,13 @@ import static com.wedriveu.shared.util.Constants.*;
 /**
  * @author Stefano Bernagozzi
  */
-public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle{
+public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
     private AnalyticsStore analyticsStore;
 
     private static final String DATABASE_FILE_NAME = "analytics.json";
 
     @Override
-    public void start() throws Exception{
+    public void start() throws Exception {
         analyticsStore = new AnalyticsStoreImpl(
                 new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, DATABASE_FILE_NAME),
                 new VehiclesCounterAlgorithmImpl());
@@ -42,7 +41,7 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle{
     }
 
     private void addVehiclesToDatabase(AnalyticsVehicleList vehicleList) {
-        for(Vehicle vehicle: vehicleList.getVehicleList()){
+        for (Vehicle vehicle : vehicleList.getVehicleList()) {
             analyticsStore.addVehicle(vehicle.getLicensePlate(), vehicle.getStatus());
         }
     }

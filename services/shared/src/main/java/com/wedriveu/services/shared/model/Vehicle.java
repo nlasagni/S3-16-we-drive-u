@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wedriveu.shared.util.Position;
 
-import java.net.URL;
 import java.util.Date;
 
 /**
@@ -38,7 +37,7 @@ public class Vehicle {
     public static final String STATUS_NETWORK_ISSUES = "net_issues";
 
     public static final String NO_ELIGIBLE_VEHICLE_RESPONSE = "No vehicles nearby, " +
-                                                        "please try again later or change your address";
+            "please try again later or change your address";
 
     private String licensePlate;
     private String status;

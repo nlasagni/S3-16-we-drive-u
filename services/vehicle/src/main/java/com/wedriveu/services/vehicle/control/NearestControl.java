@@ -1,12 +1,11 @@
 package com.wedriveu.services.vehicle.control;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.message.VehicleResponseCanDrive;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;

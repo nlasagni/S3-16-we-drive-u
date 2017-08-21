@@ -9,23 +9,22 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import javax.annotation.PostConstruct;
-
-import static com.wedriveu.shared.util.Constants.*;
+import static com.wedriveu.shared.util.Constants.ANALYTCS_VEHICLE_COUNTER_UPDATE_EVENTBUS;
+import static com.wedriveu.shared.util.Constants.ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER;
 
 /**
  * @author Stefano Bernagozzi
  */
-public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer{
+public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer {
     public AnalyticsVehicleUpdateHandlerConsumer() {
-        super(Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE);
+        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE);
     }
 
     @Override
     public void start(Future futureRequest) throws Exception {
         super.start();
         Future<Void> futureConsumer = Future.future();
-        futureConsumer.setHandler(v->{
+        futureConsumer.setHandler(v -> {
             if (v.succeeded()) {
                 Log.info("future in VehicleListGeneratorRequestHandler completed");
                 futureRequest.complete();

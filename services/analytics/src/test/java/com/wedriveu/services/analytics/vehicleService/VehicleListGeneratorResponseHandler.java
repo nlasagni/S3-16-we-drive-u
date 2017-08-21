@@ -1,12 +1,12 @@
 package com.wedriveu.services.analytics.vehicleService;
 
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
+import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
-import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
@@ -18,7 +18,7 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_V
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleListGeneratorResponseHandler extends VerticlePublisher{
+public class VehicleListGeneratorResponseHandler extends VerticlePublisher {
     @Override
     public void start() throws Exception {
         startConsumer();
@@ -34,23 +34,24 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher{
     private void sendVehicleListToAnalyticsService(Message message) {
         ArrayList<Vehicle> vehicleList = new ArrayList<>();
         vehicleList.add(new Vehicle("MACCHINA1",
-                    "broken",
-                    new Position(10.2, 13.2),
-                    new Date(2017, 11, 30, 12, 37, 43)));
+                "broken",
+                new Position(10.2, 13.2),
+                new Date(2017, 11, 30, 12, 37, 43)));
         vehicleList.add(new Vehicle("MACCHINA2",
-                    "available",
-                    new Position(11.2, 14.2),
-                    new Date(2017, 10, 28, 11, 43, 12)));
+                "available",
+                new Position(11.2, 14.2),
+                new Date(2017, 10, 28, 11, 43, 12)));
         vehicleList.add(new Vehicle("MACCHINA3",
-                    "busy",
-                    new Position(15.2, 13.2),
-                    new Date(2017, 9, 26, 10, 56, 46)));
+                "busy",
+                new Position(15.2, 13.2),
+                new Date(2017, 9, 26, 10, 56, 46)));
         vehicleList.add(new Vehicle("MACCHINA4",
-                    "recharging",
-                    new Position(13.2, 16.2),
-                    new Date(2017, 8, 24, 9, 37, 22)));
+                "recharging",
+                new Position(13.2, 16.2),
+                new Date(2017, 8, 24, 9, 37, 22)));
         JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new AnalyticsVehicleList(vehicleList));
-        publish(Constants.RabbitMQ.Exchanges.VEHICLE,ANALYTICS_VEHICLES_RESPONSE_ALL,vehicleListJson, published -> { });
+        publish(Constants.RabbitMQ.Exchanges.VEHICLE, ANALYTICS_VEHICLES_RESPONSE_ALL, vehicleListJson, published -> {
+        });
         Log.info("sent request for all vehicles to vehicle service in VehicleListGeneratorResponseHandler");
     }
 

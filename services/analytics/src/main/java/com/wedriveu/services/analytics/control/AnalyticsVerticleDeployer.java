@@ -1,7 +1,5 @@
 package com.wedriveu.services.analytics.control;
 
-import com.wedriveu.services.analytics.boundary.AnalyticsVehicleListRequestPublisher;
-import com.wedriveu.services.analytics.boundary.AnalyticsVehicleListRetrieverConsumer;
 import com.wedriveu.services.analytics.boundary.*;
 import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
@@ -11,7 +9,8 @@ import io.vertx.core.Future;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wedriveu.shared.util.Constants.*;
+import static com.wedriveu.shared.util.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_EVENTBUS;
+import static com.wedriveu.shared.util.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE;
 
 /**
  * @author Stefano Bernagozzi

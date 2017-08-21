@@ -14,23 +14,23 @@ import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wedriveu.shared.util.Constants.*;
+import static com.wedriveu.shared.util.Constants.BACKOFFICE_CONTROLLER_EVENTBUS;
 
 /**
  * @author Stefano Bernagozzi
  */
-public class BackofficeController extends AbstractVerticle{
+public class BackofficeController extends AbstractVerticle {
     private Future futureModel;
     private BackOfficeModel backOfficeModel;
     private BackOfficeView backOfficeView;
     Vertx vertx;
 
-    public BackofficeController( Vertx vertx){
+    public BackofficeController(Vertx vertx) {
         this.vertx = vertx;
     }
 
     @Override
-    public void start(Future futureRetriever) throws Exception{
+    public void start(Future futureRetriever) throws Exception {
         init();
         vertx.eventBus().consumer(BACKOFFICE_CONTROLLER_EVENTBUS, this::updateCounter);
     }
@@ -44,11 +44,11 @@ public class BackofficeController extends AbstractVerticle{
         ButtonEventListener buttonEventListener = new ButtonEventListener(backOfficeModel, backOfficeView);
         backOfficeView.addButtonListener(buttonEventListener);
         futureModel = backOfficeModel.getFuture();
-        futureModel.setHandler(res-> {
+        futureModel.setHandler(res -> {
             Future listener1 = Future.future();
             vertx.deployVerticle(new AnalyticsVehiclesResponseConsumer("." + backOfficeModel.getBackofficeID() + ".updates", ""), listener1.completer());
             Future listener2 = Future.future();
-            vertx.deployVerticle(new AnalyticsVehiclesResponseConsumer("." + backOfficeModel.getBackofficeID(), "." + backOfficeModel.getBackofficeID()),listener2.completer() );
+            vertx.deployVerticle(new AnalyticsVehiclesResponseConsumer("." + backOfficeModel.getBackofficeID(), "." + backOfficeModel.getBackofficeID()), listener2.completer());
             Future listener3 = Future.future();
             vertx.deployVerticle(new RabbitmqInitialRequest(backOfficeModel.getBackofficeID()), listener3);
             futures.add(listener1);

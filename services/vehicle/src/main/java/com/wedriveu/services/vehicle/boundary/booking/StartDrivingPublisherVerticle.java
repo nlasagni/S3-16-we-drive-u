@@ -2,7 +2,6 @@ package com.wedriveu.services.vehicle.boundary.booking;
 
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
@@ -29,7 +28,7 @@ public class StartDrivingPublisherVerticle extends VerticlePublisher {
     }
 
     private void sendStartDrivingCommand(Message message) {
-        DriveCommand command = VertxJsonMapper.mapFromBodyTo((JsonObject)message.body(), DriveCommand.class);
+        DriveCommand command = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), DriveCommand.class);
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND, command.getLicensePlate()),
                 ((JsonObject) message.body()), onPublish -> {

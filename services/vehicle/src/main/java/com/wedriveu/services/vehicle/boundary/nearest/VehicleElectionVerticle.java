@@ -12,7 +12,6 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import static com.wedriveu.shared.util.Constants.USERNAME;
 import static com.wedriveu.shared.util.Constants.VEHICLE;

@@ -13,17 +13,17 @@ import static com.wedriveu.shared.util.Constants.*;
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleListGeneratorRequestHandler extends VerticleConsumer{
+public class VehicleListGeneratorRequestHandler extends VerticleConsumer {
 
     public VehicleListGeneratorRequestHandler() {
-        super(RabbitMQ.Exchanges.ANALYTICS +"."+ ROUTING_KEY_VEHICLE_REQUEST_ALL);
+        super(RabbitMQ.Exchanges.ANALYTICS + "." + ROUTING_KEY_VEHICLE_REQUEST_ALL);
     }
 
     @Override
     public void start(Future futureRequest) throws Exception {
         super.start();
         Future<Void> futureConsumer = Future.future();
-        futureConsumer.setHandler(v->{
+        futureConsumer.setHandler(v -> {
             if (v.succeeded()) {
                 Log.info("future in VehicleListGeneratorRequestHandler completed");
                 futureRequest.complete();

@@ -85,12 +85,12 @@ object BookingControllerVerticle {
         classOf[CreateBookingRequest],
         (request: CreateBookingRequest) => {
           createBooking(request)
-      })
+        })
       registerConsumer(Constants.EventBus.Address.Vehicle.BookVehicleResponse,
         classOf[BookVehicleResponse],
         (request: BookVehicleResponse) => {
           bindVehicleToBooking(request)
-      })
+        })
       registerConsumer(Constants.EventBus.Address.Booking.ChangeBookingLicensePlateRequest,
         classOf[ChangeBookingRequest],
         (request: ChangeBookingRequest) => {
@@ -155,14 +155,14 @@ object BookingControllerVerticle {
       } else {
         val id = store.generateId()
         val result = store.addBooking(new Booking(
-            id,
-            new Date(),
-            request.getUsername,
-            request.getLicensePlate,
-            request.getUserPosition,
-            request.getDestinationPosition,
-            Booking.STATUS_STARTED
-          )
+          id,
+          new Date(),
+          request.getUsername,
+          request.getLicensePlate,
+          request.getUserPosition,
+          request.getDestinationPosition,
+          Booking.STATUS_STARTED
+        )
         )
         if (result) {
           val bookVehicleRequest = new BookVehicleRequest

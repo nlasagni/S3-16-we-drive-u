@@ -48,8 +48,8 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
                     super.declareQueueAndBind(licencePlate, context, declared -> {
                         context.assertTrue(declared.succeeded());
                         async.complete();
+                    });
                 });
-            });
                 vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
             async.countDown();

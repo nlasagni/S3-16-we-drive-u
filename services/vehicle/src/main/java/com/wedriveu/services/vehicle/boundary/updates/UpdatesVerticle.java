@@ -3,25 +3,16 @@ package com.wedriveu.services.vehicle.boundary.updates;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.SubstitutionRequest;
-import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
-import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
-import com.wedriveu.shared.rabbitmq.message.CompleteBookingRequest;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
-
-import java.util.Date;
-
-import static com.wedriveu.services.vehicle.rabbitmq.Constants.NEAREST_EVENT_BUS_ADDRESS;
 
 /**
  * Created by Michele on 19/08/2017.
@@ -91,8 +82,8 @@ public class UpdatesVerticle extends AbstractVerticle {
 
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-            UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject)msg.body(), UpdateToService.class);
-            if(update.getStatus().equals(Vehicle.STATUS_BROKEN_STOLEN)) {
+            UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), UpdateToService.class);
+            if (update.getStatus().equals(Vehicle.STATUS_BROKEN_STOLEN)) {
                 Position vehiclePosition = update.getPosition();
                 SubstitutionRequest request = new SubstitutionRequest();
                 request.setPosition(vehiclePosition);

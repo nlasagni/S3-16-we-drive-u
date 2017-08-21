@@ -14,11 +14,11 @@ public class SubstitutionRequest {
     private Position position;
     private List<Vehicle> vehicleList;
 
-    public Position getPosition(){
+    public Position getPosition() {
         return position;
     }
 
-    public void setPosition(Position newPosition){
+    public void setPosition(Position newPosition) {
         this.position = newPosition;
     }
 

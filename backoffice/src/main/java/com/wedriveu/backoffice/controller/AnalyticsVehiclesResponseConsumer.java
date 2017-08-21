@@ -14,11 +14,11 @@ import static com.wedriveu.shared.util.Constants.*;
 /**
  * @author Stefano Bernagozzi
  */
-public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer{
+public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer {
     String backofficeId;
 
-    public AnalyticsVehiclesResponseConsumer(String queueName, String backofficeId ) {
-        super(Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES +  queueName );
+    public AnalyticsVehiclesResponseConsumer(String queueName, String backofficeId) {
+        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES + queueName);
         this.backofficeId = backofficeId;
     }
 
@@ -26,7 +26,7 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer{
     public void start(Future futureRetriever) throws Exception {
         super.start();
         Future<Void> futureConsumer = Future.future();
-        futureConsumer.setHandler(v->{
+        futureConsumer.setHandler(v -> {
             if (v.succeeded()) {
                 futureRetriever.complete();
                 Log.info("started future retriever AnalyticsVehiclesResponseConsumer");
@@ -41,9 +41,9 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer{
         }
 
         startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS,
-                    ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES + backofficeId,
-                    eventBusAvailable,
-                    futureConsumer);
+                ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES + backofficeId,
+                eventBusAvailable,
+                futureConsumer);
         Log.info("started consumer " + eventBusAvailable);
     }
 

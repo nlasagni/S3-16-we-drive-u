@@ -75,19 +75,20 @@ public class VehicleVerticleRegisterImplTest {
         rabbitMQClient.start(onStart -> {
             rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
-                    rabbitMQClient.queueBind(requestId,
-                            Constants.RabbitMQ.Exchanges.VEHICLE,
-                            Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
-                            onQueueBind ->{
-                        vertx.deployVerticle(vehicleVerticle,
-                                new DeploymentOptions().setWorker(true),
-                                context.asyncAssertSuccess(onDeploy -> {
-                            async.complete();}
-                        ));
-                        async.countDown();
-                        context.assertTrue(onQueueBind.succeeded());
-                    });
-                    async.countDown();
+                rabbitMQClient.queueBind(requestId,
+                        Constants.RabbitMQ.Exchanges.VEHICLE,
+                        Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
+                        onQueueBind -> {
+                            vertx.deployVerticle(vehicleVerticle,
+                                    new DeploymentOptions().setWorker(true),
+                                    context.asyncAssertSuccess(onDeploy -> {
+                                                async.complete();
+                                            }
+                                    ));
+                            async.countDown();
+                            context.assertTrue(onQueueBind.succeeded());
+                        });
+                async.countDown();
                 context.assertTrue(onQueueDeclare.succeeded());
                 async.countDown();
             });
@@ -122,13 +123,14 @@ public class VehicleVerticleRegisterImplTest {
             });
         });
         vertx.setTimer(8000, onTime -> {
-            async.complete();});
+            async.complete();
+        });
         async.awaitSuccess();
     }
 
     private boolean checkLicenseList(String license) {
-        for(int i = 0; i < licenseList.length; i++) {
-            if(license.equals(licenseList[i])){
+        for (int i = 0; i < licenseList.length; i++) {
+            if (license.equals(licenseList[i])) {
                 return false;
             }
         }

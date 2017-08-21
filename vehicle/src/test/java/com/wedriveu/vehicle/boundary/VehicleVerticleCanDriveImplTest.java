@@ -54,7 +54,7 @@ public class VehicleVerticleCanDriveImplTest {
         eventBus = vertx.eventBus();
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx, "", "", license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleCanDriveImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -73,14 +73,14 @@ public class VehicleVerticleCanDriveImplTest {
                         Constants.RabbitMQ.Exchanges.VEHICLE,
                         String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, USERNAME),
                         onQueueBind -> {
-                    vertx.deployVerticle(vehicleVerticle,
-                            new DeploymentOptions().setWorker(true),
-                            context.asyncAssertSuccess(onDeploy ->
-                            async.complete()
-                    ));
-                    async.countDown();
-                    context.assertTrue(onQueueBind.succeeded());
-                });
+                            vertx.deployVerticle(vehicleVerticle,
+                                    new DeploymentOptions().setWorker(true),
+                                    context.asyncAssertSuccess(onDeploy ->
+                                            async.complete()
+                                    ));
+                            async.countDown();
+                            context.assertTrue(onQueueBind.succeeded());
+                        });
                 context.assertTrue(onQueueDeclare.succeeded());
                 async.countDown();
             });
@@ -109,7 +109,8 @@ public class VehicleVerticleCanDriveImplTest {
     }
 
     private void checkVehicleCanDriveResponse(TestContext context, Async async) {
-        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
+        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
+        });
         MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
             Log.info(TAG, responseJson.toString());

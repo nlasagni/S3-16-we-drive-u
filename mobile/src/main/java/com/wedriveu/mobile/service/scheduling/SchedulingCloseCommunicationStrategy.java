@@ -5,7 +5,6 @@ import com.wedriveu.mobile.model.User;
 import com.wedriveu.shared.rabbitmq.communication.RabbitMqCommunication;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqCloseCommunicationStrategy;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 
 import java.io.IOException;
 

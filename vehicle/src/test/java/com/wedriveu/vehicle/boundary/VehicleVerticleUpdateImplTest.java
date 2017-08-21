@@ -53,7 +53,7 @@ public class VehicleVerticleUpdateImplTest {
         eventBus = vertx.eventBus();
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx, "", "", license, state, position, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleUpdateImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -71,15 +71,16 @@ public class VehicleVerticleUpdateImplTest {
                 rabbitMQClient.queueBind(requestId,
                         Constants.RabbitMQ.Exchanges.VEHICLE,
                         Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE,
-                        onQueueBind ->{
-                    vertx.deployVerticle(vehicleVerticle,
-                            new DeploymentOptions().setWorker(true),
-                            context.asyncAssertSuccess(onDeploy -> {
-                        async.complete();}
-                    ));
-                    async.countDown();
-                    context.assertTrue(onQueueBind.succeeded());
-                });
+                        onQueueBind -> {
+                            vertx.deployVerticle(vehicleVerticle,
+                                    new DeploymentOptions().setWorker(true),
+                                    context.asyncAssertSuccess(onDeploy -> {
+                                                async.complete();
+                                            }
+                                    ));
+                            async.countDown();
+                            context.assertTrue(onQueueBind.succeeded());
+                        });
                 async.countDown();
                 context.assertTrue(onQueueDeclare.succeeded());
                 async.countDown();
@@ -118,7 +119,8 @@ public class VehicleVerticleUpdateImplTest {
         eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate()),
                 new JsonObject());
         vertx.setTimer(5000, onTime -> {
-            async.complete();});
+            async.complete();
+        });
         async.awaitSuccess();
     }
 

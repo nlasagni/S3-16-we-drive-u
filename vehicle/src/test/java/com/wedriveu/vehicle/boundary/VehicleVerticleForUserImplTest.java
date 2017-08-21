@@ -76,7 +76,7 @@ public class VehicleVerticleForUserImplTest {
         checkCounter = 10;
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx, "", "", license, state, position, battery, speed, stopUi, debugVar);
         vehicleControl.setUsername("Michele");
         vehicleVerticleDriveCommand = new VehicleVerticleDriveCommandImpl(vehicleControl, false);
         vehicleVerticleForUser = new VehicleVerticleForUserImpl(vehicleControl);
@@ -132,9 +132,10 @@ public class VehicleVerticleForUserImplTest {
                 String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND, vehicleControl.getVehicle().getPlate()),
                 createCommandJsonObject(),
                 onPublish -> {
-                    if(onPublish.succeeded()) {
-                        while(!(userPosition.getDistanceInKm(vehicleControl.getVehicle().getPosition())
-                                <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS())){}
+                    if (onPublish.succeeded()) {
+                        while (!(userPosition.getDistanceInKm(vehicleControl.getVehicle().getPosition())
+                                <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS())) {
+                        }
                         checkUserRequest(context, async);
                     }
                     context.assertTrue(onPublish.succeeded());
@@ -152,7 +153,8 @@ public class VehicleVerticleForUserImplTest {
     }
 
     private void checkUserRequest(TestContext context, Async async) {
-        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
+        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
+        });
         MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
             Log.info(TAG, responseJson.toString());

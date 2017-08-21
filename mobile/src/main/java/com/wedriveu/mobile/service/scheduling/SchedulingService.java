@@ -3,7 +3,6 @@ package com.wedriveu.mobile.service.scheduling;
 import com.google.android.gms.location.places.Place;
 import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
-import com.wedriveu.mobile.util.location.LocationServiceListener;
 import com.wedriveu.shared.util.Position;
 
 /**

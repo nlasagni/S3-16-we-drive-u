@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.wedriveu.shared.util.Constants.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Stefano Bernagozzi
@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 public class AnalyticsVehicleListRequestPublisherTest {
     private List<Future> futures;
     private Vertx vertx;
+
     @Before
     public void setUp() throws Exception {
         vertx = Vertx.vertx();
@@ -38,9 +39,9 @@ public class AnalyticsVehicleListRequestPublisherTest {
     public void testRequest() {
         CompositeFuture.all(futures).setHandler(completed -> {
             vertx.eventBus().send(ANALYTICS_VEHICLE_LIST_REQUEST_EVENTBUS, ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE);
-            vertx.eventBus().consumer(ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS, msg->{
-               String messageReceived = (String)((JsonObject) msg.body()).getValue(Constants.EventBus.BODY);
-               assertTrue(messageReceived.equals(VEHICLE_REQUEST_ALL_MESSAGE));
+            vertx.eventBus().consumer(ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS, msg -> {
+                String messageReceived = (String) ((JsonObject) msg.body()).getValue(Constants.EventBus.BODY);
+                assertTrue(messageReceived.equals(VEHICLE_REQUEST_ALL_MESSAGE));
             });
 
         });

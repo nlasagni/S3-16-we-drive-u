@@ -1,6 +1,5 @@
 package com.wedriveu.mobile.service.booking;
 
-import android.util.Log;
 import com.rabbitmq.client.Channel;
 import com.wedriveu.mobile.model.User;
 import com.wedriveu.mobile.service.ServiceConsumerStrategy;

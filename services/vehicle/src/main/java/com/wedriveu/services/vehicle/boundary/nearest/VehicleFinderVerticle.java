@@ -1,10 +1,9 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
+import com.wedriveu.services.shared.message.VehicleResponseCanDrive;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
-import com.wedriveu.services.shared.message.VehicleResponseCanDrive;
-import com.wedriveu.shared.util.PositionUtils;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.SubstitutionRequest;
@@ -14,6 +13,7 @@ import com.wedriveu.shared.rabbitmq.message.CanDriveResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
+import com.wedriveu.shared.util.PositionUtils;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
@@ -71,7 +71,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     }
 
     private void handleSubstitution(Message message) {
-        substitutionRequest = VertxJsonMapper.mapFromBodyTo((JsonObject)message.body(), SubstitutionRequest.class);
+        substitutionRequest = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), SubstitutionRequest.class);
         availableVehiclesForSubstitution = substitutionRequest.getVehicleList();
         startVehicleCommunication();
         try {

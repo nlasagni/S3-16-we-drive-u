@@ -1,7 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.booking;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
-import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.entity.BookVehicleResponseWrapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
@@ -10,9 +9,7 @@ import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
-import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 

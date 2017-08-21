@@ -4,8 +4,6 @@ import com.wedriveu.backoffice.controller.BackofficeController;
 import com.wedriveu.shared.util.Log;
 import io.vertx.core.Vertx;
 
-import static java.lang.Thread.sleep;
-
 /**
  * @author Stefano Bernagozzi
  */

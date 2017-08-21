@@ -21,6 +21,7 @@ public class VehicleUpdater extends VerticlePublisher {
         updateToService.setLicense("Veicolo1");
         updateToService.setStatus("broken");
         JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(updateToService);
-        publish(Constants.RabbitMQ.Exchanges.VEHICLE,Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE,vehicleListJson, published -> { });
+        publish(Constants.RabbitMQ.Exchanges.VEHICLE, Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE, vehicleListJson, published -> {
+        });
     }
 }

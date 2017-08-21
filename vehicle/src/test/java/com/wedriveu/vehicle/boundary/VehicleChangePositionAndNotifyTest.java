@@ -71,7 +71,7 @@ public class VehicleChangePositionAndNotifyTest {
         eventBus = vertx.eventBus();
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx, "", "", license, state, position, battery, speed, stopUi, debugVar);
         vehicleControl.setUserOnBoard(true);
         vehicleVerticleDriveCommand = new VehicleVerticleDriveCommandImpl(vehicleControl, false);
         vehicleVerticleArrivedNotify = new VehicleVerticleArrivedNotifyImpl(vehicleControl);
@@ -94,13 +94,14 @@ public class VehicleChangePositionAndNotifyTest {
                         onQueueBind -> {
                             vertx.deployVerticle(vehicleVerticleDriveCommand,
                                     new DeploymentOptions().setWorker(true),
-                                    context.asyncAssertSuccess(onDeploy ->{}
-                            ));
+                                    context.asyncAssertSuccess(onDeploy -> {
+                                            }
+                                    ));
                             vertx.deployVerticle(vehicleVerticleArrivedNotify,
                                     new DeploymentOptions().setWorker(true),
                                     context.asyncAssertSuccess(onDeploy ->
-                                    async.complete()
-                            ));
+                                            async.complete()
+                                    ));
                             async.countDown();
                             context.assertTrue(onQueueBind.succeeded());
                         });
@@ -150,12 +151,14 @@ public class VehicleChangePositionAndNotifyTest {
         }
         Position vehiclePosition = vehicleControl.getVehicle().position();
         double vehicleDistance = desired.getDistanceInKm(vehiclePosition);
-        if (vehicleDistance <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS()) {}
-        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
+        if (vehicleDistance <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS()) {
+        }
+        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
+        });
         MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
             Log.info(TAG, responseJson.toString());
-            ArrivedNotify notify =  responseJson.mapTo(ArrivedNotify.class);
+            ArrivedNotify notify = responseJson.mapTo(ArrivedNotify.class);
             context.assertTrue(notify.getLicense().equals(license));
             async.complete();
         });

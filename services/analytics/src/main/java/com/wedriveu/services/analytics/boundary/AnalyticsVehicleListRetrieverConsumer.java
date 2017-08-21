@@ -3,7 +3,6 @@ package com.wedriveu.services.analytics.boundary;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
@@ -14,16 +13,16 @@ import static com.wedriveu.shared.util.Constants.*;
 /**
  * @author Stefano Bernagozzi
  */
-public class AnalyticsVehicleListRetrieverConsumer extends VerticleConsumer{
+public class AnalyticsVehicleListRetrieverConsumer extends VerticleConsumer {
     public AnalyticsVehicleListRetrieverConsumer() {
-        super(RabbitMQ.Exchanges.ANALYTICS +"."+ ROUTING_KEY_VEHICLE_RESPONSE_ALL);
+        super(RabbitMQ.Exchanges.ANALYTICS + "." + ROUTING_KEY_VEHICLE_RESPONSE_ALL);
     }
 
     @Override
     public void start(Future futureRetriever) throws Exception {
         super.start();
         Future<Void> futureConsumer = Future.future();
-        futureConsumer.setHandler(v->{
+        futureConsumer.setHandler(v -> {
             if (v.succeeded()) {
                 futureRetriever.complete();
             } else {

@@ -3,10 +3,10 @@ package com.wedriveu.services.analytics.boundary;
 
 import com.wedriveu.services.analytics.vehicleService.VehicleListGeneratorRequestHandler;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
-import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.shared.util.Position;
+import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Position;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -18,10 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.wedriveu.shared.util.Constants.ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS;
-import static com.wedriveu.shared.util.Constants.ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS;
-import static com.wedriveu.shared.util.Constants.VEHICLE_REQUEST_ALL_MESSAGE;
-import static org.junit.Assert.*;
+import static com.wedriveu.shared.util.Constants.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Stefano Bernagozzi
@@ -71,10 +69,10 @@ public class AnalyticsVehicleListRetrieverConsumerTest {
         CompositeFuture.all(futures).setHandler(completed -> {
 
             JsonObject jsonObject = new JsonObject();
-            jsonObject.put(Constants.EventBus.BODY,VEHICLE_REQUEST_ALL_MESSAGE);
+            jsonObject.put(Constants.EventBus.BODY, VEHICLE_REQUEST_ALL_MESSAGE);
             vertx.eventBus().send(ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS, jsonObject);
             vertx.eventBus().consumer(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS,
-                    msg->{
+                    msg -> {
                         AnalyticsVehicleList vehicleList = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), AnalyticsVehicleList.class);
                         assertTrue(vehicleList.equals(vehicleListObject));
                     });

@@ -7,7 +7,7 @@ import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory
 import com.wedriveu.services.shared.store.{EntityListStoreStrategy, JsonFileEntityListStoreStrategyImpl}
 import com.wedriveu.services.shared.vertx.VertxJsonMapper
 import com.wedriveu.shared.rabbitmq.message._
-import com.wedriveu.shared.util.{Log, Position, Constants => Shared}
+import com.wedriveu.shared.util.{Position, Constants => Shared}
 import io.vertx.ext.unit.TestContext
 import io.vertx.ext.unit.junit.VertxUnitRunner
 import io.vertx.lang.scala.json.JsonObject
@@ -58,7 +58,7 @@ class BookingServiceTest extends AssertionsForJUnit {
       vertx.deployVerticleFuture(ServiceBoot.Verticle)
     }).flatMap(_ => {
       simulateVehicleService()
-    })onComplete {
+    }) onComplete {
       case Success(_) => async.complete()
       case Failure(result) => context.fail(result.getCause)
     }

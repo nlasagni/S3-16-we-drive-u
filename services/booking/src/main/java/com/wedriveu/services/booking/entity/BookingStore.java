@@ -11,7 +11,7 @@ import java.util.Optional;
  *
  * @author Michele Donati
  * @author Nicola Lasagni
- * This inteface models the <em>Booking' database store</em>.
+ *         This inteface models the <em>Booking' database store</em>.
  */
 public interface BookingStore {
 
@@ -32,13 +32,13 @@ public interface BookingStore {
 
     /**
      * Gets a {@linkplain Booking} with the provided {@code bookingId}
+     *
      * @param bookingId Identifies the <em>Booking</em>'s <em>ID</em> that must be retreived.
      * @return Returns the {@linkplain Booking} with the provided id, only if found.
      */
     Optional<Booking> getBookingById(int bookingId);
 
     /**
-     *
      * @param licensePlate Identifies the vehicle associated to the <em>Booking</em>'s <em>ID</em> that must be retreived.
      * @return Returns the started {@linkplain Booking} with the provided license plate, only if found.
      */
@@ -48,7 +48,7 @@ public interface BookingStore {
      * Gets the {@linkplain Booking} started by a {@linkplain com.wedriveu.services.shared.model.User} that has
      * status {@code bookingStatus}.
      *
-     * @param username Identifies username to which the booking is associated.
+     * @param username      Identifies username to which the booking is associated.
      * @param bookingStatus The status of the {@linkplain Booking} to be retrieved
      * @return Returns the {@linkplain Booking} associated to the provided username, only if found.
      */
@@ -66,7 +66,7 @@ public interface BookingStore {
     /**
      * Updates the status of a {@linkplain Booking} license plate.
      *
-     * @param bookingId     The id of the {@linkplain Booking} to be updated.
+     * @param bookingId    The id of the {@linkplain Booking} to be updated.
      * @param licensePlate The new license plate of the {@linkplain Booking}.
      * @return A boolean indicating the success or the failure of this operation.
      */
@@ -81,7 +81,8 @@ public interface BookingStore {
      */
     List<Booking> getBookingsByDate(Date fromDate, Date toDate);
 
-    /** Deletes a {@linkplain Booking} from the store.
+    /**
+     * Deletes a {@linkplain Booking} from the store.
      *
      * @param id The id of the booking to be deleted.
      * @return A boolean indicating the success or the failure of this operation.

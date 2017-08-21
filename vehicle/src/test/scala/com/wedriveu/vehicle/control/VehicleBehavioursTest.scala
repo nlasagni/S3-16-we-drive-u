@@ -51,9 +51,9 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     val vehicleBehaviours = createVehicleBehaviour(vehicleControl, true)
     randomLatitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
     randomLongitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
-    vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination,randomLongitudeDestination))
+    vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination, randomLongitudeDestination))
     Thread.sleep(timeToSleepTest1)
-      assert(vehicleControl.getVehicle().position.getLatitude == randomLatitudeDestination
+    assert(vehicleControl.getVehicle().position.getLatitude == randomLatitudeDestination
         && vehicleControl.getVehicle().position.getLongitude == randomLongitudeDestination
         && vehicleControl.getVehicle().battery < VehicleConstants.maxBatteryValue)
   }
@@ -63,7 +63,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     val vehicleBehaviours = createVehicleBehaviour(vehicleControl, true)
     randomLatitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
     randomLongitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
-    vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination,randomLongitudeDestination))
+    vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination, randomLongitudeDestination))
     vehicleBehaviours.goToRecharge()
     Thread.sleep(timeToSleepTest2)
     assert(vehicleControl.getVehicle().battery == VehicleConstants.maxBatteryValue)
@@ -87,10 +87,10 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   }
 
   private def createVehicleControl(debugVar: Boolean): VehicleControl = {
-     new VehicleControlImpl(vertx,
-       "",
-       "",
-       licenseFirstTest,
+    new VehicleControlImpl(vertx,
+      "",
+      "",
+      licenseFirstTest,
       stateFirstTest,
       new Position(latitude, longitude),
       VehicleConstants.maxBatteryValue,
@@ -100,7 +100,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   }
 
   private def createVehicleBehaviour(vehicleControl: VehicleControl, debugVar: Boolean): VehicleBehaviours = {
-    new VehicleBehavioursImpl(vehicleControl,vertx, vehicleControl.getVehicle(), new VehicleStopViewImpl(vertx,1), debugVar)
+    new VehicleBehavioursImpl(vehicleControl, vertx, vehicleControl.getVehicle(), new VehicleStopViewImpl(vertx, 1), debugVar)
   }
 
 }

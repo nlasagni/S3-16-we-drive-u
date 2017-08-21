@@ -13,10 +13,10 @@ public class MessageVehicleCounterWithID {
     @JsonProperty("vehicleCounter")
     VehicleCounter vehicleCounter;
 
-    public MessageVehicleCounterWithID(    @JsonProperty("backofficeID")
-                                                   String backofficeID,
-                                           @JsonProperty("vehicleCounter")
-                                                   VehicleCounter vehicleCounter){
+    public MessageVehicleCounterWithID(@JsonProperty("backofficeID")
+                                               String backofficeID,
+                                       @JsonProperty("vehicleCounter")
+                                               VehicleCounter vehicleCounter) {
         this.backofficeID = backofficeID;
         this.vehicleCounter = vehicleCounter;
     }

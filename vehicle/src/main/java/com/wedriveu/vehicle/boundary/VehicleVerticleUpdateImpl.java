@@ -57,11 +57,11 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
     }
 
 
-    private void registerConsumer(){
+    private void registerConsumer() {
         eventBus.consumer(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
                 message -> {
-            sendUpdate();
-        });
+                    sendUpdate();
+                });
     }
 
     @Override
@@ -70,11 +70,11 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
                 Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE,
                 createUpdate(),
                 onPublish -> {
-            onPublish.succeeded();
-            if(onPublish.failed()){
-                Log.error(TAG, SEND_ERROR);
-            }
-        });
+                    onPublish.succeeded();
+                    if (onPublish.failed()) {
+                        Log.error(TAG, SEND_ERROR);
+                    }
+                });
     }
 
     private JsonObject createUpdate() {
@@ -85,10 +85,9 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
         updateToService.setStatus(state);
         updateToService.setUserOnBoard(vehicle.getUserOnBoard());
         String message;
-        if(state.equals(vehicleConstants.stateBroken()) || state.equals(vehicleConstants.stateStolen())) {
+        if (state.equals(vehicleConstants.stateBroken()) || state.equals(vehicleConstants.stateStolen())) {
             message = FAILURE_MESSAGE;
-        }
-        else {
+        } else {
             message = NOT_FAILURE_MESSAGE;
         }
         updateToService.setFailureMessage(message);

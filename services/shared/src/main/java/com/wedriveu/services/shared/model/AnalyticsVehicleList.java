@@ -2,7 +2,6 @@ package com.wedriveu.services.shared.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ public class AnalyticsVehicleList {
         return vehicleList;
     }
 
-    public AnalyticsVehicleList(@JsonProperty ("vehicleList") List<Vehicle> vehicleList) {
+    public AnalyticsVehicleList(@JsonProperty("vehicleList") List<Vehicle> vehicleList) {
         this.vehicleList = vehicleList;
     }
 

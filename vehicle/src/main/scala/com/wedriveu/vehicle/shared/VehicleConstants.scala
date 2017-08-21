@@ -9,9 +9,9 @@ package com.wedriveu.vehicle.shared
 object VehicleConstants {
   final val stateBroken: String = "broken"
   final val stateRecharging: String = "recharging"
-  final val stateAvailable: String ="available"
-  final val stateBooked: String ="booked"
-  final val stateStolen: String ="stolen"
+  final val stateAvailable: String = "available"
+  final val stateBooked: String = "booked"
+  final val stateStolen: String = "stolen"
   final val earthRadiusInKm: Double = 6372.795477598
   final val maxBatteryValue: Double = 100.0
   final val MAXIMUM_DISTANCE_TO_RECHARGE = 20

@@ -1,7 +1,6 @@
 package com.wedriveu.mobile.service.scheduling;
 
 import android.app.Activity;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;

@@ -2,7 +2,7 @@ package com.wedriveu.vehicle.control
 
 import java.util.UUID
 
-import com.wedriveu.shared.util.{Log, Position}
+import com.wedriveu.shared.util.Position
 import com.wedriveu.vehicle.boundary.{VehicleStopView, VehicleStopViewImpl}
 import com.wedriveu.vehicle.shared.VehicleConstants
 import io.vertx.core.Vertx
@@ -12,11 +12,11 @@ import io.vertx.core.Vertx
   */
 
 class VehicleCreator(speed: Double,
-                     battery: Double,
-                     doBreak: Boolean,
-                     doStolen: Boolean,
-                     vehiclesCounter: Int,
-                     indexForImages: Int) extends Thread {
+  battery: Double,
+  doBreak: Boolean,
+  doStolen: Boolean,
+  vehiclesCounter: Int,
+  indexForImages: Int) extends Thread {
 
   override def run(): Unit = {
     val randomPlate: String = randomLicensePlateGenerator()
@@ -30,8 +30,8 @@ class VehicleCreator(speed: Double,
       "http://static.allaguida.it/845X0/www/allaguida/it/img/macchine-usate-bmw.jpg",
       "https://www.cinquecosebelle.it/wp-content/uploads/2016/09/macchine-7-posti-dacia-lodgy.jpg",
       "https://www.mercedes-benz.it/content/media_library/hq/hq_mpc_reference_site/passenger_cars_ng/new_cars/models" +
-        "/cla-class/c117/start/mercedes-benz-cla-c117_start_1000x470_02-2016_jpg.object-Single-MEDIA.tmp" +
-        "/mercedes-benz-cla_c117_start_1000x470_02-2016.jpg",
+          "/cla-class/c117/start/mercedes-benz-cla-c117_start_1000x470_02-2016_jpg.object-Single-MEDIA.tmp" +
+          "/mercedes-benz-cla_c117_start_1000x470_02-2016.jpg",
       "http://www.motorionline.com/wp-content/uploads/2016/02/Mercedes-C43-AMG-Coupe-1-1024x611.jpg"
     )
 
@@ -60,10 +60,10 @@ class VehicleCreator(speed: Double,
         false)
 
     newVehicle.startVehicleEngine()
-    if(doBreak) {
+    if (doBreak) {
       newVehicle.subscribeToBrokenEvents()
     }
-    if(doStolen) {
+    if (doStolen) {
       newVehicle.subscribeToStolenEvents()
     }
 

@@ -1,7 +1,6 @@
 package com.wedriveu.services.analytics.entity;
 
 
-
 import com.wedriveu.services.shared.model.AnalyticsVehicle;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.store.EntityListStoreStrategy;

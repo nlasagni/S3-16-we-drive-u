@@ -2,8 +2,7 @@ package com.wedriveu.services.booking.boundary
 
 import com.wedriveu.services.booking.util.{Constants, ConsumerConfig, RabbitMQConsumers}
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory
-import com.wedriveu.shared.util.{Log, Constants => Shared}
-import io.vertx.core.json.JsonObject
+import com.wedriveu.shared.util.{Constants => Shared}
 import io.vertx.lang.scala.ScalaVerticle
 import io.vertx.scala.core.eventbus.Message
 import io.vertx.scala.rabbitmq.RabbitMQClient
@@ -11,6 +10,7 @@ import io.vertx.scala.rabbitmq.RabbitMQClient
 import scala.concurrent.Future
 
 /** Trait that represents a booking messages consumer.
+  *
   * @author Nicola Lasagni on 16/08/2017.
   */
 trait BookingBoundaryConsumer {
@@ -30,10 +30,10 @@ trait BookingBoundaryConsumer {
 
 /** Configuration needed to start a [[BookingBoundaryConsumer]]
   *
-  * @param queue The queue name
-  * @param durableQueue Indicates if a queue is durable or not
-  * @param exchange The exchange name
-  * @param routingKey The routing key name
+  * @param queue           The queue name
+  * @param durableQueue    Indicates if a queue is durable or not
+  * @param exchange        The exchange name
+  * @param routingKey      The routing key name
   * @param eventBusAddress The destination event bus address name
   */
 private[boundary] case class BookingVerticleConsumerConfig(

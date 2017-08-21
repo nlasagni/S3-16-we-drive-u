@@ -80,7 +80,8 @@ public class AuthenticationServiceVerticleImplTest {
             context.assertTrue(response.isSuccess());
             async.complete();
         });
-        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
+        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
+        });
         consumer.exceptionHandler(event -> {
             context.fail(event.getCause());
             async.complete();

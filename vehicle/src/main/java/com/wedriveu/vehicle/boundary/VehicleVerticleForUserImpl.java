@@ -102,16 +102,16 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
 
         eventBus.consumer(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_FOR_USER, vehicle.getVehicle().plate()),
                 message -> {
-            JsonObject msg = new JsonObject(message.body().toString());
-            Position destPosition = null;
-            try {
-                destPosition =
-                        objectMapper.readValue(msg.getString(Constants.EventBus.BODY), Position.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            enterInVehicle(destPosition);
-        });
+                    JsonObject msg = new JsonObject(message.body().toString());
+                    Position destPosition = null;
+                    try {
+                        destPosition =
+                                objectMapper.readValue(msg.getString(Constants.EventBus.BODY), Position.class);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    enterInVehicle(destPosition);
+                });
     }
 
     @Override

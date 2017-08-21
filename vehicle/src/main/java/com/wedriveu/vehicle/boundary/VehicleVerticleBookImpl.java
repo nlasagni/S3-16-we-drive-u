@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
-
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
@@ -113,7 +112,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
         });
     }
 
-    private void sendResponse(BookVehicleResponse response){
+    private void sendResponse(BookVehicleResponse response) {
         try {
             String responseString = objectMapper.writeValueAsString(response);
             JsonObject responseJson = new JsonObject();
@@ -130,7 +129,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
                                 String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
                                 new JsonObject());
                     });
-        }catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             Log.error(TAG, SEND_ERROR, e);
         }
     }

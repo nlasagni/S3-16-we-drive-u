@@ -1,6 +1,5 @@
 package com.wedriveu.services.vehicle.boundary.vehiclearrived;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
@@ -10,7 +9,6 @@ import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
@@ -81,15 +79,15 @@ public class VehicleArrivedVerticle extends AbstractVerticle {
 
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-            ArrivedNotify notify = VertxJsonMapper.mapFromBodyTo((JsonObject)msg.body(), ArrivedNotify.class);
-           rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.BOOKING,
-                   Constants.RabbitMQ.RoutingKey.COMPLETE_BOOKING_REQUEST,
-                   createObject(notify),
-                   onPublish -> {
-                       if(!onPublish.succeeded()){
-                           Log.info("UpdatesVerticle ","Publish failed " + onPublish.cause());
-                       }
-                   });
+            ArrivedNotify notify = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), ArrivedNotify.class);
+            rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.BOOKING,
+                    Constants.RabbitMQ.RoutingKey.COMPLETE_BOOKING_REQUEST,
+                    createObject(notify),
+                    onPublish -> {
+                        if (!onPublish.succeeded()) {
+                            Log.info("UpdatesVerticle ", "Publish failed " + onPublish.cause());
+                        }
+                    });
         });
     }
 

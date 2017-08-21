@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.booking.router.BookingRouter;

@@ -5,7 +5,6 @@ import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqCommunicationCo
 import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqQueueConfig;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqCloseCommunicationStrategy;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqConsumerStrategy;
-import com.wedriveu.shared.util.Log;
 
 import java.io.IOException;
 import java.util.HashMap;

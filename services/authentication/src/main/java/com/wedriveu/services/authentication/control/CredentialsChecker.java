@@ -6,7 +6,7 @@ package com.wedriveu.services.authentication.control;
 
 /**
  * @author Stefano Bernagozzi
- * This inteface models the authentication logic.
+ *         This inteface models the authentication logic.
  */
 public interface CredentialsChecker {
     /**

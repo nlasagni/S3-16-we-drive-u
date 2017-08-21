@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 /**
  * @author Stefano Bernagozzi
  */
-public class BackOfficeView extends JFrame{
+public class BackOfficeView extends JFrame {
     private int maxX = 1000;
     private int maxY = 500;
     private JLabel textLabel;

@@ -6,14 +6,11 @@ import com.wedriveu.services.vehicle.entity.BookVehicleResponseWrapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
-import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-
-import java.util.Date;
 
 
 /**

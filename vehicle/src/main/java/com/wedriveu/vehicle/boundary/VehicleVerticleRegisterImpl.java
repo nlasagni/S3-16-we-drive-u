@@ -1,8 +1,8 @@
 package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.RegisterToServiceResponse;
+import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
@@ -72,7 +72,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
             registerConsumer();
             registerToService(vehicle.getVehicle().plate());
             future.complete();
-            }, endFuture);
+        }, endFuture);
     }
 
     private void startClient(Future<Void> future) {
@@ -118,8 +118,8 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
                 Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
                 createRequest(),
                 onPublish -> {
-            onPublish.succeeded();
-        });
+                    onPublish.succeeded();
+                });
     }
 
     private JsonObject createRequest() {
@@ -138,7 +138,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     }
 
     private void checkResponse(RegisterToServiceResponse response) {
-        if(!response.getRegisterOk()){
+        if (!response.getRegisterOk()) {
             String newLicensePlate = calculateNewLicensePlate(vehicle);
             registerToService(newLicensePlate);
         }
@@ -149,7 +149,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
 
     private String calculateNewLicensePlate(VehicleControl vehicle) {
         String newLicense = UUID.randomUUID().toString();
-        if(vehicle.getVehicle().plate().equals(newLicense)) {
+        if (vehicle.getVehicle().plate().equals(newLicense)) {
             return calculateNewLicensePlate(vehicle);
         }
         vehicle.getVehicle().setPlate(newLicense);
