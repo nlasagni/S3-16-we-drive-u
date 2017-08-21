@@ -47,8 +47,6 @@ class EnterVehicleConsumerStrategy implements RabbitMqConsumerStrategy<EnterVehi
 
     @Override
     public void handleMessage(final EnterVehicleRequest message) {
-        //TODO
-        Log.i(this.getClass().getSimpleName(), "Enter: " + message.getLicensePlate());
         if (message == null) {
             return;
         }

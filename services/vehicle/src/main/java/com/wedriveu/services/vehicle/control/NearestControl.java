@@ -108,8 +108,6 @@ public class NearestControl extends AbstractVerticle {
     }
 
     private void availableVehiclesCompleted(Message message) {
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "NEAREST CONTROL availableVehiclesCompleted");
         UUID uniqueKey = UUID.randomUUID();
         JsonObject userData = (JsonObject) message.body();
         vertx.deployVerticle(new VehicleFinderVerticle(uniqueKey.toString()), completed -> {

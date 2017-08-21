@@ -29,11 +29,6 @@ public class BookPublisherVerticle extends VerticlePublisher {
     private void notifyBookingService(Message message) {
         BookVehicleResponse vehicleResponse =
                 VertxJsonMapper.mapTo((JsonObject) message.body(), BookVehicleResponse.class);
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(),
-                "Publishing book request to booking service: " + VEHICLE_SERVICE_BOOK_RESPONSE);
-
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 VEHICLE_SERVICE_BOOK_RESPONSE,
                 VertxJsonMapper.mapInBodyFrom(vehicleResponse), onPublish -> {

@@ -29,8 +29,6 @@ class SchedulingCloseCommunicationStrategy implements RabbitMqCloseCommunication
         String queue = String.format(com.wedriveu.mobile.util.Constants.Queue.USER, userName);
         String routingKey = String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE, userName);
         Channel channel = communication.getChannel();
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "CLOSED queue: " + queue + ", key: " + routingKey);
         channel.queueUnbind(queue, Constants.RabbitMQ.Exchanges.VEHICLE, routingKey);
     }
 }

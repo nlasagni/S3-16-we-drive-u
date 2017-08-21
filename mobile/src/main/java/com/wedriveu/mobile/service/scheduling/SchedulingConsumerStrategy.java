@@ -30,10 +30,6 @@ class SchedulingConsumerStrategy extends ServiceConsumerStrategy<VehicleResponse
         String userName = mUser.getUsername();
         String queue = String.format(com.wedriveu.mobile.util.Constants.Queue.USER, userName);
         String routingKey = String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE, userName);
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "Configuring queue: " + queue + ", key: " + routingKey);
-
         Channel channel = communication.getChannel();
         channel.queueDeclare(queue, true, false, true, null);
         channel.queueBind(queue, Constants.RabbitMQ.Exchanges.VEHICLE, routingKey);

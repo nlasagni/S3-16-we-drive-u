@@ -41,8 +41,6 @@ object BookingServiceTestSimulation {
       )
     }).flatMap(_ => {
       eventBus.consumer(eventBusAddress, (msg: Message[Object]) => {
-        //TODO
-        Log.info(this.getClass.getSimpleName, "simulated vehicle service response!!!")
         client.basicPublish(
           Shared.RabbitMQ.Exchanges.VEHICLE,
           Shared.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_RESPONSE,

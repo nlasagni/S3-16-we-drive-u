@@ -107,10 +107,6 @@ public class VehicleVerticleCanDriveImpl extends AbstractVerticle implements Veh
                 JsonObject message = new JsonObject(msg.body().toString());
                 CanDriveRequest canDriveRequest =
                         objectMapper.readValue(message.getString(Constants.EventBus.BODY), CanDriveRequest.class);
-
-                //TODO
-                Log.info(this.getClass().getSimpleName(), "Received can drive request " + canDriveRequest.toString());
-
                 response = canDrive(canDriveRequest);
             } catch (IOException e) {
                 Log.error(TAG, READ_ERROR, e);
@@ -121,14 +117,9 @@ public class VehicleVerticleCanDriveImpl extends AbstractVerticle implements Veh
 
     private void sendResponse(CanDriveResponse response) {
         try {
-
             String responseString = objectMapper.writeValueAsString(response);
             JsonObject responseJson = new JsonObject();
             responseJson.put(Constants.EventBus.BODY, responseString);
-
-            //TODO
-            Log.info(this.getClass().getSimpleName(), "Send can drive response " + responseJson.toString());
-
             rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
                     String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, vehicle.getUsername()),
                     responseJson,

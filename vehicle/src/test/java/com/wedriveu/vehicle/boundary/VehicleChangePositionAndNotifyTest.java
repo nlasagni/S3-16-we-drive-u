@@ -134,11 +134,8 @@ public class VehicleChangePositionAndNotifyTest {
 
     private JsonObject createCommandJsonObject() {
         DriveCommand newCommand = new DriveCommand();
-        //TODO 44.147 12.248
-        newCommand.setUserPosition(new Position(44.147, 12.248));
-        newCommand.setDestinationPosition(position);
-        // newCommand.setUserPosition(new Position(randomLatitudeUser, randomLongitudeUser));
-        //newCommand.setDestinationPosition(new Position(randomLatitudeDestination, randomLongitudeDestination));
+        newCommand.setUserPosition(new Position(randomLatitudeUser, randomLongitudeUser));
+        newCommand.setDestinationPosition(new Position(randomLatitudeDestination, randomLongitudeDestination));
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(newCommand).toString());
         return jsonObject;

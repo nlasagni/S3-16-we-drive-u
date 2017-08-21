@@ -177,10 +177,6 @@ public class BookingStoreImpl implements BookingStore {
 
     @Override
     public boolean deleteBooking(int id) {
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "deleteBooking " + id);
-
         try {
             List<Booking> bookings = storeStrategy.getEntities();
             List<Booking> updatedBookings = bookings.stream()
@@ -197,10 +193,6 @@ public class BookingStoreImpl implements BookingStore {
 
     @Override
     public void deleteAllBookings() {
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "deleteAllBookings");
-
         try {
             storeStrategy.clear();
         } catch (Exception e) {

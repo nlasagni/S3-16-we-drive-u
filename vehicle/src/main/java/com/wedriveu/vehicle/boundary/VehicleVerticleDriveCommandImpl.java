@@ -95,10 +95,6 @@ public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements
 
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-
-            //TODO
-            Log.info(this.getClass().getSimpleName(), "Drive command received: " + msg.body().toString());
-
             try {
                 JsonObject message = new JsonObject(msg.body().toString());
                 DriveCommand driveCommand =

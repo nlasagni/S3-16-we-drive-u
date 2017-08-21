@@ -102,10 +102,8 @@ public class SchedulingServiceImpl implements SchedulingService {
 
     private VehicleRequest createRequest(Position userPosition,
                                          Place destinationAddress) throws UnsupportedEncodingException {
-        //TODO
         VehicleRequest request = new VehicleRequest();
         request.setUsername(mUserStore.getUser().getUsername());
-        //Position userPosition = new Position(mUserLatitude, mUserLongitude);
         LatLng coordinates = destinationAddress.getLatLng();
         Position destinationPosition = new Position(coordinates.latitude, coordinates.longitude);
         request.setUserPosition(userPosition);

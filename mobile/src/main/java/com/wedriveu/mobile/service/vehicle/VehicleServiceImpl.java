@@ -71,11 +71,8 @@ public class VehicleServiceImpl implements VehicleService {
                     mEnterVehicleCommunicationManager.setUpCommunication(config);
                     RabbitMqConsumerStrategy<EnterVehicleRequest> strategy =
                             new EnterVehicleConsumerStrategy(mActivity, mUserStore.getUser(), callback);
-
-                    enterSubscriberId = mEnterVehicleCommunicationManager.subscribeConsumer(strategy, EnterVehicleRequest.class);
-
-                    //TODO
-                    //mEnterVehicleCommunicationManager.registerConsumer(strategy, EnterVehicleRequest.class);
+                    enterSubscriberId =
+                            mEnterVehicleCommunicationManager.subscribeConsumer(strategy, EnterVehicleRequest.class);
                 } catch (IOException | TimeoutException e) {
                     Log.e(TAG, ENTER_ERROR, e);
                 }
@@ -136,11 +133,8 @@ public class VehicleServiceImpl implements VehicleService {
                     mVehicleArrivedCommunicationManager.setUpCommunication(config);
                     RabbitMqConsumerStrategy<CompleteBookingResponse> strategy =
                             new VehicleArrivedConsumerStrategy(mActivity, mUserStore.getUser(), callback);
-                    //TODO
-                    //mVehicleArrivedCommunicationManager.registerConsumer(strategy, CompleteBookingResponse.class);
-
-                    arrivedSubscriberId = mVehicleArrivedCommunicationManager.subscribeConsumer(strategy, CompleteBookingResponse.class);
-
+                    arrivedSubscriberId =
+                            mVehicleArrivedCommunicationManager.subscribeConsumer(strategy, CompleteBookingResponse.class);
                 } catch (IOException | TimeoutException e) {
                     Log.e(TAG, ARRIVED_ERROR, e);
                 }
@@ -190,10 +184,8 @@ public class VehicleServiceImpl implements VehicleService {
                     mVehiclePositionCommunicationManager.setUpCommunication(config);
                     RabbitMqConsumerStrategy<UpdateToService> strategy =
                             new VehicleUpdateConsumerStrategy(mActivity, mUserStore.getUser(), mVehicleStore, callback);
-
-                    //todo
-                    //mVehiclePositionCommunicationManager.registerConsumer(strategy, UpdateToService.class);
-                    updateSubscriberId = mVehiclePositionCommunicationManager.subscribeConsumer(strategy, UpdateToService.class);
+                    updateSubscriberId =
+                            mVehiclePositionCommunicationManager.subscribeConsumer(strategy, UpdateToService.class);
                 } catch (IOException | TimeoutException e) {
                     Log.e(TAG, ARRIVED_ERROR, e);
                 }

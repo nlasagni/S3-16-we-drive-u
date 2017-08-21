@@ -52,8 +52,6 @@ class VehicleUpdateConsumerStrategy implements RabbitMqConsumerStrategy<UpdateTo
 
     @Override
     public void handleMessage(final UpdateToService message) {
-        //TODO
-        Log.i(this.getClass().getSimpleName(), "PositionUpdate: " + message.toString());
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -65,8 +63,6 @@ class VehicleUpdateConsumerStrategy implements RabbitMqConsumerStrategy<UpdateTo
                 } else if (!vehicle.getLicencePlate().equals(message.getLicense())) {
                     return;
                 } else {
-                    //TODO
-                    Log.i(this.getClass().getSimpleName(), "Vehicle Update: " + message.toString());
                     vehicle.setPosition(message.getPosition());
                     mVehicleStore.storeVehicle(vehicle);
                 }

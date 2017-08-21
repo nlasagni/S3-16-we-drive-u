@@ -67,10 +67,6 @@ public class BookingControl extends AbstractVerticle {
         driveCommand.setLicensePlate(vehicleResponseWrapper.getResponse().getLicensePlate());
         driveCommand.setUserPosition(vehicleResponseWrapper.getUserPosition());
         driveCommand.setDestinationPosition(vehicleResponseWrapper.getDestinationPosition());
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "sendStartDrivingCommand");
-
         eventBus.send(Messages.BookingControl.START_DRIVING, VertxJsonMapper.mapInBodyFrom(driveCommand));
 
     }

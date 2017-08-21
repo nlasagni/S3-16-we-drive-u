@@ -74,8 +74,6 @@ object BookingBoundaryPublisherVerticle {
     }
 
     override def publish(message: JsonObject): Unit = {
-      //TODO
-      Log.info(this.getClass.getSimpleName, "Publishing to: " + exchange + " , routing key: " + getRoutingKey)
       client.basicPublish(exchange, getRoutingKey, message, handler => {
         if (handler.failed()) {
           Log.error(

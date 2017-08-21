@@ -130,14 +130,10 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
                     public void onServiceOperationFinished(ServiceResult<Vehicle> result) {
                         TravellingBookingView view = getTravellingBookingView(AcceptedBookingViewImpl.ID);
                         if (view != null) {
-                            //TODO
-                            Log.i(this.getClass().getSimpleName(), "Vehicle Update AcceptedBookingViewImpl");
                             view.showVehicle(result.getResult());
                         }
                         view = getTravellingBookingView(TravellingBookingViewImpl.ID);
                         if (view != null) {
-                            //TODO
-                            Log.i(this.getClass().getSimpleName(), "Vehicle Update TravellingBookingViewImpl");
                             view.showVehicle(result.getResult());
                         }
                     }

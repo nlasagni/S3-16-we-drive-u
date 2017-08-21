@@ -34,8 +34,6 @@ public class VehicleElectionVerticle extends VerticlePublisher {
     }
 
     private void sendVehicleToUser(Message message) {
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "sendVehicleToUser: " + message.body().toString());
         JsonObject body = (JsonObject) message.body();
         String username = body.getString(USERNAME);
         body.remove(USERNAME);
@@ -43,11 +41,6 @@ public class VehicleElectionVerticle extends VerticlePublisher {
     }
 
     private void publishToUser(String username, JsonObject dataToUser) {
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(),
-                "Send message to: " + String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE, username));
-
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE, username),
                 dataToUser, onPublish -> {

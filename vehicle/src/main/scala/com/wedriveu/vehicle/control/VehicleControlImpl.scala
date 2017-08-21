@@ -159,8 +159,6 @@ class VehicleControlImpl(vertx: Vertx,
           && !vehicleGiven.getState().equals(VehicleConstants.stateStolen)
           && !userOnBoard
           && !debugVar) {
-          //TODO
-          Log.info(this.getClass.getSimpleName, "subscribeToMovementAndChangePositionEvents GO TO RECHARGE")
           executeBehaviour(vehicleBehaviours.goToRecharge)
         }
       }
@@ -198,15 +196,6 @@ class VehicleControlImpl(vertx: Vertx,
     if (!vehicleGiven.getState().equals(VehicleConstants.stateRecharging) ||
         !vehicleGiven.getState().equals(VehicleConstants.stateBroken)) {
       executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition, notRealisticVar)
-//      if (!vehicleGiven.getState().equals(VehicleConstants.stateRecharging)
-//        && !vehicleGiven.getState().equals(VehicleConstants.stateBroken)
-//        && !vehicleGiven.getState().equals(VehicleConstants.stateStolen)
-//        && !userOnBoard
-//        && !debugVar) {
-//        //TODO
-//        Log.info(this.getClass.getSimpleName, "changePositionUponBooking GO TO RECHARGE")
-//        executeBehaviour(vehicleBehaviours.goToRecharge)
-//      }
     }
   }
 
@@ -217,8 +206,6 @@ class VehicleControlImpl(vertx: Vertx,
         && !vehicleGiven.getState().equals(VehicleConstants.stateStolen)
         && !userOnBoard
         && !debugVar) {
-      //TODO
-      Log.info(this.getClass.getSimpleName, "changePositionUponBooking GO TO RECHARGE")
       executeBehaviour(vehicleBehaviours.goToRecharge)
     }
   }

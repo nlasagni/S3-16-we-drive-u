@@ -104,10 +104,6 @@ object BookingBoundaryConsumerVerticle {
 
     override def consume(): Unit = {
       vertx.eventBus().consumer(consumerAddress, (message: Message[Object]) => {
-
-        //TODO
-        Log.info(this.getClass.getSimpleName, "Received message: " + message.body().toString)
-
         vertx.eventBus().send(bookingConsumerConfig.eventBusAddress, message.body())
       })
     }

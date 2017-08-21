@@ -48,10 +48,6 @@ public class BookVehicleVerticle extends VerticleConsumer {
     }
 
     private void handleBookingRequest(Message message) {
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "BOOK VEHICLE availableVehiclesCompleted " + message.body());
-
         vehicleRequest = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), BookVehicleRequest.class);
         try {
             Future<Void> future = Future.future();
@@ -65,22 +61,11 @@ public class BookVehicleVerticle extends VerticleConsumer {
     private void publishBookRequest() {
         VehicleReservationRequest requestData = new VehicleReservationRequest();
         requestData.setUsername(vehicleRequest.getUsername());
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "Sending booking request to  vehicle " + vehicleRequest.getLicencePlate());
-
         client.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(BOOK_VEHICLE_REQUEST,
                         vehicleRequest.getLicencePlate()),
                 VertxJsonMapper.mapInBodyFrom(requestData), onPublish -> {
                 });
-    }
-
-    private void startRabbitMQClient(Handler<AsyncResult<Void>> resultHandler) {
-        if (!client.isConnected()) {
-            client = RabbitMQClientFactory.createClient(vertx);
-            client.start(resultHandler);
-        }
     }
 
     private void startBookVehicleConsumer(Future future) throws IOException, TimeoutException {

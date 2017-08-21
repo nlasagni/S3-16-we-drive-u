@@ -88,8 +88,6 @@ class BookingServiceTest extends AssertionsForJUnit {
     val eventBusAddress = UserSimulatedEventBusAddress + "CreateBooking"
     eventBus.consumer(eventBusAddress, (message: Message[Object]) => message.body() match {
       case body: JsonObject =>
-        //TODO
-        Log.info(this.getClass.getSimpleName, "Received CreateBookingResponse")
         val response: CreateBookingResponse = VertxJsonMapper.mapFromBodyTo(body, classOf[CreateBookingResponse])
         context.assertTrue(response != null)
         async.complete()

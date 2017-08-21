@@ -198,10 +198,6 @@ public class VehicleFinderVerticle extends VerticleConsumer {
             }
         }));
         eventBus.consumer(eventBusAddress, msg -> {
-
-            //TODO
-            Log.info(this.getClass().getSimpleName(), "Vehicle can drive response " + msg.body().toString());
-
             counter++;
             if (counter <= availableVehicles.size()) {
                 JsonObject responseJson = (JsonObject) msg.body();

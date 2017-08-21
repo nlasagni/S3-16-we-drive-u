@@ -67,10 +67,6 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
    // This value indicates the battery consumed after 10 seconds of the vehicle journey. The vehicle consumes 1% of
    // battery every 10Km.
 
-  //TODO
-   //val batteryToConsume: Double = kilometersInTenSecondsGivenSpeed / 10.0
-
-  //TODO
   val metersRunBeforeUpdate: Double = 100.0
   val batteryToConsume: Double = 1/((Constants.ESTIMATED_KILOMETERS_PER_PERCENTAGE*1000)/metersRunBeforeUpdate)
 
@@ -99,161 +95,53 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
    var deltaLat: Double = .0
    var deltaLon: Double = .0
    var debugging: Boolean = false
-   var rechargingLatchManager: RechargingLatchManager = null
+   var rechargingLatchManager: RechargingLatchManager = _
    var testVar: Boolean = false
    var testUserVar: Boolean = false
    var verticlesTestVar: Boolean = false
    var destinationPosition: Position = _
 
+
   //This algorithm calculates the distance in Km between the points, then estimates the journey time and calculates
   //the coordinates reached during the journey.
   // The Thread.sleep in the method is useful to render the simulation real and for testing observables.
   override def movementAndPositionChange(position: Position): Unit = {
-    movementAndPositionChangeStefano(position)
-//    if(checkVehicleIsBrokenOrStolen()){
-//      return
-//    }
-//    else {
-//      val distanceInKm: Double = selfDrivingVehicle.position.getDistanceInKm(position)
-//      stopUi.writeMessageLog(distanceInKmLog + distanceInKm)
-//      val estimatedJourneyTimeInSeconds: Long =
-//        ((distanceInKm / selfDrivingVehicle.speed) * conversionInSeconds).asInstanceOf[Long]
-//      stopUi.writeMessageLog(timeInSecondsLog + estimatedJourneyTimeInSeconds)
-//      breakable {
-//
-//        for (time <- timeOfJourney to estimatedJourneyTimeInSeconds by timeStep) {
-//          if (checkVehicleIsBrokenOrStolen()) {
-//            break()
-//          }
-//          if(!debugVar && !testVar){
-//            Thread.sleep(oneSecondInMillis * timeStep)
-//          }
-//          eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
-//            new JsonObject())
-//          deltaLat = position.getLatitude - selfDrivingVehicle.position.getLatitude
-//          deltaLon = position.getLongitude - selfDrivingVehicle.position.getLongitude
-//          calculateMovement(time, estimatedJourneyTimeInSeconds, deltaLat, deltaLon)
-//          val distanceDone: Double = distanceInKm - selfDrivingVehicle.position.getDistanceInKm(position)
-//
-//          //TODO
-//          Log.info(this.getClass.getSimpleName, "NOT USED Distance done: " + distanceDone)
-//
-//          if ((time + timeStep) > estimatedJourneyTimeInSeconds) {
-//            if (checkVehicleIsBrokenOrStolen()) {
-//              break()
-//            }
-//            deltaLat = position.getLatitude - selfDrivingVehicle.position.getLatitude
-//            deltaLon = position.getLongitude - selfDrivingVehicle.position.getLongitude
-//            calculateMovement(estimatedJourneyTimeInSeconds, estimatedJourneyTimeInSeconds, deltaLat, deltaLon)
-//            debugging = true
-//          }
-//        }
-//        if(!verticlesTestVar) {
-//          if (vehicleControl.getUserOnBoard() && !testUserVar) {
-//            if (destinationPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
-//              <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
-//              vehicleControl.setUserOnBoard(false)
-//              eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY,vehicleControl.getVehicle().plate),
-//                new JsonObject())
-//            }
-//          }
-//        }
-//      }
-//    }
-  }
-
-  //This algorithm calculates the distance in Km between the points, then estimates the journey time and calculates
-  //the coordinates reached during the journey.
-  // The Thread.sleep in the method is useful to render the simulation real and for testing observables.
-  def movementAndPositionChangeStefano(position: Position): Unit = {
     if(checkVehicleIsBrokenOrStolen()){
       return
     }
     else {
-
-      //TODO
-      Log.info(this.getClass.getSimpleName, "Destination: " + position.toString)
-      //TODO
-      Log.info(this.getClass.getSimpleName, "Vehicle start position: " + selfDrivingVehicle.position.toString)
-
       val distanceInKm: Double = selfDrivingVehicle.position.getDistanceInKm(position)
       stopUi.writeMessageLog(distanceInKmLog + distanceInKm)
       val estimatedJourneyTimeInSeconds: Long =
         ((distanceInKm / selfDrivingVehicle.speed) * conversionInSeconds).asInstanceOf[Long]
       stopUi.writeMessageLog(timeInSecondsLog + estimatedJourneyTimeInSeconds)
       val distanceInMeters: Double = distanceInKm * 1000
-
-      //TODO
-      Log.info(this.getClass.getSimpleName, "distanceInMeters: " + distanceInMeters)
-
-      //TODO
       val numberUpdates: Int = (distanceInMeters / metersRunBeforeUpdate).toInt
-
-      //TODO
       if (numberUpdates == 0 && !vehicleControl.getUserOnBoard()) {
         return
       }
-
-      //TODO
-      Log.info(this.getClass.getSimpleName, "numberUpdates: " + numberUpdates)
-
       val latitudeDifference = position.getLatitude - selfDrivingVehicle.getPosition.getLatitude
       val longitudeDifference = position.getLongitude - selfDrivingVehicle.getPosition.getLongitude
       deltaLat = (latitudeDifference * metersRunBeforeUpdate) / distanceInMeters
       deltaLon = (longitudeDifference * metersRunBeforeUpdate) / distanceInMeters
-
-      Log.info(this.getClass.getSimpleName, "deltaLat: " + deltaLat)
-      Log.info(this.getClass.getSimpleName, "deltaLon: " + deltaLon)
-
-//      deltaLat = (position.getLatitude - selfDrivingVehicle.getPosition.getLatitude) /
-//          (distanceInMeters / metersRunBeforeUpdate)
-//      deltaLon = (position.getLongitude - selfDrivingVehicle.getPosition.getLongitude) /
-//          (distanceInMeters / metersRunBeforeUpdate)
-
-
       breakable {
-        //for (time <- timeOfJourney to estimatedJourneyTimeInSeconds by timeStep) {
-        for (metersDriven <- 0.0 to distanceInMeters by metersRunBeforeUpdate) {
-          //TODO
-          Log.info(this.getClass.getSimpleName, "Meters driven: " + metersDriven)
+        for (_ <- 0.0 to distanceInMeters by metersRunBeforeUpdate) {
           if (checkVehicleIsBrokenOrStolen()) {
             break()
           }
           if(!debugVar && !testVar){
-
-            //TODO
-            Log.info(this.getClass.getSimpleName ,
-              "Sleep of: " + ((metersRunBeforeUpdate * 1000) / (selfDrivingVehicle.speed/3.6)).toInt)
-
-            //TODO Restore millisecondsForUpdateMeters
-//            val millisecondsForUpdateMeters: Int =
-//              ((metersRunBeforeUpdate * 1000) / (selfDrivingVehicle.speed/3.6)).toInt
-            Thread.sleep(1000)
+            val millisecondsForUpdateMeters: Int =
+              ((metersRunBeforeUpdate * oneSecondInMillis) / (selfDrivingVehicle.speed/3.6)).toInt
+            Thread.sleep(millisecondsForUpdateMeters)
           }
           eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
             new JsonObject())
           updatePosition(deltaLat, deltaLon)
-          //          val distanceDone: Double = distanceInKm - selfDrivingVehicle.position.getDistanceInKm(position)
-//          if ((metersDriven + metersRunBeforeUpdate) > distanceInMeters) {
-//
-//            //TODO
-//            Log.info(this.getClass.getSimpleName,
-//              "Extra cycle, my position: " + selfDrivingVehicle.position.toString)
-//
-//            if (checkVehicleIsBrokenOrStolen()) {
-//              break()
-//            }
-//            updatePosition(deltaLat, deltaLon)
-//          }
         }
         if(!verticlesTestVar) {
           if (vehicleControl.getUserOnBoard() && !testUserVar) {
             if (destinationPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
                 <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
-
-              //TODO
-              Log.info(this.getClass.getSimpleName, "Arrived at destination")
-
               vehicleControl.setUserOnBoard(false)
               eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY,vehicleControl.getVehicle().plate),
                 new JsonObject())
@@ -275,10 +163,6 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
     val positionCurrent: Position = new Position(
       selfDrivingVehicle.getPosition.getLatitude + deltaLat,
       selfDrivingVehicle.getPosition.getLongitude + deltaLon)
-
-    //TODO
-    Log.info(this.getClass.getSimpleName, "updatePosition: " + positionCurrent.toString)
-
     selfDrivingVehicle.position = positionCurrent
     logVehicleUpdate()
     drainBattery()
@@ -316,10 +200,6 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
       if (estimatedJourneyTimeInSeconds != 0) time.asInstanceOf[Double] / estimatedJourneyTimeInSeconds else 0
     val latInter: Double = selfDrivingVehicle.position.getLatitude + deltaLat * elapsedTime
     val lonInter: Double = selfDrivingVehicle.position.getLongitude + deltaLon * elapsedTime
-
-    //TODO
-    Log.info(this.getClass.getSimpleName, "Elapsed time: " + elapsedTime)
-
       selfDrivingVehicle.position = new Position(latInter, lonInter)
     drainBattery()
     stopUi.writeMessageLog(newPositionLog
@@ -343,18 +223,10 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
                                          destinationPosition: Position,
                                          notRealisticVar: Boolean): Unit = {
     verticlesTestVar = notRealisticVar
-
-    //TODO
-    Log.info(this.getClass.getSimpleName, "New Destination Position: " + destinationPosition.toString)
-
     this.destinationPosition = destinationPosition
     movementAndPositionChange(userPosition)
     if(userPosition.getDistanceInKm(selfDrivingVehicle.getPosition)
       <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
-
-      //TODO
-      Log.info(this.getClass.getSimpleName, "Arrived at user")
-
       eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_FOR_USER, vehicleControl.getVehicle().plate),
         createMessage())
     }
@@ -378,7 +250,6 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
       val randomNumber2 : Double = Math.random()
       val distance : Double = 20.0 * Math.sqrt(randomNumber1)
       val bearing: Double = 2 * Math.PI * randomNumber2
-      //TODO
       val newLatitude: Double = selfDrivingVehicle.position.getLatitude +
         Math.asin(Math.sin(selfDrivingVehicle.position.getLatitude)
           * Math.cos(distance/VehicleConstants.earthRadiusInKm)

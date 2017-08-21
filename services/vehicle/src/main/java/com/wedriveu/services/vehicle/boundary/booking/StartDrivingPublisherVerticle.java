@@ -29,12 +29,7 @@ public class StartDrivingPublisherVerticle extends VerticlePublisher {
     }
 
     private void sendStartDrivingCommand(Message message) {
-
         DriveCommand command = VertxJsonMapper.mapFromBodyTo((JsonObject)message.body(), DriveCommand.class);
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "Command sent to vehicle: " + command.toString());
-
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND, command.getLicensePlate()),
                 ((JsonObject) message.body()), onPublish -> {

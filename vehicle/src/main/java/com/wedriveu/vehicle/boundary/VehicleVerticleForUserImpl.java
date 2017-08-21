@@ -96,9 +96,6 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
 
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-            //TODO
-            Log.info(this.getClass().getSimpleName(), "USER ENTERED!!");
-
             vehicle.setUserOnBoard(true);
             vehicle.goToDestination(destinationPosition);
         });
@@ -124,8 +121,9 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
                 String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST_ENTER_USER, vehicle.getUsername()),
                 createRequest(),
                 onPublish -> {
-                    //TODO
-                    Log.info(this.getClass().getSimpleName(), "ASKED USER TO ENTER...");
+                    if (!onPublish.succeeded()) {
+                        Log.info(this.getClass().getSimpleName(), onPublish.cause().getLocalizedMessage());
+                    }
                 });
     }
 

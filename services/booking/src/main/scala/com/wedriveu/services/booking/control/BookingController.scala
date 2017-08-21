@@ -173,8 +173,6 @@ object BookingControllerVerticle {
           sendMessage(Constants.EventBus.Address.Vehicle.BookVehicleRequest, bookVehicleRequest)
 
           timerIds = timerIds + (request.getUsername -> vertx.setTimer(Timer, _ => {
-            //TODO
-            Log.info(this.getClass.getSimpleName, "TIMER!!")
             store.deleteBooking(id)
             sendCreateBookingErrorResponse(Constants.EventBus.Address.Booking.CreateBookingResponse,
               request.getUsername,
@@ -189,18 +187,10 @@ object BookingControllerVerticle {
     }
 
     private def bindVehicleToBooking(response: BookVehicleResponse): Unit = {
-
-      //TODO
-      Log.info(this.getClass.getSimpleName, "bindVehicleToBooking")
-
       val optBooking = store.getStartedBookingByLicensePlate(response.getLicensePlate)
       if (optBooking.isPresent) {
         val booking = optBooking.get()
-        timerIds.filter(map => map._1.equals(booking.getUsername)).foreach(map => {
-          //TODO
-          Log.info(this.getClass.getSimpleName, "TIMER CANCELED!!")
-          vertx.cancelTimer(map._2)
-        })
+        timerIds.filter(map => map._1.equals(booking.getUsername)).foreach(map => vertx.cancelTimer(map._2))
         if (response.getBooked) {
           store.updateBookingStatus(booking.getId, Booking.STATUS_PROCESSING)
           val arriveAtUserCalendar = Calendar.getInstance()

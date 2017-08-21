@@ -52,7 +52,7 @@ public class BackOfficeView extends JFrame{
     public void updateText(VehicleCounter vehicleCounter) {
         textLabel.setText("<html><body>" +
                 "Available: " + vehicleCounter.getAvailable() + "<br>" +
-                "Broken: " + vehicleCounter.getBroken() + "<br>" +
+                "Broken: " + vehicleCounter.getBrokenStolen() + "<br>" +
                 "Booked: " + vehicleCounter.getBooked() + "<br>" +
                 "Recharging: " + vehicleCounter.getRecharging() + "<br>" +
                 "Network Issues: " + vehicleCounter.getNetworkIssues() + "<br>" +

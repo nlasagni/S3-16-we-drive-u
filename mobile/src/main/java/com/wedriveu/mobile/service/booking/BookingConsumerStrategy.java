@@ -32,10 +32,6 @@ public class BookingConsumerStrategy extends ServiceConsumerStrategy<CreateBooki
         String queue = String.format(com.wedriveu.mobile.util.Constants.Queue.BOOKING, userName);
         String routingKey = String.format(Constants.RabbitMQ.RoutingKey.CREATE_BOOKING_RESPONSE, userName);
         Channel channel = communication.getChannel();
-
-        //TODO
-        Log.i(this.getClass().getSimpleName(), "Wait booking response on: " + routingKey);
-
         channel.queueDeclare(queue, false, false, true, null);
         channel.queueBind(queue, Constants.RabbitMQ.Exchanges.BOOKING, routingKey);
         return queue;

@@ -140,10 +140,6 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
         if (checkIllegalState()) {
             throw new IllegalStateException(ENGINE_ILLEGAL_STATE);
         }
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "Set username");
-
         vehicle.setUsername(request.getUsername());
         BookVehicleResponse response = new BookVehicleResponse();
         response.setBooked(vehicle.getVehicle().getState().equals(Vehicle.STATUS_AVAILABLE));

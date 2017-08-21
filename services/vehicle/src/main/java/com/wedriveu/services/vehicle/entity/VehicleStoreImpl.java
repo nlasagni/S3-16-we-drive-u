@@ -3,7 +3,7 @@ package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.entity.AnalyticsVehicleList;
+import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.PositionUtils;
@@ -80,10 +80,6 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     @Override
     public void addVehicle(Message message) {
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "Adding new vehicle");
-
         JsonObject responseJson = new JsonObject();
         JsonObject vehicleRequesterJson = (JsonObject) message.body();
         Vehicle vehicleRequester = vehicleRequesterJson.mapTo(Vehicle.class);
@@ -151,10 +147,6 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     @Override
     public void getVehicleForBooking(Message message) {
         Vehicle requestedVehicle = getVehicleFromLicencePlate(message);
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "RequestedVehicle: " + requestedVehicle);
-
         eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_BOOKING, VertxJsonMapper.mapFrom(requestedVehicle));
     }
 
@@ -170,9 +162,8 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     private void getVehicleList(Message message) {
         ObjectMapper mapper = new ObjectMapper();
-        AnalyticsVehicleList vehicleList = new AnalyticsVehicleList();
-        vehicleList.setVehiclesList(readFromVehiclesDb(mapper));
-        if (vehicleList.getVehiclesList() != null) {
+        AnalyticsVehicleList vehicleList = new AnalyticsVehicleList(readFromVehiclesDb(mapper));
+        if (vehicleList.getVehicleList() != null) {
             eventBus.send(Messages.VehicleStore.GET_VEHICLE_LIST_COMPLETED, VertxJsonMapper.mapInBodyFrom(vehicleList));
         }
     }

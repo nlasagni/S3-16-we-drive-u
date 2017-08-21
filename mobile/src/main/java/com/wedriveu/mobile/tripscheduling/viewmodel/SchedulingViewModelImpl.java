@@ -130,10 +130,6 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
             SchedulingView schedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.ID);
             schedulingView.renderError(errorMessage);
         } else {
-
-            //TODO REMOVE
-            mUserPosition = new Position(44.138294, 12.242098);
-
             Booking storedBooking = mBookingStore.getBooking();
             Booking booking =
                     new Booking(vehicle.getLicencePlate(), mUserPosition, storedBooking.getDestinationPosition());

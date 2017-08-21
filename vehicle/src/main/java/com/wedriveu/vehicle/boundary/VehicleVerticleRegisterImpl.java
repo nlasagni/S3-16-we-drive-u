@@ -37,11 +37,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
 
     public VehicleVerticleRegisterImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "Queue before: " + queue);
-        queue = "vehicle.register." + this.vehicle.getVehicle().plate();
-        //TODO
-        Log.info(this.getClass().getSimpleName(), "Queue after: " + queue);
+        this.queue = "vehicle.register." + this.vehicle.getVehicle().plate();
     }
 
     @Override
@@ -92,12 +88,6 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     }
 
     private void bindQueueToExchange(Future<Void> future) {
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(),
-                "Waiting response on " +
-                        String.format(Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE, vehicle.getVehicle().plate()));
-
         rabbitMQClient.queueBind(queue,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE, vehicle.getVehicle().plate()),
@@ -124,11 +114,6 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
 
     @Override
     public void registerToService(String license) {
-
-        //TODO
-        Log.info(this.getClass().getSimpleName(),
-                "Attempt to register with licensePlate " + createRequest().toString());
-
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
                 createRequest(),
@@ -153,10 +138,6 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
     }
 
     private void checkResponse(RegisterToServiceResponse response) {
-        //TODO
-        Log.info(this.getClass().getSimpleName(),
-                "Register response " + response.toString());
-
         if(!response.getRegisterOk()){
             String newLicensePlate = calculateNewLicensePlate(vehicle);
             registerToService(newLicensePlate);
