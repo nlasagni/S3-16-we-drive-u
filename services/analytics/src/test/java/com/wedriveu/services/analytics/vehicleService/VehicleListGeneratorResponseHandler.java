@@ -1,7 +1,7 @@
 package com.wedriveu.services.analytics.vehicleService;
 
 import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.services.shared.model.VehicleListObject;
+import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
@@ -49,7 +49,7 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher{
                     "recharging",
                     new Position(13.2, 16.2),
                     new Date(2017, 8, 24, 9, 37, 22)));
-        JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new VehicleListObject(vehicleList));
+        JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new AnalyticsVehicleList(vehicleList));
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,ANALYTICS_VEHICLES_RESPONSE_ALL,vehicleListJson, published -> { });
         Log.info("sent request for all vehicles to vehicle service in VehicleListGeneratorResponseHandler");
     }

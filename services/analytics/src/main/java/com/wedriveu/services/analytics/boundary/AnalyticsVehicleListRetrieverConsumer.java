@@ -1,6 +1,6 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.shared.model.VehicleListObject;
+import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Log;
@@ -25,10 +25,8 @@ public class AnalyticsVehicleListRetrieverConsumer extends VerticleConsumer{
         Future<Void> futureConsumer = Future.future();
         futureConsumer.setHandler(v->{
             if (v.succeeded()) {
-                Log.info("future in AnalyticsVehicleListRetrieverConsumer completed");
                 futureRetriever.complete();
             } else {
-                Log.error("future consumer handler", v.cause().getLocalizedMessage(), v.cause());
                 futureRetriever.fail(v.cause());
             }
         });
@@ -37,14 +35,13 @@ public class AnalyticsVehicleListRetrieverConsumer extends VerticleConsumer{
 
     @Override
     public void registerConsumer(String eventBus) {
-        Log.info("started vertx eventbus consumer in AnalyticsVehicleListRetrieverConsumer, attending start to receive");
         vertx.eventBus().consumer(eventBus, this::sendToController);
     }
 
     private void sendToController(Message message) {
-        VehicleListObject vehicleListObject = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleListObject.class);
+        AnalyticsVehicleList vehicleListObject =
+                VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), AnalyticsVehicleList.class);
         vertx.eventBus().send(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS, VertxJsonMapper.mapInBodyFrom(vehicleListObject));
-        Log.info("sent vehicle list to analytics controller");
     }
 
 }

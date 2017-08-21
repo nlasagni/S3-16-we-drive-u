@@ -77,7 +77,7 @@ public class AnalyticsStoreImplTest {
         VehicleCounter counter = analyticsStore.getVehicleCounter();
         assertTrue(counter.getAvailable() == availableVehicles &&
                 counter.getBooked() == bookedVehicles &&
-                counter.getBroken() == brokenVehicles &&
+                counter.getBrokenStolen() == brokenVehicles &&
                 counter.getRecharging() == rechargingVehicles &&
                 counter.getNetworkIssues() == stolenVehicles);
 

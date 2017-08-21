@@ -3,19 +3,20 @@ package com.wedriveu.services.shared.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleListObject {
+public class AnalyticsVehicleList {
 
-    private ArrayList<Vehicle> vehicleList;
+    private List<Vehicle> vehicleList;
 
-    public ArrayList<Vehicle> getVehicleList() {
+    public List<Vehicle> getVehicleList() {
         return vehicleList;
     }
 
-    public VehicleListObject (@JsonProperty ("vehicleList") ArrayList<Vehicle> vehicleList) {
+    public AnalyticsVehicleList(@JsonProperty ("vehicleList") List<Vehicle> vehicleList) {
         this.vehicleList = vehicleList;
     }
 
@@ -24,7 +25,7 @@ public class VehicleListObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        VehicleListObject that = (VehicleListObject) o;
+        AnalyticsVehicleList that = (AnalyticsVehicleList) o;
 
         return getVehicleList() != null ? getVehicleList().equals(that.getVehicleList()) : that.getVehicleList() == null;
     }

@@ -5,8 +5,8 @@ import com.wedriveu.services.analytics.entity.AnalyticsStoreImpl;
 import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
 import com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithmImpl;
 import com.wedriveu.services.shared.model.AnalyticsVehicle;
+import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.services.shared.model.VehicleListObject;
 import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Log;
@@ -24,23 +24,24 @@ import static com.wedriveu.shared.util.Constants.*;
 public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle{
     private AnalyticsStore analyticsStore;
 
+    private static final String DATABASE_FILE_NAME = "analytics.json";
+
     @Override
     public void start() throws Exception{
         analyticsStore = new AnalyticsStoreImpl(
-                new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, "AnalyticsStore"),
+                new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, DATABASE_FILE_NAME),
                 new VehiclesCounterAlgorithmImpl());
         vertx.eventBus().consumer(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS, this::convertVehicleList);
         vertx.eventBus().consumer(ANALYTICS_VEHICLE_COUNTER_REQUEST_EVENTBUS, this::handleVehicleCounterRequest);
         vertx.eventBus().consumer(ANALYTICS_VEHICLE_STORE_UPDATE_REQUEST_EVENTBUS, this::updateVehicleStore);
-        Log.info("future AnalyticsVehicleDataManipulationVerticle complete");
     }
 
     private void convertVehicleList(Message message) {
-        addVehiclesToDatabase(VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleListObject.class));
+        addVehiclesToDatabase(VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), AnalyticsVehicleList.class));
         sendVehicleUpdates();
     }
 
-    private void addVehiclesToDatabase(VehicleListObject vehicleList) {
+    private void addVehiclesToDatabase(AnalyticsVehicleList vehicleList) {
         for(Vehicle vehicle: vehicleList.getVehicleList()){
             analyticsStore.addVehicle(vehicle.getLicensePlate(), vehicle.getStatus());
         }
@@ -53,7 +54,6 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle{
                 VertxJsonMapper.mapInBodyFrom(new MessageVehicleCounterWithID(
                         backofficeId,
                         analyticsStore.getVehicleCounter())));
-        System.out.println("sent " + analyticsStore.getVehicleCounter().toString());
 
     }
 

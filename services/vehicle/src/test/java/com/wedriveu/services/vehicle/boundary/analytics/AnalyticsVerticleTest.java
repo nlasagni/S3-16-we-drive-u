@@ -1,6 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.analytics;
 
-import com.wedriveu.services.shared.entity.AnalyticsVehicleList;
+import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
@@ -72,8 +72,8 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
     protected void checkResponse(TestContext context, JsonObject responseJson) {
         AnalyticsVehicleList vehicles = responseJson.mapTo(AnalyticsVehicleList.class);
         context.assertNotNull(responseJson);
-        context.assertNotNull(vehicles.getVehiclesList());
-        vehicles.getVehiclesList().forEach(vehicle -> {
+        context.assertNotNull(vehicles.getVehicleList());
+        vehicles.getVehicleList().forEach(vehicle -> {
             context.assertNotNull(vehicle.getLicensePlate());
             context.assertNotNull(vehicle.getPosition());
         });

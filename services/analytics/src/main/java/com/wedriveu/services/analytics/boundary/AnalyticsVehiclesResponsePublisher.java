@@ -30,12 +30,18 @@ public class AnalyticsVehiclesResponsePublisher extends VerticlePublisher{
     }
 
     private void sendVehicleCounterToBackOffice(Message message) {
-        MessageVehicleCounterWithID messageVehicleCounterWithID = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), MessageVehicleCounterWithID.class);
+        MessageVehicleCounterWithID messageVehicleCounterWithID =
+                VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), MessageVehicleCounterWithID.class);
         JsonObject dataToUser = VertxJsonMapper.mapInBodyFrom(messageVehicleCounterWithID.getVehicleCounter());
         if (messageVehicleCounterWithID.getBackofficeID().equals(""))   {
-            publish(Constants.RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES ,dataToUser, res-> {});
+            publish(Constants.RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES ,
+                    dataToUser,
+                    res-> {});
         } else {
-            publish(Constants.RabbitMQ.Exchanges.ANALYTICS,ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES + "." + messageVehicleCounterWithID.getBackofficeID(),dataToUser, res->{});
+            publish(Constants.RabbitMQ.Exchanges.ANALYTICS,
+                    ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES + "." + messageVehicleCounterWithID.getBackofficeID(),
+                    dataToUser,
+                    res->{});
         }
     }
 }
