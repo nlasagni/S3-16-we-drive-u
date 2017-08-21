@@ -1,5 +1,6 @@
 package com.wedriveu.vehicle.boundary;
 
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.rabbitmq.message.EnterVehicleRequest;
 import com.wedriveu.shared.rabbitmq.message.EnterVehicleResponse;
@@ -62,8 +63,6 @@ public class VehicleVerticleForUserImplTest {
     private VehicleControl vehicleControl;
     private String requestId;
     private String license = "VEHICLE8";
-    private String state = "available";
-    private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 80.0;
     private VehicleStopView stopUi;
@@ -76,7 +75,7 @@ public class VehicleVerticleForUserImplTest {
         checkCounter = 10;
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx, "", "", license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx, "", "", license, Vehicle.STATUS_AVAILABLE, Constants.HEAD_QUARTER, battery, speed, stopUi, debugVar);
         vehicleControl.setUsername("Michele");
         vehicleVerticleDriveCommand = new VehicleVerticleDriveCommandImpl(vehicleControl, false);
         vehicleVerticleForUser = new VehicleVerticleForUserImpl(vehicleControl);

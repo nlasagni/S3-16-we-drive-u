@@ -1,13 +1,14 @@
 package com.wedriveu.services.analytics.boundary;
 
+import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.*;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_VEHICLE_REQUEST_ALL;
+import static com.wedriveu.shared.util.Constants.VEHICLE_REQUEST_ALL_MESSAGE;
 
 /**
  * @author Stefano Bernagozzi
@@ -25,12 +26,12 @@ public class AnalyticsVehicleListRequestPublisher extends VerticlePublisher {
     }
 
     private void startConsumer() {
-        vertx.eventBus().consumer(ANALYTICS_VEHICLE_LIST_REQUEST_EVENTBUS, this::requestVehicleListToVehicleService);
+        vertx.eventBus().consumer(EventBus.VEHICLE_LIST_REQUEST, this::requestVehicleListToVehicleService);
     }
 
     private void requestVehicleListToVehicleService(Message message) {
         JsonObject dataToUser = new JsonObject();
-        dataToUser.put(EventBus.BODY, VEHICLE_REQUEST_ALL_MESSAGE);
+        dataToUser.put(Constants.EventBus.BODY, VEHICLE_REQUEST_ALL_MESSAGE);
         publish(Constants.RabbitMQ.Exchanges.VEHICLE, ANALYTICS_VEHICLE_REQUEST_ALL, dataToUser, published -> {
         });
     }

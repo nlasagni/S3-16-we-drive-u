@@ -2,8 +2,8 @@ package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.RegisterToServiceResponse;
-import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
@@ -44,7 +44,6 @@ public class VehicleVerticleRegisterImplTest {
     private String license = "VEHICLE2";
     private String[] licenseList = {"VEHICLE1", "VEHICLE3", "VEHICLE4", "VEHICLE5"};
     private String state = "";
-    private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
     private VehicleStopView stopUi;
@@ -60,7 +59,7 @@ public class VehicleVerticleRegisterImplTest {
                 new VehicleControlImpl(vertx,
                         "http://www.google.com",
                         "",
-                        license, state, position, battery, speed, stopUi, debugVar);
+                        license, state, Constants.HEAD_QUARTER, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleRegisterImpl(vehicleControl);
         setUpAsyncComponents(context);
     }

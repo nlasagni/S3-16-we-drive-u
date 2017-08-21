@@ -1,6 +1,7 @@
 package com.wedriveu.vehicle.boundary;
 
 
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
 import com.wedriveu.shared.util.Constants;
@@ -41,8 +42,6 @@ public class VehicleVerticleBookImplTest {
     private VehicleVerticleBookImpl vehicleVerticle;
     private String requestId;
     private VehicleControl vehicleControl;
-    private String state = "available";
-    private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
     private VehicleStopView stopUi;
@@ -54,7 +53,7 @@ public class VehicleVerticleBookImplTest {
         eventBus = vertx.eventBus();
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx, "", "", license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx, "", "", license, Vehicle.STATUS_AVAILABLE, Constants.HEAD_QUARTER, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleBookImpl(vehicleControl);
         setUpAsyncComponents(context);
     }

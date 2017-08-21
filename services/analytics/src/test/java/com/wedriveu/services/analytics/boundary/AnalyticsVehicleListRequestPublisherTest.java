@@ -1,5 +1,6 @@
 package com.wedriveu.services.analytics.boundary;
 
+import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.analytics.vehicleService.VehicleListGeneratorRequestHandler;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.CompositeFuture;
@@ -38,8 +39,8 @@ public class AnalyticsVehicleListRequestPublisherTest {
     @Test
     public void testRequest() {
         CompositeFuture.all(futures).setHandler(completed -> {
-            vertx.eventBus().send(ANALYTICS_VEHICLE_LIST_REQUEST_EVENTBUS, ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE);
-            vertx.eventBus().consumer(ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS, msg -> {
+            vertx.eventBus().send(EventBus.VEHICLE_LIST_REQUEST, ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE);
+            vertx.eventBus().consumer(EventBus.TEST_VEHICLE_LIST_REQUEST, msg -> {
                 String messageReceived = (String) ((JsonObject) msg.body()).getValue(Constants.EventBus.BODY);
                 assertTrue(messageReceived.equals(VEHICLE_REQUEST_ALL_MESSAGE));
             });

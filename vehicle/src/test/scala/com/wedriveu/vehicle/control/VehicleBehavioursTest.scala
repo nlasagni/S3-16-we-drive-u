@@ -3,6 +3,7 @@ package com.wedriveu.vehicle.control
 import java.util.concurrent.ThreadLocalRandom
 
 import com.wedriveu.shared.util.Position
+import com.wedriveu.shared.util.Constants
 import com.wedriveu.vehicle.boundary.VehicleStopViewImpl
 import com.wedriveu.vehicle.shared.VehicleConstants
 import io.vertx.core.Vertx
@@ -18,8 +19,6 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
   val stateFirstTest: String = "available"
   val licenseSecondTest: String = "veicolo"
   val stateSecondTest: String = "available"
-  val latitude: Double = 44.1454528
-  val longitude: Double = 12.2474513
   val nVehicles: Int = 3
   val minorBound: Int = 30
   val maxBound: Int = 101
@@ -60,7 +59,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
 
   test("The vehicle battery, after 10 seconds of recharging must be 100.0") {
     val vehicleControl: VehicleControl = createVehicleControl(false)
-    val vehicleBehaviours = createVehicleBehaviour(vehicleControl, true)
+    val vehicleBehaviours = createVehicleBehaviour(vehicleControl, debugVar = true)
     randomLatitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
     randomLongitudeDestination = ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
     vehicleBehaviours.movementAndPositionChange(new Position(randomLatitudeDestination, randomLongitudeDestination))
@@ -72,7 +71,6 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
 
   test("The vehicle state should be broken when the broken event arrives") {
     val vehicleControl: VehicleControl = createVehicleControl(false)
-    val vehicleBehaviours = createVehicleBehaviour(vehicleControl, true)
     vehicleControl.subscribeToBrokenEvents()
     Thread.sleep(timeToSleepForBrokenEvent)
     assert(vehicleControl.getVehicle().getState().equals(VehicleConstants.stateBroken))
@@ -80,7 +78,6 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
 
   test("The vehicle state should be stolen when the stolen event arrives") {
     val vehicleControl: VehicleControl = createVehicleControl(false)
-    val vehicleBehaviours = createVehicleBehaviour(vehicleControl, true)
     vehicleControl.subscribeToStolenEvents()
     Thread.sleep(timeToSleepForStolenEvent)
     assert(vehicleControl.getVehicle().getState().equals(VehicleConstants.stateStolen))
@@ -92,7 +89,7 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
       "",
       licenseFirstTest,
       stateFirstTest,
-      new Position(latitude, longitude),
+      Constants.HEAD_QUARTER,
       VehicleConstants.maxBatteryValue,
       speedTest,
       new VehicleStopViewImpl(vertx, 1),

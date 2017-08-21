@@ -68,7 +68,7 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
   // battery every 10Km.
 
   val metersRunBeforeUpdate: Double = 100.0
-  val batteryToConsume: Double = 1 / ((Constants.ESTIMATED_KILOMETERS_PER_PERCENTAGE * 1000) / metersRunBeforeUpdate)
+  val batteryToConsume: Double = 1 / ((VehicleConstants.ESTIMATED_KILOMETERS_PER_PERCENTAGE * 1000) / metersRunBeforeUpdate)
 
   val newPositionIsTheSame: String = "The position given is the same, the vehicle doesn't move"
   val timeOfJourney: Long = 0

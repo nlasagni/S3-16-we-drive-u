@@ -1,5 +1,6 @@
 package com.wedriveu.backoffice.controller;
 
+import com.wedriveu.backoffice.util.EventBus;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
@@ -9,7 +10,8 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.*;
+import static com.wedriveu.shared.util.Constants.ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES;
+import static com.wedriveu.shared.util.Constants.RabbitMQ;
 
 /**
  * @author Stefano Bernagozzi
@@ -35,9 +37,9 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer {
                 futureRetriever.fail(v.cause());
             }
         });
-        String eventBusAvailable = BACKOFFICE_EVENTBUS_AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_NO_ID;
+        String eventBusAvailable = EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_NO_ID;
         if (!backofficeId.equals("")) {
-            eventBusAvailable = BACKOFFICE_EVENTBUS_AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_WITH_ID;
+            eventBusAvailable = EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_WITH_ID;
         }
 
         startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS,
@@ -54,7 +56,7 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer {
 
     private void sendUpdatesToController(Message message) {
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
-        vertx.eventBus().send(BACKOFFICE_CONTROLLER_EVENTBUS, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
+        vertx.eventBus().send(EventBus.BACKOFFICE_CONTROLLER, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
         Log.info("AnalyticsVehiclesResponseConsumer received updates and send to controller");
     }
 }

@@ -5,7 +5,6 @@ import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -22,11 +21,9 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher {
     @Override
     public void start() throws Exception {
         startConsumer();
-        Log.info("future VehicleListGeneratorResponseHandler complete");
     }
 
     private void startConsumer() {
-        Log.info("started vertx eventbus consumer in VehicleListGeneratorResponseHandler, attending start to receive");
         vertx.eventBus().consumer("mandaVeicoli", this::sendVehicleListToAnalyticsService);
     }
 
@@ -34,25 +31,24 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher {
     private void sendVehicleListToAnalyticsService(Message message) {
         ArrayList<Vehicle> vehicleList = new ArrayList<>();
         vehicleList.add(new Vehicle("MACCHINA1",
-                "broken",
+                Vehicle.STATUS_BROKEN_STOLEN,
                 new Position(10.2, 13.2),
                 new Date(2017, 11, 30, 12, 37, 43)));
         vehicleList.add(new Vehicle("MACCHINA2",
-                "available",
+                Vehicle.STATUS_AVAILABLE,
                 new Position(11.2, 14.2),
                 new Date(2017, 10, 28, 11, 43, 12)));
         vehicleList.add(new Vehicle("MACCHINA3",
-                "busy",
+                Vehicle.STATUS_BOOKED,
                 new Position(15.2, 13.2),
                 new Date(2017, 9, 26, 10, 56, 46)));
         vehicleList.add(new Vehicle("MACCHINA4",
-                "recharging",
+                Vehicle.STATUS_RECHARGING,
                 new Position(13.2, 16.2),
                 new Date(2017, 8, 24, 9, 37, 22)));
         JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new AnalyticsVehicleList(vehicleList));
         publish(Constants.RabbitMQ.Exchanges.VEHICLE, ANALYTICS_VEHICLES_RESPONSE_ALL, vehicleListJson, published -> {
         });
-        Log.info("sent request for all vehicles to vehicle service in VehicleListGeneratorResponseHandler");
     }
 
 }

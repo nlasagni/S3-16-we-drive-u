@@ -1,6 +1,7 @@
 package com.wedriveu.backoffice.controller;
 
 import com.wedriveu.backoffice.model.BackOfficeModel;
+import com.wedriveu.backoffice.util.EventBus;
 import com.wedriveu.backoffice.view.BackOfficeView;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
@@ -13,8 +14,6 @@ import io.vertx.core.json.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.wedriveu.shared.util.Constants.BACKOFFICE_CONTROLLER_EVENTBUS;
 
 /**
  * @author Stefano Bernagozzi
@@ -32,7 +31,7 @@ public class BackofficeController extends AbstractVerticle {
     @Override
     public void start(Future futureRetriever) throws Exception {
         init();
-        vertx.eventBus().consumer(BACKOFFICE_CONTROLLER_EVENTBUS, this::updateCounter);
+        vertx.eventBus().consumer(EventBus.BACKOFFICE_CONTROLLER, this::updateCounter);
     }
 
 

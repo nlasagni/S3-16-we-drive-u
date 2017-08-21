@@ -1,5 +1,6 @@
 package com.wedriveu.vehicle.boundary;
 
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.util.Constants;
@@ -24,6 +25,8 @@ import org.junit.runner.RunWith;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import static com.wedriveu.shared.util.Constants.HEAD_QUARTER;
+
 /**
  * @author Michele Donati on 16/08/2017.
  */
@@ -41,6 +44,8 @@ public class VehicleChangePositionAndNotifyTest {
     private static final double maxBoundPositionLon = 12.247498;
     private static final int timeToSleep = 1000;
 
+    private static final String license = "VEHICLE7";
+
     private double randomLatitudeUser =
             ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat);
     private double randomLongitudeUser =
@@ -57,9 +62,6 @@ public class VehicleChangePositionAndNotifyTest {
     private VehicleVerticleArrivedNotifyImpl vehicleVerticleArrivedNotify;
     private VehicleControl vehicleControl;
     private String requestId;
-    private String license = "VEHICLE7";
-    private String state = "available";
-    private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 80.0;
     private VehicleStopView stopUi;
@@ -70,12 +72,24 @@ public class VehicleChangePositionAndNotifyTest {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
         stopUi = new VehicleStopViewImpl(vertx, 1);
-        vehicleControl =
-                new VehicleControlImpl(vertx, "", "", license, state, position, battery, speed, stopUi, debugVar);
+        vehicleControl = createControl();
         vehicleControl.setUserOnBoard(true);
         vehicleVerticleDriveCommand = new VehicleVerticleDriveCommandImpl(vehicleControl, false);
         vehicleVerticleArrivedNotify = new VehicleVerticleArrivedNotifyImpl(vehicleControl);
         setUpAsyncComponents(context);
+    }
+
+    private VehicleControlImpl createControl() {
+        return new VehicleControlImpl(vertx,
+                "",
+                "",
+                license,
+                Vehicle.STATUS_AVAILABLE,
+                HEAD_QUARTER,
+                battery,
+                speed,
+                stopUi,
+                debugVar);
     }
 
     private void setUpAsyncComponents(TestContext context) {
@@ -122,7 +136,7 @@ public class VehicleChangePositionAndNotifyTest {
     public void driveAndAwaitNotify(TestContext context) throws Exception {
         final Async async = context.async(2);
         vehicleControl.setUserOnBoard(true);
-        vehicleControl.getVehicle().setPosition(position);
+        vehicleControl.getVehicle().setPosition(HEAD_QUARTER);
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND, vehicleControl.getVehicle().getPlate()),
                 createCommandJsonObject(),

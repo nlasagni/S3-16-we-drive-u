@@ -1,5 +1,6 @@
 package com.wedriveu.services.analytics.boundary;
 
+import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
@@ -8,9 +9,6 @@ import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-
-import static com.wedriveu.shared.util.Constants.ANALYTCS_VEHICLE_COUNTER_UPDATE_EVENTBUS;
-import static com.wedriveu.shared.util.Constants.ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER;
 
 /**
  * @author Stefano Bernagozzi
@@ -33,7 +31,7 @@ public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer {
                 futureRequest.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE, ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER, futureConsumer);
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE, EventBus.AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER, futureConsumer);
 
     }
 
@@ -46,7 +44,7 @@ public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer {
     private void sendToController(Message message) {
         Log.info("received vehicle list");
         UpdateToService vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), UpdateToService.class);
-        vertx.eventBus().send(ANALYTCS_VEHICLE_COUNTER_UPDATE_EVENTBUS, VertxJsonMapper.mapInBodyFrom(vehicle));
+        vertx.eventBus().send(EventBus.VEHICLE_COUNTER_UPDATE, VertxJsonMapper.mapInBodyFrom(vehicle));
     }
 
 

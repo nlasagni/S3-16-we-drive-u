@@ -1,5 +1,6 @@
 package com.wedriveu.services.analytics.boundary;
 
+import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
@@ -29,7 +30,7 @@ public class AnalyticsVehicleListRetrieverConsumer extends VerticleConsumer {
                 futureRetriever.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, ROUTING_KEY_VEHICLE_RESPONSE_ALL, ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_VEHICLE_LIST_RETRIEVER_VERTICLE, futureConsumer);
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, ROUTING_KEY_VEHICLE_RESPONSE_ALL, EventBus.AVAILABLE_ADDRESS_VEHICLE_LIST_RETRIEVER_VERTICLE, futureConsumer);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class AnalyticsVehicleListRetrieverConsumer extends VerticleConsumer {
     private void sendToController(Message message) {
         AnalyticsVehicleList vehicleListObject =
                 VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), AnalyticsVehicleList.class);
-        vertx.eventBus().send(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS, VertxJsonMapper.mapInBodyFrom(vehicleListObject));
+        vertx.eventBus().send(EventBus.CONTROLLER_VEHICLE_LIST, VertxJsonMapper.mapInBodyFrom(vehicleListObject));
     }
 
 }

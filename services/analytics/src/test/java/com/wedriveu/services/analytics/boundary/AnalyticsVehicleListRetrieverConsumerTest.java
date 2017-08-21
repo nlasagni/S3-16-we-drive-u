@@ -1,6 +1,7 @@
 package com.wedriveu.services.analytics.boundary;
 
 
+import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.analytics.vehicleService.VehicleListGeneratorRequestHandler;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
@@ -70,8 +71,8 @@ public class AnalyticsVehicleListRetrieverConsumerTest {
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.put(Constants.EventBus.BODY, VEHICLE_REQUEST_ALL_MESSAGE);
-            vertx.eventBus().send(ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS, jsonObject);
-            vertx.eventBus().consumer(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS,
+            vertx.eventBus().send(EventBus.TEST_VEHICLE_LIST_REQUEST, jsonObject);
+            vertx.eventBus().consumer(EventBus.CONTROLLER_VEHICLE_LIST,
                     msg -> {
                         AnalyticsVehicleList vehicleList = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), AnalyticsVehicleList.class);
                         assertTrue(vehicleList.equals(vehicleListObject));

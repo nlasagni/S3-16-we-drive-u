@@ -3,7 +3,7 @@ package com.wedriveu.vehicle.boundary;
 import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
-import com.wedriveu.shared.util.Position;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import io.vertx.core.DeploymentOptions;
@@ -39,7 +39,6 @@ public class VehicleVerticleArrivedNotifyImplTest {
     private VehicleControl vehicleControl;
     private String license = "VEHICLE4";
     private String state = "available";
-    private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
     private VehicleStopView stopUi;
@@ -51,7 +50,16 @@ public class VehicleVerticleArrivedNotifyImplTest {
         eventBus = vertx.eventBus();
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx, "", "", license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx,
+                        "",
+                        "",
+                        license,
+                        state,
+                        Constants.HEAD_QUARTER,
+                        battery,
+                        speed,
+                        stopUi,
+                        debugVar);
         vehicleVerticle = new VehicleVerticleArrivedNotifyImpl(vehicleControl);
         setUpAsyncComponents(context);
     }

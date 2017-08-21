@@ -1,5 +1,6 @@
 package com.wedriveu.services.analytics.boundary;
 
+import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.analytics.vehicleService.VehicleUpdater;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
@@ -14,7 +15,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wedriveu.shared.util.Constants.ANALYTCS_VEHICLE_COUNTER_UPDATE_EVENTBUS;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -42,14 +42,14 @@ public class AnalyticsVehicleUpdateHandlerConsumerTest {
         CompositeFuture.all(futures).setHandler(completed -> {
             JsonObject jsonObject = new JsonObject();
             jsonObject.put(Constants.EventBus.BODY, "start");
-            vertx.eventBus().consumer(ANALYTCS_VEHICLE_COUNTER_UPDATE_EVENTBUS,
+            vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_UPDATE,
                     msg -> {
                         UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), UpdateToService.class);
                         assertTrue(update.getLicense().equals("Veicolo1") &&
                                 update.getStatus().equals("broken"));
                     });
 
-            vertx.eventBus().send(Constants.ANALYTICS_EVENTBUS_AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER, jsonObject);
+            vertx.eventBus().send(EventBus.AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER, jsonObject);
 
         });
 

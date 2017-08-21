@@ -1,6 +1,7 @@
 package com.wedriveu.vehicle.boundary;
 
 
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
@@ -40,8 +41,7 @@ public class VehicleVerticleUpdateImplTest {
     private String requestId;
     private VehicleControl vehicleControl;
     private String license = "VEHICLE5";
-    private String state = "available";
-    private Position position = new Position(44.1454528, 12.2474513);
+    private String state = Vehicle.STATUS_AVAILABLE;
     private double battery = 100.0;
     private double speed = 50.0;
     private VehicleStopView stopUi;
@@ -53,7 +53,7 @@ public class VehicleVerticleUpdateImplTest {
         eventBus = vertx.eventBus();
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx, "", "", license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx, "", "", license, state, Constants.HEAD_QUARTER, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleUpdateImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -107,7 +107,7 @@ public class VehicleVerticleUpdateImplTest {
                 JsonObject updateJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
                 Log.info(TAG, updateJson.toString());
                 UpdateToService updateArrived = updateJson.mapTo(UpdateToService.class);
-                context.assertTrue(updateArrived.getPosition().equals(position)
+                context.assertTrue(updateArrived.getPosition().equals(Constants.HEAD_QUARTER)
                         && updateArrived.getStatus().equals(state)
                         && updateArrived.getLicense().equals(license)
                         && updateArrived.getFailureMessage().equals(FAILURE_MESSAGE));
@@ -118,9 +118,7 @@ public class VehicleVerticleUpdateImplTest {
         });
         eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate()),
                 new JsonObject());
-        vertx.setTimer(5000, onTime -> {
-            async.complete();
-        });
+        vertx.setTimer(5000, onTime -> async.complete());
         async.awaitSuccess();
     }
 

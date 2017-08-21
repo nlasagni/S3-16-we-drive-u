@@ -1,6 +1,7 @@
 package com.wedriveu.services.analytics.boundary;
 
 import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
+import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Constants;
@@ -8,7 +9,6 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.ANALYTICS_VEHICLE_COUNTER_RESPONSE_EVENTBUS;
 import static com.wedriveu.shared.util.Constants.ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES;
 
 /**
@@ -26,7 +26,7 @@ public class AnalyticsVehiclesResponsePublisher extends VerticlePublisher {
     }
 
     private void startConsumer() {
-        vertx.eventBus().consumer(ANALYTICS_VEHICLE_COUNTER_RESPONSE_EVENTBUS, this::sendVehicleCounterToBackOffice);
+        vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_RESPONSE, this::sendVehicleCounterToBackOffice);
     }
 
     private void sendVehicleCounterToBackOffice(Message message) {
