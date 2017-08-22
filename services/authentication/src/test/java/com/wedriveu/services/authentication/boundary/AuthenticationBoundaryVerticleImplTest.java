@@ -21,22 +21,22 @@ import org.junit.runner.RunWith;
  * @author Nicola Lasagni on 05/08/2017.
  */
 @RunWith(VertxUnitRunner.class)
-public class AuthenticationServiceVerticleImplTest {
+public class AuthenticationBoundaryVerticleImplTest {
 
     private static final String JSON_QUEUE_KEY = "queue";
-    private static final String EVENT_BUS_ADDRESS = AuthenticationServiceVerticleImplTest.class.getCanonicalName();
+    private static final String EVENT_BUS_ADDRESS = AuthenticationBoundaryVerticleImplTest.class.getCanonicalName();
 
     private Vertx vertx;
     private EventBus eventBus;
     private RabbitMQClient rabbitMQClient;
-    private AuthenticationServiceVerticleImpl authenticationService;
+    private AuthenticationBoundaryVerticleImpl authenticationService;
     private String requestId;
 
     @Before
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
-        authenticationService = new AuthenticationServiceVerticleImpl();
+        authenticationService = new AuthenticationBoundaryVerticleImpl();
         setUpAsyncComponents(context);
     }
 

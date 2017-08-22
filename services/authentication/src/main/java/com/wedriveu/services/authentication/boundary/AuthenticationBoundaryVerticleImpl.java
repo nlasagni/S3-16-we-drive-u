@@ -24,9 +24,9 @@ import java.io.IOException;
  *         This class represents the Boundary of the Authentication micro-service.
  *         It allows users to login into the WeDriveU system through its API.
  */
-public class AuthenticationServiceVerticleImpl extends AbstractVerticle implements AuthenticationService {
+public class AuthenticationBoundaryVerticleImpl extends AbstractVerticle implements AuthenticationBoundary {
 
-    private static final String TAG = AuthenticationServiceVerticleImpl.class.getSimpleName();
+    private static final String TAG = AuthenticationBoundaryVerticleImpl.class.getSimpleName();
     private static final String QUEUE_NAME = "service.authentication";
     private static final String EVENT_BUS_ADDRESS = "service.authentication.login";
     private static final String READ_ERROR = "Error occurred while reading request.";

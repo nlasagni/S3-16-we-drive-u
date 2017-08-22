@@ -10,7 +10,7 @@ import com.wedriveu.shared.rabbitmq.message.LoginResponse;
  *         This interface represents the Boundary of the Authentication micro-service.
  *         It allows users to login into the WeDriveU system through its API.
  */
-public interface AuthenticationService {
+public interface AuthenticationBoundary {
 
     /**
      * This method checks the credentials from user's input.
