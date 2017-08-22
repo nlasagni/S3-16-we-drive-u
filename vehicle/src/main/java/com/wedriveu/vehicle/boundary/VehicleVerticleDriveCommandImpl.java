@@ -1,4 +1,4 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
@@ -24,7 +24,7 @@ public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements
     private static final String TAG = VehicleVerticleDriveCommandImpl.class.getSimpleName();
     private static final String EVENT_BUS_ADDRESS = "vehicle.drivecommandbus";
     private static final String READ_ERROR = "Error occurred while reading request.";
-    private static String QUEUE_NAME = "vehicle.drivecommand.";
+    private String queue;
 
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
@@ -33,7 +33,7 @@ public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements
     public VehicleVerticleDriveCommandImpl(VehicleControl vehicle, boolean testVar) {
         this.vehicle = vehicle;
         this.testVar = testVar;
-        QUEUE_NAME+=this.vehicle.getVehicle().plate();
+        queue = "vehicle.drivecommand." + this.vehicle.getVehicle().plate();
     }
 
     @Override
@@ -75,7 +75,7 @@ public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements
     }
 
     private void declareQueue(Future<JsonObject> future) {
-        rabbitMQClient.queueDeclare(QUEUE_NAME,
+        rabbitMQClient.queueDeclare(queue,
                 true,
                 false,
                 false,
@@ -83,14 +83,14 @@ public class VehicleVerticleDriveCommandImpl extends AbstractVerticle implements
     }
 
     private void bindQueueToExchange(Future<Void> future) {
-        rabbitMQClient.queueBind(QUEUE_NAME,
+        rabbitMQClient.queueBind(queue,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
-                Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND,
+                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND, vehicle.getVehicle().getPlate()),
                 future.completer());
     }
 
     private void basicConsume(Future<Void> future) {
-        rabbitMQClient.basicConsume(QUEUE_NAME, EVENT_BUS_ADDRESS, future.completer());
+        rabbitMQClient.basicConsume(queue, EVENT_BUS_ADDRESS, future.completer());
     }
 
     private void registerConsumer() {

@@ -1,8 +1,6 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 import com.wedriveu.shared.util.Position;
-
-import java.util.concurrent.Semaphore;
 
 /**
  * @author Michele Donati on 17/08/2017.

@@ -2,15 +2,12 @@ package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.shared.rabbitmq.message.RegisterToServiceRequest;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.RegisterToServiceResponse;
-import com.wedriveu.shared.rabbitmq.message.Vehicle;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
-import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.weriveu.vehicle.boundary.VehicleVerticleRegisterImpl;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -46,7 +43,6 @@ public class VehicleVerticleRegisterImplTest {
     private String license = "VEHICLE2";
     private String[] licenseList = {"VEHICLE1", "VEHICLE3", "VEHICLE4", "VEHICLE5"};
     private String state = "";
-    private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
     private VehicleStopView stopUi;
@@ -62,7 +58,7 @@ public class VehicleVerticleRegisterImplTest {
                 new VehicleControlImpl(vertx,
                         "http://www.google.com",
                         "",
-                        license, state, position, battery, speed, stopUi, debugVar);
+                        license, state, Constants.HEAD_QUARTER, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleRegisterImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -77,19 +73,20 @@ public class VehicleVerticleRegisterImplTest {
         rabbitMQClient.start(onStart -> {
             rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
-                    rabbitMQClient.queueBind(requestId,
-                            Constants.RabbitMQ.Exchanges.VEHICLE,
-                            Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
-                            onQueueBind ->{
-                        vertx.deployVerticle(vehicleVerticle,
-                                new DeploymentOptions().setWorker(true),
-                                context.asyncAssertSuccess(onDeploy -> {
-                            async.complete();}
-                        ));
-                        async.countDown();
-                        context.assertTrue(onQueueBind.succeeded());
-                    });
-                    async.countDown();
+                rabbitMQClient.queueBind(requestId,
+                        Constants.RabbitMQ.Exchanges.VEHICLE,
+                        Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
+                        onQueueBind -> {
+                            vertx.deployVerticle(vehicleVerticle,
+                                    new DeploymentOptions().setWorker(true),
+                                    context.asyncAssertSuccess(onDeploy -> {
+                                                async.complete();
+                                            }
+                                    ));
+                            async.countDown();
+                            context.assertTrue(onQueueBind.succeeded());
+                        });
+                async.countDown();
                 context.assertTrue(onQueueDeclare.succeeded());
                 async.countDown();
             });
@@ -124,13 +121,14 @@ public class VehicleVerticleRegisterImplTest {
             });
         });
         vertx.setTimer(8000, onTime -> {
-            async.complete();});
+            async.complete();
+        });
         async.awaitSuccess();
     }
 
     private boolean checkLicenseList(String license) {
-        for(int i = 0; i < licenseList.length; i++) {
-            if(license.equals(licenseList[i])){
+        for (int i = 0; i < licenseList.length; i++) {
+            if (license.equals(licenseList[i])) {
                 return false;
             }
         }

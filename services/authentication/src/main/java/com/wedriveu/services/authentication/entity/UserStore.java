@@ -8,7 +8,7 @@ import com.wedriveu.services.shared.model.User;
 
 /**
  * @author Michele Donati
- * This inteface models the <em>Users' database domain</em>.
+ *         This inteface models the <em>Users' database domain</em>.
  */
 public interface UserStore {
 

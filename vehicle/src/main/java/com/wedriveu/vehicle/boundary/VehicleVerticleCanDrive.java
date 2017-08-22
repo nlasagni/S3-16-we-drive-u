@@ -1,4 +1,4 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 import com.wedriveu.shared.rabbitmq.message.CanDriveRequest;
 import com.wedriveu.shared.rabbitmq.message.CanDriveResponse;
@@ -13,6 +13,7 @@ import com.wedriveu.shared.rabbitmq.message.CanDriveResponse;
 public interface VehicleVerticleCanDrive {
     /**
      * This method permits to send the "can drive" request to the vehicle from the service.
+     *
      * @param canDriveRequest This indicates the request object sended to vehicle.
      * @return Returns the the response object to the service.
      */

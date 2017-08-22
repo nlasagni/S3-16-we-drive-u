@@ -3,7 +3,6 @@ package com.wedriveu.services.analytics.entity
 
 import com.wedriveu.services.shared.model.{AnalyticsVehicle, Vehicle}
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter
-import com.wedriveu.shared.util.Log._
 
 import scala.collection.JavaConverters._
 

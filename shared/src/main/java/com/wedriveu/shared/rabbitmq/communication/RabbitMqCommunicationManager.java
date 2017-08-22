@@ -63,6 +63,25 @@ public interface RabbitMqCommunicationManager {
      */
     <T> void registerConsumer(RabbitMqConsumerStrategy<T> strategy, Class<T> messageClass) throws IOException;
 
+
+    /**
+     * Subscribes a consumer of messages that are sent to the queue
+     * specified in {@linkplain RabbitMqConsumerStrategy#configureQueue(RabbitMqCommunication)}.
+     *
+     * @param <T>          the type parameter
+     * @param strategy     the strategy
+     * @param messageClass the message class
+     * @throws IOException the io exception
+     */
+    <T> int subscribeConsumer(RabbitMqConsumerStrategy<T> strategy, Class<T> messageClass) throws IOException;
+
+    /**
+     *
+     * @param subscriberId
+     * @throws IOException
+     */
+    void unsubscribeConsumer(int subscriberId) throws IOException;
+
     /**
      * Close the {@linkplain RabbitMqCommunication}.
      * For additional behaviour provide a {@linkplain RabbitMqCloseCommunicationStrategy}.

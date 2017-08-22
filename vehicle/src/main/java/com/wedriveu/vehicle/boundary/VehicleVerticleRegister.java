@@ -1,4 +1,4 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 /**
  * @author Michele Donati on 10/08/2017.
@@ -11,6 +11,7 @@ package com.weriveu.vehicle.boundary;
 public interface VehicleVerticleRegister {
     /**
      * This method permits to send the registration request to the service.
+     *
      * @param license This indicates the license plate of the vehicle to register in the database.
      */
     void registerToService(String license);

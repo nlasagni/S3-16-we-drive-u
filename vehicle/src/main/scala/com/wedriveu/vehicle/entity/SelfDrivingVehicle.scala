@@ -13,12 +13,12 @@ import scala.beans.BeanProperty
   */
 
 class SelfDrivingVehicle(var imageUrl: String,
-                         var description: String,
-                         @BeanProperty var plate: String,
-                         private var state: String,
-                         @BeanProperty var position: Position,
-                         var battery: Double,
-                         var speed: Double){
+  var description: String,
+  @BeanProperty var plate: String,
+  private var state: String,
+  @BeanProperty var position: Position,
+  var battery: Double,
+  var speed: Double) {
 
   val mutex: ReentrantLock = new ReentrantLock()
   val barrier: Condition = mutex.newCondition()
@@ -45,7 +45,7 @@ class SelfDrivingVehicle(var imageUrl: String,
 
   def checkVehicleIsStolenAndSetBroken(): Boolean = {
     mutex.lock()
-    if(state.equals(VehicleConstants.stateStolen)){
+    if (state.equals(VehicleConstants.stateStolen)) {
       releaseLock()
       false
     }
@@ -58,7 +58,7 @@ class SelfDrivingVehicle(var imageUrl: String,
 
   def checkVehicleIsBrokenOrStolenAndSetRecharging(): Boolean = {
     mutex.lock()
-    if(state.equals(VehicleConstants.stateBroken) || state.equals(VehicleConstants.stateStolen)) {
+    if (state.equals(VehicleConstants.stateBroken) || state.equals(VehicleConstants.stateStolen)) {
       releaseLock()
       false
     }

@@ -4,56 +4,56 @@ import com.wedriveu.services.analytics.entity.AnalyticsStore;
 import com.wedriveu.services.analytics.entity.AnalyticsStoreImpl;
 import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
 import com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithmImpl;
+import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.shared.model.AnalyticsVehicle;
+import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.services.shared.model.VehicleListObject;
 import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
-import com.wedriveu.shared.util.Log;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
+import com.wedriveu.shared.rabbitmq.message.UpdateToService;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-
-import static com.wedriveu.shared.util.Constants.*;
 
 
 /**
  * @author Stefano Bernagozzi
  */
-public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle{
+public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
     private AnalyticsStore analyticsStore;
 
+    private static final String DATABASE_FILE_NAME = "analytics.json";
+
     @Override
-    public void start() throws Exception{
+    public void start() throws Exception {
         analyticsStore = new AnalyticsStoreImpl(
-                new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, "AnalyticsStore"),
+                new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, DATABASE_FILE_NAME),
                 new VehiclesCounterAlgorithmImpl());
-        vertx.eventBus().consumer(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS, this::convertVehicleList);
-        vertx.eventBus().consumer(ANALYTICS_VEHICLE_COUNTER_REQUEST_EVENTBUS, this::handleVehicleCounterRequest);
-        vertx.eventBus().consumer(ANALYTICS_VEHICLE_STORE_UPDATE_REQUEST_EVENTBUS, this::updateVehicleStore);
-        Log.info("future AnalyticsVehicleDataManipulationVerticle complete");
+        vertx.eventBus().consumer(EventBus.CONTROLLER_VEHICLE_LIST, this::convertVehicleList);
+        vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_REQUEST, this::handleVehicleCounterRequest);
+        vertx.eventBus().consumer(EventBus.VEHICLE_STORE_UPDATE_REQUEST, this::updateVehicleStore);
     }
 
     private void convertVehicleList(Message message) {
-        addVehiclesToDatabase(VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleListObject.class));
+        addVehiclesToDatabase(VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), AnalyticsVehicleList.class));
         sendVehicleUpdates();
     }
 
-    private void addVehiclesToDatabase(VehicleListObject vehicleList) {
-        for(Vehicle vehicle: vehicleList.getVehicleList()){
+    private void addVehiclesToDatabase(AnalyticsVehicleList vehicleList) {
+        analyticsStore.clear();
+        for (Vehicle vehicle : vehicleList.getVehicleList()) {
             analyticsStore.addVehicle(vehicle.getLicensePlate(), vehicle.getStatus());
         }
     }
 
     private void handleVehicleCounterRequest(Message message) {
         JsonObject dataToUser = new JsonObject(message.body().toString());
-        String backofficeId = dataToUser.getValue(EventBus.BODY).toString();
-        vertx.eventBus().send(ANALYTICS_VEHICLE_COUNTER_RESPONSE_EVENTBUS,
+        String backofficeId = dataToUser.getValue(Constants.EventBus.BODY).toString();
+        vertx.eventBus().send(EventBus.VEHICLE_COUNTER_RESPONSE,
                 VertxJsonMapper.mapInBodyFrom(new MessageVehicleCounterWithID(
                         backofficeId,
                         analyticsStore.getVehicleCounter())));
-        System.out.println("sent " + analyticsStore.getVehicleCounter().toString());
 
     }
 
@@ -68,7 +68,7 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle{
     }
 
     private void sendVehicleUpdates() {
-        vertx.eventBus().send(ANALYTCS_VEHICLE_COUNTER_UPDATE_EVENTBUS,
+        vertx.eventBus().send(EventBus.VEHICLE_COUNTER_UPDATE,
                 VertxJsonMapper.mapInBodyFrom(new MessageVehicleCounterWithID(
                         "",
                         analyticsStore.getVehicleCounter())));

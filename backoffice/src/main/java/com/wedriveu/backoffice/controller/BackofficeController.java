@@ -1,6 +1,7 @@
 package com.wedriveu.backoffice.controller;
 
 import com.wedriveu.backoffice.model.BackOfficeModel;
+import com.wedriveu.backoffice.util.EventBus;
 import com.wedriveu.backoffice.view.BackOfficeView;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
@@ -14,25 +15,23 @@ import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wedriveu.shared.util.Constants.*;
-
 /**
  * @author Stefano Bernagozzi
  */
-public class BackofficeController extends AbstractVerticle{
+public class BackofficeController extends AbstractVerticle {
     private Future futureModel;
     private BackOfficeModel backOfficeModel;
     private BackOfficeView backOfficeView;
     Vertx vertx;
 
-    public BackofficeController( Vertx vertx){
+    public BackofficeController(Vertx vertx) {
         this.vertx = vertx;
     }
 
     @Override
-    public void start(Future futureRetriever) throws Exception{
+    public void start(Future futureRetriever) throws Exception {
         init();
-        vertx.eventBus().consumer(BACKOFFICE_CONTROLLER_EVENTBUS, this::updateCounter);
+        vertx.eventBus().consumer(EventBus.BACKOFFICE_CONTROLLER, this::updateCounter);
     }
 
 
@@ -44,11 +43,11 @@ public class BackofficeController extends AbstractVerticle{
         ButtonEventListener buttonEventListener = new ButtonEventListener(backOfficeModel, backOfficeView);
         backOfficeView.addButtonListener(buttonEventListener);
         futureModel = backOfficeModel.getFuture();
-        futureModel.setHandler(res-> {
+        futureModel.setHandler(res -> {
             Future listener1 = Future.future();
             vertx.deployVerticle(new AnalyticsVehiclesResponseConsumer("." + backOfficeModel.getBackofficeID() + ".updates", ""), listener1.completer());
             Future listener2 = Future.future();
-            vertx.deployVerticle(new AnalyticsVehiclesResponseConsumer("." + backOfficeModel.getBackofficeID(), "." + backOfficeModel.getBackofficeID()),listener2.completer() );
+            vertx.deployVerticle(new AnalyticsVehiclesResponseConsumer("." + backOfficeModel.getBackofficeID(), "." + backOfficeModel.getBackofficeID()), listener2.completer());
             Future listener3 = Future.future();
             vertx.deployVerticle(new RabbitmqInitialRequest(backOfficeModel.getBackofficeID()), listener3);
             futures.add(listener1);
@@ -60,6 +59,5 @@ public class BackofficeController extends AbstractVerticle{
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
         backOfficeModel.updateCounter(vehicleCounter);
         backOfficeView.updateText(vehicleCounter);
-        Log.info("updating counter in BackofficeController");
     }
 }

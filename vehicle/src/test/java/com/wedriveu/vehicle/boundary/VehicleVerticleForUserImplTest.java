@@ -1,6 +1,6 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.rabbitmq.message.EnterVehicleRequest;
 import com.wedriveu.shared.rabbitmq.message.EnterVehicleResponse;
@@ -9,11 +9,7 @@ import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.wedriveu.vehicle.shared.VehicleConstants;
 import com.wedriveu.vehicle.shared.VehicleConstants$;
-import com.weriveu.vehicle.boundary.VehicleVerticleDriveCommandImpl;
-import com.weriveu.vehicle.boundary.VehicleVerticleForUser;
-import com.weriveu.vehicle.boundary.VehicleVerticleForUserImpl;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -67,8 +63,6 @@ public class VehicleVerticleForUserImplTest {
     private VehicleControl vehicleControl;
     private String requestId;
     private String license = "VEHICLE8";
-    private String state = "available";
-    private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 80.0;
     private VehicleStopView stopUi;
@@ -81,7 +75,7 @@ public class VehicleVerticleForUserImplTest {
         checkCounter = 10;
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx, "", "", license, Vehicle.STATUS_AVAILABLE, Constants.HEAD_QUARTER, battery, speed, stopUi, debugVar);
         vehicleControl.setUsername("Michele");
         vehicleVerticleDriveCommand = new VehicleVerticleDriveCommandImpl(vehicleControl, false);
         vehicleVerticleForUser = new VehicleVerticleForUserImpl(vehicleControl);
@@ -134,12 +128,13 @@ public class VehicleVerticleForUserImplTest {
         final Async async = context.async(2);
         vehicleControl.getBehavioursControl().setTestUserVar(true);
         rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND,
+                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_DRIVE_COMMAND, vehicleControl.getVehicle().getPlate()),
                 createCommandJsonObject(),
                 onPublish -> {
-                    if(onPublish.succeeded()) {
-                        while(!(userPosition.getDistanceInKm(vehicleControl.getVehicle().getPosition())
-                                <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS())){}
+                    if (onPublish.succeeded()) {
+                        while (!(userPosition.getDistanceInKm(vehicleControl.getVehicle().getPosition())
+                                <= VehicleConstants$.MODULE$.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS())) {
+                        }
                         checkUserRequest(context, async);
                     }
                     context.assertTrue(onPublish.succeeded());
@@ -157,7 +152,8 @@ public class VehicleVerticleForUserImplTest {
     }
 
     private void checkUserRequest(TestContext context, Async async) {
-        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
+        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
+        });
         MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
             Log.info(TAG, responseJson.toString());

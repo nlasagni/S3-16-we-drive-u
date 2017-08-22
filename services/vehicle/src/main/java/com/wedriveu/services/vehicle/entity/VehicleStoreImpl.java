@@ -3,15 +3,15 @@ package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.entity.AnalyticsVehicleList;
+import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.services.shared.util.PositionUtils;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.rabbitmq.SubstitutionRequest;
 import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Position;
+import com.wedriveu.shared.util.PositionUtils;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import static com.wedriveu.services.shared.model.Vehicle.STATUS_AVAILABLE;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
+import static com.wedriveu.shared.util.Constants.VEHICLE;
 import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 
 
@@ -53,11 +54,11 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         eventBus.consumer(Messages.VehicleStore.CLEAR_VEHICLES, msg -> clearVehicles());
         eventBus.consumer(Messages.Analytics.GET_VEHICLES_REQUEST, this::getVehicleList);
         eventBus.consumer(Messages.VehicleStore.UPDATE_VEHICLE_STATUS, msg -> {
-            UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject)msg.body(), UpdateToService.class);
+            UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), UpdateToService.class);
             updateVehicleInVehicleList(update.getLicense(), update.getStatus(), update.getPosition(), new Date());
         });
         eventBus.consumer(SUBSTITUTION_BUS_ADDRESS, msg -> {
-            SubstitutionRequest request = VertxJsonMapper.mapFromBodyTo((JsonObject)msg.body(), SubstitutionRequest.class);
+            SubstitutionRequest request = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), SubstitutionRequest.class);
             findSubstitutionVehicle(request);
         });
         createJsonFile();
@@ -135,16 +136,16 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     @Override
     public void getVehicleForNearest(Message message) {
+        JsonObject vehicleData = (JsonObject) message.body();
         Vehicle requestedVehicle = getVehicleFromLicencePlate(message);
-        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST,
-                requestedVehicle == null ? null : JsonObject.mapFrom(requestedVehicle));
+        vehicleData.put(VEHICLE, JsonObject.mapFrom(requestedVehicle).toString());
+        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST, vehicleData);
     }
 
     @Override
     public void getVehicleForBooking(Message message) {
         Vehicle requestedVehicle = getVehicleFromLicencePlate(message);
-        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_BOOKING,
-                requestedVehicle == null ? null : requestedVehicle);
+        eventBus.send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_BOOKING, VertxJsonMapper.mapFrom(requestedVehicle));
     }
 
     @Override
@@ -159,9 +160,8 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
     private void getVehicleList(Message message) {
         ObjectMapper mapper = new ObjectMapper();
-        AnalyticsVehicleList vehicleList = new AnalyticsVehicleList();
-        vehicleList.setVehiclesList(readFromVehiclesDb(mapper));
-        if (vehicleList.getVehiclesList() != null) {
+        AnalyticsVehicleList vehicleList = new AnalyticsVehicleList(readFromVehiclesDb(mapper));
+        if (vehicleList.getVehicleList() != null) {
             eventBus.send(Messages.VehicleStore.GET_VEHICLE_LIST_COMPLETED, VertxJsonMapper.mapInBodyFrom(vehicleList));
         }
     }

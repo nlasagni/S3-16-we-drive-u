@@ -38,7 +38,7 @@ public class BookingStoreImpl implements BookingStore {
             List<Booking> bookings = storeStrategy.getEntities();
             if (bookings != null && !bookings.isEmpty()) {
                 Optional<Booking> booking = bookings.stream().sorted((o1, o2) ->
-                    Integer.valueOf(o2.getId()).compareTo(o1.getId())
+                        Integer.valueOf(o2.getId()).compareTo(o1.getId())
                 ).findFirst();
                 if (booking.isPresent()) {
                     id = booking.get().getId() + 1;

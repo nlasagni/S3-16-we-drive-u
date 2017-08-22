@@ -1,35 +1,40 @@
 package com.wedriveu.services.analytics.boundary;
 
 
-import com.wedriveu.services.analytics.vehicleService.VehicleListGeneratorRequestHandler;
-import com.wedriveu.services.shared.vertx.VertxJsonMapper;
+import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.vehicleService.VehicleListGenerator;
+import com.wedriveu.services.analytics.vehicleService.VehicleListGeneratorResponseHandler;
+import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.services.shared.model.VehicleListObject;
-import com.wedriveu.shared.util.Position;
+import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static com.wedriveu.shared.util.Constants.ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS;
-import static com.wedriveu.shared.util.Constants.ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS;
-import static com.wedriveu.shared.util.Constants.VEHICLE_REQUEST_ALL_MESSAGE;
-import static org.junit.Assert.*;
+import static com.wedriveu.shared.util.Constants.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Stefano Bernagozzi
  */
+@RunWith(VertxUnitRunner.class)
 public class AnalyticsVehicleListRetrieverConsumerTest {
+
     private List<Future> futures;
     private Vertx vertx;
-    private VehicleListObject vehicleListObject;
+    private AnalyticsVehicleList vehicleListObject;
 
     @Before
     public void setUp() throws Exception {
@@ -40,47 +45,29 @@ public class AnalyticsVehicleListRetrieverConsumerTest {
         futures.add(retrieveFuture);
 
         Future generatorRequestHandlerFuture = Future.future();
-        vertx.deployVerticle(new VehicleListGeneratorRequestHandler(), generatorRequestHandlerFuture.completer());
+        vertx.deployVerticle(new VehicleListGeneratorResponseHandler(), generatorRequestHandlerFuture.completer());
         futures.add(generatorRequestHandlerFuture);
 
-        ArrayList<Vehicle> vehicleList = new ArrayList<>();
-        vehicleList.add(new Vehicle("MACCHINA1",
-                "broken",
-                new Position(10.2, 13.2),
-                new Date(2017, 11, 30, 12, 37, 43)));
-        vehicleList.add(new Vehicle("MACCHINA2",
-                "available",
-                new Position(11.2, 14.2),
-                new Date(2017, 10, 28, 11, 43, 12)));
-        vehicleList.add(new Vehicle("MACCHINA3",
-                "busy",
-                new Position(15.2, 13.2),
-                new Date(2017, 9, 26, 10, 56, 46)));
-        vehicleList.add(new Vehicle("MACCHINA4",
-                "recharging",
-                new Position(13.2, 16.2),
-                new Date(2017, 8, 24, 9, 37, 22)));
-
-        vehicleListObject = new VehicleListObject(vehicleList);
-
-
+        List<Vehicle> vehicleList = VehicleListGenerator.getVehicleList();
+        vehicleListObject = new AnalyticsVehicleList(vehicleList);
     }
 
 
     @Test
-    public void testRetrieve() {
+    public void testRetrieve(TestContext context) {
+        Async async = context.async();
         CompositeFuture.all(futures).setHandler(completed -> {
-
             JsonObject jsonObject = new JsonObject();
-            jsonObject.put(Constants.EventBus.BODY,VEHICLE_REQUEST_ALL_MESSAGE);
-            vertx.eventBus().send(ANALYTICS_TEST_VEHICLE_LIST_REQUEST_EVENTBUS, jsonObject);
-            vertx.eventBus().consumer(ANALYTICS_CONTROLLER_VEHICLE_LIST_EVENTBUS,
-                    msg->{
-                        VehicleListObject vehicleList = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), VehicleListObject.class);
+            jsonObject.put(Constants.EventBus.BODY, EventBus.Messages.ANALYTICS_VEHICLE_LIST_RESPONSE_START_MESSAGE_TEST);
+            vertx.eventBus().send(EventBus.TEST_VEHICLE_LIST_RESPONSE, jsonObject);
+            vertx.eventBus().consumer(EventBus.CONTROLLER_VEHICLE_LIST,
+                    msg -> {
+                        AnalyticsVehicleList vehicleList = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), AnalyticsVehicleList.class);
                         assertTrue(vehicleList.equals(vehicleListObject));
+                        async.complete();
                     });
-
         });
+        async.awaitSuccess();
     }
 
 }

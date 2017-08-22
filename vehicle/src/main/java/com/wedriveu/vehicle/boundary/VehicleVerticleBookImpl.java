@@ -1,11 +1,10 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
-
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
@@ -30,7 +29,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
     private static final String READ_ERROR = "Error occurred while reading request.";
     private static final String SEND_ERROR = "Error occurred while sending response.";
     private static final String ENGINE_ILLEGAL_STATE = "The Engine has not been started yet or it has been stopped.";
-    private static String QUEUE_NAME = "vehicle.book.";
+    private String queue;
 
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
@@ -38,7 +37,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
 
     public VehicleVerticleBookImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
-        QUEUE_NAME+=this.vehicle.getVehicle().plate();
+        queue = "vehicle.book." + this.vehicle.getVehicle().plate();
     }
 
     @Override
@@ -80,7 +79,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
     }
 
     private void declareQueue(Future<JsonObject> future) {
-        rabbitMQClient.queueDeclare(QUEUE_NAME,
+        rabbitMQClient.queueDeclare(queue,
                 true,
                 false,
                 false,
@@ -88,14 +87,14 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
     }
 
     private void bindQueueToExchange(Future<Void> future) {
-        rabbitMQClient.queueBind(QUEUE_NAME,
+        rabbitMQClient.queueBind(queue,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_REQUEST, vehicle.getVehicle().plate()),
                 future.completer());
     }
 
     private void basicConsume(Future<Void> future) {
-        rabbitMQClient.basicConsume(QUEUE_NAME, EVENT_BUS_ADDRESS, future.completer());
+        rabbitMQClient.basicConsume(queue, EVENT_BUS_ADDRESS, future.completer());
     }
 
     private void registerConsumer() {
@@ -113,7 +112,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
         });
     }
 
-    private void sendResponse(BookVehicleResponse response){
+    private void sendResponse(BookVehicleResponse response) {
         try {
             String responseString = objectMapper.writeValueAsString(response);
             JsonObject responseJson = new JsonObject();
@@ -130,7 +129,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
                                 String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
                                 new JsonObject());
                     });
-        }catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             Log.error(TAG, SEND_ERROR, e);
         }
     }

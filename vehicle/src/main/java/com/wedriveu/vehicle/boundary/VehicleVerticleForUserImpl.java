@@ -1,8 +1,7 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wedriveu.shared.rabbitmq.message.EnterVehicleRequest;
-import com.wedriveu.shared.rabbitmq.message.EnterVehicleResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
@@ -25,7 +24,7 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
     private static final String TAG = VehicleVerticleForUserImpl.class.getSimpleName();
     private static final String EVENT_BUS_ADDRESS = "vehicle.enter";
     private static final String READ_ERROR = "Error occurred while reading response.";
-    private static String QUEUE_NAME = "vehicle.enter.";
+    private static String queue;
 
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
@@ -34,7 +33,7 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
 
     public VehicleVerticleForUserImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
-        QUEUE_NAME+=this.vehicle.getVehicle().plate();
+        queue = "vehicle.enter." + this.vehicle.getVehicle().plate();
     }
 
     @Override
@@ -76,7 +75,7 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
     }
 
     private void declareQueue(Future<JsonObject> future) {
-        rabbitMQClient.queueDeclare(QUEUE_NAME,
+        rabbitMQClient.queueDeclare(queue,
                 true,
                 false,
                 false,
@@ -84,42 +83,35 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
     }
 
     private void bindQueueToExchange(Future<Void> future) {
-        rabbitMQClient.queueBind(QUEUE_NAME,
+        rabbitMQClient.queueBind(queue,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
-                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE_ENTER_USER, vehicle.getUsername()),
+                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE_ENTER_USER,
+                        vehicle.getVehicle().getPlate()),
                 future.completer());
     }
 
     private void basicConsume(Future<Void> future) {
-        rabbitMQClient.basicConsume(QUEUE_NAME, EVENT_BUS_ADDRESS, future.completer());
+        rabbitMQClient.basicConsume(queue, EVENT_BUS_ADDRESS, future.completer());
     }
 
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-            try {
-                JsonObject message = new JsonObject(msg.body().toString());
-                EnterVehicleResponse enterVehicleResponse =
-                        objectMapper.readValue(message.getString(Constants.EventBus.BODY),
-                                EnterVehicleResponse.class);
-                vehicle.setUserOnBoard(true);
-                vehicle.changePosition(destinationPosition);
-            } catch (IOException e) {
-                Log.error(TAG, READ_ERROR, e);
-            }
+            vehicle.setUserOnBoard(true);
+            vehicle.goToDestination(destinationPosition);
         });
 
         eventBus.consumer(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_FOR_USER, vehicle.getVehicle().plate()),
                 message -> {
-            JsonObject msg = new JsonObject(message.body().toString());
-            Position destPosition = null;
-            try {
-                destPosition =
-                        objectMapper.readValue(msg.getString(Constants.EventBus.BODY), Position.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            enterInVehicle(destPosition);
-        });
+                    JsonObject msg = new JsonObject(message.body().toString());
+                    Position destPosition = null;
+                    try {
+                        destPosition =
+                                objectMapper.readValue(msg.getString(Constants.EventBus.BODY), Position.class);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    enterInVehicle(destPosition);
+                });
     }
 
     @Override
@@ -129,7 +121,9 @@ public class VehicleVerticleForUserImpl extends AbstractVerticle implements Vehi
                 String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST_ENTER_USER, vehicle.getUsername()),
                 createRequest(),
                 onPublish -> {
-                    onPublish.succeeded();
+                    if (!onPublish.succeeded()) {
+                        Log.info(this.getClass().getSimpleName(), onPublish.cause().getLocalizedMessage());
+                    }
                 });
     }
 

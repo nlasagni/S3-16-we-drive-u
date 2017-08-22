@@ -7,7 +7,7 @@ import java.util.Optional;
 
 /**
  * @author Stefano Bernagozzi
- * This inteface models the <em>AnalyticsVehicle' database store</em>.
+ *         This inteface models the <em>AnalyticsVehicle' database store</em>.
  */
 
 

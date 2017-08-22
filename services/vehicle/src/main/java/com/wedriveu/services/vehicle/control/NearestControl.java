@@ -1,8 +1,8 @@
 package com.wedriveu.services.vehicle.control;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.message.VehicleResponseCanDrive;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import static com.wedriveu.services.shared.model.Vehicle.NO_ELIGIBLE_VEHICLE_RESPONSE;
 import static com.wedriveu.shared.util.Constants.*;
 import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
+import static com.wedriveu.shared.util.Constants.Vehicle.SPEED;
 
 
 /**
@@ -83,6 +84,7 @@ public class NearestControl extends AbstractVerticle {
     }
 
     private void sendReplyToUser(List<VehicleResponseCanDrive> eligibleVehicles) {
+
         vertx.eventBus().send(Messages.NearestControl.GET_VEHICLE_NEAREST, getBestVehicle(eligibleVehicles));
     }
 
@@ -98,6 +100,9 @@ public class NearestControl extends AbstractVerticle {
         JsonObject bestVehicleJson = new JsonObject();
         bestVehicleJson.put(USERNAME, chosen.getUsername());
         bestVehicleJson.put(LICENSE_PLATE, chosen.getLicencePlate());
+        bestVehicleJson.put(SPEED, chosen.getVehicleSpeed());
+        bestVehicleJson.put(Trip.DISTANCE_TO_USER, chosen.getDistanceToUser());
+        bestVehicleJson.put(Trip.TOTAL_DISTANCE, chosen.getTotalDistance());
         return bestVehicleJson;
     }
 

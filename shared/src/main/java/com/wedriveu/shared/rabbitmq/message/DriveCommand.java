@@ -10,8 +10,17 @@ import com.wedriveu.shared.util.Position;
 
 public class DriveCommand {
 
+    private String licensePlate;
     private Position userPosition;
     private Position destinationPosition;
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
+    }
 
     public Position getUserPosition() {
         return userPosition;
@@ -29,30 +38,37 @@ public class DriveCommand {
         this.destinationPosition = newDestinationPosition;
     }
 
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DriveCommand)) {
+            return false;
+        }
         DriveCommand that = (DriveCommand) o;
-
-        if (!userPosition.equals(that.userPosition)) return false;
-        return destinationPosition.equals(that.destinationPosition);
+        return (licensePlate != null ? licensePlate.equals(that.licensePlate) : that.licensePlate == null) &&
+                (userPosition != null ? userPosition.equals(that.userPosition) : that.userPosition == null) &&
+                (destinationPosition != null
+                        ? destinationPosition.equals(that.destinationPosition)
+                        : that.destinationPosition == null);
     }
 
     @Override
     public int hashCode() {
-        int result = userPosition.hashCode();
-        result = 31 * result + destinationPosition.hashCode();
+        int result = licensePlate != null ? licensePlate.hashCode() : 0;
+        result = 31 * result + (userPosition != null ? userPosition.hashCode() : 0);
+        result = 31 * result + (destinationPosition != null ? destinationPosition.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "DriveCommand{" +
-                "userPosition=" + userPosition +
+                "licensePlate='" + licensePlate + '\'' +
+                ", userPosition=" + userPosition +
                 ", destinationPosition=" + destinationPosition +
                 '}';
     }
-
 }

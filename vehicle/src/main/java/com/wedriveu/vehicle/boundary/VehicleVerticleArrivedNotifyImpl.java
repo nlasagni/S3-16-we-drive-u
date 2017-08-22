@@ -1,4 +1,4 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.util.Constants;
@@ -52,11 +52,11 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
         rabbitMQClient.start(future.completer());
     }
 
-    private void registerConsumer(){
+    private void registerConsumer() {
         eventBus.consumer(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, vehicle.getVehicle().plate()),
                 message -> {
-            sendArrivedNotify();
-        });
+                    sendArrivedNotify();
+                });
     }
 
     @Override
@@ -65,11 +65,11 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
                 Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
                 createNotify(),
                 onPublish -> {
-            onPublish.succeeded();
-            if(onPublish.failed()){
-                Log.error(TAG, SEND_ERROR);
-            }
-        });
+                    onPublish.succeeded();
+                    if (onPublish.failed()) {
+                        Log.error(TAG, SEND_ERROR);
+                    }
+                });
     }
 
     private JsonObject createNotify() {

@@ -58,8 +58,7 @@ public abstract class VerticleConsumer extends AbstractVerticle {
                                     Log.error(queueName + " bind ", onBind.cause().getLocalizedMessage(), onBind.cause());
                                 }
                             });
-                }
-                else {
+                } else {
                     Log.error(queueName, onQueue.cause().getLocalizedMessage(), onQueue.cause());
                 }
             });

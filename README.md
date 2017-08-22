@@ -29,9 +29,10 @@ Il client principale è la App Android, contenuta nel file con estensione ".apk"
 E' necessario scaricarla nel proprio dispositivo ed avviarla.
 Una volta avviata è necessario fare il login, alcuni account disponibili sono:
 
-- Username: "Michele", Password: "PASSWORD1"
-- Username: "Stefano", Password: "PASSWORD2"
-- Username: "Marco", Password: "PASSWORD4"
+- Username: "Michele", Password: "password"
+- Username: "Stefano", Password: "password"
+- Username: "Marco", Password: "password"
+- Username: "Nicola", Password: "password"
 
 Una volta loggati si potrà scegliere la destinazione del viaggio, attendere la proposta di un veicolo e infine
 confermare la prenotazione attendendo l'arrivo del veicolo.

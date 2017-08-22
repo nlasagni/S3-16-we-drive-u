@@ -5,7 +5,6 @@ import com.wedriveu.mobile.service.booking.BookingService;
 import com.wedriveu.mobile.service.login.LoginService;
 import com.wedriveu.mobile.service.scheduling.SchedulingService;
 import com.wedriveu.mobile.service.vehicle.VehicleService;
-import com.wedriveu.mobile.store.BookingStore;
 import com.wedriveu.mobile.store.UserStore;
 import com.wedriveu.mobile.store.VehicleStore;
 

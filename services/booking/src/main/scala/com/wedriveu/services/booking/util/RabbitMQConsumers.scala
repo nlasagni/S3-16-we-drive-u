@@ -3,19 +3,18 @@ package com.wedriveu.services.booking.util
 import io.vertx.core.json.JsonObject
 import io.vertx.scala.rabbitmq.RabbitMQClient
 
-import scala.concurrent.Future
-
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * @author Nicola Lasagni on 19/08/2017.
   */
 /** Configuration needed to start a RabbitMQ consumer.
   *
-  * @param queue The queue name
-  * @param durableQueue Indicates if a queue is durable or not
-  * @param exchange The exchange name
-  * @param routingKey The routing key name
+  * @param queue           The queue name
+  * @param durableQueue    Indicates if a queue is durable or not
+  * @param exchange        The exchange name
+  * @param routingKey      The routing key name
   * @param eventBusAddress The destination event bus address name
   */
 case class ConsumerConfig(

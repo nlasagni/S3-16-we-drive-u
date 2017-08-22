@@ -1,9 +1,9 @@
 package com.wedriveu.services.authentication.boundary;
 
+import com.wedriveu.services.shared.model.User;
 import com.wedriveu.shared.rabbitmq.message.LoginRequest;
 import com.wedriveu.shared.rabbitmq.message.LoginResponse;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -21,25 +21,22 @@ import org.junit.runner.RunWith;
  * @author Nicola Lasagni on 05/08/2017.
  */
 @RunWith(VertxUnitRunner.class)
-public class AuthenticationServiceVerticleImplTest {
+public class AuthenticationBoundaryVerticleImplTest {
 
-    private static final String TAG = AuthenticationServiceVerticleImplTest.class.getSimpleName();
     private static final String JSON_QUEUE_KEY = "queue";
-    private static final String EVENT_BUS_ADDRESS = AuthenticationServiceVerticleImplTest.class.getCanonicalName();
-    private static final String USERNAME = "Michele";
-    private static final String PASSWORD = "PASSWORD1";
+    private static final String EVENT_BUS_ADDRESS = AuthenticationBoundaryVerticleImplTest.class.getCanonicalName();
 
     private Vertx vertx;
     private EventBus eventBus;
     private RabbitMQClient rabbitMQClient;
-    private AuthenticationServiceVerticleImpl authenticationService;
+    private AuthenticationBoundaryVerticleImpl authenticationService;
     private String requestId;
 
     @Before
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
-        authenticationService = new AuthenticationServiceVerticleImpl();
+        authenticationService = new AuthenticationBoundaryVerticleImpl();
         setUpAsyncComponents(context);
     }
 
@@ -79,12 +76,12 @@ public class AuthenticationServiceVerticleImplTest {
     private void checkServiceResponse(TestContext context, Async async) {
         MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
-            Log.info(TAG, responseJson.toString());
             LoginResponse response = responseJson.mapTo(LoginResponse.class);
             context.assertTrue(response.isSuccess());
             async.complete();
         });
-        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
+        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
+        });
         consumer.exceptionHandler(event -> {
             context.fail(event.getCause());
             async.complete();
@@ -101,8 +98,9 @@ public class AuthenticationServiceVerticleImplTest {
     private JsonObject createRequestJsonObject() {
         LoginRequest request = new LoginRequest();
         request.setRequestId(requestId);
-        request.setUsername(USERNAME);
-        request.setPassword(PASSWORD);
+        User user = User.USERS[0];
+        request.setUsername(user.getUsername());
+        request.setPassword(user.getPassword());
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(request).toString());
         return jsonObject;

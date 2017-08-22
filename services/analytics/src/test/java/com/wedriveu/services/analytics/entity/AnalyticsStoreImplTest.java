@@ -1,7 +1,6 @@
 package com.wedriveu.services.analytics.entity;
 
 
-
 import com.wedriveu.services.shared.model.AnalyticsVehicle;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.store.EntityListStoreStrategy;
@@ -19,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class AnalyticsStoreImplTest {
 
-    private static final String DATABASE_FILE_NAME = AnalyticsStoreImplTest.class.getSimpleName() + ".json";
+    private static final String DATABASE_FILE_NAME = AnalyticsStoreImplTest.class.getSimpleName()  + ".json";
     private static final String VEHICLE_1_LICENSE_PLATE = "vehicle1";
     private static final String VEHICLE_NOT_FOUND_LICENSE_PLATE = "vehicle3";
 
@@ -32,6 +31,7 @@ public class AnalyticsStoreImplTest {
         EntityListStoreStrategy<AnalyticsVehicle> storeStrategy =
                 new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, DATABASE_FILE_NAME);
         analyticsStore = new AnalyticsStoreImpl(storeStrategy, vehiclesCounterAlgorithm);
+        analyticsStore.clear();
         vehicle = new AnalyticsVehicle(VEHICLE_1_LICENSE_PLATE, Vehicle.STATUS_AVAILABLE);
     }
 
@@ -77,7 +77,7 @@ public class AnalyticsStoreImplTest {
         VehicleCounter counter = analyticsStore.getVehicleCounter();
         assertTrue(counter.getAvailable() == availableVehicles &&
                 counter.getBooked() == bookedVehicles &&
-                counter.getBroken() == brokenVehicles &&
+                counter.getBrokenStolen() == brokenVehicles &&
                 counter.getRecharging() == rechargingVehicles &&
                 counter.getNetworkIssues() == stolenVehicles);
 

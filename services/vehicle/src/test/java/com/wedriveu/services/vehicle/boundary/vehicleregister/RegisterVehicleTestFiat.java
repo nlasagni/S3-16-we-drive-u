@@ -27,7 +27,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Vehicle register simulator to the VehicleService. It simulates a new vehicle trying
  * to add itself in the VehicleService database.
- *
  */
 @RunWith(VertxUnitRunner.class)
 public class RegisterVehicleTestFiat extends BaseInteractionClient {

@@ -5,18 +5,19 @@ package com.wedriveu.shared.rabbitmq.message;
  */
 
 public class VehicleCounter {
+
     private int available;
-    private int broken;
+    private int brokenStolen;
     private int booked;
     private int recharging;
-    private int stolen;
+    private int networkIssues;
 
     public void increaseAvailable() {
         available++;
     }
 
     public void increaseBroken() {
-        broken++;
+        brokenStolen++;
     }
 
     public void increaseBooked() {
@@ -24,7 +25,7 @@ public class VehicleCounter {
     }
 
     public void increaseNetworkIssues() {
-        stolen++;
+        networkIssues++;
     }
 
     public void increaseRecharging() {
@@ -32,7 +33,7 @@ public class VehicleCounter {
     }
 
     public int getNetworkIssues() {
-        return stolen;
+        return networkIssues;
     }
 
     public int getRecharging() {
@@ -43,8 +44,8 @@ public class VehicleCounter {
         return booked;
     }
 
-    public int getBroken() {
-        return broken;
+    public int getBrokenStolen() {
+        return brokenStolen;
     }
 
     public int getAvailable() {
@@ -59,7 +60,7 @@ public class VehicleCounter {
         VehicleCounter that = (VehicleCounter) o;
 
         if (getAvailable() != that.getAvailable()) return false;
-        if (getBroken() != that.getBroken()) return false;
+        if (getBrokenStolen() != that.getBrokenStolen()) return false;
         if (getBooked() != that.getBooked()) return false;
         if (getRecharging() != that.getRecharging()) return false;
         return getNetworkIssues() == that.getNetworkIssues();
@@ -68,7 +69,7 @@ public class VehicleCounter {
     @Override
     public int hashCode() {
         int result = getAvailable();
-        result = 31 * result + getBroken();
+        result = 31 * result + getBrokenStolen();
         result = 31 * result + getBooked();
         result = 31 * result + getRecharging();
         result = 31 * result + getNetworkIssues();
@@ -79,10 +80,10 @@ public class VehicleCounter {
     public String toString() {
         return "VehicleCounter{" +
                 "available=" + available +
-                ", broken=" + broken +
+                ", brokenStolen=" + brokenStolen +
                 ", booked=" + booked +
                 ", recharging=" + recharging +
-                ", stolen=" + stolen +
+                ", networkIssues=" + networkIssues +
                 '}';
     }
 }

@@ -1,4 +1,4 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 /**
  * @author Michele Donati on 11/08/2017.

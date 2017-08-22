@@ -10,6 +10,7 @@ import com.wedriveu.shared.util.Position;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonObject;
 
 
 /**
@@ -38,28 +39,29 @@ public class BookingControl extends AbstractVerticle {
     }
 
     private void handleBookResponse(Message message) {
-        vehicleResponseWrapper = (BookVehicleResponseWrapper) message.body();
+        vehicleResponseWrapper = VertxJsonMapper.mapTo((JsonObject) message.body(), BookVehicleResponseWrapper.class);
         vehicleResponse = vehicleResponseWrapper.getResponse();
-        if (vehicleResponse.getBooked()) {
+        if (!vehicleResponse.getBooked()) {
             notifyBookingService();
         } else {
-            eventBus.send(Messages.BookingControl.GET_VEHICLE_BOOKING, vehicleResponse);
+            eventBus.send(Messages.BookingControl.GET_VEHICLE_BOOKING, VertxJsonMapper.mapFrom(vehicleResponse));
         }
     }
 
     private void getVehicleCompleted(Message message) {
-        Vehicle vehicle = (Vehicle) message.body();
+        Vehicle vehicle = VertxJsonMapper.mapTo((JsonObject) message.body(), Vehicle.class);
         fillDriveTimes(vehicle);
         sendStartDrivingCommand();
         notifyBookingService();
     }
 
     private void notifyBookingService() {
-        eventBus.send(Messages.BookingControl.PUBLISH_RESULT, vehicleResponse);
+        eventBus.send(Messages.BookingControl.PUBLISH_RESULT, VertxJsonMapper.mapFrom(vehicleResponse));
     }
 
     private void sendStartDrivingCommand() {
         DriveCommand driveCommand = new DriveCommand();
+        driveCommand.setLicensePlate(vehicleResponseWrapper.getResponse().getLicensePlate());
         driveCommand.setUserPosition(vehicleResponseWrapper.getUserPosition());
         driveCommand.setDestinationPosition(vehicleResponseWrapper.getDestinationPosition());
         eventBus.send(Messages.BookingControl.START_DRIVING, VertxJsonMapper.mapInBodyFrom(driveCommand));

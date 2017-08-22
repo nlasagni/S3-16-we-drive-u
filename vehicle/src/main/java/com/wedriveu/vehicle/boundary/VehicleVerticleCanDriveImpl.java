@@ -1,4 +1,4 @@
-package com.weriveu.vehicle.boundary;
+package com.wedriveu.vehicle.boundary;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,7 +30,7 @@ public class VehicleVerticleCanDriveImpl extends AbstractVerticle implements Veh
     private static final String READ_ERROR = "Error occurred while reading request.";
     private static final String SEND_ERROR = "Error occurred while sending response.";
     private static final String ENGINE_ILLEGAL_STATE = "The Engine has not been started yet or it has been stopped.";
-    private static String QUEUE_NAME = "vehicle.candrive.";
+    private String queue;
 
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
@@ -39,7 +39,7 @@ public class VehicleVerticleCanDriveImpl extends AbstractVerticle implements Veh
 
     public VehicleVerticleCanDriveImpl(VehicleControl vehicle) {
         this.vehicle = vehicle;
-        QUEUE_NAME+=this.vehicle.getVehicle().plate();
+        queue = "vehicle.candrive." + this.vehicle.getVehicle().plate();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class VehicleVerticleCanDriveImpl extends AbstractVerticle implements Veh
     }
 
     private void declareQueue(Future<JsonObject> future) {
-        rabbitMQClient.queueDeclare(QUEUE_NAME,
+        rabbitMQClient.queueDeclare(queue,
                 true,
                 false,
                 false,
@@ -90,14 +90,14 @@ public class VehicleVerticleCanDriveImpl extends AbstractVerticle implements Veh
     }
 
     private void bindQueueToExchange(Future<Void> future) {
-        rabbitMQClient.queueBind(QUEUE_NAME,
+        rabbitMQClient.queueBind(queue,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_REQUEST, vehicle.getVehicle().plate()),
                 future.completer());
     }
 
     private void basicConsume(Future<Void> future) {
-        rabbitMQClient.basicConsume(QUEUE_NAME, EVENT_BUS_ADDRESS, future.completer());
+        rabbitMQClient.basicConsume(queue, EVENT_BUS_ADDRESS, future.completer());
     }
 
     private void registerConsumer() {

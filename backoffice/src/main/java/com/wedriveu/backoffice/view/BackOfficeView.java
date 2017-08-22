@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 /**
  * @author Stefano Bernagozzi
  */
-public class BackOfficeView extends JFrame{
+public class BackOfficeView extends JFrame {
     private int maxX = 1000;
     private int maxY = 500;
     private JLabel textLabel;
@@ -52,7 +52,7 @@ public class BackOfficeView extends JFrame{
     public void updateText(VehicleCounter vehicleCounter) {
         textLabel.setText("<html><body>" +
                 "Available: " + vehicleCounter.getAvailable() + "<br>" +
-                "Broken: " + vehicleCounter.getBroken() + "<br>" +
+                "Broken: " + vehicleCounter.getBrokenStolen() + "<br>" +
                 "Booked: " + vehicleCounter.getBooked() + "<br>" +
                 "Recharging: " + vehicleCounter.getRecharging() + "<br>" +
                 "Network Issues: " + vehicleCounter.getNetworkIssues() + "<br>" +
