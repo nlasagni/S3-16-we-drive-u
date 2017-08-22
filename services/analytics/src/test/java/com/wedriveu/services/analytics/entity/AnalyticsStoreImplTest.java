@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class AnalyticsStoreImplTest {
 
-    private static final String DATABASE_FILE_NAME = AnalyticsStoreImplTest.class.getSimpleName() + ".json";
+    private static final String DATABASE_FILE_NAME = AnalyticsStoreImplTest.class.getSimpleName()  + ".json";
     private static final String VEHICLE_1_LICENSE_PLATE = "vehicle1";
     private static final String VEHICLE_NOT_FOUND_LICENSE_PLATE = "vehicle3";
 
@@ -31,6 +31,7 @@ public class AnalyticsStoreImplTest {
         EntityListStoreStrategy<AnalyticsVehicle> storeStrategy =
                 new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, DATABASE_FILE_NAME);
         analyticsStore = new AnalyticsStoreImpl(storeStrategy, vehiclesCounterAlgorithm);
+        analyticsStore.clear();
         vehicle = new AnalyticsVehicle(VEHICLE_1_LICENSE_PLATE, Vehicle.STATUS_AVAILABLE);
     }
 

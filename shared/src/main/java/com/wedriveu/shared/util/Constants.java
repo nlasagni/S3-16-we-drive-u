@@ -241,6 +241,14 @@ public interface Constants {
              * The routing key used by booking-service to communicate the bookings found.
              */
             String FIND_BOOKING_POSITION_RESPONSE = "booking.response.position";
+            /**
+             *  The routing key used by backoffice to request a vehicle counter.
+             */
+            String ROUTING_KEY_ANALYTICS_REQUEST_VEHICLE_LIST = "analytics.request.vehicleList";
+            /**
+             *  The routing key used by backoffice to receive a vehicle counter.
+             */
+            String ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST = "analytics.response.vehicles";
         }
     }
 
@@ -264,6 +272,13 @@ public interface Constants {
         String TOTAL_DISTANCE = "totalDistance";
     }
 
+    interface MessagesAnalytics {
+
+        /**
+         * The message sent from the Analytics service to the Vehicle service to request all vehicles.
+         */
+        String VEHICLE_REQUEST_ALL_MESSAGE = "Requesting All Vehicles From Analytics Service";
+    }
     /**
      * The constant zero.
      */
@@ -278,15 +293,5 @@ public interface Constants {
      * Key used for event bus messages.
      */
     String VEHICLE = "vehicle";
-
-    //analytics messages
-    String VEHICLE_REQUEST_ALL_MESSAGE = "Requesting All Vehicles From Analytics Service";
-    String ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE = "Started all services, start requesting vehicle list";
-
-    //analytics routing keys
-    String ROUTING_KEY_VEHICLE_REQUEST_ALL = "vehicle.request.all";
-    String ROUTING_KEY_VEHICLE_RESPONSE_ALL = "vehicle.response.all";
-    String ROUTING_KEY_ANALYTICS_REQUEST_VEHICLES = "analytics.request.vehicles";
-    String ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES = "analytics.response.vehicles";
 
 }

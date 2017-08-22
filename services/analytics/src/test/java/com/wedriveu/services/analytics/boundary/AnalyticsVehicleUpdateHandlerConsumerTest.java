@@ -1,7 +1,8 @@
 package com.wedriveu.services.analytics.boundary;
 
 import com.wedriveu.services.analytics.util.EventBus;
-import com.wedriveu.services.analytics.vehicleService.VehicleUpdater;
+import com.wedriveu.services.analytics.vehicleService.VehicleUpdateGenerator;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
@@ -9,8 +10,12 @@ import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +25,9 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Stefano Bernagozzi
  */
+@RunWith(VertxUnitRunner.class)
 public class AnalyticsVehicleUpdateHandlerConsumerTest {
+
     private List<Future> futures;
     private Vertx vertx;
 
@@ -29,7 +36,7 @@ public class AnalyticsVehicleUpdateHandlerConsumerTest {
         vertx = Vertx.vertx();
         futures = new ArrayList<>();
         Future retrieveFuture = Future.future();
-        vertx.deployVerticle(new VehicleUpdater(), retrieveFuture.completer());
+        vertx.deployVerticle(new VehicleUpdateGenerator(), retrieveFuture.completer());
         futures.add(retrieveFuture);
 
         Future updaterFuture = Future.future();
@@ -38,20 +45,21 @@ public class AnalyticsVehicleUpdateHandlerConsumerTest {
     }
 
     @Test
-    public void testVehicleUpdater() {
+    public void testVehicleUpdater(TestContext context) {
+        Async async = context.async();
         CompositeFuture.all(futures).setHandler(completed -> {
             JsonObject jsonObject = new JsonObject();
             jsonObject.put(Constants.EventBus.BODY, "start");
             vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_UPDATE,
                     msg -> {
                         UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), UpdateToService.class);
-                        assertTrue(update.getLicense().equals("Veicolo1") &&
-                                update.getStatus().equals("broken"));
+                        assertTrue(update.getLicense().equals(EventBus.Messages.ANALYTICS_VEHICLE_TEST_LICENSE_PLATE) &&
+                                update.getStatus().equals(Vehicle.STATUS_BOOKED));
+                        async.complete();
                     });
 
-            vertx.eventBus().send(EventBus.AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER, jsonObject);
-
+            vertx.eventBus().send(EventBus.TEST_VEHICLE_UPDATE, jsonObject);
         });
-
+        async.awaitSuccess();
     }
 }

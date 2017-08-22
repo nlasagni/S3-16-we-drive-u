@@ -10,7 +10,7 @@ import io.vertx.core.Future;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wedriveu.shared.util.Constants.ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE;
+import static com.wedriveu.services.analytics.util.EventBus.Messages.ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE;
 
 /**
  * @author Stefano Bernagozzi
@@ -48,11 +48,9 @@ public class AnalyticsVerticleDeployer extends AbstractVerticle {
 
         CompositeFuture.all(futures).setHandler(completed -> {
             if (completed.succeeded()) {
-                Log.info("starting event message queue");
                 vertx.eventBus().send(EventBus.VEHICLE_LIST_REQUEST, ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE);
                 startFuture.complete();
             } else {
-                Log.error("failing starting some verticle", completed.cause().getLocalizedMessage(), completed.cause());
                 startFuture.fail(completed.cause());
             }
         });

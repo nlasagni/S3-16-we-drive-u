@@ -24,14 +24,15 @@ public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer {
         Future<Void> futureConsumer = Future.future();
         futureConsumer.setHandler(v -> {
             if (v.succeeded()) {
-                Log.info("future in VehicleListGeneratorRequestHandler completed");
                 futureRequest.complete();
             } else {
-                Log.error("future VehicleListGeneratorRequestHandler fail", v.cause().getLocalizedMessage(), v.cause());
                 futureRequest.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE, EventBus.AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER, futureConsumer);
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE,
+                Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE,
+                EventBus.AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER,
+                futureConsumer);
 
     }
 
@@ -42,7 +43,6 @@ public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer {
     }
 
     private void sendToController(Message message) {
-        Log.info("received vehicle list");
         UpdateToService vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), UpdateToService.class);
         vertx.eventBus().send(EventBus.VEHICLE_COUNTER_UPDATE, VertxJsonMapper.mapInBodyFrom(vehicle));
     }

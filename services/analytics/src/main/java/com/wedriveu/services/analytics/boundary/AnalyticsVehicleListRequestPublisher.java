@@ -8,7 +8,7 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_VEHICLE_REQUEST_ALL;
-import static com.wedriveu.shared.util.Constants.VEHICLE_REQUEST_ALL_MESSAGE;
+import static com.wedriveu.shared.util.Constants.MessagesAnalytics.VEHICLE_REQUEST_ALL_MESSAGE;
 
 /**
  * @author Stefano Bernagozzi

@@ -8,14 +8,12 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.ROUTING_KEY_ANALYTICS_REQUEST_VEHICLES;
-
 /**
  * @author Stefano Bernagozzi
  */
 public class AnalyticsVehicleRequestConsumer extends VerticleConsumer {
     public AnalyticsVehicleRequestConsumer() {
-        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + ROUTING_KEY_ANALYTICS_REQUEST_VEHICLES);
+        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_REQUEST_VEHICLE_LIST);
     }
 
     @Override
@@ -24,19 +22,16 @@ public class AnalyticsVehicleRequestConsumer extends VerticleConsumer {
         Future<Void> futureConsumer = Future.future();
         futureConsumer.setHandler(v -> {
             if (v.succeeded()) {
-                Log.info("future in AnalyticsVehicleRequestConsumer completed");
                 futureRetriever.complete();
             } else {
-                Log.error("future consumer handler", v.cause().getLocalizedMessage(), v.cause());
                 futureRetriever.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS, ROUTING_KEY_ANALYTICS_REQUEST_VEHICLES, EventBus.AVAILABLE_ADDRESS_COUNTER_REQUEST, futureConsumer);
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS, Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_REQUEST_VEHICLE_LIST, EventBus.AVAILABLE_ADDRESS_COUNTER_REQUEST, futureConsumer);
     }
 
     @Override
     public void registerConsumer(String eventBus) {
-        Log.info("started vertx eventbus consumer in AnalyticsVehicleRequestConsumer, attending start to receive");
         vertx.eventBus().consumer(eventBus, this::sendToController);
     }
 

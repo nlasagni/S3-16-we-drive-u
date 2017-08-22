@@ -10,7 +10,7 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST;
 import static com.wedriveu.shared.util.Constants.RabbitMQ;
 
 /**
@@ -20,7 +20,7 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer {
     String backofficeId;
 
     public AnalyticsVehiclesResponseConsumer(String queueName, String backofficeId) {
-        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES + queueName);
+        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST + queueName);
         this.backofficeId = backofficeId;
     }
 
@@ -31,9 +31,7 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer {
         futureConsumer.setHandler(v -> {
             if (v.succeeded()) {
                 futureRetriever.complete();
-                Log.info("started future retriever AnalyticsVehiclesResponseConsumer");
             } else {
-                Log.error("AnalyticsVehiclesResponseConsumer", v.cause().getLocalizedMessage(), v.cause());
                 futureRetriever.fail(v.cause());
             }
         });
@@ -43,10 +41,9 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer {
         }
 
         startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS,
-                ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLES + backofficeId,
+                ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST + backofficeId,
                 eventBusAvailable,
                 futureConsumer);
-        Log.info("started consumer " + eventBusAvailable);
     }
 
     @Override
@@ -57,6 +54,5 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer {
     private void sendUpdatesToController(Message message) {
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
         vertx.eventBus().send(EventBus.BACKOFFICE_CONTROLLER, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
-        Log.info("AnalyticsVehiclesResponseConsumer received updates and send to controller");
     }
 }

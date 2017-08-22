@@ -59,6 +59,5 @@ public class BackofficeController extends AbstractVerticle {
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
         backOfficeModel.updateCounter(vehicleCounter);
         backOfficeView.updateText(vehicleCounter);
-        Log.info("updating counter in BackofficeController");
     }
 }

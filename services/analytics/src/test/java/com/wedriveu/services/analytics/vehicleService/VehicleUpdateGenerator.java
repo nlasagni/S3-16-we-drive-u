@@ -1,11 +1,12 @@
 package com.wedriveu.services.analytics.vehicleService;
 
+import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
+import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.services.analytics.util.*;
 import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
@@ -18,7 +19,7 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_V
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleListGeneratorResponseHandler extends VerticlePublisher {
+public class VehicleUpdateGenerator extends VerticlePublisher {
     @Override
     public void start(Future startFuture) throws Exception {
         Future future = Future.future();
@@ -30,14 +31,18 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher {
     }
 
     private void startConsumer() {
-        vertx.eventBus().consumer(EventBus.TEST_VEHICLE_LIST_RESPONSE, this::sendVehicleListToAnalyticsService);
+        vertx.eventBus().consumer(EventBus.TEST_VEHICLE_UPDATE, this::sendVehicleUpdateToAnalyticsService);
     }
 
 
-    private void sendVehicleListToAnalyticsService(Message message) {
-        List<Vehicle> vehicleList = VehicleListGenerator.getVehicleList();
-        JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new AnalyticsVehicleList(vehicleList));
-        publish(Constants.RabbitMQ.Exchanges.VEHICLE, ANALYTICS_VEHICLES_RESPONSE_ALL, vehicleListJson, published -> { });
+    private void sendVehicleUpdateToAnalyticsService(Message message) {
+        UpdateToService updateToService = new UpdateToService();
+        updateToService.setLicense(EventBus.Messages.ANALYTICS_VEHICLE_TEST_LICENSE_PLATE);
+        updateToService.setStatus(Vehicle.STATUS_BOOKED);
+        publish(Constants.RabbitMQ.Exchanges.VEHICLE,
+                Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE,
+                VertxJsonMapper.mapInBodyFrom(updateToService),
+                res-> { });
     }
 
 }

@@ -16,7 +16,7 @@ import static com.wedriveu.shared.util.Constants.*;
 public class VehicleListGeneratorRequestHandler extends VerticleConsumer {
 
     public VehicleListGeneratorRequestHandler() {
-        super(RabbitMQ.Exchanges.ANALYTICS + "." + ROUTING_KEY_VEHICLE_REQUEST_ALL);
+        super(RabbitMQ.Exchanges.ANALYTICS + "." + RabbitMQ.RoutingKey.ANALYTICS_VEHICLE_REQUEST_ALL + ".test");
     }
 
     @Override
@@ -30,7 +30,7 @@ public class VehicleListGeneratorRequestHandler extends VerticleConsumer {
                 futureRequest.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, ROUTING_KEY_VEHICLE_REQUEST_ALL, EventBus.AVAILABLE_ADDRESS_FAKE_GENERATOR, futureConsumer);
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, RabbitMQ.RoutingKey.ANALYTICS_VEHICLE_REQUEST_ALL, EventBus.AVAILABLE_ADDRESS_FAKE_GENERATOR, futureConsumer);
 
     }
 

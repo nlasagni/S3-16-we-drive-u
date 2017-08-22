@@ -41,6 +41,7 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
     }
 
     private void addVehiclesToDatabase(AnalyticsVehicleList vehicleList) {
+        analyticsStore.clear();
         for (Vehicle vehicle : vehicleList.getVehicleList()) {
             analyticsStore.addVehicle(vehicle.getLicensePlate(), vehicle.getStatus());
         }
