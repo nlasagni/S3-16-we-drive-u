@@ -20,15 +20,13 @@ import org.junit.runner.RunWith;
 /**
  * @author Michele Donati on 11/08/2017.
  */
-
 @RunWith(VertxUnitRunner.class)
 public class VehicleVerticleArrivedNotifyImplTest {
 
-    private static final String TAG = VehicleVerticleArrivedNotifyImplTest.class.getSimpleName();
     private static final String JSON_QUEUE_KEY = "queue";
+    private static final String QUEUE = VehicleVerticleArrivedNotifyImplTest.class.getCanonicalName();
     private static final String EVENT_BUS_ADDRESS =
             VehicleVerticleArrivedNotifyImplTest.class.getCanonicalName();
-    private static final long TEST_TIME_OUT = 5000;
 
     private Vertx vertx;
     private EventBus eventBus;
@@ -70,23 +68,23 @@ public class VehicleVerticleArrivedNotifyImplTest {
         config.put(Constants.RabbitMQ.ConfigKey.PASSWORD, Constants.RabbitMQ.Broker.PASSWORD);
         config.put(Constants.RabbitMQ.ConfigKey.PORT, Constants.RabbitMQ.Broker.PORT);
         rabbitMQClient = io.vertx.rabbitmq.RabbitMQClient.create(vertx, config);
-        rabbitMQClient.start(onStart -> {
-            rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
-                requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
-                rabbitMQClient.queueBind(requestId,
-                        Constants.RabbitMQ.Exchanges.VEHICLE,
-                        Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
-                        onQueueBind -> {
-                            vertx.deployVerticle(vehicleVerticle,
-                                    context.asyncAssertSuccess(onDeploy -> {
-                                            async.complete();
-                                        }
-                                    ));
-                            context.assertTrue(onQueueBind.succeeded());
-                        });
-                context.assertTrue(onQueueDeclare.succeeded());
-            });
-        });
+        rabbitMQClient.start(onStart ->
+                rabbitMQClient.queueDeclare(QUEUE,
+                        false,
+                        false,
+                        true,
+                        onQueueDeclare -> {
+                            rabbitMQClient.queueBind(QUEUE,
+                                    Constants.RabbitMQ.Exchanges.VEHICLE,
+                                    Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
+                                    onQueueBind -> {
+                                        vertx.deployVerticle(vehicleVerticle,
+                                                context.asyncAssertSuccess(onDeploy -> async.complete()));
+                                        context.assertTrue(onQueueBind.succeeded());
+                                    });
+                            context.assertTrue(onQueueDeclare.succeeded());
+                        })
+        );
         async.awaitSuccess();
     }
 
@@ -97,23 +95,20 @@ public class VehicleVerticleArrivedNotifyImplTest {
 
     @Test
     public void sendArrivedNotifyToService(TestContext context) throws Exception {
-        checkVehicleNotify(context);
-    }
-
-    private void checkVehicleNotify(TestContext context) {
         final Async async = context.async();
-        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
-            MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-                JsonObject notifyJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
-                ArrivedNotify notify = notifyJson.mapTo(ArrivedNotify.class);
-                context.assertTrue(notify.getLicense().equals(license));
-                async.complete();
-            });
-            consumer.exceptionHandler(event -> {
-                context.fail(event.getCause());
-            });
+        MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
+            JsonObject notifyJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
+            ArrivedNotify notify = notifyJson.mapTo(ArrivedNotify.class);
+            context.assertTrue(notify.getLicense().equals(license));
+            async.complete();
         });
-        eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, vehicleControl.getVehicle().plate()),
+        consumer.exceptionHandler(event -> {
+            context.fail(event.getCause());
+        });
+        rabbitMQClient.basicConsume(QUEUE, EVENT_BUS_ADDRESS, onGet -> {
+        });
+        eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY,
+                vehicleControl.getVehicle().plate()),
                 new JsonObject());
         async.awaitSuccess();
     }
