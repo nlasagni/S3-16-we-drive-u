@@ -47,6 +47,9 @@ class EnterVehicleConsumerStrategy implements RabbitMqConsumerStrategy<EnterVehi
 
     @Override
     public void handleMessage(final EnterVehicleRequest message) {
+        if (message == null) {
+            return;
+        }
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {

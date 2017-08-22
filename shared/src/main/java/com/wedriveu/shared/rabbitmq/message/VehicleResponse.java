@@ -4,26 +4,26 @@ package com.wedriveu.shared.rabbitmq.message;
  *
  *  Describes the Vehicle as returned from the VehicleService.
  *  Some of the fields won't be used for the Android Application
+ *
+ *  @author Marco Baldassarri
+ *  @author Nicola Lasagni
  */
 public class VehicleResponse {
 
-    private String licencePlate;
+    private String licensePlate;
     private String vehicleName;
     private String description;
     private String pictureURL;
-    private String arriveAtUserTime;
-    private String arriveAtDestinationTime;
-    private String lastUpdate;
-    private String userPosition;
-    private String destinationPosition;
+    private long arriveAtUserTime;
+    private long arriveAtDestinationTime;
     private String notEligibleVehicleFound;
 
-    public String getLicencePlate() {
-        return licencePlate;
+    public String getLicensePlate() {
+        return licensePlate;
     }
 
-    public void setLicencePlate(String licencePlate) {
-        this.licencePlate = licencePlate;
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 
     public String getVehicleName() {
@@ -50,44 +50,20 @@ public class VehicleResponse {
         this.pictureURL = pictureURL;
     }
 
-    public String getArriveAtUserTime() {
+    public long getArriveAtUserTime() {
         return arriveAtUserTime;
     }
 
-    public void setArriveAtUserTime(String arriveAtUserTime) {
+    public void setArriveAtUserTime(long arriveAtUserTime) {
         this.arriveAtUserTime = arriveAtUserTime;
     }
 
-    public String getArriveAtDestinationTime() {
+    public long getArriveAtDestinationTime() {
         return arriveAtDestinationTime;
     }
 
-    public void setArriveAtDestinationTime(String arriveAtDestinationTime) {
+    public void setArriveAtDestinationTime(long arriveAtDestinationTime) {
         this.arriveAtDestinationTime = arriveAtDestinationTime;
-    }
-
-    public String getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(String lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public String getUserPosition() {
-        return userPosition;
-    }
-
-    public void setUserPosition(String userPosition) {
-        this.userPosition = userPosition;
-    }
-
-    public String getDestinationPosition() {
-        return destinationPosition;
-    }
-
-    public void setDestinationPosition(String destinationPosition) {
-        this.destinationPosition = destinationPosition;
     }
 
     public String getNotEligibleVehicleFound() {
@@ -99,48 +75,47 @@ public class VehicleResponse {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
-        VehicleResponse otherResponse = (VehicleResponse) other;
-        return (licencePlate != null ? licencePlate.equals(otherResponse.licencePlate) : otherResponse.licencePlate == null) &&
-                (vehicleName != null ? vehicleName.equals(otherResponse.vehicleName) : otherResponse.vehicleName == null) &&
-                (description != null ? description.equals(otherResponse.description) : otherResponse.description == null) &&
-                (pictureURL != null ? pictureURL.equals(otherResponse.pictureURL) : otherResponse.pictureURL == null) &&
-                (arriveAtUserTime != null ? arriveAtUserTime.equals(otherResponse.arriveAtUserTime) : otherResponse.arriveAtUserTime == null) &&
-                (arriveAtDestinationTime != null ? arriveAtDestinationTime.equals(otherResponse.arriveAtDestinationTime) : otherResponse.arriveAtDestinationTime == null) &&
-                (lastUpdate != null ? lastUpdate.equals(otherResponse.lastUpdate) : otherResponse.lastUpdate == null) &&
-                (userPosition != null ? userPosition.equals(otherResponse.userPosition) : otherResponse.userPosition == null) &&
-                (destinationPosition != null ? destinationPosition.equals(otherResponse.destinationPosition) : otherResponse.destinationPosition == null);
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof VehicleResponse)) {
+            return false;
+        }
+        VehicleResponse that = (VehicleResponse) o;
+        return arriveAtUserTime == that.arriveAtUserTime &&
+                arriveAtDestinationTime == that.arriveAtDestinationTime &&
+                (licensePlate != null ? licensePlate.equals(that.licensePlate) : that.licensePlate == null) &&
+                (vehicleName != null ? vehicleName.equals(that.vehicleName) : that.vehicleName == null) &&
+                (description != null ? description.equals(that.description) : that.description == null) &&
+                (pictureURL != null ? pictureURL.equals(that.pictureURL) : that.pictureURL == null) &&
+                (notEligibleVehicleFound != null
+                        ? notEligibleVehicleFound.equals(that.notEligibleVehicleFound)
+                        : that.notEligibleVehicleFound == null);
     }
 
     @Override
     public int hashCode() {
-        int result = licencePlate != null ? licencePlate.hashCode() : 0;
+        int result = licensePlate != null ? licensePlate.hashCode() : 0;
         result = 31 * result + (vehicleName != null ? vehicleName.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (pictureURL != null ? pictureURL.hashCode() : 0);
-        result = 31 * result + (arriveAtUserTime != null ? arriveAtUserTime.hashCode() : 0);
-        result = 31 * result + (arriveAtDestinationTime != null ? arriveAtDestinationTime.hashCode() : 0);
-        result = 31 * result + (lastUpdate != null ? lastUpdate.hashCode() : 0);
-        result = 31 * result + (userPosition != null ? userPosition.hashCode() : 0);
-        result = 31 * result + (destinationPosition != null ? destinationPosition.hashCode() : 0);
+        result = 31 * result + (int) (arriveAtUserTime ^ (arriveAtUserTime >>> 32));
+        result = 31 * result + (int) (arriveAtDestinationTime ^ (arriveAtDestinationTime >>> 32));
+        result = 31 * result + (notEligibleVehicleFound != null ? notEligibleVehicleFound.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "VehicleResponse{" +
-                "licencePlate='" + licencePlate + '\'' +
+                "licensePlate='" + licensePlate + '\'' +
                 ", vehicleName='" + vehicleName + '\'' +
                 ", description='" + description + '\'' +
                 ", pictureURL='" + pictureURL + '\'' +
-                ", arriveAtUserTime='" + arriveAtUserTime + '\'' +
-                ", arriveAtDestinationTime='" + arriveAtDestinationTime + '\'' +
-                ", lastUpdate='" + lastUpdate + '\'' +
-                ", userPosition='" + userPosition + '\'' +
-                ", destinationPosition='" + destinationPosition + '\'' +
+                ", arriveAtUserTime=" + arriveAtUserTime +
+                ", arriveAtDestinationTime=" + arriveAtDestinationTime +
+                ", notEligibleVehicleFound='" + notEligibleVehicleFound + '\'' +
                 '}';
     }
-
 }

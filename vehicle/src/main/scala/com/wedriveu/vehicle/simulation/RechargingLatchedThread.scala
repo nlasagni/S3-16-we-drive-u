@@ -14,15 +14,15 @@ import io.vertx.core.json.JsonObject
   */
 
 class RechargingLatchedThread(selfDrivingVehicle: SelfDrivingVehicle,
-                              countdownLatch: CountDownLatch,
-                              vertx: Vertx) extends Thread {
+  countdownLatch: CountDownLatch,
+  vertx: Vertx) extends Thread {
   val oneSecondInMillis: Int = 1000
   val eventBus: EventBus = vertx.eventBus()
 
   override def run(): Unit = {
-    for(i <- 0 until 10 by 1){
+    for (i <- 0 until 10 by 1) {
       try {
-        if(!selfDrivingVehicle.getState().equals(VehicleConstants.stateBroken)) {
+        if (!selfDrivingVehicle.getState().equals(VehicleConstants.stateBroken)) {
           Thread.sleep(oneSecondInMillis)
         }
         else {

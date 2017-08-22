@@ -14,12 +14,12 @@ import io.vertx.core.json.JsonObject
   * @author Michele Donati on 04/08/2017.
   */
 
-/** This trait models the UI of vehicle stop window.*/
+/** This trait models the UI of vehicle stop window. */
 trait VehicleStopView {
-  /** This method renders the frame visible.*/
+  /** This method renders the frame visible. */
   def render(): Unit
 
-  /** This method does the shutdown of the system.*/
+  /** This method does the shutdown of the system. */
   def close(): Unit
 
   /** This method write the vehicles message logs in the text area.
@@ -37,7 +37,7 @@ trait VehicleStopView {
 }
 
 class VehicleStopViewImpl(vertx: Vertx, vehicleIdentifier: Int)
-  extends JFrame("Vehicle " + vehicleIdentifier) with VehicleStopView with ActionListener {
+    extends JFrame("Vehicle " + vehicleIdentifier) with VehicleStopView with ActionListener {
 
   val eventBus: EventBus = vertx.eventBus()
   val notCommandFoundError: String = "No Command Found"
@@ -46,12 +46,12 @@ class VehicleStopViewImpl(vertx: Vertx, vehicleIdentifier: Int)
   var vehicleAssociated: VehicleControl = null
   val panel: JPanel = new JPanel()
   val logLabel: JLabel = new JLabel("Log")
-  val logsTextArea: JTextArea = new JTextArea(450,300)
+  val logsTextArea: JTextArea = new JTextArea(450, 300)
   logsTextArea.setEditable(false)
   val textAreaScrollPane: JScrollPane = new JScrollPane(logsTextArea)
   val stopCommand: String = "Force Stop Vehicle (Broken)"
-  val stopButton: JButton =  new JButton(stopCommand)
-  setSize(500,400)
+  val stopButton: JButton = new JButton(stopCommand)
+  setSize(500, 400)
   setResizable(false)
   stopButton.addActionListener(this)
 
@@ -62,11 +62,11 @@ class VehicleStopViewImpl(vertx: Vertx, vehicleIdentifier: Int)
 
   groupLayout.setHorizontalGroup(
     groupLayout.createSequentialGroup()
-      .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-          .addComponent(logLabel)
-          .addComponent(textAreaScrollPane)
-          .addComponent(stopButton)
-    )
+        .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(logLabel)
+            .addComponent(textAreaScrollPane)
+            .addComponent(stopButton)
+        )
   )
 
   groupLayout.setVerticalGroup(
@@ -87,13 +87,17 @@ class VehicleStopViewImpl(vertx: Vertx, vehicleIdentifier: Int)
 
   override def render(): Unit = setVisible(true)
 
-  override def close(): Unit = System.exit(-1)
+  override def close(): Unit = {
+    eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleAssociated.getVehicle().plate),
+      new JsonObject())
+    writeMessageLog(forceBrokenStatus + vehicleAssociated.getVehicle().getState())
+  }
 
   override def writeMessageLog(messageToLog: String): Unit = {
     logsTextArea.setText(logsTextArea.getText.concat(messageToLog + "\n"))
   }
 
-  override def setVehicleAssociated(vehicle: VehicleControl) : Unit = {
+  override def setVehicleAssociated(vehicle: VehicleControl): Unit = {
     vehicleAssociated = vehicle
   }
 

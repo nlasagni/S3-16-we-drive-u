@@ -1,15 +1,13 @@
 package com.wedriveu.services.authentication.entity;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.shared.util.Log;
 import com.wedriveu.services.shared.model.User;
+import com.wedriveu.shared.util.Log;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,18 +28,7 @@ public class UserStoreImpl implements UserStore {
 
     @Override
     public void mapEntityToJson() {
-
-        User user = createDummyObject("Michele", "PASSWORD1");
-        User user2 = createDummyObject("Stefano", "PASSWORD2");
-        User user3 = createDummyObject("Nicola", "PASSWORD3");
-        User user4 = createDummyObject("Marco", "PASSWORD4");
-
-        ArrayList<User> userListToJSon = new ArrayList<User>();
-        userListToJSon.add(user);
-        userListToJSon.add(user2);
-        userListToJSon.add(user3);
-        userListToJSon.add(user4);
-
+        List<User> userListToJSon = Arrays.asList(User.USERS);
         writeJSonUsersFile(userListToJSon);
     }
 
@@ -54,10 +41,6 @@ public class UserStoreImpl implements UserStore {
                     mapper.readValue(file, new TypeReference<List<User>>() {
                     });
             return getRequestedUuser(users, username);
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,23 +48,14 @@ public class UserStoreImpl implements UserStore {
         return null;
     }
 
-    private User createDummyObject(String username, String password) {
-        return new User(username, password);
-    }
-
-    private void writeJSonUsersFile(ArrayList<User> userListToJSon) {
+    private void writeJSonUsersFile(List<User> userListToJSon) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-
             mapper.writeValue(file, userListToJSon);
             String jsonInString = mapper.writeValueAsString(userListToJSon);
             Log.info(jsonInString);
             jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(userListToJSon);
             Log.info(jsonInString);
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,15 +64,9 @@ public class UserStoreImpl implements UserStore {
     private User getRequestedUuser(List<User> users, String username) {
         for (User user : users) {
             if (user.getUsername().equals(username)) {
-                Log.info("Login success! " +
-                        "Username: " +
-                        user.getUsername() +
-                        ", Password: " +
-                        user.getPassword());
                 return user;
             }
         }
-        Log.info("Login failed, retry!");
         return null;
     }
 

@@ -39,27 +39,12 @@ public class Position {
         this.longitude = longitude;
     }
 
-    public double getEuclideanDistance(Position position) {
-        return Math.sqrt(Math.pow(this.latitude - position.getLatitude(), 2)
-                + Math.pow(this.longitude - position.getLongitude(), 2));
-    }
-
     public static double getDistanceInKm(Position from, Position to) {
-        double earthRadius = 6372.795477598;
-        return earthRadius * Math.acos(Math.sin(from.getLatitude()) * Math.sin(to.getLatitude())
-                + Math.cos(from.getLatitude()) * Math.cos(to.getLatitude())
-                * Math.cos(from.getLatitude() - to.getLongitude()));
+        return PositionUtils.getDistanceInKm(from, to);
     }
 
     public double getDistanceInKm(Position to) {
-        double earthRadius = 6372.795477598;
-        return earthRadius * Math.acos(Math.sin(this.latitude) * Math.sin(to.getLatitude())
-                + Math.cos(this.latitude) * Math.cos(to.getLatitude())
-                * Math.cos(this.longitude - to.getLongitude()));
-    }
-
-    public static boolean isInRange(Position userPosition, Position vehiclePosition) {
-        return userPosition.getEuclideanDistance(vehiclePosition) < 20;
+        return PositionUtils.getDistanceInKm(new Position(this.latitude, this.longitude), to);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.wedriveu.vehicle.simulation
 
-import rx.lang.scala.Observable
 import java.util.concurrent.ThreadLocalRandom
 
 import com.wedriveu.shared.util.{Log, Position}
+import rx.lang.scala.Observable
 
 /**
   * @author Michele Donati on 28/07/2017.
@@ -67,8 +67,8 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
       subscriber => {
         new Thread(new Runnable() {
           def run(): Unit = {
-            while(true) {
-              if(unsubscribeToMovements){
+            while (true) {
+              if (unsubscribeToMovements) {
                 subscriber.unsubscribe()
               }
               if (subscriber.isUnsubscribed) {
@@ -77,11 +77,11 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
               }
               //This event will be not necessary when the service is up.
               randomLatitudeDestination =
-                ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
+                  ThreadLocalRandom.current().nextDouble(minorBoundPositionLat, maxBoundPositionLat)
               randomLongitudeDestination =
-                ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
+                  ThreadLocalRandom.current().nextDouble(minorBoundPositionLon, maxBoundPositionLon)
               Log.info(positionToReachLog + randomLatitudeDestination + " , " + randomLongitudeDestination)
-              subscriber.onNext(new Position(randomLatitudeDestination, randomLongitudeDestination ))
+              subscriber.onNext(new Position(randomLatitudeDestination, randomLongitudeDestination))
               Thread.sleep(1500000) //this is temporary
             }
           }
@@ -95,9 +95,9 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
       subscriber => {
         new Thread(new Runnable() {
           def run(): Unit = {
-            while(true) {
+            while (true) {
               calculateRandomNumber(startBrokenRange, endBrokenRange, vehicleBrokenLog)
-              if(unsubscribeToBrokens){
+              if (unsubscribeToBrokens) {
                 subscriber.unsubscribe()
               }
               if (subscriber.isUnsubscribed) {
@@ -117,9 +117,9 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
       subscriber => {
         new Thread(new Runnable() {
           def run(): Unit = {
-            while(true) {
+            while (true) {
               calculateRandomNumber(startStolenRange, endStolenRange, vehicleStolenLog)
-              if(unsubscribeToStolens){
+              if (unsubscribeToStolens) {
                 subscriber.unsubscribe()
               }
               if (subscriber.isUnsubscribed) {
@@ -136,8 +136,8 @@ class VehicleEventsObservablesImpl extends VehicleEventsObservables {
 
   private def calculateRandomNumber(startRange: Int, endRange: Int, vehicleLog: String): Unit = {
     val randomNumber = new scala.util.Random
-    val result = startRange + randomNumber.nextInt(( endRange - startRange) + 1);
-    Thread.sleep(result*oneSecondInMillis)
+    val result = startRange + randomNumber.nextInt((endRange - startRange) + 1);
+    Thread.sleep(result * oneSecondInMillis)
     Log.info(vehicleLog)
   }
 

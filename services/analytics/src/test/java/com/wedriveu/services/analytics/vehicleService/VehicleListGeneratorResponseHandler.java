@@ -1,57 +1,43 @@
 package com.wedriveu.services.analytics.vehicleService;
 
+import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.services.shared.model.VehicleListObject;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
-import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
-import com.wedriveu.shared.util.Position;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
+import com.wedriveu.shared.util.Constants;
+import com.wedriveu.services.analytics.util.*;
+import com.wedriveu.shared.util.Log;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_VEHICLES_RESPONSE_ALL;
 
 /**
  * @author Stefano Bernagozzi
  */
-public class VehicleListGeneratorResponseHandler extends VerticlePublisher{
+public class VehicleListGeneratorResponseHandler extends VerticlePublisher {
     @Override
-    public void start() throws Exception {
-        startConsumer();
-        Log.info("future VehicleListGeneratorResponseHandler complete");
+    public void start(Future startFuture) throws Exception {
+        Future future = Future.future();
+        super.start(future);
+        future.setHandler(res -> {
+            startFuture.complete();
+            startConsumer();
+        });
     }
 
     private void startConsumer() {
-        Log.info("started vertx eventbus consumer in VehicleListGeneratorResponseHandler, attending start to receive");
-        vertx.eventBus().consumer("mandaVeicoli", this::sendVehicleListToAnalyticsService);
+        vertx.eventBus().consumer(EventBus.TEST_VEHICLE_LIST_RESPONSE, this::sendVehicleListToAnalyticsService);
     }
 
 
     private void sendVehicleListToAnalyticsService(Message message) {
-        ArrayList<Vehicle> vehicleList = new ArrayList<>();
-        vehicleList.add(new Vehicle("MACCHINA1",
-                    "broken",
-                    new Position(10.2, 13.2),
-                    new Date(2017, 11, 30, 12, 37, 43)));
-        vehicleList.add(new Vehicle("MACCHINA2",
-                    "available",
-                    new Position(11.2, 14.2),
-                    new Date(2017, 10, 28, 11, 43, 12)));
-        vehicleList.add(new Vehicle("MACCHINA3",
-                    "busy",
-                    new Position(15.2, 13.2),
-                    new Date(2017, 9, 26, 10, 56, 46)));
-        vehicleList.add(new Vehicle("MACCHINA4",
-                    "recharging",
-                    new Position(13.2, 16.2),
-                    new Date(2017, 8, 24, 9, 37, 22)));
-        JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new VehicleListObject(vehicleList));
-        publish(Constants.RabbitMQ.Exchanges.VEHICLE,ANALYTICS_VEHICLES_RESPONSE_ALL,vehicleListJson, published -> { });
-        Log.info("sent request for all vehicles to vehicle service in VehicleListGeneratorResponseHandler");
+        List<Vehicle> vehicleList = VehicleListGenerator.getVehicleList();
+        JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new AnalyticsVehicleList(vehicleList));
+        publish(Constants.RabbitMQ.Exchanges.VEHICLE, ANALYTICS_VEHICLES_RESPONSE_ALL, vehicleListJson, published -> { });
     }
 
 }

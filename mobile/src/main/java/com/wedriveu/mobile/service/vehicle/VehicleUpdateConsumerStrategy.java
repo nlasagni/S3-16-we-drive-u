@@ -55,6 +55,7 @@ class VehicleUpdateConsumerStrategy implements RabbitMqConsumerStrategy<UpdateTo
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 String error = null;
                 Vehicle vehicle = mVehicleStore.getVehicle();
                 if (message == null) {

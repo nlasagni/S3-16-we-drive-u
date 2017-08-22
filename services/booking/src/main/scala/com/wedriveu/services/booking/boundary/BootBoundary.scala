@@ -26,12 +26,13 @@ object BootBoundary {
 
     override def boot(): Future[_] = {
       client.startFuture().flatMap({
-        _ => client.exchangeDeclareFuture(
-          Shared.RabbitMQ.Exchanges.BOOKING,
-          Shared.RabbitMQ.Exchanges.Type.DIRECT,
-          durable = true,
-          autoDelete = false
-        )
+        _ =>
+          client.exchangeDeclareFuture(
+            Shared.RabbitMQ.Exchanges.BOOKING,
+            Shared.RabbitMQ.Exchanges.Type.DIRECT,
+            durable = true,
+            autoDelete = false
+          )
       }).flatMap({
         _ => vertx.deployVerticleFuture(BookingBoundaryVerticle.Verticle)
       }).flatMap({

@@ -7,6 +7,7 @@ import com.rabbitmq.client.ExceptionHandler;
 import com.wedriveu.mobile.model.Vehicle;
 import com.wedriveu.mobile.service.ServiceExceptionHandler;
 import com.wedriveu.mobile.service.ServiceOperationCallback;
+import com.wedriveu.mobile.service.ServiceResult;
 import com.wedriveu.mobile.store.UserStore;
 import com.wedriveu.mobile.store.VehicleStore;
 import com.wedriveu.shared.rabbitmq.communication.DefaultRabbitMqCommunicationManager;
@@ -41,6 +42,9 @@ public class VehicleServiceImpl implements VehicleService {
     private RabbitMqCommunicationManager mEnterVehicleCommunicationManager;
     private RabbitMqCommunicationManager mVehicleArrivedCommunicationManager;
     private RabbitMqCommunicationManager mVehiclePositionCommunicationManager;
+    private int enterSubscriberId;
+    private int arrivedSubscriberId;
+    private int updateSubscriberId;
 
     public VehicleServiceImpl(Activity activity, UserStore userStore, VehicleStore vehicleStore) {
         mActivity = activity;
@@ -67,7 +71,8 @@ public class VehicleServiceImpl implements VehicleService {
                     mEnterVehicleCommunicationManager.setUpCommunication(config);
                     RabbitMqConsumerStrategy<EnterVehicleRequest> strategy =
                             new EnterVehicleConsumerStrategy(mActivity, mUserStore.getUser(), callback);
-                    mEnterVehicleCommunicationManager.registerConsumer(strategy, EnterVehicleRequest.class);
+                    enterSubscriberId =
+                            mEnterVehicleCommunicationManager.subscribeConsumer(strategy, EnterVehicleRequest.class);
                 } catch (IOException | TimeoutException e) {
                     Log.e(TAG, ENTER_ERROR, e);
                 }
@@ -77,16 +82,20 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void enterVehicleAndUnsubscribe(ServiceOperationCallback<Void> callback) {
+    public void enterVehicleAndUnsubscribe(final ServiceOperationCallback<Void> callback) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 EnterVehicleResponse enterVehicleResponse = new EnterVehicleResponse();
                 enterVehicleResponse.setResponse(ENTER_CONFIRMATION);
                 try {
+                    String licensePlate = mVehicleStore.getVehicle().getLicencePlate();
                     mEnterVehicleCommunicationManager.publishMessage(Constants.RabbitMQ.Exchanges.VEHICLE,
-                            Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE_ENTER_USER,
+                            String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE_ENTER_USER, licensePlate),
                             enterVehicleResponse);
+
+                    mEnterVehicleCommunicationManager.unsubscribeConsumer(enterSubscriberId);
+
                     mEnterVehicleCommunicationManager.closeCommunication(new RabbitMqCloseCommunicationStrategy() {
                         @Override
                         public void closeCommunication(RabbitMqCommunication communication) throws IOException {
@@ -99,6 +108,11 @@ public class VehicleServiceImpl implements VehicleService {
                     Log.e(TAG, ENTER_ERROR, e);
                 }
                 return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                callback.onServiceOperationFinished(new ServiceResult<>(result, null));
             }
         }.execute();
     }
@@ -119,7 +133,8 @@ public class VehicleServiceImpl implements VehicleService {
                     mVehicleArrivedCommunicationManager.setUpCommunication(config);
                     RabbitMqConsumerStrategy<CompleteBookingResponse> strategy =
                             new VehicleArrivedConsumerStrategy(mActivity, mUserStore.getUser(), callback);
-                    mVehicleArrivedCommunicationManager.registerConsumer(strategy, CompleteBookingResponse.class);
+                    arrivedSubscriberId =
+                            mVehicleArrivedCommunicationManager.subscribeConsumer(strategy, CompleteBookingResponse.class);
                 } catch (IOException | TimeoutException e) {
                     Log.e(TAG, ARRIVED_ERROR, e);
                 }
@@ -134,6 +149,9 @@ public class VehicleServiceImpl implements VehicleService {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
+
+                    mVehicleArrivedCommunicationManager.unsubscribeConsumer(arrivedSubscriberId);
+
                     mVehicleArrivedCommunicationManager.closeCommunication(new RabbitMqCloseCommunicationStrategy() {
                         @Override
                         public void closeCommunication(RabbitMqCommunication communication) throws IOException {
@@ -166,7 +184,8 @@ public class VehicleServiceImpl implements VehicleService {
                     mVehiclePositionCommunicationManager.setUpCommunication(config);
                     RabbitMqConsumerStrategy<UpdateToService> strategy =
                             new VehicleUpdateConsumerStrategy(mActivity, mUserStore.getUser(), mVehicleStore, callback);
-                    mVehiclePositionCommunicationManager.registerConsumer(strategy, UpdateToService.class);
+                    updateSubscriberId =
+                            mVehiclePositionCommunicationManager.subscribeConsumer(strategy, UpdateToService.class);
                 } catch (IOException | TimeoutException e) {
                     Log.e(TAG, ARRIVED_ERROR, e);
                 }
@@ -189,6 +208,7 @@ public class VehicleServiceImpl implements VehicleService {
                                             mUserStore.getUser().getUsername()));
                         }
                     });
+                    mVehiclePositionCommunicationManager.unsubscribeConsumer(updateSubscriberId);
                 } catch (IOException | TimeoutException e) {
                     Log.e(TAG, UPDATE_ERROR, e);
                 }

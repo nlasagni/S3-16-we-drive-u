@@ -1,13 +1,12 @@
 package com.wedriveu.vehicle.boundary;
 
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.CanDriveRequest;
 import com.wedriveu.shared.rabbitmq.message.CanDriveResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
-import com.wedriveu.shared.util.Position;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.weriveu.vehicle.boundary.VehicleVerticleCanDriveImpl;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -42,8 +41,6 @@ public class VehicleVerticleCanDriveImplTest {
     private String requestId;
     private VehicleControl vehicleControl;
     private String license = "VEHICLE1";
-    private String state = "available";
-    private Position position = new Position(44.1454528, 12.2474513);
     private double battery = 100.0;
     private double speed = 50.0;
     private VehicleStopView stopUi;
@@ -55,7 +52,7 @@ public class VehicleVerticleCanDriveImplTest {
         eventBus = vertx.eventBus();
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx,"","",license, state, position, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx, "", "", license, Vehicle.STATUS_AVAILABLE, Constants.HEAD_QUARTER, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleCanDriveImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -74,14 +71,14 @@ public class VehicleVerticleCanDriveImplTest {
                         Constants.RabbitMQ.Exchanges.VEHICLE,
                         String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, USERNAME),
                         onQueueBind -> {
-                    vertx.deployVerticle(vehicleVerticle,
-                            new DeploymentOptions().setWorker(true),
-                            context.asyncAssertSuccess(onDeploy ->
-                            async.complete()
-                    ));
-                    async.countDown();
-                    context.assertTrue(onQueueBind.succeeded());
-                });
+                            vertx.deployVerticle(vehicleVerticle,
+                                    new DeploymentOptions().setWorker(true),
+                                    context.asyncAssertSuccess(onDeploy ->
+                                            async.complete()
+                                    ));
+                            async.countDown();
+                            context.assertTrue(onQueueBind.succeeded());
+                        });
                 context.assertTrue(onQueueDeclare.succeeded());
                 async.countDown();
             });
@@ -110,7 +107,8 @@ public class VehicleVerticleCanDriveImplTest {
     }
 
     private void checkVehicleCanDriveResponse(TestContext context, Async async) {
-        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {});
+        rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
+        });
         MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
             JsonObject responseJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
             Log.info(TAG, responseJson.toString());

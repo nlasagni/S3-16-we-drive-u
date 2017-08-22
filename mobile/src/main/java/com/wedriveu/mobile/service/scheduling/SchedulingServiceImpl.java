@@ -1,7 +1,6 @@
 package com.wedriveu.mobile.service.scheduling;
 
 import android.app.Activity;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,6 +24,9 @@ import com.wedriveu.shared.util.Position;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -41,11 +43,11 @@ public class SchedulingServiceImpl implements SchedulingService {
 
     private static final String TAG = SchedulingServiceImpl.class.getSimpleName();
     private static final String SCHEDULING_ERROR = "Error occurred while performing scheduling operation.";
+    private static final String FORMAT = "dd/MM/yyyy HH:mm";
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(FORMAT, Locale.getDefault());
 
     private Activity mActivity;
     private UserStore mUserStore;
-    private Double mUserLatitude;
-    private Double mUserLongitude;
     private RabbitMqCommunicationManager mCommunicationManager;
 
     public SchedulingServiceImpl(Activity activity, UserStore userStore) {
@@ -55,7 +57,9 @@ public class SchedulingServiceImpl implements SchedulingService {
     }
 
     @Override
-    public void findNearestVehicle(final Place address, final ServiceOperationCallback<Vehicle> callback) {
+    public void findNearestVehicle(final Position userPosition,
+                                   final Place address,
+                                   final ServiceOperationCallback<Vehicle> callback) {
         new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -69,7 +73,7 @@ public class SchedulingServiceImpl implements SchedulingService {
                                     .password(Constants.RabbitMQ.Broker.PASSWORD)
                                     .exceptionHandler(exceptionHandler).build();
                     mCommunicationManager.setUpCommunication(config);
-                    VehicleRequest request = createRequest(address);
+                    VehicleRequest request = createRequest(userPosition, address);
                     sendRequest(request);
                     final BlockingQueue<VehicleResponse> response = new ArrayBlockingQueue<>(1);
                     VehicleResponse responseBody = subscribeForResponse(response);
@@ -85,18 +89,6 @@ public class SchedulingServiceImpl implements SchedulingService {
         }.execute();
     }
 
-    @Override
-    public void onLocationAvailable(Location location) {
-        mUserLatitude = location.getLatitude();
-        mUserLongitude = location.getLongitude();
-    }
-
-    @Override
-    public void onLocationServiceDisabled() {
-        mUserLatitude = null;
-        mUserLongitude = null;
-    }
-
     private void closeCommunication() {
         try {
             RabbitMqCloseCommunicationStrategy strategy =
@@ -107,10 +99,10 @@ public class SchedulingServiceImpl implements SchedulingService {
         }
     }
 
-    private VehicleRequest createRequest(Place destinationAddress) throws UnsupportedEncodingException {
+    private VehicleRequest createRequest(Position userPosition,
+                                         Place destinationAddress) throws UnsupportedEncodingException {
         VehicleRequest request = new VehicleRequest();
         request.setUsername(mUserStore.getUser().getUsername());
-        Position userPosition = new Position(mUserLatitude, mUserLongitude);
         LatLng coordinates = destinationAddress.getLatLng();
         Position destinationPosition = new Position(coordinates.latitude, coordinates.longitude);
         request.setUserPosition(userPosition);
@@ -139,13 +131,15 @@ public class SchedulingServiceImpl implements SchedulingService {
             String error = "";
             if (response == null) {
                 error = NO_RESPONSE_DATA_ERROR;
-            } else if (!TextUtils.isEmpty(response.getLicencePlate())) {
-                    vehicle = new Vehicle(response.getLicencePlate(),
-                            response.getVehicleName(),
-                            response.getDescription(),
-                            response.getPictureURL(),
-                            response.getArriveAtUserTime(),
-                            response.getArriveAtDestinationTime());
+            } else if (!TextUtils.isEmpty(response.getLicensePlate())) {
+                Date arriveAtUserTime = new Date(response.getArriveAtUserTime());
+                Date arriveAtDestinationTime = new Date(response.getArriveAtDestinationTime());
+                vehicle = new Vehicle(response.getLicensePlate(),
+                        response.getVehicleName(),
+                        response.getDescription(),
+                        response.getPictureURL(),
+                        DATE_FORMAT.format(arriveAtUserTime),
+                        DATE_FORMAT.format(arriveAtDestinationTime));
             } else if (!TextUtils.isEmpty(response.getNotEligibleVehicleFound())) {
                 error = response.getNotEligibleVehicleFound();
             } else {

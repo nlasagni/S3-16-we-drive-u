@@ -9,6 +9,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class User {
 
+    private static final String PASSWORD = "password";
+    public static final User[] USERS = {
+            new User("Michele", PASSWORD),
+            new User("Stefano", PASSWORD),
+            new User("Nicola", PASSWORD),
+            new User("Marco", PASSWORD),
+    };
+
     private String username;
     private String password;
 

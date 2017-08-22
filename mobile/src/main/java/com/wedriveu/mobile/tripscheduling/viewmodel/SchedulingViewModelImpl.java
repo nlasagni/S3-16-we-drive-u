@@ -41,6 +41,7 @@ import static android.app.Activity.RESULT_CANCELED;
 public class SchedulingViewModelImpl extends Fragment implements SchedulingViewModel, LocationServiceListener {
 
     private SchedulingRouter mRouter;
+    private LocationService mLocationService;
     private SchedulingService mSchedulingService;
     private BookingStore mBookingStore;
     private VehicleStore mVehicleStore;
@@ -68,9 +69,8 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
         UserStore userStore = StoreFactoryImpl.getInstance().createUserStore(getContext());
         mBookingStore = StoreFactoryImpl.getInstance().createBookingStore(getContext());
         mSchedulingService = ServiceFactoryImpl.getInstance().createSchedulingService(activity, userStore);
-        LocationService mLocationService = LocationServiceImpl.getInstance(activity);
+        mLocationService = LocationServiceImpl.getInstance(activity);
         mVehicleStore = StoreFactoryImpl.getInstance().createVehicleStore(getContext());
-        mLocationService.addLocationListener(mSchedulingService);
     }
 
     @Override
@@ -79,9 +79,7 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
     }
 
     @Override
-    public void onLocationServiceDisabled() {
-
-    }
+    public void onLocationServiceDisabled() {}
 
     @Override
     public void onSearchVehicleButtonClick() {
@@ -90,7 +88,9 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
         Booking booking =
                 new Booking(null, null, new Position(destination.latitude, destination.longitude));
         mBookingStore.storeBooking(booking);
-        mSchedulingService.findNearestVehicle(mPlace, new ServiceOperationCallback<Vehicle>() {
+        Location location = mLocationService.getLastKnownLocation();
+        mUserPosition = new Position(location.getLatitude(), location.getLongitude());
+        mSchedulingService.findNearestVehicle(mUserPosition, mPlace, new ServiceOperationCallback<Vehicle>() {
             @Override
             public void onServiceOperationFinished(ServiceResult<Vehicle> result) {
                 onFindNearestVehicleFinished(result.getResult(), result.getErrorMessage());

@@ -174,6 +174,7 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
         mVehicleService.enterVehicleAndUnsubscribe(new ServiceOperationCallback<Void>() {
             @Override
             public void onServiceOperationFinished(ServiceResult<Void> result) {
+                mRouter.dismissProgressDialog();
                 mRouter.showTravellingView();
                 subscribeToVehicleArrived();
             }

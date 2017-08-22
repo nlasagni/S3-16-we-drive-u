@@ -27,23 +27,23 @@ object Constants {
     /**
       * A queue to receive change booking messages.
       */
-    val Change: String  = Request + Dot + "change"
+    val Change: String = Request + Dot + "change"
     /**
       * A queue to receive complete booking messages.
       */
-    val Complete: String  = Request + Dot + "complete"
+    val Complete: String = Request + Dot + "complete"
     /**
       * A queue to receive find by date booking messages.
       */
-    val FindByDate: String  = Find + Dot + "byDate"
+    val FindByDate: String = Find + Dot + "byDate"
     /**
       * A queue to receive find position booking messages.
       */
-    val FindPosition: String  = Find + Dot + "position"
+    val FindPosition: String = Find + Dot + "position"
     /**
       * A queue to receive book vehicle booking response messages.
       */
-    val BookVehicle: String  = Response + Dot + "bookVehicle"
+    val BookVehicle: String = Response + Dot + "bookVehicle"
 
   }
 
@@ -78,19 +78,19 @@ object Constants {
         /**
           * Address for receiving and sending messages for a create booking request.
           */
-        val CreateBookingRequest: String = Request + Dot +CreateBooking
+        val CreateBookingRequest: String = Request + Dot + CreateBooking
         /**
           * Address for receiving and sending messages for a create booking response.
           */
-        val CreateBookingResponse: String = Response + Dot +CreateBooking
+        val CreateBookingResponse: String = Response + Dot + CreateBooking
         /**
           * Address for receiving and sending messages for a change booking request.
           */
-        val ChangeBookingLicensePlateRequest: String = Request + Dot +ChangeBooking + Dot + LicensePlate
+        val ChangeBookingLicensePlateRequest: String = Request + Dot + ChangeBooking + Dot + LicensePlate
         /**
           * Address for receiving and sending messages for a change booking response.
           */
-        val ChangeBookingLicensePlateResponse: String = Response + Dot +ChangeBooking + Dot + LicensePlate
+        val ChangeBookingLicensePlateResponse: String = Response + Dot + ChangeBooking + Dot + LicensePlate
         /**
           * Address for receiving and sending messages for a complete booking request.
           */

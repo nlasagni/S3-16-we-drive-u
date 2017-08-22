@@ -9,11 +9,11 @@ import java.awt.event.ActionListener;
 /**
  * @author Stefano Bernagozzi
  */
-public class ButtonEventListener implements ActionListener{
+public class ButtonEventListener implements ActionListener {
     BackOfficeModel backOfficeModel;
     BackOfficeView backOfficeView;
 
-    public ButtonEventListener(BackOfficeModel backOfficeModel, BackOfficeView backOfficeView){
+    public ButtonEventListener(BackOfficeModel backOfficeModel, BackOfficeView backOfficeView) {
         this.backOfficeModel = backOfficeModel;
         this.backOfficeView = backOfficeView;
     }

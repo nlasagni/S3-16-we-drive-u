@@ -7,7 +7,7 @@ import com.wedriveu.vehicle.shared.VehicleConstants
   * @author Michele Donati on 09/08/2017.
   */
 
-/** This trait models the part of the system used to check if a journey is possible for the vehicle.*/
+/** This trait models the part of the system used to check if a journey is possible for the vehicle. */
 trait CanDriveChecker {
   /** This method permits to check if the journey is possible given its distance and the vehicle's battery.
     *
@@ -26,7 +26,7 @@ class CanDriveCheckerImpl(vehicleGiven: SelfDrivingVehicle) extends CanDriveChec
 
   private def estimateBatteryConsumption(kilometersToDo: Double): Boolean = {
     ((kilometersToDo + VehicleConstants.MAXIMUM_DISTANCE_TO_RECHARGE)
-      / VehicleConstants.ESTIMATED_KILOMETERS_PER_PERCENTAGE) < vehicleGiven.battery
+        / VehicleConstants.ESTIMATED_KILOMETERS_PER_PERCENTAGE) < vehicleGiven.battery
   }
 
 }

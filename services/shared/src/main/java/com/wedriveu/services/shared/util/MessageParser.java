@@ -11,12 +11,6 @@ import static com.wedriveu.shared.util.Constants.EventBus.BODY;
  */
 public class MessageParser {
 
-    public static <T> T getObject(Message message, Class<T> object) {
-        JsonObject responseJson = (JsonObject) message.body();
-        String response = responseJson.getString(BODY);
-        return (new JsonObject(response)).mapTo(object);
-    }
-
     public static JsonObject getJson(Message message) {
         JsonObject responseJson = (JsonObject) message.body();
         String response = responseJson.getString(BODY);

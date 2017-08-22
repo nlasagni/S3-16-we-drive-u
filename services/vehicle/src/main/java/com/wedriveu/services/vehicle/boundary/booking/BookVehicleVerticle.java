@@ -1,16 +1,15 @@
 package com.wedriveu.services.vehicle.boundary.booking;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
-import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.entity.BookVehicleResponseWrapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
+import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
@@ -42,46 +41,36 @@ public class BookVehicleVerticle extends VerticleConsumer {
     @Override
     public void start() throws Exception {
         super.start();
-        eventBus.consumer(Messages.VehicleStore.AVAILABLE_COMPLETED, this::handleBookingRequest);
-
+        eventBus.consumer(Messages.Booking.BOOK_REQUEST, this::handleBookingRequest);
     }
 
     private void handleBookingRequest(Message message) {
         vehicleRequest = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), BookVehicleRequest.class);
         try {
-            startBookVehicleConsumer();
-        } catch (IOException e) {
-            Log.error(TAG, ERROR_MESSAGE, e);
-        } catch (TimeoutException e) {
+            Future<Void> future = Future.future();
+            future.setHandler(onStart -> publishBookRequest());
+            startBookVehicleConsumer(future);
+        } catch (IOException | TimeoutException e) {
             Log.error(TAG, ERROR_MESSAGE, e);
         }
-        publishBookRequest();
     }
 
     private void publishBookRequest() {
-        startRabbitMQClient(clientStarted -> {
-            VehicleReservationRequest requestData = new VehicleReservationRequest();
-            requestData.setUsername(vehicleRequest.getUsername());
-            client.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                    String.format(BOOK_VEHICLE_REQUEST,
-                            vehicleRequest.getLicencePlate()),
-                    VertxJsonMapper.mapInBodyFrom(requestData), onPublish -> {
-                    });
-        });
+        VehicleReservationRequest requestData = new VehicleReservationRequest();
+        requestData.setUsername(vehicleRequest.getUsername());
+        client.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
+                String.format(BOOK_VEHICLE_REQUEST,
+                        vehicleRequest.getLicencePlate()),
+                VertxJsonMapper.mapInBodyFrom(requestData), onPublish -> {
+                });
     }
 
-    private void startRabbitMQClient(Handler<AsyncResult<Void>> resultHandler) {
-        if (!client.isConnected()) {
-            client = RabbitMQClientFactory.createClient(vertx);
-            client.start(resultHandler);
-        }
-    }
-
-    private void startBookVehicleConsumer() throws IOException, TimeoutException {
-        startConsumer(false,
+    private void startBookVehicleConsumer(Future future) throws IOException, TimeoutException {
+        startConsumerWithFuture(
                 Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(BOOK_VEHICLE_RESPONSE, vehicleRequest.getLicencePlate()),
-                EVENT_BUS_BOOK_VEHICLE_ADDRESS);
+                EVENT_BUS_BOOK_VEHICLE_ADDRESS,
+                future);
     }
 
     @Override
@@ -89,18 +78,16 @@ public class BookVehicleVerticle extends VerticleConsumer {
         vertx.eventBus().consumer(eventBus, msg -> {
             handleVehicleBookingResponse((JsonObject) msg.body());
         });
-        vertx.eventBus().consumer(EVENT_BUS_BOOK_VEHICLE_ADDRESS, msg -> {
-            vertx.eventBus().send("", new JsonObject());
-        });
     }
 
     private void handleVehicleBookingResponse(JsonObject responseJson) {
-        BookVehicleResponseWrapper response =
-                VertxJsonMapper.mapFromBodyTo(responseJson, BookVehicleResponseWrapper.class);
-        response.getResponse().setLicencePlate(vehicleRequest.getLicencePlate());
-        response.setUserPosition(vehicleRequest.getUserPosition());
-        response.setDestinationPosition(vehicleRequest.getDestinationPosition());
-        JsonObject data = VertxJsonMapper.mapFrom(response);
+        BookVehicleResponse response = VertxJsonMapper.mapFromBodyTo(responseJson, BookVehicleResponse.class);
+        BookVehicleResponseWrapper wrapper = new BookVehicleResponseWrapper();
+        wrapper.setResponse(response);
+        wrapper.getResponse().setLicensePlate(vehicleRequest.getLicencePlate());
+        wrapper.setUserPosition(vehicleRequest.getUserPosition());
+        wrapper.setDestinationPosition(vehicleRequest.getDestinationPosition());
+        JsonObject data = VertxJsonMapper.mapFrom(wrapper);
         eventBus.send(Messages.Booking.BOOK_RESPONSE, data);
         eventBus.send(Messages.Booking.UNDEPLOY, deploymentID());
     }

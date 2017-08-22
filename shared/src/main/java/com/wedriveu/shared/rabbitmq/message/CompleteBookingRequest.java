@@ -1,7 +1,5 @@
 package com.wedriveu.shared.rabbitmq.message;
 
-import com.wedriveu.shared.util.Position;
-
 /**
  * A change booking request from the vehicle service that has to substitute a vehicle for the user.
  *

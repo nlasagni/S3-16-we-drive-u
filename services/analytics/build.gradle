@@ -12,8 +12,6 @@ sourceSets {
 dependencies {
     compile project(path: ':services:shared')
     compile project(path: ':shared')
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    compile group: "com.rabbitmq", name: "amqp-client", version: "$rabbitMQVersion"
 
 }
 
@@ -23,7 +21,7 @@ jar {
     manifest {
         attributes 'Implementation-Version': project.version,
 
-        'Main-Class': 'com.wedriveu.services.analytics.Main.java'
+                'Main-Class': 'com.wedriveu.services.analytics.Main'
     }
     from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
 }
