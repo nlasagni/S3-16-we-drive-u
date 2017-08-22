@@ -2,8 +2,7 @@ package com.wedriveu.vehicle.control
 
 import java.util.concurrent.ThreadLocalRandom
 
-import com.wedriveu.shared.util.Position
-import com.wedriveu.shared.util.Constants
+import com.wedriveu.shared.util.{Constants, Position}
 import com.wedriveu.vehicle.boundary.VehicleStopViewImpl
 import com.wedriveu.vehicle.shared.VehicleConstants
 import io.vertx.core.Vertx

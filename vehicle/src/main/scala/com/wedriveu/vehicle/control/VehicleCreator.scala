@@ -2,9 +2,8 @@ package com.wedriveu.vehicle.control
 
 import java.util.UUID
 
-import com.wedriveu.shared.util.{Constants, Position}
+import com.wedriveu.shared.util.Constants
 import com.wedriveu.vehicle.boundary.{VehicleStopView, VehicleStopViewImpl}
-import com.wedriveu.vehicle.shared.VehicleConstants
 import io.vertx.core.Vertx
 
 /**

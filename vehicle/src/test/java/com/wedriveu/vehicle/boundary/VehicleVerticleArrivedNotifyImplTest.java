@@ -2,11 +2,8 @@ package com.wedriveu.vehicle.boundary;
 
 import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
-import com.wedriveu.shared.util.Constants;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -29,7 +26,9 @@ public class VehicleVerticleArrivedNotifyImplTest {
 
     private static final String TAG = VehicleVerticleArrivedNotifyImplTest.class.getSimpleName();
     private static final String JSON_QUEUE_KEY = "queue";
-    private static final String EVENT_BUS_ADDRESS = VehicleVerticleArrivedNotifyImplTest.class.getCanonicalName();
+    private static final String EVENT_BUS_ADDRESS =
+            VehicleVerticleArrivedNotifyImplTest.class.getCanonicalName();
+    private static final long TEST_TIME_OUT = 5000;
 
     private Vertx vertx;
     private EventBus eventBus;
@@ -65,7 +64,7 @@ public class VehicleVerticleArrivedNotifyImplTest {
     }
 
     private void setUpAsyncComponents(TestContext context) {
-        Async async = context.async(5);
+        Async async = context.async();
         JsonObject config = new JsonObject();
         config.put(Constants.RabbitMQ.ConfigKey.HOST, Constants.RabbitMQ.Broker.HOST);
         config.put(Constants.RabbitMQ.ConfigKey.PASSWORD, Constants.RabbitMQ.Broker.PASSWORD);
@@ -79,19 +78,14 @@ public class VehicleVerticleArrivedNotifyImplTest {
                         Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
                         onQueueBind -> {
                             vertx.deployVerticle(vehicleVerticle,
-                                    new DeploymentOptions().setWorker(true),
                                     context.asyncAssertSuccess(onDeploy -> {
-                                                async.complete();
-                                            }
+                                            async.complete();
+                                        }
                                     ));
-                            async.countDown();
                             context.assertTrue(onQueueBind.succeeded());
                         });
-                async.countDown();
                 context.assertTrue(onQueueDeclare.succeeded());
-                async.countDown();
             });
-            async.countDown();
         });
         async.awaitSuccess();
     }
@@ -102,7 +96,7 @@ public class VehicleVerticleArrivedNotifyImplTest {
     }
 
     @Test
-    public void sendArivedNotifyToService(TestContext context) throws Exception {
+    public void sendArrivedNotifyToService(TestContext context) throws Exception {
         checkVehicleNotify(context);
     }
 
@@ -111,9 +105,9 @@ public class VehicleVerticleArrivedNotifyImplTest {
         rabbitMQClient.basicConsume(requestId, EVENT_BUS_ADDRESS, onGet -> {
             MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
                 JsonObject notifyJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
-                Log.info(TAG, notifyJson.toString());
                 ArrivedNotify notify = notifyJson.mapTo(ArrivedNotify.class);
                 context.assertTrue(notify.getLicense().equals(license));
+                async.complete();
             });
             consumer.exceptionHandler(event -> {
                 context.fail(event.getCause());
@@ -121,9 +115,6 @@ public class VehicleVerticleArrivedNotifyImplTest {
         });
         eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, vehicleControl.getVehicle().plate()),
                 new JsonObject());
-        vertx.setTimer(5000, onTime -> {
-            async.complete();
-        });
         async.awaitSuccess();
     }
 
