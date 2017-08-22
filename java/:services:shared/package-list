@@ -1,4 +1,3 @@
-com.wedriveu.services.shared.entity
 com.wedriveu.services.shared.message
 com.wedriveu.services.shared.model
 com.wedriveu.services.shared.rabbitmq

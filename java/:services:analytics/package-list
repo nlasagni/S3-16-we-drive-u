@@ -2,3 +2,4 @@ com.wedriveu.services.analytics
 com.wedriveu.services.analytics.boundary
 com.wedriveu.services.analytics.control
 com.wedriveu.services.analytics.entity
+com.wedriveu.services.analytics.util
