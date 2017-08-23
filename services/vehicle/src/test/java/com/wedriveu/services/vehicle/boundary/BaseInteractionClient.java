@@ -1,6 +1,7 @@
 package com.wedriveu.services.vehicle.boundary;
 
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -23,21 +24,18 @@ public abstract class BaseInteractionClient {
     private static final int TIME_OUT = 12000;
     private RabbitMQClient rabbitMQClient;
     private String queue;
-    private String exchangeName;
-    private String requestRoutingKey;
-    private String responseRoutingKey;
+    private String consumerExchangeName;
+    private String consumerRoutingKey;
     private String eventBusAddress;
     private Vertx vertx;
 
     public BaseInteractionClient(String queue,
-                                 String exchangeName,
-                                 String requestRoutingKey,
-                                 String responseRoutingKey,
+                                 String consumerExchangeName,
+                                 String consumerRoutingKey,
                                  String eventBusAddress) {
         this.queue = queue;
-        this.exchangeName = exchangeName;
-        this.requestRoutingKey = requestRoutingKey;
-        this.responseRoutingKey = responseRoutingKey;
+        this.consumerExchangeName = consumerExchangeName;
+        this.consumerRoutingKey = consumerRoutingKey;
         this.eventBusAddress = eventBusAddress;
     }
 
@@ -70,10 +68,10 @@ public abstract class BaseInteractionClient {
     }
 
     private void bindQueueToExchange(String keyName, Handler<AsyncResult<Void>> handler) {
-        if (!keyName.isEmpty()) {
-            responseRoutingKey = String.format(responseRoutingKey, keyName);
+        if (keyName != null && !keyName.isEmpty()) {
+            consumerRoutingKey = String.format(consumerRoutingKey, keyName);
         }
-        rabbitMQClient.queueBind(queue, exchangeName, responseRoutingKey,
+        rabbitMQClient.queueBind(queue, consumerExchangeName, consumerRoutingKey,
                 onBind -> {
                     if (onBind.succeeded()) {
                         handler.handle(Future.succeededFuture());
@@ -83,22 +81,28 @@ public abstract class BaseInteractionClient {
                 });
     }
 
-    protected void publishMessage(boolean withTimeOut, TestContext context, JsonObject data) {
-        context.assertTrue(true);
-//        final Async async = context.async();
-//        context.assertNotNull(data);
-//        handleServiceResponse(context, async, eventBusAddress);
-//        rabbitMQClient.basicConsume(queue, eventBusAddress, context.asyncAssertSuccess(onGet -> {
-//            rabbitMQClient.basicPublish(exchangeName, requestRoutingKey, data,
-//                    context.asyncAssertSuccess(onPublish -> {
-//                        if (withTimeOut) {
-//                            vertx.setTimer(TIME_OUT, handler -> {
-//                                context.fail();
-//                                async.complete();
-//                            });
-//                        }
-//                    }));
-//        }));
+    protected void publishMessage(TestContext context,
+                                  boolean withTimeOut,
+                                  String publishExchange,
+                                  String publishRoutingKey,
+                                  JsonObject data) {
+        final Async async = context.async();
+        context.assertNotNull(data);
+        handleServiceResponse(context, async, eventBusAddress);
+        rabbitMQClient.basicConsume(queue, eventBusAddress, context.asyncAssertSuccess(onGet -> {
+            rabbitMQClient.basicPublish(publishExchange, publishRoutingKey, data,
+                    onPublish -> {
+                        if (!onPublish.succeeded()) {
+                            Log.error(this.getClass().getSimpleName(), onPublish.cause());
+                        }
+                        if (withTimeOut) {
+                            vertx.setTimer(TIME_OUT, handler -> {
+                                context.fail();
+                                async.complete();
+                            });
+                        }
+                    });
+        }));
     }
 
     private void handleServiceResponse(TestContext context, Async async, String eventBusAddress) {
@@ -116,5 +120,4 @@ public abstract class BaseInteractionClient {
 
     protected abstract void checkResponse(TestContext context, JsonObject responseJson);
 
-    protected abstract JsonObject getJson();
 }

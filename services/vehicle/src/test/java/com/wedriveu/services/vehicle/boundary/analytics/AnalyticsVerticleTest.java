@@ -31,7 +31,7 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
     private Vertx vertx;
 
     public AnalyticsVerticleTest() {
-        super(QUEUE, VEHICLE, ANALYTICS_VEHICLE_REQUEST_ALL, ANALYTICS_VEHICLES_RESPONSE_ALL, EVENT_BUS_ADDRESS);
+        super(QUEUE, VEHICLE, ANALYTICS_VEHICLES_RESPONSE_ALL, EVENT_BUS_ADDRESS);
     }
 
     @Before
@@ -65,7 +65,7 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
 
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessage(false, context, getJson());
+        super.publishMessage(context, false, VEHICLE, ANALYTICS_VEHICLE_REQUEST_ALL, getJson());
     }
 
     @Override
@@ -80,8 +80,7 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
         assertThat(vehicles, instanceOf(AnalyticsVehicleList.class));
     }
 
-    @Override
-    protected JsonObject getJson() {
+    private JsonObject getJson() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(BODY, "");
         return jsonObject;

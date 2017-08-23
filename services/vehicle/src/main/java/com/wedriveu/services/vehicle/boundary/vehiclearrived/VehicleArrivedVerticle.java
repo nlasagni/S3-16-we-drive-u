@@ -85,7 +85,7 @@ public class VehicleArrivedVerticle extends AbstractVerticle {
                     createObject(notify),
                     onPublish -> {
                         if (!onPublish.succeeded()) {
-                            Log.info("UpdatesVerticle ", "Publish failed " + onPublish.cause());
+                            Log.error(TAG, onPublish.cause());
                         }
                     });
         });

@@ -37,7 +37,7 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
     private Vertx vertx;
 
     public VehicleNearestVerticleTest() {
-        super(QUEUE, VEHICLE, VEHICLE_REQUEST, VEHICLE_RESPONSE, EVENT_BUS_ADDRESS);
+        super(QUEUE, VEHICLE, VEHICLE_RESPONSE, EVENT_BUS_ADDRESS);
     }
 
     @Before
@@ -71,7 +71,7 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
 
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessage(false, context, getJson());
+        super.publishMessage(context, false, VEHICLE, VEHICLE_REQUEST, getJson());
     }
 
     @Override
@@ -80,8 +80,7 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
         assertThat(responseVehicle, instanceOf(Vehicle.class));
     }
 
-    @Override
-    protected JsonObject getJson() {
+    private JsonObject getJson() {
         UserRequest userDataA = new UserDataFactoryA().getUserData();
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(BODY, JsonObject.mapFrom(userDataA).toString());
