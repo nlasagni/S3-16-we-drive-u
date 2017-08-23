@@ -2,7 +2,6 @@ package com.wedriveu.backoffice.controller;
 
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 

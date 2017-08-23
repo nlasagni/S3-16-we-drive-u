@@ -5,7 +5,6 @@ import com.wedriveu.backoffice.util.EventBus;
 import com.wedriveu.backoffice.view.BackOfficeView;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
