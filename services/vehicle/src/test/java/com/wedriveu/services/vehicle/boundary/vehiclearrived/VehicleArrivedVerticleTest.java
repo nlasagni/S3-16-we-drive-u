@@ -28,6 +28,9 @@ public class VehicleArrivedVerticleTest extends BaseInteractionClient {
     private static final String USERNAME = "username";
     private static final String LICENSE_PLATE = "licensePlate";
 
+    private Vertx vertx;
+    private BootVerticle bootVerticle;
+
     public VehicleArrivedVerticleTest() {
         super(
                 QUEUE,
@@ -40,7 +43,8 @@ public class VehicleArrivedVerticleTest extends BaseInteractionClient {
     @Before
     public void setUp(TestContext context) throws Exception {
         Async async = context.async();
-        Vertx vertx = Vertx.vertx();
+        vertx = Vertx.vertx();
+        bootVerticle = new BootVerticle();
         super.setup(vertx, completed -> {
             vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
                 vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
@@ -51,7 +55,7 @@ public class VehicleArrivedVerticleTest extends BaseInteractionClient {
                 });
                 vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
-            vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
+            vertx.deployVerticle(bootVerticle, context.asyncAssertSuccess(onDeploy -> {
                 vertx.eventBus().send(Messages.VehicleService.BOOT, null);
             }));
         });
@@ -61,6 +65,7 @@ public class VehicleArrivedVerticleTest extends BaseInteractionClient {
     @After
     public void tearDown(TestContext context) throws Exception {
         super.stop(context);
+        vertx.undeploy(bootVerticle.deploymentID());
     }
 
     @Test

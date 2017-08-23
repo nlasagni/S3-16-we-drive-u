@@ -1,6 +1,7 @@
 package com.wedriveu.services.vehicle.boundary.booking;
 
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
+import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.booking.entity.BookingRequest;
 import com.wedriveu.services.vehicle.boundary.booking.mock.VehicleMockVerticle;
@@ -36,6 +37,7 @@ public class BookingTest extends BaseInteractionClient {
     private static final String QUEUE = "vehicle.queue.booking.test";
     private static final String LICENSE_PLATE = new VehicleFactoryMini().getVehicle().getLicensePlate();
     private static final int ASYNC_COUNT = 3;
+    private VehicleMockVerticle mockVerticle;
     private Async async;
     private Vertx vertx;
 
@@ -48,8 +50,9 @@ public class BookingTest extends BaseInteractionClient {
     public void setUp(TestContext context) throws Exception {
         async = context.async(ASYNC_COUNT);
         vertx = Vertx.vertx();
-        super.setup(vertx, hanlder -> {
-            vertx.deployVerticle(new VehicleMockVerticle(LICENSE_PLATE), onMockDeploy -> {
+        mockVerticle = new VehicleMockVerticle(LICENSE_PLATE);
+        super.setup(vertx, handler -> {
+            vertx.deployVerticle(mockVerticle, onMockDeploy -> {
                 super.declareQueueAndBind("", context, declared -> {
                     context.assertTrue(declared.succeeded());
                     async.complete();
@@ -62,6 +65,7 @@ public class BookingTest extends BaseInteractionClient {
     @After
     public void tearDown(TestContext context) throws Exception {
         super.stop(context);
+        vertx.undeploy(mockVerticle.deploymentID());
     }
 
     @Test

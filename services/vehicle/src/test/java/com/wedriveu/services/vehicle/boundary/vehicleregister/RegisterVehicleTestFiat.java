@@ -33,6 +33,9 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
     private static final String EVENT_BUS_ADDRESS = RegisterVehicleTestFiat.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.fiat";
 
+    private Vertx vertx;
+    private BootVerticle bootVerticle;
+
     public RegisterVehicleTestFiat() {
         super(QUEUE, VEHICLE, REGISTER_RESPONSE, EVENT_BUS_ADDRESS);
     }
@@ -40,7 +43,8 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
     @Before
     public void setUp(TestContext context) throws Exception {
         Async async = context.async();
-        Vertx vertx = Vertx.vertx();
+        vertx = Vertx.vertx();
+        bootVerticle = new BootVerticle();
         super.setup(vertx, completed -> {
             vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
                 vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
@@ -52,7 +56,7 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
                 });
                 vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
-            vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
+            vertx.deployVerticle(bootVerticle, context.asyncAssertSuccess(onDeploy -> {
                 vertx.eventBus().send(Messages.VehicleService.BOOT, null);
             }));
         });
@@ -62,6 +66,7 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
     @After
     public void tearDown(TestContext context) throws Exception {
         super.stop(context);
+        vertx.undeploy(bootVerticle.deploymentID());
     }
 
     @Test

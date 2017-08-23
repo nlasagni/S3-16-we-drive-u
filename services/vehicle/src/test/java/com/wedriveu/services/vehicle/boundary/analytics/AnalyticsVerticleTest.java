@@ -27,6 +27,7 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
     private static final String EVENT_BUS_ADDRESS = AnalyticsVerticleTest.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.analytics.test";
     private static final int ASYNC_COUNT = 3;
+    private BootVerticle bootVerticle;
     private Async async;
     private Vertx vertx;
 
@@ -39,6 +40,7 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
     public void setUp(TestContext context) throws Exception {
         async = context.async(ASYNC_COUNT);
         vertx = Vertx.vertx();
+        bootVerticle = new BootVerticle();
         super.setup(vertx, completed -> {
             vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
                 vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
@@ -51,7 +53,7 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
                 vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
             async.countDown();
-            vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
+            vertx.deployVerticle(bootVerticle, context.asyncAssertSuccess(onDeploy -> {
                 vertx.eventBus().send(Messages.VehicleService.BOOT, null);
             }));
         });
@@ -61,6 +63,7 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
     @After
     public void tearDown(TestContext context) throws Exception {
         super.stop(context);
+        vertx.undeploy(bootVerticle.deploymentID());
     }
 
     @Test
