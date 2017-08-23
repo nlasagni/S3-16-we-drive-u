@@ -13,13 +13,15 @@ public class BackOfficeView extends JFrame {
     private int maxX = 1000;
     private int maxY = 500;
     private JLabel textLabel;
-    private JTextField textField;
-    private JButton button;
+    private JTextField textFieldBackofficeId;
+    private JButton buttonRegistration;
+    private JButton buttonBookings;
     private final int width = 175;
     private String backOffice = "Backoffice";
     private String labelDefaultText = "Loading cars Counters";
     private String textFieldDefaultText = "backoffice1";
-    private String buttonText = "Register backoffice";
+    private String buttonRegistrationText = "Register backoffice";
+    private String buttonBookingsText = "Get bookings positions";
 
     public BackOfficeView() {
         createAndShowGUI();
@@ -36,13 +38,16 @@ public class BackOfficeView extends JFrame {
         textLabel.setPreferredSize(new Dimension(width, 120));
         getContentPane().add(textLabel, BorderLayout.PAGE_START);
 
-        textField = new JTextField(textFieldDefaultText);
-        textField.setPreferredSize(new Dimension(width, 50));
-        getContentPane().add(textField, BorderLayout.CENTER);
+        textFieldBackofficeId = new JTextField(textFieldDefaultText);
+        textFieldBackofficeId.setPreferredSize(new Dimension(width, 50));
+        getContentPane().add(textFieldBackofficeId, BorderLayout.CENTER);
 
-        button = new JButton(buttonText);
-        button.setPreferredSize(new Dimension(width, 50));
-        getContentPane().add(button, BorderLayout.PAGE_END);
+        buttonRegistration = new JButton(buttonRegistrationText);
+        buttonRegistration.setPreferredSize(new Dimension(width, 50));
+        getContentPane().add(buttonRegistration, BorderLayout.PAGE_END);
+
+        buttonBookings = new JButton(buttonBookingsText);
+        buttonBookings.setPreferredSize(new Dimension(width, 50));
 
         //Display the window.
         pack();
@@ -60,16 +65,19 @@ public class BackOfficeView extends JFrame {
     }
 
     public String getTextBoxContent() {
-        return textField.getText();
+        return textFieldBackofficeId.getText();
     }
 
     public void disableButtonAndText() {
-        textField.setVisible(false);
-        button.setVisible(false);
+        getContentPane().remove(buttonRegistration);
+        getContentPane().remove(textFieldBackofficeId);
+        getContentPane().add(buttonBookings, BorderLayout.PAGE_END);
+        getContentPane().revalidate();
+        getContentPane().repaint();
     }
 
     public void addButtonListener(ActionListener actionListener) {
-        button.addActionListener(actionListener);
+        buttonRegistration.addActionListener(actionListener);
     }
 
 }

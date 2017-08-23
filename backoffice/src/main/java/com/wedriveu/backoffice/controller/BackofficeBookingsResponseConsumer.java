@@ -4,23 +4,24 @@ import com.wedriveu.backoffice.util.EventBus;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
-import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST;
 import static com.wedriveu.shared.util.Constants.RabbitMQ;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY_BOOKING_RESPONSE_BOOKING_LIST;
 
 /**
+ * the class for recieving a booking list over rabbitMQ with vertx from the booking service
+ *
  * @author Stefano Bernagozzi
  */
-public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer {
-    String backofficeId;
+public class BackofficeBookingsResponseConsumer extends VerticleConsumer {
+    private String backofficeId;
 
-    public AnalyticsVehiclesResponseConsumer(String queueName, String backofficeId) {
-        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST + queueName);
+    public BackofficeBookingsResponseConsumer(String backofficeId) {
+        super(RabbitMQ.Exchanges.BOOKING + "." + ROUTING_KEY_BOOKING_RESPONSE_BOOKING_LIST + "." + backofficeId);
         this.backofficeId = backofficeId;
     }
 
@@ -35,14 +36,10 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer {
                 futureRetriever.fail(v.cause());
             }
         });
-        String eventBusAvailable = EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_NO_ID;
-        if (!backofficeId.equals("")) {
-            eventBusAvailable = EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_WITH_ID;
-        }
 
         startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS,
-                ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST + backofficeId,
-                eventBusAvailable,
+                RabbitMQ.RoutingKey.ROUTING_KEY_BOOKING_RESPONSE_BOOKING_LIST + "." + backofficeId,
+                EventBus.AVAILABLE_ADDRESS_BACKOFFICE_BOOKING_RESPONSE,
                 futureConsumer);
     }
 
@@ -53,6 +50,6 @@ public class AnalyticsVehiclesResponseConsumer extends VerticleConsumer {
 
     private void sendUpdatesToController(Message message) {
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
-        vertx.eventBus().send(EventBus.BACKOFFICE_CONTROLLER, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
+        vertx.eventBus().send(EventBus.BACKOFFICE_BOOKING_LIST_RETRIEVER_CONTROLLER, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
     }
 }

@@ -5,7 +5,6 @@ import com.wedriveu.backoffice.util.EventBus;
 import com.wedriveu.backoffice.view.BackOfficeView;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * @author Stefano Bernagozzi
  */
 public class BackofficeController extends AbstractVerticle {
@@ -23,6 +23,7 @@ public class BackofficeController extends AbstractVerticle {
     private BackOfficeModel backOfficeModel;
     private BackOfficeView backOfficeView;
     Vertx vertx;
+    String toUndeploy;
 
     public BackofficeController(Vertx vertx) {
         this.vertx = vertx;
@@ -44,14 +45,21 @@ public class BackofficeController extends AbstractVerticle {
         backOfficeView.addButtonListener(buttonEventListener);
         futureModel = backOfficeModel.getFuture();
         futureModel.setHandler(res -> {
-            Future listener1 = Future.future();
-            vertx.deployVerticle(new AnalyticsVehiclesResponseConsumer("." + backOfficeModel.getBackofficeID() + ".updates", ""), listener1.completer());
-            Future listener2 = Future.future();
-            vertx.deployVerticle(new AnalyticsVehiclesResponseConsumer("." + backOfficeModel.getBackofficeID(), "." + backOfficeModel.getBackofficeID()), listener2.completer());
-            Future listener3 = Future.future();
-            vertx.deployVerticle(new RabbitmqInitialRequest(backOfficeModel.getBackofficeID()), listener3);
-            futures.add(listener1);
-            futures.add(listener2);
+            vertx.deployVerticle(new BackofficeVehiclesResponseConsumer(
+                    "." + backOfficeModel.getBackofficeID() + ".updates",
+                    ""));
+            vertx.deployVerticle(new BackofficeVehiclesResponseConsumer(
+                    "." + backOfficeModel.getBackofficeID(),
+                    "." + backOfficeModel.getBackofficeID()));
+            vertx.deployVerticle(new BackofficeVehicleRequestPublisher(
+                    backOfficeModel.getBackofficeID()),
+                    resDeploy ->{ });
+            vertx.deployVerticle(new BackofficeBookingsRequestPublisher(
+                            backOfficeModel.getBackofficeID()),
+                            resDeploy ->{ });
+            vertx.deployVerticle(new BackofficeBookingsResponseConsumer(
+                            backOfficeModel.getBackofficeID()),
+                            resDeploy ->{ });
         });
     }
 

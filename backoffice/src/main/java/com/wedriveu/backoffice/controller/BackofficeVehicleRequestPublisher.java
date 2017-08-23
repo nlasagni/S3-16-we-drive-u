@@ -6,15 +6,15 @@ import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_REQUEST_VEHICLE_LIST;
 
 /**
+ * the class for sending a request of the Vehicle list over rabbitMQ with vertx
  * @author Stefano Bernagozzi
  */
-public class RabbitmqInitialRequest extends VerticlePublisher {
+public class BackofficeVehicleRequestPublisher extends VerticlePublisher {
     String backofficeId;
 
-    public RabbitmqInitialRequest(String backofficeId) {
+    public BackofficeVehicleRequestPublisher(String backofficeId) {
         this.backofficeId = backofficeId;
     }
 
@@ -31,7 +31,9 @@ public class RabbitmqInitialRequest extends VerticlePublisher {
     private void requestVehicleCounterToAnalytics() {
         JsonObject dataToUser = new JsonObject();
         dataToUser.put(Constants.EventBus.BODY, backofficeId);
-        publish(Constants.RabbitMQ.Exchanges.ANALYTICS, ROUTING_KEY_ANALYTICS_REQUEST_VEHICLE_LIST, dataToUser, published -> {
-        });
+        publish(Constants.RabbitMQ.Exchanges.ANALYTICS,
+                Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_REQUEST_VEHICLE_LIST,
+                dataToUser,
+                published -> { });
     }
 }
