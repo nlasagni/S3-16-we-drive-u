@@ -30,6 +30,7 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
     private static final int ASYNC_COUNT = 5;
     private Async async;
     private Vertx vertx;
+    private BootVerticle bootVerticle;
 
     public RegisterVehicleTestMini() {
         super(QUEUE, VEHICLE, REGISTER_RESPONSE, EVENT_BUS_ADDRESS);
@@ -39,6 +40,7 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
     public void setUp(TestContext context) throws Exception {
         async = context.async(ASYNC_COUNT);
         vertx = Vertx.vertx();
+        bootVerticle = new BootVerticle();
         super.setup(vertx, completed -> {
             vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
                 vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
@@ -52,7 +54,7 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
                 vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
             async.countDown();
-            vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
+            vertx.deployVerticle(bootVerticle, context.asyncAssertSuccess(onDeploy -> {
                 vertx.eventBus().send(Messages.VehicleService.BOOT, null);
             }));
         });
@@ -62,6 +64,7 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
     @After
     public void tearDown(TestContext context) throws Exception {
         super.stop(context);
+        vertx.undeploy(bootVerticle.deploymentID());
     }
 
     @Test

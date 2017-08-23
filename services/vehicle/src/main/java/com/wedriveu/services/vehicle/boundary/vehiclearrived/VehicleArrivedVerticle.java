@@ -12,6 +12,8 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_VEHICLE_ARRIVED;
+
 /**
  * Created by Michele on 19/08/2017.
  */
@@ -19,7 +21,6 @@ import io.vertx.rabbitmq.RabbitMQClient;
 public class VehicleArrivedVerticle extends AbstractVerticle {
 
     private static final String TAG = VehicleArrivedVerticle.class.getSimpleName();
-    private static final String QUEUE_NAME = "service.vehicle.arrived";
     private static final String EVENT_BUS_ADDRESS = "service.vehicle.arrived.eventbus";
 
     private RabbitMQClient rabbitMQClient;
@@ -59,7 +60,7 @@ public class VehicleArrivedVerticle extends AbstractVerticle {
     }
 
     private void declareQueue(Future<JsonObject> future) {
-        rabbitMQClient.queueDeclare(QUEUE_NAME,
+        rabbitMQClient.queueDeclare(VEHICLE_SERVICE_QUEUE_VEHICLE_ARRIVED,
                 true,
                 false,
                 false,
@@ -67,14 +68,16 @@ public class VehicleArrivedVerticle extends AbstractVerticle {
     }
 
     private void bindQueueToExchange(Future<Void> future) {
-        rabbitMQClient.queueBind(QUEUE_NAME,
+        rabbitMQClient.queueBind(VEHICLE_SERVICE_QUEUE_VEHICLE_ARRIVED,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
                 future.completer());
     }
 
     private void basicConsume(Future<Void> future) {
-        rabbitMQClient.basicConsume(QUEUE_NAME, EVENT_BUS_ADDRESS, future.completer());
+        rabbitMQClient.basicConsume(VEHICLE_SERVICE_QUEUE_VEHICLE_ARRIVED,
+                EVENT_BUS_ADDRESS,
+                future.completer());
     }
 
     private void registerConsumer() {
