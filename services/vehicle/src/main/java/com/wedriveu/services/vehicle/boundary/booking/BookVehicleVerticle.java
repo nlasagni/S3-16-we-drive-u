@@ -34,8 +34,8 @@ public class BookVehicleVerticle extends VerticleConsumer {
     private static final String ERROR_MESSAGE = "Error starting BookVehicle consumer";
     private BookVehicleRequest vehicleRequest;
 
-    public BookVehicleVerticle() {
-        super(VEHICLE_SERVICE_QUEUE_BOOK_VEHICLE);
+    public BookVehicleVerticle(String id) {
+        super(String.format(VEHICLE_SERVICE_QUEUE_BOOK_VEHICLE, id));
     }
 
     @Override

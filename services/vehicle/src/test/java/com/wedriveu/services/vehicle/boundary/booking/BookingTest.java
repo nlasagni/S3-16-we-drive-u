@@ -1,10 +1,11 @@
 package com.wedriveu.services.vehicle.boundary.booking;
 
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.booking.entity.BookingRequest;
-import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.services.vehicle.boundary.booking.mock.VehicleMockVerticle;
+import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterVehicleTestMini;
+import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import io.vertx.core.Vertx;
@@ -15,6 +16,7 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 
 import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
@@ -26,20 +28,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * BookingService simulator, it sends the VehicleService the booking data and starts
  * waiting for a proper booking response.
- * During this test, {@link com.wedriveu.services.vehicle.boundary.booking.util.VehicleBookingResponseTest} has to be
- * up and running in order to interact with a simulated Vehicle during the booking process.
  */
 @RunWith(VertxUnitRunner.class)
 public class BookingTest extends BaseInteractionClient {
 
     private static final String EVENT_BUS_ADDRESS = BookingTest.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.booking.test";
+    private static final String LICENSE_PLATE = new VehicleFactoryMini().getVehicle().getLicensePlate();
     private static final int ASYNC_COUNT = 3;
     private Async async;
     private Vertx vertx;
 
     public BookingTest() {
-        super(QUEUE, VEHICLE, VEHICLE_SERVICE_BOOK_REQUEST, VEHICLE_SERVICE_BOOK_RESPONSE, EVENT_BUS_ADDRESS);
+        super(QUEUE, VEHICLE, VEHICLE_SERVICE_BOOK_RESPONSE, EVENT_BUS_ADDRESS);
     }
 
     @Before
@@ -47,21 +48,13 @@ public class BookingTest extends BaseInteractionClient {
     public void setUp(TestContext context) throws Exception {
         async = context.async(ASYNC_COUNT);
         vertx = Vertx.vertx();
-        super.setup(vertx, completed -> {
-            vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
-                vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
-                    async.countDown();
-                    super.declareQueueAndBind("", context, declared -> {
-                        context.assertTrue(declared.succeeded());
-                        async.complete();
-                    });
+        super.setup(vertx, hanlder -> {
+            vertx.deployVerticle(new VehicleMockVerticle(LICENSE_PLATE), onMockDeploy -> {
+                super.declareQueueAndBind("", context, declared -> {
+                    context.assertTrue(declared.succeeded());
+                    async.complete();
                 });
-                vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
-            async.countDown();
-            vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
-                vertx.eventBus().send(Messages.VehicleService.BOOT, null);
-            }));
         });
         async.awaitSuccess();
     }
@@ -73,7 +66,8 @@ public class BookingTest extends BaseInteractionClient {
 
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessage(false, context, getJson());
+        JUnitCore.runClasses(RegisterVehicleTestMini.class);
+        publishMessage(context, false, VEHICLE, VEHICLE_SERVICE_BOOK_REQUEST, createRequest());
     }
 
     @Override
@@ -84,9 +78,9 @@ public class BookingTest extends BaseInteractionClient {
         assertThat(bookVehicleResponse, instanceOf(BookVehicleResponse.class));
     }
 
-    @Override
-    protected JsonObject getJson() {
+    private JsonObject createRequest() {
         BookVehicleRequest bookingRequest = new BookingRequest().getBookingVehicleRequest();
+        bookingRequest.setLicencePlate(LICENSE_PLATE);
         return VertxJsonMapper.mapInBodyFrom(bookingRequest);
     }
 
