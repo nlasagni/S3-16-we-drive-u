@@ -2,9 +2,7 @@ package com.wedriveu.backoffice.controller;
 
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.rabbitmq.message.BackofficeBookingListRequest;
-import com.wedriveu.shared.rabbitmq.message.FindBookingPositionsRequest;
-import com.wedriveu.shared.rabbitmq.message.FindBookingPositionsResponse;
+import com.wedriveu.shared.rabbitmq.message.BookingListRequest;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
@@ -21,6 +19,9 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY
 public class BackofficeBookingsRequestPublisher extends VerticlePublisher {
     private String backofficeId;
 
+    /**
+     * @param backofficeId the backoffice id
+     */
     public BackofficeBookingsRequestPublisher(String backofficeId) {
         this.backofficeId = backofficeId;
     }
@@ -40,12 +41,10 @@ public class BackofficeBookingsRequestPublisher extends VerticlePublisher {
     }
 
     private void requestVehicleCounterToBookingService(Message message) {
-        JsonObject dataToUser = new JsonObject();
-        BackofficeBookingListRequest backofficeBookingListRequest = new BackofficeBookingListRequest();
-        backofficeBookingListRequest.setBackofficeId(backofficeId);
-        dataToUser.put(Constants.EventBus.BODY, VertxJsonMapper.mapInBodyFrom(backofficeBookingListRequest));
-        publish(Constants.RabbitMQ.Exchanges.BOOKING,ROUTING_KEY_BOOKING_REQUEST_BOOKING_LIST, dataToUser, published -> {
-        });
+        BookingListRequest bookingListRequest = new BookingListRequest();
+        bookingListRequest.setBackofficeId(backofficeId);
+        JsonObject dataToUser = VertxJsonMapper.mapInBodyFrom(bookingListRequest);
+        publish(Constants.RabbitMQ.Exchanges.BOOKING,ROUTING_KEY_BOOKING_REQUEST_BOOKING_LIST, dataToUser, published -> { });
     }
 
 }

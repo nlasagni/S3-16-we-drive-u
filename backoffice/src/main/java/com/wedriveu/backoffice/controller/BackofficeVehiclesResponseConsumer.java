@@ -5,7 +5,6 @@ import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -21,6 +20,11 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ;
 public class BackofficeVehiclesResponseConsumer extends VerticleConsumer {
     private String backofficeId;
 
+    /**
+     * @param queueName the rabbitMQ queue name
+     * @param backofficeId null in case you want to listen over the backoffice update queue,
+     *                     "." + backoffice id in case you want to listen in your own routing key (only for the initial update)
+     */
     public BackofficeVehiclesResponseConsumer(String queueName, String backofficeId) {
         super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST + queueName);
         this.backofficeId = backofficeId;
@@ -55,6 +59,6 @@ public class BackofficeVehiclesResponseConsumer extends VerticleConsumer {
 
     private void sendUpdatesToController(Message message) {
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
-        vertx.eventBus().send(EventBus.BACKOFFICE_CONTROLLER, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
+        vertx.eventBus().send(EventBus.BACKOFFICE_CONTROLLER_VEHICLES, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
     }
 }

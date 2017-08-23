@@ -20,6 +20,9 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY
 public class BackofficeBookingsResponseConsumer extends VerticleConsumer {
     private String backofficeId;
 
+    /**
+     * @param backofficeId the backoffice id
+     */
     public BackofficeBookingsResponseConsumer(String backofficeId) {
         super(RabbitMQ.Exchanges.BOOKING + "." + ROUTING_KEY_BOOKING_RESPONSE_BOOKING_LIST + "." + backofficeId);
         this.backofficeId = backofficeId;
@@ -50,6 +53,6 @@ public class BackofficeBookingsResponseConsumer extends VerticleConsumer {
 
     private void sendUpdatesToController(Message message) {
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
-        vertx.eventBus().send(EventBus.BACKOFFICE_BOOKING_LIST_RETRIEVER_CONTROLLER, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
+        vertx.eventBus().send(EventBus.BACKOFFICE_CONTROLLER_BOOKINGS, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
     }
 }

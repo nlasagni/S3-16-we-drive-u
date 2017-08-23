@@ -1,6 +1,11 @@
 package com.wedriveu.services.shared.vertx;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.json.JsonObject;
+
+import java.io.IOException;
+import java.util.List;
 
 import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 
@@ -10,6 +15,12 @@ import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 public class VertxJsonMapper {
     private static final String MAP_TO_ILLEGAL_ARGUMENT = "error, provided JsonObject to be mapped is null";
     private static final String MAP_FROM_ILLEGAL_ARGUMENT = "error, provided object to be mapped is null";
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    public static <T> List<T> mapFromBodyToList(JsonObject jsonObject, Class<T> classType) throws IOException {
+        JavaType collectionType = MAPPER.getTypeFactory().constructCollectionType(List.class, classType);
+        return MAPPER.readValue(jsonObject.getString(BODY), collectionType);
+    }
 
     public static <T> T mapTo(JsonObject jsonObject, Class<T> classType) throws IllegalArgumentException {
         if (jsonObject == null) {

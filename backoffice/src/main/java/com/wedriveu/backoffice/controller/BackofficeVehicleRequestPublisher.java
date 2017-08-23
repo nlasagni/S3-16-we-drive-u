@@ -14,6 +14,9 @@ import io.vertx.core.json.JsonObject;
 public class BackofficeVehicleRequestPublisher extends VerticlePublisher {
     String backofficeId;
 
+    /**
+     * @param backofficeId the backoffice id
+     */
     public BackofficeVehicleRequestPublisher(String backofficeId) {
         this.backofficeId = backofficeId;
     }
