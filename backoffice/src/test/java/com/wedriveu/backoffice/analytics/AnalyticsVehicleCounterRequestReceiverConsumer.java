@@ -41,7 +41,6 @@ public class AnalyticsVehicleCounterRequestReceiverConsumer extends VerticleCons
 
     private void sendUpdatesToController(Message message) {
         JsonObject dataToUser = new JsonObject(message.body().toString());
-        String backofficeId = dataToUser.getValue(Constants.EventBus.BODY).toString();
         vertx.eventBus().send(ConstantsBackoffice.EventBus.BACKOFFICE_VEHICLE_COUNTER_REQUEST_TEST, dataToUser);
     }
 

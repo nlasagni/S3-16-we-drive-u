@@ -43,7 +43,7 @@ public class BackofficeBookingsRequestPublisherTest {
     }
 
     @Test
-    public void testVehicleResponsePublisher(TestContext context) {
+    public void testBookingResponsePublisher(TestContext context) {
         Async async = context.async();
         CompositeFuture.all(futures).setHandler(completed -> {
             BookingListRequest bookingListRequestLocal = new BookingListRequest();
