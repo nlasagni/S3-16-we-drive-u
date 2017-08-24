@@ -1,0 +1,33 @@
+#!/usr/bin/expect
+
+set username [lindex $argv 0];
+set password [lindex $argv 1];
+set host [lindex $argv 2];
+set build_number [lindex $argv 3];
+
+spawn sftp $username@$host
+expect "*Are you sure you want to continue connecting (yes/no)?*"
+send "yes\n"
+expect "*?assword:*"
+send "$password\n"
+expect "sftp>"
+send "cd wedriveu\n"
+expect "sftp>"
+send "mkdir travis-dumps\n"
+expect "sftp>"
+send "cd travis-dumps\n"
+expect "sftp>"
+send "mkdir dump-test-$build_number\n"
+expect "sftp>"
+send "cd dump-test-$build_number\n"
+expect "sftp>"
+send "mkdir service-vehicle\n"
+expect "sftp>"
+send "cd service-vehicle\n"
+expect "sftp>"
+send "lcd /home/travis/build/nlasagni/S3-16-we-drive-u/services/vehicle/build/reports/tests/test\n"
+expect "sftp>"
+send "put -r .\n"
+expect "sftp>"
+send "exit\n"
+interact
