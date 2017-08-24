@@ -11,7 +11,7 @@ import java.util.List;
  * @author Stefano Bernagozzi
  */
 public class BookingListGenerator {
-    public List<Booking> getBookingsFromBookingService() {
+    public static List<Booking> getBookingsFromBookingService() {
         List<Booking> bookings = new ArrayList<>();
         bookings.add(
                 new Booking(1,

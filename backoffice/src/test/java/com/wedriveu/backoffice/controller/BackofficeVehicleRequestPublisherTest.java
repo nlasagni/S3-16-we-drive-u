@@ -1,10 +1,7 @@
 package com.wedriveu.backoffice.controller;
 
 import com.wedriveu.backoffice.analytics.AnalyticsVehicleCounterRequestReceiverConsumer;
-import com.wedriveu.backoffice.booking.BookingRequestReceiverConsumer;
-import com.wedriveu.backoffice.util.EventBus;
-import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.rabbitmq.message.BookingListRequest;
+import com.wedriveu.backoffice.util.ConstantsBackoffice;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -35,7 +32,7 @@ public class BackofficeVehicleRequestPublisherTest {
         vertx = Vertx.vertx();
         futures = new ArrayList<>();
         Future retrieveFuture = Future.future();
-        vertx.deployVerticle(new BackofficeVehicleRequestPublisher(EventBus.TEST_BACKOFFICE_ID), retrieveFuture.completer());
+        vertx.deployVerticle(new BackofficeVehicleRequestPublisher(ConstantsBackoffice.TEST_BACKOFFICE_ID), retrieveFuture.completer());
         futures.add(retrieveFuture);
 
         Future generatorRequestHandlerFuture = Future.future();
@@ -47,10 +44,10 @@ public class BackofficeVehicleRequestPublisherTest {
     public void testVehicleResponsePublisher(TestContext context) {
         Async async = context.async();
         CompositeFuture.all(futures).setHandler(completed -> {
-            vertx.eventBus().consumer(EventBus.BACKOFFICE_VEHICLE_COUNTER_REQUEST_TEST, res -> {
+            vertx.eventBus().consumer(ConstantsBackoffice.EventBus.BACKOFFICE_VEHICLE_COUNTER_REQUEST_TEST, res -> {
                 JsonObject dataFromUser = new JsonObject(res.body().toString());
                 String backofficeIdReceived = dataFromUser.getValue(Constants.EventBus.BODY).toString();
-                assertTrue(backofficeIdReceived.equals(EventBus.TEST_BACKOFFICE_ID));
+                assertTrue(backofficeIdReceived.equals(ConstantsBackoffice.TEST_BACKOFFICE_ID));
                 async.complete();
             });
         });

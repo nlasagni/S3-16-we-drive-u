@@ -1,6 +1,7 @@
 package com.wedriveu.backoffice.controller;
 
-import com.wedriveu.backoffice.util.EventBus;
+import com.wedriveu.backoffice.util.ConstantsBackoffice;
+import com.wedriveu.services.shared.model.Booking;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
@@ -8,8 +9,9 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
+import java.util.List;
+
 import static com.wedriveu.shared.util.Constants.RabbitMQ;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY_BOOKING_RESPONSE_BOOKING_LIST;
 
 /**
@@ -24,7 +26,7 @@ public class BackofficeBookingsResponseConsumer extends VerticleConsumer {
      * @param backofficeId the backoffice id
      */
     public BackofficeBookingsResponseConsumer(String backofficeId) {
-        super(RabbitMQ.Exchanges.BOOKING + "." + ROUTING_KEY_BOOKING_RESPONSE_BOOKING_LIST + "." + backofficeId);
+        super(RabbitMQ.Exchanges.BOOKING + String.format(RabbitMQ.RoutingKey.ROUTING_KEY_BOOKING_RESPONSE_BOOKING_LIST, backofficeId));
         this.backofficeId = backofficeId;
     }
 
@@ -40,9 +42,9 @@ public class BackofficeBookingsResponseConsumer extends VerticleConsumer {
             }
         });
 
-        startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS,
-                RabbitMQ.RoutingKey.ROUTING_KEY_BOOKING_RESPONSE_BOOKING_LIST + "." + backofficeId,
-                EventBus.AVAILABLE_ADDRESS_BACKOFFICE_BOOKING_RESPONSE,
+        startConsumerWithFuture(RabbitMQ.Exchanges.BOOKING,
+                String.format(RabbitMQ.RoutingKey.ROUTING_KEY_BOOKING_RESPONSE_BOOKING_LIST, backofficeId),
+                ConstantsBackoffice.EventBus.AVAILABLE_ADDRESS_BACKOFFICE_BOOKING_RESPONSE,
                 futureConsumer);
     }
 
@@ -52,7 +54,11 @@ public class BackofficeBookingsResponseConsumer extends VerticleConsumer {
     }
 
     private void sendUpdatesToController(Message message) {
-        VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
-        vertx.eventBus().send(EventBus.BACKOFFICE_CONTROLLER_BOOKINGS, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
+        try {
+            List<Booking> bookings = VertxJsonMapper.mapFromBodyToList((JsonObject) message.body(), Booking.class);
+            vertx.eventBus().send(ConstantsBackoffice.EventBus.BACKOFFICE_CONTROLLER_BOOKINGS, VertxJsonMapper.mapListInBodyFrom(bookings));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

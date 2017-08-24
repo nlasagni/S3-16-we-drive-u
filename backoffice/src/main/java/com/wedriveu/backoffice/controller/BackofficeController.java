@@ -1,7 +1,7 @@
 package com.wedriveu.backoffice.controller;
 
 import com.wedriveu.backoffice.model.BackOfficeModel;
-import com.wedriveu.backoffice.util.EventBus;
+import com.wedriveu.backoffice.util.ConstantsBackoffice;
 import com.wedriveu.backoffice.view.BackOfficeView;
 import com.wedriveu.services.shared.model.Booking;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
@@ -32,8 +32,8 @@ public class BackofficeController extends AbstractVerticle {
     @Override
     public void start(Future futureRetriever) throws Exception {
         init();
-        vertx.eventBus().consumer(EventBus.BACKOFFICE_CONTROLLER_VEHICLES, this::updateCounter);
-        vertx.eventBus().consumer(EventBus.BACKOFFICE_CONTROLLER_BOOKINGS, this::manageBookingList);
+        vertx.eventBus().consumer(ConstantsBackoffice.EventBus.BACKOFFICE_CONTROLLER_VEHICLES, this::updateCounter);
+        vertx.eventBus().consumer(ConstantsBackoffice.EventBus.BACKOFFICE_CONTROLLER_BOOKINGS, this::manageBookingList);
     }
 
 

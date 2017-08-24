@@ -1,6 +1,6 @@
 package com.wedriveu.backoffice.controller;
 
-import com.wedriveu.backoffice.util.EventBus;
+import com.wedriveu.backoffice.util.ConstantsBackoffice;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
@@ -41,9 +41,9 @@ public class BackofficeVehiclesResponseConsumer extends VerticleConsumer {
                 futureRetriever.fail(v.cause());
             }
         });
-        String eventBusAvailable = EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_NO_ID;
+        String eventBusAvailable = ConstantsBackoffice.EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_NO_ID;
         if (!backofficeId.equals("")) {
-            eventBusAvailable = EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_WITH_ID;
+            eventBusAvailable = ConstantsBackoffice.EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_WITH_ID;
         }
 
         startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS,
@@ -59,6 +59,6 @@ public class BackofficeVehiclesResponseConsumer extends VerticleConsumer {
 
     private void sendUpdatesToController(Message message) {
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
-        vertx.eventBus().send(EventBus.BACKOFFICE_CONTROLLER_VEHICLES, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
+        vertx.eventBus().send(ConstantsBackoffice.EventBus.BACKOFFICE_CONTROLLER_VEHICLES, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
     }
 }

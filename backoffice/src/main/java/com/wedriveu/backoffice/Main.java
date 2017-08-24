@@ -25,52 +25,5 @@ public class Main {
                 Log.error("main analytics service", completed.cause().getLocalizedMessage(), completed.cause());
             }
         });
-        List<Booking> bookings = new ArrayList<>();
-        bookings.add(
-                new Booking(1,
-                        new Date(2017,11,10),
-                        "pippo",
-                        "veicolo1",
-                        new Position(44,12),
-                        new Position(44.9,12),
-                        Booking.STATUS_COMPLETED));
-        bookings.add(
-                new Booking(2,
-                        new Date(2017,11,11),
-                        "pippo",
-                        "veicolo1",
-                        new Position(45,12),
-                        new Position(46,12),
-                        Booking.STATUS_COMPLETED));
-        bookings.add(
-                new Booking(3,
-                        new Date(2017,11,12),
-                        "pippo",
-                        "veicolo1",
-                        new Position(44,13),
-                        new Position(47,12),
-                        Booking.STATUS_COMPLETED));
-        String parameters = "";
-        for (Booking book: bookings) {
-            parameters = parameters + "new google.maps.Marker({" +
-                    "position: {lat: "
-                    +book.getUserPosition().getLatitude() +
-                    ", lng:" +
-                    +book.getUserPosition().getLongitude() +
-                    "}," +
-                    "map: map," +
-                    "icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'" +
-                    "});" +
-                    "new google.maps.Marker({" +
-                    "position: {lat: " +
-                    book.getDestinationPosition().getLatitude() +
-                    ", lng: " +
-                    book.getUserPosition().getLongitude() +
-                    "}," +
-                    "map: map," +
-                    "icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'" +
-                    "});";
-        }
-        Application.launch(MapViewerJavaFX.class, parameters);
     }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vertx.core.json.JsonObject;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 import static com.wedriveu.shared.util.Constants.EventBus.BODY;
@@ -34,6 +35,13 @@ public class VertxJsonMapper {
         return mapTo(body, classType);
     }
 
+    public static <T> JsonObject mapListInBodyFrom(T object) throws IOException {
+        StringWriter sw =new StringWriter();
+        MAPPER.writeValue(sw,object);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.put(BODY, sw.toString());
+        return jsonObject;
+    }
 
     public static <T> JsonObject mapFrom(T object) throws IllegalArgumentException {
         if (object == null) {

@@ -1,7 +1,6 @@
 package com.wedriveu.backoffice.analytics;
 
-import com.wedriveu.backoffice.util.EventBus;
-import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
+import com.wedriveu.backoffice.util.ConstantsBackoffice;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Constants;
@@ -26,7 +25,7 @@ public class AnalyticsVehicleCounterResponseGenerator extends VerticlePublisher 
         }
 
         private void startConsumer() {
-            vertx.eventBus().consumer(EventBus.BACKOFFICE_VEHICLE_COUNTER_RESPONSE_GENERATOR_START_TEST, this::sendVehicleCounterToBackOffice);
+            vertx.eventBus().consumer(ConstantsBackoffice.EventBus.BACKOFFICE_VEHICLE_COUNTER_RESPONSE_GENERATOR_START_TEST, this::sendVehicleCounterToBackOffice);
         }
 
         private void sendVehicleCounterToBackOffice(Message message) {

@@ -8,7 +8,7 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.backoffice.util.EventBus.BACKOFFICE_BOOKING_LIST_REQUEST_CONTROLLER;
+import static com.wedriveu.backoffice.util.ConstantsBackoffice.EventBus.BACKOFFICE_BOOKING_LIST_REQUEST_CONTROLLER;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY_BOOKING_REQUEST_BOOKING_LIST;
 
 /**

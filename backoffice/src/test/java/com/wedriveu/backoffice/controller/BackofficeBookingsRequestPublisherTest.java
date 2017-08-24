@@ -1,7 +1,7 @@
 package com.wedriveu.backoffice.controller;
 
 import com.wedriveu.backoffice.booking.BookingRequestReceiverConsumer;
-import com.wedriveu.backoffice.util.EventBus;
+import com.wedriveu.backoffice.util.ConstantsBackoffice;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.BookingListRequest;
 import com.wedriveu.shared.util.Constants;
@@ -34,7 +34,7 @@ public class BackofficeBookingsRequestPublisherTest {
         vertx = Vertx.vertx();
         futures = new ArrayList<>();
         Future retrieveFuture = Future.future();
-        vertx.deployVerticle(new BackofficeBookingsRequestPublisher(EventBus.TEST_BACKOFFICE_ID), retrieveFuture.completer());
+        vertx.deployVerticle(new BackofficeBookingsRequestPublisher(ConstantsBackoffice.TEST_BACKOFFICE_ID), retrieveFuture.completer());
         futures.add(retrieveFuture);
 
         Future generatorRequestHandlerFuture = Future.future();
@@ -47,11 +47,11 @@ public class BackofficeBookingsRequestPublisherTest {
         Async async = context.async();
         CompositeFuture.all(futures).setHandler(completed -> {
             BookingListRequest bookingListRequestLocal = new BookingListRequest();
-            bookingListRequestLocal.setBackofficeId(EventBus.TEST_BACKOFFICE_ID);
+            bookingListRequestLocal.setBackofficeId(ConstantsBackoffice.TEST_BACKOFFICE_ID);
             JsonObject dataToUser = new JsonObject();
             dataToUser.put(Constants.EventBus.BODY, "requesting");
-            vertx.eventBus().send(EventBus.BACKOFFICE_BOOKING_LIST_REQUEST_CONTROLLER, dataToUser);
-            vertx.eventBus().consumer(EventBus.BACKOFFICE_BOOKING_LIST_REQUEST_TEST, res -> {
+            vertx.eventBus().send(ConstantsBackoffice.EventBus.BACKOFFICE_BOOKING_LIST_REQUEST_CONTROLLER, dataToUser);
+            vertx.eventBus().consumer(ConstantsBackoffice.EventBus.BACKOFFICE_BOOKING_LIST_REQUEST_TEST, res -> {
                 BookingListRequest bookingListRequestReceived =
                         VertxJsonMapper.mapFromBodyTo((JsonObject) res.body(), BookingListRequest.class);
                 assertTrue(bookingListRequestLocal.getBackofficeId().equals(bookingListRequestReceived.getBackofficeId()));
