@@ -10,6 +10,12 @@ import java.util.List;
  * @author Stefano Bernagozzi
  */
 public class MapUtility {
+
+    /**
+     * launch a browser with a map inside with pins in the starting and ending position of the bookings
+     *
+     * @param list a list of booking for putting the pins on the map
+     */
     public static void generateMap(List<Booking> list) {
         Application.launch(MapViewerJavaFX.class, generateMapParameters(list));
     }
