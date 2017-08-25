@@ -6,6 +6,7 @@ import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.rabbitmq.message.CompleteBookingRequest;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -63,7 +64,7 @@ public class VehicleArrivedVerticleTest extends BaseInteractionClient {
 
     @Test
     public void vehicleArrived(TestContext context) {
-        super.publishMessage(context,
+        super.publishMessageAndWaitResponse(context,
                 Constants.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
                 createRequest());
@@ -72,6 +73,10 @@ public class VehicleArrivedVerticleTest extends BaseInteractionClient {
     @Override
     protected void checkResponse(TestContext context, JsonObject responseJson) {
         CompleteBookingRequest request = responseJson.mapTo(CompleteBookingRequest.class);
+
+        //TODO
+        Log.error(this.getClass().getSimpleName(), responseJson.toString());
+
         context.assertTrue(USERNAME.equals(request.getUsername()) &&
                 LICENSE_PLATE.equals(request.getLicensePlate()));
     }

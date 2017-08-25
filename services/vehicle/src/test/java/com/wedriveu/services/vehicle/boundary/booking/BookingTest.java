@@ -11,6 +11,7 @@ import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFact
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -54,10 +55,10 @@ public class BookingTest extends BaseInteractionClient {
             super.setup(vertx, completed -> {
                 vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
                     vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
-                        String licencePlate = new VehicleFactoryFiat().getVehicle().getLicensePlate();
-                        vertx.eventBus().send(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST,
-                                JsonObject.mapFrom(vehicle));
-                        super.declareQueueAndBind(licencePlate, context, declared -> {
+                        publishMessage(Constants.RabbitMQ.Exchanges.VEHICLE,
+                                Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
+                                VertxJsonMapper.mapInBodyFrom(vehicle));
+                        super.declareQueueAndBind(vehicle.getLicensePlate(), context, declared -> {
                             context.assertTrue(declared.succeeded());
                             async.complete();
                         });
@@ -74,7 +75,7 @@ public class BookingTest extends BaseInteractionClient {
 
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        publishMessage(context, VEHICLE, VEHICLE_SERVICE_BOOK_REQUEST, createRequest());
+        publishMessageAndWaitResponse(context, VEHICLE, VEHICLE_SERVICE_BOOK_REQUEST, createRequest());
     }
 
     @Override

@@ -67,7 +67,7 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
 
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessage(context, VEHICLE, VEHICLE_REQUEST, getJson());
+        super.publishMessageAndWaitResponse(context, VEHICLE, VEHICLE_REQUEST, getJson());
     }
 
     @Override

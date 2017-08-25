@@ -64,7 +64,7 @@ public class RegisterVehicleTestFiat extends BaseInteractionClient {
 
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessage(context, VEHICLE, REGISTER_REQUEST, getJson());
+        super.publishMessageAndWaitResponse(context, VEHICLE, REGISTER_REQUEST, getJson());
     }
 
     @Override

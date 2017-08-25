@@ -71,10 +71,21 @@ public abstract class BaseInteractionClient {
                 });
     }
 
-    protected void publishMessage(TestContext context,
-                                  String publishExchange,
+    protected void publishMessage(String publishExchange,
                                   String publishRoutingKey,
                                   JsonObject data) {
+        rabbitMQClient.basicPublish(publishExchange, publishRoutingKey, data,
+                onPublish -> {
+                    if (!onPublish.succeeded()) {
+                        Log.error(this.getClass().getSimpleName(), onPublish.cause());
+                    }
+                });
+    }
+
+    protected void publishMessageAndWaitResponse(TestContext context,
+                                                 String publishExchange,
+                                                 String publishRoutingKey,
+                                                 JsonObject data) {
         Async async = context.async();
         handleServiceResponse(context, async, eventBusAddress);
         rabbitMQClient.basicConsume(queue, eventBusAddress, context.asyncAssertSuccess(onGet -> {

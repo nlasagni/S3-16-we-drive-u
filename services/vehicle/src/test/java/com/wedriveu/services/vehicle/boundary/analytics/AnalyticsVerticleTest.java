@@ -61,7 +61,7 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
 
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessage(context, VEHICLE, ANALYTICS_VEHICLE_REQUEST_ALL, getJson());
+        super.publishMessageAndWaitResponse(context, VEHICLE, ANALYTICS_VEHICLE_REQUEST_ALL, getJson());
     }
 
     @Override
