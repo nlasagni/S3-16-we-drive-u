@@ -1,6 +1,6 @@
 package com.wedriveu.backoffice;
 
-import com.wedriveu.backoffice.controller.BackofficeController;
+import com.wedriveu.backoffice.controller.BackOfficeController;
 import com.wedriveu.shared.util.Log;
 import io.vertx.core.Vertx;
 
@@ -10,13 +10,12 @@ import io.vertx.core.Vertx;
 public class Main {
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
-        vertx.deployVerticle(new BackofficeController(vertx), completed -> {
+        vertx.deployVerticle(new BackOfficeController(vertx), completed -> {
             if (completed.succeeded()) {
                 Log.info("correctly started Analytics service");
             } else {
                 Log.error("main analytics service", completed.cause().getLocalizedMessage(), completed.cause());
             }
         });
-
     }
 }

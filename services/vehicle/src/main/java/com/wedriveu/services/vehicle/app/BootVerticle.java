@@ -17,7 +17,7 @@ import io.vertx.core.eventbus.Message;
  */
 public class BootVerticle extends AbstractVerticle {
 
-    ExchangeManagerVerticle exchangeVerticle = new ExchangeManagerVerticle();
+    private ExchangeManagerVerticle exchangeVerticle = new ExchangeManagerVerticle();
 
     @Override
     public void start() throws Exception {
@@ -36,11 +36,11 @@ public class BootVerticle extends AbstractVerticle {
         vertx.deployVerticle(new VerticleDeployer(), deployerCompleted -> {
             if (deployerCompleted.succeeded()) {
                 vertx.deployVerticle(new NearestConsumerVerticle(), onNearestCompleted -> {
+                    vertx.undeploy(exchangeVerticle.deploymentID());
                     vertx.eventBus().send(Messages.VehicleService.BOOT_COMPLETED, null);
                 });
             }
         });
-        vertx.undeploy(exchangeVerticle.deploymentID());
     }
 
 }
