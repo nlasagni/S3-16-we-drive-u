@@ -11,7 +11,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,16 +61,9 @@ public class VehicleArrivedVerticleTest extends BaseInteractionClient {
         async.awaitSuccess();
     }
 
-    @After
-    public void tearDown(TestContext context) throws Exception {
-        super.stop(context);
-        vertx.undeploy(bootVerticle.deploymentID());
-    }
-
     @Test
     public void vehicleArrived(TestContext context) {
         super.publishMessage(context,
-                true,
                 Constants.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
                 createRequest());
