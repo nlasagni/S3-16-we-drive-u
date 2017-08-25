@@ -37,7 +37,7 @@ public class VertxJsonMapper {
      * @param classType the class of the entity that is inside the json object
      * @param <T> the type of the object returned
      * @return an object T
-     * @throws IOException
+     * @throws IllegalArgumentException
      */
     public static <T> T mapTo(JsonObject jsonObject, Class<T> classType) throws IllegalArgumentException {
         if (jsonObject == null) {
@@ -51,7 +51,7 @@ public class VertxJsonMapper {
      * @param classType the class of the entity that is inside the json object
      * @param <T> the type of the object returned
      * @return an object T
-     * @throws IOException
+     * @throws IllegalArgumentException
      */
     public static <T> T mapFromBodyTo(JsonObject jsonObject, Class<T> classType) throws IllegalArgumentException {
         JsonObject body = new JsonObject(jsonObject.getString(BODY));
@@ -78,7 +78,7 @@ public class VertxJsonMapper {
      * @param object the object that has to be mappped
      * @param <T> the class of the object
      * @return a json object with inside the object
-     * @throws IOException
+     * @throws IllegalArgumentException
      */
     public static <T> JsonObject mapFrom(T object) throws IllegalArgumentException {
         if (object == null) {
@@ -92,7 +92,7 @@ public class VertxJsonMapper {
      * @param object the object that has to be mappped
      * @param <T> the class of the object
      * @return a json object with inside the body the object
-     * @throws IOException
+     * @throws IllegalArgumentException
      */
     public static <T> JsonObject mapInBodyFrom(T object) throws IllegalArgumentException {
         JsonObject body = mapFrom(object);
