@@ -1,6 +1,6 @@
 package com.wedriveu.backoffice.controller;
 
-import com.wedriveu.backoffice.util.ConstantsBackoffice;
+import com.wedriveu.backoffice.util.ConstantsBackOffice;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
@@ -9,7 +9,7 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_LIST;
 import static com.wedriveu.shared.util.Constants.RabbitMQ;
 
 /**
@@ -17,7 +17,7 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ;
  *
  * @author Stefano Bernagozzi
  */
-public class BackofficeVehiclesResponseConsumer extends VerticleConsumer {
+public class BackOfficeVehiclesResponseConsumer extends VerticleConsumer {
     private String backofficeId;
 
     /**
@@ -25,8 +25,8 @@ public class BackofficeVehiclesResponseConsumer extends VerticleConsumer {
      * @param backofficeId null in case you want to listen over the backoffice update queue,
      *                     "." + backoffice id in case you want to listen in your own routing key (only for the initial update)
      */
-    public BackofficeVehiclesResponseConsumer(String queueName, String backofficeId) {
-        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST + queueName);
+    public BackOfficeVehiclesResponseConsumer(String queueName, String backofficeId) {
+        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + ANALYTICS_RESPONSE_VEHICLE_LIST + queueName);
         this.backofficeId = backofficeId;
     }
 
@@ -41,13 +41,13 @@ public class BackofficeVehiclesResponseConsumer extends VerticleConsumer {
                 futureRetriever.fail(v.cause());
             }
         });
-        String eventBusAvailable = ConstantsBackoffice.EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_NO_ID;
+        String eventBusAvailable = ConstantsBackOffice.EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_NO_ID;
         if (!backofficeId.equals("")) {
-            eventBusAvailable = ConstantsBackoffice.EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_WITH_ID;
+            eventBusAvailable = ConstantsBackOffice.EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_WITH_ID;
         }
 
         startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS,
-                ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST + backofficeId,
+                ANALYTICS_RESPONSE_VEHICLE_LIST + backofficeId,
                 eventBusAvailable,
                 futureConsumer);
     }
@@ -59,6 +59,6 @@ public class BackofficeVehiclesResponseConsumer extends VerticleConsumer {
 
     private void sendUpdatesToController(Message message) {
         VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
-        vertx.eventBus().send(ConstantsBackoffice.EventBus.BACKOFFICE_CONTROLLER_VEHICLES, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
+        vertx.eventBus().send(ConstantsBackOffice.EventBus.BACKOFFICE_CONTROLLER_VEHICLES, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
     }
 }

@@ -8,21 +8,21 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.backoffice.util.ConstantsBackoffice.EventBus.BACKOFFICE_BOOKING_LIST_REQUEST_CONTROLLER;
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY_BOOKING_REQUEST_BOOKING_LIST;
+import static com.wedriveu.backoffice.util.ConstantsBackOffice.EventBus.BACKOFFICE_BOOKING_LIST_REQUEST_CONTROLLER;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.BOOKING_REQUEST_BOOKING_LIST;
 
 /**
  * the class for sending a request of the booking list over rabbitMQ with vertx
  *
  * @author Stefano Bernagozzi
  */
-public class BackofficeBookingsRequestPublisher extends VerticlePublisher {
+public class BackOfficeBookingsRequestPublisher extends VerticlePublisher {
     private String backofficeId;
 
     /**
      * @param backofficeId the backoffice id
      */
-    public BackofficeBookingsRequestPublisher(String backofficeId) {
+    public BackOfficeBookingsRequestPublisher(String backofficeId) {
         this.backofficeId = backofficeId;
     }
 
@@ -44,7 +44,7 @@ public class BackofficeBookingsRequestPublisher extends VerticlePublisher {
         BookingListRequest bookingListRequest = new BookingListRequest();
         bookingListRequest.setBackofficeId(backofficeId);
         JsonObject dataToUser = VertxJsonMapper.mapInBodyFrom(bookingListRequest);
-        publish(Constants.RabbitMQ.Exchanges.BOOKING,ROUTING_KEY_BOOKING_REQUEST_BOOKING_LIST, dataToUser, published -> { });
+        publish(Constants.RabbitMQ.Exchanges.BOOKING, BOOKING_REQUEST_BOOKING_LIST, dataToUser, published -> { });
     }
 
 }

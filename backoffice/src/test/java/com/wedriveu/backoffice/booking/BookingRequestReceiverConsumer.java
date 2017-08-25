@@ -1,6 +1,6 @@
 package com.wedriveu.backoffice.booking;
 
-import com.wedriveu.backoffice.util.ConstantsBackoffice;
+import com.wedriveu.backoffice.util.ConstantsBackOffice;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.BookingListRequest;
@@ -15,7 +15,7 @@ import io.vertx.core.json.JsonObject;
 public class BookingRequestReceiverConsumer extends VerticleConsumer {
 
     public BookingRequestReceiverConsumer() {
-        super(ConstantsBackoffice.Queues.ANALYTYCS_BOOKING_LIST_REQUEST_QUEUE_TEST);
+        super(ConstantsBackOffice.Queues.ANALYTYCS_BOOKING_LIST_REQUEST_QUEUE_TEST);
     }
 
     @Override
@@ -31,8 +31,8 @@ public class BookingRequestReceiverConsumer extends VerticleConsumer {
         });
 
         startConsumerWithFuture(Constants.RabbitMQ.Exchanges.BOOKING,
-                Constants.RabbitMQ.RoutingKey.ROUTING_KEY_BOOKING_REQUEST_BOOKING_LIST,
-                ConstantsBackoffice.EventBus.ANALYTICS_BOOKING_LIST_REQUEST_EVENTBUS_AVAILABLE_TEST,
+                Constants.RabbitMQ.RoutingKey.BOOKING_REQUEST_BOOKING_LIST,
+                ConstantsBackOffice.EventBus.ANALYTICS_BOOKING_LIST_REQUEST_EVENTBUS_AVAILABLE_TEST,
                 futureConsumer);
     }
 
@@ -43,7 +43,7 @@ public class BookingRequestReceiverConsumer extends VerticleConsumer {
 
     private void sendUpdatesToController(Message message) {
         BookingListRequest bookingListRequest = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), BookingListRequest.class);
-        vertx.eventBus().send(ConstantsBackoffice.EventBus.BACKOFFICE_BOOKING_LIST_REQUEST_TEST, VertxJsonMapper.mapInBodyFrom(bookingListRequest));
+        vertx.eventBus().send(ConstantsBackOffice.EventBus.BACKOFFICE_BOOKING_LIST_REQUEST_TEST, VertxJsonMapper.mapInBodyFrom(bookingListRequest));
     }
 
 }

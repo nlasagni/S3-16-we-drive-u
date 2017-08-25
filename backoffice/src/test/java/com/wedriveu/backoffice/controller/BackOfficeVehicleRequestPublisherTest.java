@@ -1,7 +1,7 @@
 package com.wedriveu.backoffice.controller;
 
-import com.wedriveu.backoffice.analytics.AnalyticsVehicleCounterRequestReceiverConsumer;
-import com.wedriveu.backoffice.util.ConstantsBackoffice;
+import com.wedriveu.backoffice.analytics.AnalyticsVehicleCounterRequestConsumer;
+import com.wedriveu.backoffice.util.ConstantsBackOffice;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
  * @author Stefano Bernagozzi
  */
 @RunWith(VertxUnitRunner.class)
-public class BackofficeVehicleRequestPublisherTest {
+public class BackOfficeVehicleRequestPublisherTest {
     private List<Future> futures;
     private Vertx vertx;
 
@@ -32,11 +32,11 @@ public class BackofficeVehicleRequestPublisherTest {
         vertx = Vertx.vertx();
         futures = new ArrayList<>();
         Future retrieveFuture = Future.future();
-        vertx.deployVerticle(new BackofficeVehicleRequestPublisher(ConstantsBackoffice.TEST_BACKOFFICE_ID), retrieveFuture.completer());
+        vertx.deployVerticle(new BackOfficeVehicleRequestPublisher(ConstantsBackOffice.TEST_BACKOFFICE_ID), retrieveFuture.completer());
         futures.add(retrieveFuture);
 
         Future generatorRequestHandlerFuture = Future.future();
-        vertx.deployVerticle(new AnalyticsVehicleCounterRequestReceiverConsumer(), generatorRequestHandlerFuture.completer());
+        vertx.deployVerticle(new AnalyticsVehicleCounterRequestConsumer(), generatorRequestHandlerFuture.completer());
         futures.add(generatorRequestHandlerFuture);
     }
 
@@ -44,10 +44,10 @@ public class BackofficeVehicleRequestPublisherTest {
     public void testVehicleResponsePublisher(TestContext context) {
         Async async = context.async();
         CompositeFuture.all(futures).setHandler(completed -> {
-            vertx.eventBus().consumer(ConstantsBackoffice.EventBus.BACKOFFICE_VEHICLE_COUNTER_REQUEST_TEST, res -> {
+            vertx.eventBus().consumer(ConstantsBackOffice.EventBus.BACKOFFICE_VEHICLE_COUNTER_REQUEST_TEST, res -> {
                 JsonObject dataFromUser = new JsonObject(res.body().toString());
                 String backofficeIdReceived = dataFromUser.getValue(Constants.EventBus.BODY).toString();
-                assertTrue(backofficeIdReceived.equals(ConstantsBackoffice.TEST_BACKOFFICE_ID));
+                assertTrue(backofficeIdReceived.equals(ConstantsBackOffice.TEST_BACKOFFICE_ID));
                 async.complete();
             });
         });

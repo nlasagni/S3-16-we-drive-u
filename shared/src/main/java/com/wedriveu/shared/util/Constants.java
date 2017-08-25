@@ -244,19 +244,19 @@ public interface Constants {
             /**
              *  The routing key used by backoffice to request a vehicle counter.
              */
-            String ROUTING_KEY_ANALYTICS_REQUEST_VEHICLE_LIST = "analytics.request.vehicleList";
+            String ANALYTICS_REQUEST_VEHICLE_LIST = "analytics.request.vehicleList";
             /**
              *  The routing key used by backoffice to receive a vehicle counter.
              */
-            String ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST = "analytics.response.vehicles";
+            String ANALYTICS_RESPONSE_VEHICLE_LIST = "analytics.response.vehicles";
             /**
              *  The routing key used by booking service to receive a booking list request.
              */
-            String ROUTING_KEY_BOOKING_REQUEST_BOOKING_LIST = "booking.request.bydate";
+            String BOOKING_REQUEST_BOOKING_LIST = "booking.request.bydate";
             /**
              *  The routing key used by booking service to receive a booking list request.
              */
-            String ROUTING_KEY_BOOKING_RESPONSE_BOOKING_LIST = "booking.response.bydate.%s";
+            String BOOKING_RESPONSE_BOOKING_LIST = "booking.response.bydate.%s";
 
         }
     }

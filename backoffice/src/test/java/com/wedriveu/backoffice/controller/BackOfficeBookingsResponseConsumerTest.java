@@ -1,13 +1,10 @@
 package com.wedriveu.backoffice.controller;
 
-import com.wedriveu.backoffice.analytics.AnalyticsVehicleCounterResponseGenerator;
-import com.wedriveu.backoffice.analytics.VehicleCounterGenerator;
 import com.wedriveu.backoffice.booking.BookingListGenerator;
 import com.wedriveu.backoffice.booking.BookingResponseGeneratorPublisher;
-import com.wedriveu.backoffice.util.ConstantsBackoffice;
+import com.wedriveu.backoffice.util.ConstantsBackOffice;
 import com.wedriveu.services.shared.model.Booking;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -29,7 +26,7 @@ import static org.junit.Assert.*;
  * @author Stefano Bernagozzi
  */
 @RunWith(VertxUnitRunner.class)
-public class BackofficeBookingsResponseConsumerTest {
+public class BackOfficeBookingsResponseConsumerTest {
     private List<Future> futures;
     private Vertx vertx;
 
@@ -38,7 +35,7 @@ public class BackofficeBookingsResponseConsumerTest {
         vertx = Vertx.vertx();
         futures = new ArrayList<>();
         Future retrieveFuture = Future.future();
-        vertx.deployVerticle(new BackofficeBookingsResponseConsumer(ConstantsBackoffice.TEST_BACKOFFICE_ID), retrieveFuture.completer());
+        vertx.deployVerticle(new BackOfficeBookingsResponseConsumer(ConstantsBackOffice.TEST_BACKOFFICE_ID), retrieveFuture.completer());
         futures.add(retrieveFuture);
 
         Future generatorRequestHandlerFuture = Future.future();
@@ -52,8 +49,8 @@ public class BackofficeBookingsResponseConsumerTest {
         CompositeFuture.all(futures).setHandler(completed -> {
             JsonObject dataToUser = new JsonObject();
             dataToUser.put(Constants.EventBus.BODY, "requesting");
-            vertx.eventBus().send(ConstantsBackoffice.EventBus.BACKOFFICE_BOOKING_LIST_RESPONSE_GENERATOR_START_TEST, dataToUser);
-            vertx.eventBus().consumer(ConstantsBackoffice.EventBus.BACKOFFICE_CONTROLLER_BOOKINGS, res -> {
+            vertx.eventBus().send(ConstantsBackOffice.EventBus.BACKOFFICE_BOOKING_LIST_RESPONSE_GENERATOR_START_TEST, dataToUser);
+            vertx.eventBus().consumer(ConstantsBackOffice.EventBus.BACKOFFICE_CONTROLLER_BOOKINGS, res -> {
                 try {
                     List<Booking> bookingList =
                             VertxJsonMapper.mapFromBodyToList((JsonObject) res.body(), Booking.class);

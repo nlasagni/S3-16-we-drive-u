@@ -1,39 +1,41 @@
 package com.wedriveu.backoffice.controller;
 
 import com.wedriveu.backoffice.model.BackOfficeModel;
-import com.wedriveu.backoffice.util.ConstantsBackoffice;
+import com.wedriveu.backoffice.util.ConstantsBackOffice;
 import com.wedriveu.backoffice.view.BackOfficeView;
 import com.wedriveu.services.shared.model.Booking;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author Stefano Bernagozzi
  */
-public class BackofficeController extends AbstractVerticle {
-    private Future futureModel;
+public class BackOfficeController extends AbstractVerticle {
     private BackOfficeModel backOfficeModel;
     private BackOfficeView backOfficeView;
     Vertx vertx;
-    String toUndeploy;
+    private Future futureStart;
 
-    public BackofficeController(Vertx vertx) {
+    public BackOfficeController(Vertx vertx) {
         this.vertx = vertx;
     }
 
     @Override
     public void start(Future futureRetriever) throws Exception {
+        futureStart = futureRetriever;
         init();
-        vertx.eventBus().consumer(ConstantsBackoffice.EventBus.BACKOFFICE_CONTROLLER_VEHICLES, this::updateCounter);
-        vertx.eventBus().consumer(ConstantsBackoffice.EventBus.BACKOFFICE_CONTROLLER_BOOKINGS, this::manageBookingList);
+        vertx.eventBus().consumer(ConstantsBackOffice.EventBus.BACKOFFICE_CONTROLLER_VEHICLES, this::updateCounter);
+        vertx.eventBus().consumer(ConstantsBackOffice.EventBus.BACKOFFICE_CONTROLLER_BOOKINGS, this::manageBookingList);
     }
 
 
@@ -43,23 +45,39 @@ public class BackofficeController extends AbstractVerticle {
         backOfficeView.setVisible(true);
         ButtonEventListener buttonEventListener = new ButtonEventListener(backOfficeModel, backOfficeView);
         backOfficeView.addButtonListener(buttonEventListener);
-        futureModel = backOfficeModel.getFuture();
+        Future futureModel = backOfficeModel.getFuture();
+        List<Future> futures = new ArrayList<>();
         futureModel.setHandler(res -> {
-            vertx.deployVerticle(new BackofficeVehiclesResponseConsumer(
+            Future futureVerticle1 = Future.future();
+            vertx.deployVerticle(new BackOfficeVehiclesResponseConsumer(
                             "." + backOfficeModel.getBackofficeID() + ".updates",
-                            ""));
-            vertx.deployVerticle(new BackofficeVehiclesResponseConsumer(
+                            ""),
+                    futureVerticle1.completer());
+            futures.add(futureVerticle1);
+            Future futureVerticle2 = Future.future();
+            vertx.deployVerticle(new BackOfficeVehiclesResponseConsumer(
                             "." + backOfficeModel.getBackofficeID(),
-                            "." + backOfficeModel.getBackofficeID()));
-            vertx.deployVerticle(new BackofficeVehicleRequestPublisher(
+                            "." + backOfficeModel.getBackofficeID()),
+                    futureVerticle2.completer());
+            futures.add(futureVerticle2);
+            Future futureVerticle3 = Future.future();
+            vertx.deployVerticle(new BackOfficeVehicleRequestPublisher(
                             backOfficeModel.getBackofficeID()),
-                            resDeploy ->{ });
-            vertx.deployVerticle(new BackofficeBookingsRequestPublisher(
+                    futureVerticle3.completer());
+            futures.add(futureVerticle3);
+            Future futureVerticle4 = Future.future();
+            vertx.deployVerticle(new BackOfficeBookingsRequestPublisher(
                             backOfficeModel.getBackofficeID()),
-                            resDeploy ->{ });
-            vertx.deployVerticle(new BackofficeBookingsResponseConsumer(
+                    futureVerticle4.completer());
+            futures.add(futureVerticle4);
+            Future futureVerticle5 = Future.future();
+            vertx.deployVerticle(new BackOfficeBookingsResponseConsumer(
                             backOfficeModel.getBackofficeID()),
-                            resDeploy ->{ });
+                    futureVerticle5.completer());
+            futures.add(futureVerticle5);
+            CompositeFuture.all(futures).setHandler(resAllFutures-> {
+                futureStart.complete();
+            });
         });
     }
 
@@ -72,7 +90,7 @@ public class BackofficeController extends AbstractVerticle {
     private void manageBookingList(Message message) {
         try {
             List<Booking> list = VertxJsonMapper.mapFromBodyToList((JsonObject) message.body(), Booking.class);
-            backOfficeModel.generateMap(list);
+            MapUtility.generateMap(list);
         }catch (Exception e) {
             e.printStackTrace();
         }

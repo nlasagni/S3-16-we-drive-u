@@ -1,16 +1,8 @@
 package com.wedriveu.backoffice;
 
-import com.wedriveu.backoffice.controller.BackofficeController;
-import com.wedriveu.backoffice.view.MapViewerJavaFX;
-import com.wedriveu.services.shared.model.Booking;
+import com.wedriveu.backoffice.controller.BackOfficeController;
 import com.wedriveu.shared.util.Log;
-import com.wedriveu.shared.util.Position;
 import io.vertx.core.Vertx;
-import javafx.application.Application;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author Stefano Bernagozzi
@@ -18,7 +10,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
-        vertx.deployVerticle(new BackofficeController(vertx), completed -> {
+        vertx.deployVerticle(new BackOfficeController(vertx), completed -> {
             if (completed.succeeded()) {
                 Log.info("correctly started Analytics service");
             } else {

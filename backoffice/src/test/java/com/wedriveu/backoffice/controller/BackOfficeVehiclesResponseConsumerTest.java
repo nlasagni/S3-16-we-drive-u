@@ -1,8 +1,8 @@
 package com.wedriveu.backoffice.controller;
 
 import com.wedriveu.backoffice.analytics.AnalyticsVehicleCounterResponseGenerator;
-import com.wedriveu.backoffice.analytics.VehicleCounterGenerator;
-import com.wedriveu.backoffice.util.ConstantsBackoffice;
+import com.wedriveu.backoffice.analytics.VehicleCounterGeneratorFactory;
+import com.wedriveu.backoffice.util.ConstantsBackOffice;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import com.wedriveu.shared.util.Constants;
@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
  * @author Stefano Bernagozzi
  */
 @RunWith(VertxUnitRunner.class)
-public class BackofficeVehiclesResponseConsumerTest {
+public class BackOfficeVehiclesResponseConsumerTest {
     private List<Future> futures;
     private Vertx vertx;
 
@@ -35,7 +35,7 @@ public class BackofficeVehiclesResponseConsumerTest {
         vertx = Vertx.vertx();
         futures = new ArrayList<>();
         Future retrieveFuture = Future.future();
-        vertx.deployVerticle(new BackofficeVehiclesResponseConsumer(ConstantsBackoffice.Queues.ANALYTYCS_VEHICLE_COUNTER_RESPONSE_QUEUE_TEST, ""), retrieveFuture.completer());
+        vertx.deployVerticle(new BackOfficeVehiclesResponseConsumer(ConstantsBackOffice.Queues.ANALYTYCS_VEHICLE_COUNTER_RESPONSE_QUEUE_TEST, ""), retrieveFuture.completer());
         futures.add(retrieveFuture);
 
         Future generatorRequestHandlerFuture = Future.future();
@@ -49,11 +49,16 @@ public class BackofficeVehiclesResponseConsumerTest {
         CompositeFuture.all(futures).setHandler(completed -> {
             JsonObject dataToUser = new JsonObject();
             dataToUser.put(Constants.EventBus.BODY, "requesting");
-            vertx.eventBus().send(ConstantsBackoffice.EventBus.BACKOFFICE_VEHICLE_COUNTER_RESPONSE_GENERATOR_START_TEST, dataToUser);
-            vertx.eventBus().consumer(ConstantsBackoffice.EventBus.BACKOFFICE_CONTROLLER_VEHICLES, res -> {
+            vertx.eventBus().send(ConstantsBackOffice.EventBus.BACKOFFICE_VEHICLE_COUNTER_RESPONSE_GENERATOR_START_TEST, dataToUser);
+            vertx.eventBus().consumer(ConstantsBackOffice.EventBus.BACKOFFICE_CONTROLLER_VEHICLES, res -> {
                 VehicleCounter vehicleCounter =
                         VertxJsonMapper.mapFromBodyTo((JsonObject) res.body(), VehicleCounter.class);
-                assertTrue(vehicleCounter.equals(VehicleCounterGenerator.getVehicleCounter()));
+                assertTrue(vehicleCounter.equals(VehicleCounterGeneratorFactory.getVehicleCounter(
+                        ConstantsBackOffice.VEHICLE_AVAILABLE,
+                        ConstantsBackOffice.VEHICLE_BOOKED,
+                        ConstantsBackOffice.VEHICLE_BROKEN,
+                        ConstantsBackOffice.VEHICLE_NETWORK_ISSUES,
+                        ConstantsBackOffice.VEHICLE_RECHARGING)));
                 async.complete();
             });
         });

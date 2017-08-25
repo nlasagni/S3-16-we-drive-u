@@ -3,8 +3,14 @@ package com.wedriveu.backoffice.util;
 /**
  * @author Stefano Bernagozzi
  */
-public interface ConstantsBackoffice {
+public interface ConstantsBackOffice {
     String TEST_BACKOFFICE_ID = "backoffice1test";
+    int VEHICLE_AVAILABLE = 2;
+    int VEHICLE_BOOKED = 3;
+    int VEHICLE_BROKEN = 1;
+    int VEHICLE_NETWORK_ISSUES = 0;
+    int VEHICLE_RECHARGING = 0;
+
 
     interface WebPage {
         String HTML_WEB_PAGE_BEFORE_JAVASCRIPT_SCRIPT = "<!DOCTYPE html>" +
