@@ -12,7 +12,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +19,6 @@ import org.junit.runner.RunWith;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(VertxUnitRunner.class)
 public class RegisterVehicleTestMini extends BaseInteractionClient {
@@ -38,22 +36,19 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
 
     @Before
     public void setUp(TestContext context) throws Exception {
-        async = context.async(ASYNC_COUNT);
+        async = context.async();
         vertx = Vertx.vertx();
         bootVerticle = new BootVerticle();
         super.setup(vertx, completed -> {
             vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
                 vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
-                    async.countDown();
                     String licencePlate = new VehicleFactoryMini().getVehicle().getLicensePlate();
-                    super.declareQueueAndBind(licencePlate, context, declared -> {
-                        context.assertTrue(declared.succeeded());
+                    super.declareQueueAndBind(licencePlate, context, context.asyncAssertSuccess(declared -> {
                         async.complete();
-                    });
+                    }));
                 });
                 vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
-            async.countDown();
             vertx.deployVerticle(bootVerticle, context.asyncAssertSuccess(onDeploy -> {
                 vertx.eventBus().send(Messages.VehicleService.BOOT, null);
             }));
@@ -61,21 +56,15 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
         async.awaitSuccess();
     }
 
-    @After
-    public void tearDown(TestContext context) throws Exception {
-        super.stop(context);
-        vertx.undeploy(bootVerticle.deploymentID());
-    }
-
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessage(context, false, VEHICLE, REGISTER_REQUEST, getJson());
+        super.publishMessage(context, VEHICLE, REGISTER_REQUEST, getJson());
     }
 
     @Override
     protected void checkResponse(TestContext context, JsonObject responseJson) {
         RegisterToServiceResponse response = responseJson.mapTo(RegisterToServiceResponse.class);
-        assertTrue(response.getRegisterOk());
+        context.assertTrue(response.getRegisterOk());
     }
 
     private JsonObject getJson() {

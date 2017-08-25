@@ -46,18 +46,8 @@ public abstract class BaseInteractionClient {
 
     }
 
-    private void declareQueue(Handler<AsyncResult<Void>> handler) {
-        rabbitMQClient.queueDeclare(queue, true, false, false, onDeclareCompleted -> {
-            if (onDeclareCompleted.succeeded()) {
-                handler.handle(Future.succeededFuture());
-            } else {
-                handler.handle(Future.failedFuture(onDeclareCompleted.cause().getMessage()));
-            }
-        });
-    }
-
-    protected void stop(TestContext context) {
-        rabbitMQClient.stop(context.asyncAssertSuccess());
+    private void declareQueue(Handler<AsyncResult<JsonObject>> handler) {
+        rabbitMQClient.queueDeclare(queue, true, false, false, handler);
     }
 
     protected void declareQueueAndBind(String keyName, TestContext context, Handler<AsyncResult<Void>> handler) {
@@ -82,24 +72,16 @@ public abstract class BaseInteractionClient {
     }
 
     protected void publishMessage(TestContext context,
-                                  boolean withTimeOut,
                                   String publishExchange,
                                   String publishRoutingKey,
                                   JsonObject data) {
-        final Async async = context.async();
-        context.assertNotNull(data);
+        Async async = context.async();
         handleServiceResponse(context, async, eventBusAddress);
         rabbitMQClient.basicConsume(queue, eventBusAddress, context.asyncAssertSuccess(onGet -> {
             rabbitMQClient.basicPublish(publishExchange, publishRoutingKey, data,
                     onPublish -> {
                         if (!onPublish.succeeded()) {
                             Log.error(this.getClass().getSimpleName(), onPublish.cause());
-                        }
-                        if (withTimeOut) {
-                            vertx.setTimer(TIME_OUT, handler -> {
-                                context.fail();
-                                async.complete();
-                            });
                         }
                     });
         }));
