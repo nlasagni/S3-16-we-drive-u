@@ -9,7 +9,6 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_REQUEST_VEHICLE_LIST;
-
 /**
  * @author Stefano Bernagozzi
  */
