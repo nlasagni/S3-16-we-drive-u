@@ -3,9 +3,9 @@
         <head>
           <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-          <title>backoffice API  - com.wedriveu.backoffice.controller.BackofficeController</title>
-          <meta name="description" content="backoffice API - com.wedriveu.backoffice.controller.BackofficeController" />
-          <meta name="keywords" content="backoffice API com.wedriveu.backoffice.controller.BackofficeController" />
+          <title>backoffice API  - com.wedriveu.backoffice.controller.BackOfficeVehiclesResponseConsumer</title>
+          <meta name="description" content="backoffice API - com.wedriveu.backoffice.controller.BackOfficeVehiclesResponseConsumer" />
+          <meta name="keywords" content="backoffice API com.wedriveu.backoffice.controller.BackOfficeVehiclesResponseConsumer" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
@@ -145,15 +145,39 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.wedriveu.backoffice">backoffice</a></dd></dl></div>
     </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="AnalyticsVehiclesResponseConsumer.html" title=""></a>
-                        <a href="AnalyticsVehiclesResponseConsumer.html" title="">
-                          AnalyticsVehiclesResponseConsumer
+                        <a class="class" href="BackOfficeBookingsRequestPublisher.html" title="the class for sending a request of the booking list over rabbitMQ with vertx
+"></a>
+                        <a href="BackOfficeBookingsRequestPublisher.html" title="the class for sending a request of the booking list over rabbitMQ with vertx
+">
+                          BackOfficeBookingsRequestPublisher
                         </a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="" title=""></a>
-                        <a href="" title="">
-                          BackofficeController
+                        <a class="class" href="BackOfficeBookingsResponseConsumer.html" title="the class for recieving a booking list over rabbitMQ with vertx from the booking service
+"></a>
+                        <a href="BackOfficeBookingsResponseConsumer.html" title="the class for recieving a booking list over rabbitMQ with vertx from the booking service
+">
+                          BackOfficeBookingsResponseConsumer
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="BackOfficeController.html" title=""></a>
+                        <a href="BackOfficeController.html" title="">
+                          BackOfficeController
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="BackOfficeVehicleRequestPublisher.html" title="the class for sending a request of the Vehicle list over rabbitMQ with vertx"></a>
+                        <a href="BackOfficeVehicleRequestPublisher.html" title="the class for sending a request of the Vehicle list over rabbitMQ with vertx">
+                          BackOfficeVehicleRequestPublisher
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="" title="the class for recieving a vehicle list over rabbitMQ with vertx from the vehicle service
+"></a>
+                        <a href="" title="the class for recieving a vehicle list over rabbitMQ with vertx from the vehicle service
+">
+                          BackOfficeVehiclesResponseConsumer
                         </a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
@@ -163,9 +187,9 @@
                         </a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="RabbitmqInitialRequest.html" title=""></a>
-                        <a href="RabbitmqInitialRequest.html" title="">
-                          RabbitmqInitialRequest
+                        <a class="class" href="MapUtility.html" title=""></a>
+                        <a href="MapUtility.html" title="">
+                          MapUtility
                         </a>
                       </li>
               </ul>
@@ -176,8 +200,8 @@
       <div id="definition">
         <div class="big-circle class">c</div>
         <p id="owner"><a href="../../../index.html" class="extype" name="com">com</a>.<a href="../../index.html" class="extype" name="com.wedriveu">wedriveu</a>.<a href="../index.html" class="extype" name="com.wedriveu.backoffice">backoffice</a>.<a href="index.html" class="extype" name="com.wedriveu.backoffice.controller">controller</a></p>
-        <h1>BackofficeController<span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html" title="Permalink">
+        <h1>BackOfficeVehiclesResponseConsumer<span class="permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
@@ -190,16 +214,17 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">BackofficeController</span><span class="result"> extends <span class="extype" name="io.vertx.core.AbstractVerticle">AbstractVerticle</span></span>
+        <span class="name">BackOfficeVehiclesResponseConsumer</span><span class="result"> extends <span class="extype" name="com.wedriveu.services.shared.rabbitmq.VerticleConsumer">VerticleConsumer</span></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>the class for recieving a vehicle list over rabbitMQ with vertx from the vehicle service
+</p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="io.vertx.core.AbstractVerticle">AbstractVerticle</span>, <span class="extype" name="io.vertx.core.Verticle">Verticle</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="com.wedriveu.services.shared.rabbitmq.VerticleConsumer">VerticleConsumer</span>, <span class="extype" name="io.vertx.core.AbstractVerticle">AbstractVerticle</span>, <span class="extype" name="io.vertx.core.Verticle">Verticle</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -225,7 +250,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.wedriveu.backoffice.controller.BackofficeController"><span>BackofficeController</span></li><li class="in" name="io.vertx.core.AbstractVerticle"><span>AbstractVerticle</span></li><li class="in" name="io.vertx.core.Verticle"><span>Verticle</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.wedriveu.backoffice.controller.BackOfficeVehiclesResponseConsumer"><span>BackOfficeVehiclesResponseConsumer</span></li><li class="in" name="com.wedriveu.services.shared.rabbitmq.VerticleConsumer"><span>VerticleConsumer</span></li><li class="in" name="io.vertx.core.AbstractVerticle"><span>AbstractVerticle</span></li><li class="in" name="io.vertx.core.Verticle"><span>Verticle</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -245,10 +270,10 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.wedriveu.backoffice.controller.BackofficeController#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(vertx:io.vertx.core.Vertx):com.wedriveu.backoffice.controller.BackofficeController"></a><a id="&lt;init&gt;:BackofficeController"></a>
+              <ol><li name="com.wedriveu.backoffice.controller.BackOfficeVehiclesResponseConsumer#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(queueName:String,backofficeId:String):com.wedriveu.backoffice.controller.BackOfficeVehiclesResponseConsumer"></a><a id="&lt;init&gt;:BackOfficeVehiclesResponseConsumer"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#&lt;init&gt;(vertx:io.vertx.core.Vertx):com.wedriveu.backoffice.controller.BackofficeController" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#&lt;init&gt;(queueName:String,backofficeId:String):com.wedriveu.backoffice.controller.BackOfficeVehiclesResponseConsumer" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -257,7 +282,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">BackofficeController</span><span class="params">(<span name="vertx">vertx: <span class="extype" name="io.vertx.core.Vertx">Vertx</span></span>)</span>
+        <span class="name">BackOfficeVehiclesResponseConsumer</span><span class="params">(<span name="queueName">queueName: <span class="extype" name="java.lang.String">String</span></span>, <span name="backofficeId">backofficeId: <span class="extype" name="java.lang.String">String</span></span>)</span>
       </span>
       
       
@@ -274,7 +299,7 @@
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -290,7 +315,7 @@
     </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html###():Int" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -306,7 +331,7 @@
     </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -322,7 +347,7 @@
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -338,7 +363,7 @@
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#clone():Object" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#clone():Object" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -360,7 +385,7 @@
     </li><li name="io.vertx.core.AbstractVerticle#config" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="config():io.vertx.core.json.JsonObject"></a><a id="config():JsonObject"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#config():io.vertx.core.json.JsonObject" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#config():io.vertx.core.json.JsonObject" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -376,7 +401,7 @@
     </li><li name="io.vertx.core.AbstractVerticle#deploymentID" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="deploymentID():String"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#deploymentID():String" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#deploymentID():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -392,7 +417,7 @@
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#eq(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -408,7 +433,7 @@
     </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#equals(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#equals(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -424,7 +449,7 @@
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#finalize():Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#finalize():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -446,7 +471,7 @@
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#getClass():Class[_]" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#getClass():Class[_]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -462,7 +487,7 @@
     </li><li name="io.vertx.core.AbstractVerticle#getVertx" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getVertx():io.vertx.core.Vertx"></a><a id="getVertx():Vertx"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#getVertx():io.vertx.core.Vertx" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#getVertx():io.vertx.core.Vertx" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -478,7 +503,7 @@
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#hashCode():Int" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#hashCode():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -494,7 +519,7 @@
     </li><li name="io.vertx.core.AbstractVerticle#init" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="init(x$1:io.vertx.core.Vertx,x$2:io.vertx.core.Context):Unit"></a><a id="init(Vertx,Context):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#init(x$1:io.vertx.core.Vertx,x$2:io.vertx.core.Context):Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#init(x$1:io.vertx.core.Vertx,x$2:io.vertx.core.Context):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -510,7 +535,7 @@
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -526,7 +551,7 @@
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#ne(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -542,7 +567,7 @@
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#notify():Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#notify():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -558,7 +583,7 @@
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#notifyAll():Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#notifyAll():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -574,7 +599,7 @@
     </li><li name="io.vertx.core.AbstractVerticle#processArgs" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="processArgs():java.util.List[String]"></a><a id="processArgs():List[String]"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#processArgs():java.util.List[String]" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#processArgs():java.util.List[String]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -587,10 +612,26 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AbstractVerticle</dd></dl></div>
-    </li><li name="com.wedriveu.backoffice.controller.BackofficeController#start" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.wedriveu.backoffice.controller.BackOfficeVehiclesResponseConsumer#registerConsumer" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="registerConsumer(eventBus:String):Unit"></a><a id="registerConsumer(String):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#registerConsumer(eventBus:String):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">registerConsumer</span><span class="params">(<span name="eventBus">eventBus: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.backoffice.controller.BackOfficeVehiclesResponseConsumer">BackOfficeVehiclesResponseConsumer</a> → VerticleConsumer</dd></dl></div>
+    </li><li name="com.wedriveu.backoffice.controller.BackOfficeVehiclesResponseConsumer#start" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="start(futureRetriever:io.vertx.core.Future):Unit"></a><a id="start(Future):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#start(futureRetriever:io.vertx.core.Future):Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#start(futureRetriever:io.vertx.core.Future):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -603,10 +644,10 @@
       </span>
       
       
-    </li><li name="io.vertx.core.AbstractVerticle#start" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.wedriveu.services.shared.rabbitmq.VerticleConsumer#start" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="start():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#start():Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#start():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -618,7 +659,7 @@
         <span class="name">start</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AbstractVerticle</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>VerticleConsumer → AbstractVerticle</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="symbol">classOf[java.lang.Exception]</span>
@@ -628,7 +669,7 @@
     </li><li name="io.vertx.core.AbstractVerticle#start" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="start(x$1:io.vertx.core.Future[Void]):Unit"></a><a id="start(Future[Void]):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#start(x$1:io.vertx.core.Future[Void]):Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#start(x$1:io.vertx.core.Future[Void]):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -647,10 +688,91 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.wedriveu.services.shared.rabbitmq.VerticleConsumer#startConsumer" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="startConsumer(x$1:Boolean,x$2:String,x$3:String,x$4:String):Unit"></a><a id="startConsumer(Boolean,String,String,String):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#startConsumer(x$1:Boolean,x$2:String,x$3:String,x$4:String):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">startConsumer</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="arg1">arg1: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg2">arg2: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg3">arg3: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../services/shared/rabbitmq/index.html" class="extype" name="com.wedriveu.services.shared.rabbitmq">com.wedriveu.services.shared.rabbitmq</a>] </dd><dt>Definition Classes</dt><dd>VerticleConsumer</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.util.concurrent.TimeoutException]">...</span>
+    </span>)</span>
+              
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.io.IOException]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.wedriveu.services.shared.rabbitmq.VerticleConsumer#startConsumerWithDurableQueue" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="startConsumerWithDurableQueue(x$1:String,x$2:String,x$3:String):Unit"></a><a id="startConsumerWithDurableQueue(String,String,String):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#startConsumerWithDurableQueue(x$1:String,x$2:String,x$3:String):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">startConsumerWithDurableQueue</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg1">arg1: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg2">arg2: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../services/shared/rabbitmq/index.html" class="extype" name="com.wedriveu.services.shared.rabbitmq">com.wedriveu.services.shared.rabbitmq</a>] </dd><dt>Definition Classes</dt><dd>VerticleConsumer</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.util.concurrent.TimeoutException]">...</span>
+    </span>)</span>
+              
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.io.IOException]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.wedriveu.services.shared.rabbitmq.VerticleConsumer#startConsumerWithFuture" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="startConsumerWithFuture(x$1:String,x$2:String,x$3:String,x$4:io.vertx.core.Future[_]):Unit"></a><a id="startConsumerWithFuture(String,String,String,Future[_]):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#startConsumerWithFuture(x$1:String,x$2:String,x$3:String,x$4:io.vertx.core.Future[_]):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">startConsumerWithFuture</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg1">arg1: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg2">arg2: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg3">arg3: <span class="extype" name="io.vertx.core.Future">Future</span>[_]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../services/shared/rabbitmq/index.html" class="extype" name="com.wedriveu.services.shared.rabbitmq">com.wedriveu.services.shared.rabbitmq</a>] </dd><dt>Definition Classes</dt><dd>VerticleConsumer</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.util.concurrent.TimeoutException]">...</span>
+    </span>)</span>
+              
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.io.IOException]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
     </li><li name="io.vertx.core.AbstractVerticle#stop" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="stop():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#stop():Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#stop():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -672,7 +794,7 @@
     </li><li name="io.vertx.core.AbstractVerticle#stop" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="stop(x$1:io.vertx.core.Future[Void]):Unit"></a><a id="stop(Future[Void]):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#stop(x$1:io.vertx.core.Future[Void]):Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#stop(x$1:io.vertx.core.Future[Void]):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -694,7 +816,7 @@
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -710,7 +832,7 @@
     </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#toString():String" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -726,7 +848,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#wait():Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#wait():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -748,7 +870,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -770,7 +892,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/wedriveu/backoffice/controller/BackofficeController.html#wait(x$1:Long):Unit" title="Permalink">
+      <a href="../../../../com/wedriveu/backoffice/controller/BackOfficeVehiclesResponseConsumer.html#wait(x$1:Long):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -799,7 +921,9 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="io.vertx.core.AbstractVerticle">
+        <div class="parent" name="com.wedriveu.services.shared.rabbitmq.VerticleConsumer">
+              <h3>Inherited from <span class="extype" name="com.wedriveu.services.shared.rabbitmq.VerticleConsumer">VerticleConsumer</span></h3>
+            </div><div class="parent" name="io.vertx.core.AbstractVerticle">
               <h3>Inherited from <span class="extype" name="io.vertx.core.AbstractVerticle">AbstractVerticle</span></h3>
             </div><div class="parent" name="io.vertx.core.Verticle">
               <h3>Inherited from <span class="extype" name="io.vertx.core.Verticle">Verticle</span></h3>
