@@ -45,10 +45,6 @@ object BookingBoundaryPublisherVerticle {
     * The [[ScalaVerticle]] name to deploy a [[FindBookingPositionPublisher]]
     */
   val FindBookingPosition: String = s"scala:${classOf[FindBookingPositionPublisher].getName}"
-  /**
-    * The [[ScalaVerticle]] name to deploy a [[GetBookingsPublisher]]
-    */
-  val GetBookings: String = s"scala:${classOf[GetBookingsPublisher].getName}"
 
   private[this] class BookingBoundaryPublisherVerticleImpl(
     private val address: String,
@@ -122,12 +118,6 @@ object BookingBoundaryPublisherVerticle {
     Constants.EventBus.Address.Booking.FindBookingPositionResponse,
     Shared.RabbitMQ.Exchanges.BOOKING,
     Shared.RabbitMQ.RoutingKey.FIND_BOOKING_POSITION_RESPONSE
-  )
-
-  private[this] class GetBookingsPublisher extends BookingBoundaryPublisherVerticleImpl(
-    Constants.EventBus.Address.Booking.GetBookingsResponse,
-    Shared.RabbitMQ.Exchanges.BOOKING,
-    Shared.RabbitMQ.RoutingKey.BOOKING_RESPONSE_BOOKING_LIST
   )
 
 }

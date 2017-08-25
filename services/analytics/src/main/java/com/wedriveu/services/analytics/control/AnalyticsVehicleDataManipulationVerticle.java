@@ -16,8 +16,6 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import java.util.Optional;
-
 
 /**
  * @author Stefano Bernagozzi
@@ -47,7 +45,6 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
         for (Vehicle vehicle : vehicleList.getVehicleList()) {
             analyticsStore.addVehicle(vehicle.getLicensePlate(), vehicle.getStatus());
         }
-        sendVehicleUpdates();
     }
 
     private void handleVehicleCounterRequest(Message message) {
@@ -62,20 +59,12 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
 
     private void updateVehicleStore(Message message) {
         UpdateToService vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), UpdateToService.class);
-        Optional<AnalyticsVehicle> old = analyticsStore.getVehicleByLicensePlate(vehicle.getLicense());
-        boolean sendUpdate = true;
-        if (!old.isPresent()) {
+        if (analyticsStore.getVehicleByLicensePlate(vehicle.getLicense()) != null) {
             analyticsStore.updateVehicle(vehicle.getLicense(), vehicle.getStatus());
         } else {
-            if (!old.get().getStatus().equals(vehicle.getStatus())) {
-                analyticsStore.addVehicle(vehicle.getLicense(), vehicle.getStatus());
-            }else {
-                sendUpdate = false;
-            }
+            analyticsStore.addVehicle(vehicle.getLicense(), vehicle.getStatus());
         }
-        if (sendUpdate) {
-            sendVehicleUpdates();
-        }
+        sendVehicleUpdates();
     }
 
     private void sendVehicleUpdates() {

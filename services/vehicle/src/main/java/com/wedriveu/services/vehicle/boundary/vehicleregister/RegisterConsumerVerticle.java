@@ -4,7 +4,6 @@ import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.util.MessageParser;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
-import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 
 import java.io.IOException;
@@ -27,16 +26,15 @@ public class RegisterConsumerVerticle extends VerticleConsumer {
     }
 
     @Override
-    public void start(Future<Void> startFuture) throws Exception {
+    public void start() throws Exception {
         super.start();
-        startVehicleRegisterConsumer(startFuture);
+        startVehicleRegisterConsumer();
     }
 
-    private void startVehicleRegisterConsumer(Future future) throws IOException, TimeoutException {
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE,
+    private void startVehicleRegisterConsumer() throws IOException, TimeoutException {
+        startConsumerWithDurableQueue(Constants.RabbitMQ.Exchanges.VEHICLE,
                 REGISTER_REQUEST,
-                EVENT_BUS_REGISTER_ADDRESS,
-                future);
+                EVENT_BUS_REGISTER_ADDRESS);
     }
 
     @Override

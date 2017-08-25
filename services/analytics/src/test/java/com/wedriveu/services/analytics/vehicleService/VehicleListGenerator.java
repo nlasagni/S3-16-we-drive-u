@@ -32,13 +32,4 @@ public class VehicleListGenerator {
                 new Date(2017, 8, 24, 9, 37, 22)));
         return vehicleList;
     }
-
-    public  static VehicleCounter getVehicleCounter() {
-        VehicleCounter vehicleCounter = new VehicleCounter();
-        vehicleCounter.increaseBooked();
-        vehicleCounter.increaseAvailable();
-        vehicleCounter.increaseBroken();
-        vehicleCounter.increaseRecharging();
-        return vehicleCounter;
-    }
 }

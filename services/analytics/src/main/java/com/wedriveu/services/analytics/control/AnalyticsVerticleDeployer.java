@@ -2,6 +2,7 @@ package com.wedriveu.services.analytics.control;
 
 import com.wedriveu.services.analytics.boundary.*;
 import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;

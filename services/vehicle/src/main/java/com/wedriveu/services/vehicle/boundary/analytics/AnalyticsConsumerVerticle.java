@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_ANALYTICS_ADDRESS;
-import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_ANALYTICS;
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_REGISTER;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_VEHICLE_REQUEST_ALL;
 
 
@@ -21,7 +21,7 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_V
 public class AnalyticsConsumerVerticle extends VerticleConsumer {
 
     public AnalyticsConsumerVerticle() {
-        super(VEHICLE_SERVICE_QUEUE_ANALYTICS);
+        super(VEHICLE_SERVICE_QUEUE_REGISTER);
     }
 
     @Override

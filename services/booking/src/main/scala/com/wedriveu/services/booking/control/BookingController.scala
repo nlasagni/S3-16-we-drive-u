@@ -43,16 +43,9 @@ trait BookingController {
   /** Gets the positions of a [[com.wedriveu.services.shared.model.Booking]] that is in status
     * [[Booking.STATUS_PROCESSING]].
     *
-    * @param findRequest The request data needed to find a
-    *                    [[com.wedriveu.services.shared.model.Booking]] positions.
+    * @param findRequest The request data needed to find a [[com.wedriveu.services.shared.model.Booking]] positions.
     */
   def findProcessingBookingPositions(findRequest: FindBookingPositionsRequest): Unit
-
-  /** Gets all the [[com.wedriveu.services.shared.model.Booking]]s stored.
-    *
-    * @param getRequest The request data needed to find all the [[com.wedriveu.services.shared.model.Booking]]s.
-    */
-  def findAllBookings(getRequest: BookingListRequest): Unit
 
 }
 
@@ -113,11 +106,6 @@ object BookingControllerVerticle {
         (request: FindBookingPositionsRequest) => {
           findProcessingBookingPositions(request)
         })
-      registerConsumer(Constants.EventBus.Address.Booking.GetBookingsRequest,
-        classOf[BookingListRequest],
-        (request: BookingListRequest) => {
-          findAllBookings(request)
-        })
     }
 
     private def registerConsumer[T](address: String, clazz: Class[T], operation: T => Unit): Unit = {
@@ -139,24 +127,14 @@ object BookingControllerVerticle {
           new IllegalArgumentException(InvalidOperationMessage + message.toString))
     }
 
-    private def sendJsonObject(address: String, message: JsonObject) = {
-      vertx.eventBus().send(address, message)
-    }
-
     private def sendMessage(address: String, id: String, message: Object): Unit = {
       val jsonObject = VertxJsonMapper.mapInBodyFrom(message)
       jsonObject.put(Constants.EventBus.Message.SpecificRoutingKey, id)
-      sendJsonObject(address, jsonObject)
+      vertx.eventBus().send(address, jsonObject)
     }
 
     private def sendMessage(address: String, message: Object): Unit = {
       sendMessage(address, null, message)
-    }
-
-    private def sendListInMessage[T](address: String, id: String, message: java.util.List[T]): Unit = {
-      val jsonObject = VertxJsonMapper.mapListInBodyFrom(message)
-      jsonObject.put(Constants.EventBus.Message.SpecificRoutingKey, id)
-      sendJsonObject(address, jsonObject)
     }
 
     private def sendCreateBookingErrorResponse(address: String, id: String, error: String): Unit = {
@@ -273,10 +251,6 @@ object BookingControllerVerticle {
       sendMessage(Constants.EventBus.Address.Booking.FindBookingPositionResponse, response)
     }
 
-    override def findAllBookings(getRequest: BookingListRequest): Unit = {
-      val id = getRequest.getBackofficeId
-      sendListInMessage(Constants.EventBus.Address.Booking.GetBookingsResponse, id, store.getBookings)
-    }
   }
 
 }

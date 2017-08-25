@@ -11,6 +11,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,19 +33,17 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
     private static final String EVENT_BUS_ADDRESS = VehicleNearestVerticleTest.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.nearest";
     private static final int ASYNC_COUNT = 3;
-    private BootVerticle bootVerticle;
     private Async async;
     private Vertx vertx;
 
     public VehicleNearestVerticleTest() {
-        super(QUEUE, VEHICLE, VEHICLE_RESPONSE, EVENT_BUS_ADDRESS);
+        super(QUEUE, VEHICLE, VEHICLE_REQUEST, VEHICLE_RESPONSE, EVENT_BUS_ADDRESS);
     }
 
     @Before
     public void setUp(TestContext context) throws Exception {
         async = context.async(ASYNC_COUNT);
         vertx = Vertx.vertx();
-        bootVerticle = new BootVerticle();
         super.setup(vertx, completed -> {
             vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
                 vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
@@ -58,16 +57,21 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
                 vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
             async.countDown();
-            vertx.deployVerticle(bootVerticle, context.asyncAssertSuccess(onDeploy -> {
+            vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
                 vertx.eventBus().send(Messages.VehicleService.BOOT, null);
             }));
         });
         async.awaitSuccess();
     }
 
+    @After
+    public void tearDown(TestContext context) throws Exception {
+        super.stop(context);
+    }
+
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessageAndWaitResponse(context, VEHICLE, VEHICLE_REQUEST, getJson());
+        super.publishMessage(false, context, getJson());
     }
 
     @Override
@@ -76,7 +80,8 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
         assertThat(responseVehicle, instanceOf(Vehicle.class));
     }
 
-    private JsonObject getJson() {
+    @Override
+    protected JsonObject getJson() {
         UserRequest userDataA = new UserDataFactoryA().getUserData();
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(BODY, JsonObject.mapFrom(userDataA).toString());

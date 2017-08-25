@@ -5,6 +5,7 @@ import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;

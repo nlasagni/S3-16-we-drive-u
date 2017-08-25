@@ -78,10 +78,6 @@ object BookingBoundaryConsumerVerticle {
     * The [[ScalaVerticle]] name to deploy a [[BookVehicleBoundaryConsumer]]
     */
   val BookVehicle: String = s"scala:${classOf[BookVehicleBoundaryConsumer].getName}"
-  /**
-    * The [[ScalaVerticle]] name to deploy a [[GetBookingsConsumer]]
-    */
-  val GetBookings: String = s"scala:${classOf[GetBookingsConsumer].getName}"
 
   private[this] abstract class BookingBoundaryConsumerVerticle extends ScalaVerticle with BookingBoundaryConsumer {
 
@@ -161,16 +157,6 @@ object BookingBoundaryConsumerVerticle {
         Shared.RabbitMQ.Exchanges.VEHICLE,
         Shared.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_RESPONSE,
         Constants.EventBus.Address.Vehicle.BookVehicleResponse)
-    }
-  }
-
-  private[this] class GetBookingsConsumer extends BookingBoundaryConsumerVerticle {
-    override def buildConfig: BookingVerticleConsumerConfig = {
-      BookingVerticleConsumerConfig(Constants.Queue.GetBookings,
-        durableQueue = true,
-        Shared.RabbitMQ.Exchanges.BOOKING,
-        Shared.RabbitMQ.RoutingKey.BOOKING_REQUEST_BOOKING_LIST,
-        Constants.EventBus.Address.Booking.GetBookingsRequest)
     }
   }
 

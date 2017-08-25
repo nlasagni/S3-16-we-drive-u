@@ -12,8 +12,6 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
-import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_VEHICLE_ARRIVED;
-
 /**
  * Created by Michele on 19/08/2017.
  */
@@ -21,6 +19,7 @@ import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_Q
 public class VehicleArrivedVerticle extends AbstractVerticle {
 
     private static final String TAG = VehicleArrivedVerticle.class.getSimpleName();
+    private static final String QUEUE_NAME = "service.vehicle.arrived";
     private static final String EVENT_BUS_ADDRESS = "service.vehicle.arrived.eventbus";
 
     private RabbitMQClient rabbitMQClient;
@@ -60,7 +59,7 @@ public class VehicleArrivedVerticle extends AbstractVerticle {
     }
 
     private void declareQueue(Future<JsonObject> future) {
-        rabbitMQClient.queueDeclare(VEHICLE_SERVICE_QUEUE_VEHICLE_ARRIVED,
+        rabbitMQClient.queueDeclare(QUEUE_NAME,
                 true,
                 false,
                 false,
@@ -68,16 +67,14 @@ public class VehicleArrivedVerticle extends AbstractVerticle {
     }
 
     private void bindQueueToExchange(Future<Void> future) {
-        rabbitMQClient.queueBind(VEHICLE_SERVICE_QUEUE_VEHICLE_ARRIVED,
+        rabbitMQClient.queueBind(QUEUE_NAME,
                 Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
                 future.completer());
     }
 
     private void basicConsume(Future<Void> future) {
-        rabbitMQClient.basicConsume(VEHICLE_SERVICE_QUEUE_VEHICLE_ARRIVED,
-                EVENT_BUS_ADDRESS,
-                future.completer());
+        rabbitMQClient.basicConsume(QUEUE_NAME, EVENT_BUS_ADDRESS, future.completer());
     }
 
     private void registerConsumer() {
@@ -88,7 +85,7 @@ public class VehicleArrivedVerticle extends AbstractVerticle {
                     createObject(notify),
                     onPublish -> {
                         if (!onPublish.succeeded()) {
-                            Log.error(TAG, onPublish.cause());
+                            Log.info("UpdatesVerticle ", "Publish failed " + onPublish.cause());
                         }
                     });
         });

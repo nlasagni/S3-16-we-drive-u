@@ -71,9 +71,10 @@ public class BookingStoreTest {
     }
 
     @Test
-    public void getBookings() throws Exception {
+    public void getBookingsByDate() throws Exception {
+        Date date = new Date();
         bookings.forEach(booking -> bookingStore.addBooking(booking));
-        List<Booking> storedBookings = bookingStore.getBookings();
+        List<Booking> storedBookings = bookingStore.getBookingsByDate(bookings.get(0).getDate(), date);
         assertTrue(storedBookings != null && storedBookings.size() == BOOKING_COUNT);
     }
 

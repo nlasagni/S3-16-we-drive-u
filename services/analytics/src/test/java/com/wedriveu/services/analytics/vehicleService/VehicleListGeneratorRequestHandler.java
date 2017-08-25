@@ -8,7 +8,7 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ;
+import static com.wedriveu.shared.util.Constants.*;
 
 /**
  * @author Stefano Bernagozzi

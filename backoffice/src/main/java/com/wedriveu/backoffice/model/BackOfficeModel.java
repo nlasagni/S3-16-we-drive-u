@@ -1,13 +1,7 @@
 package com.wedriveu.backoffice.model;
 
-import com.wedriveu.backoffice.view.MapViewerJavaFX;
-import com.wedriveu.services.shared.model.Booking;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import io.vertx.core.Future;
-import javafx.application.Application;
-import javafx.stage.Stage;
-
-import java.util.List;
 
 
 /**

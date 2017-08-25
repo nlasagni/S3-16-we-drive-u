@@ -96,7 +96,7 @@ public class AnalyticsStoreImpl implements AnalyticsStore {
     @Override
     public VehicleCounter getVehicleCounter() {
         try {
-            return vehiclesCounterAlgorithmStrategy.vehicleCounter(storeStrategy.getEntities());
+            return (VehicleCounter) vehiclesCounterAlgorithmStrategy.vehicleCounter(storeStrategy.getEntities());
         } catch (Exception e) {
             Log.error(TAG, CLEAR_ERROR, e);
         }

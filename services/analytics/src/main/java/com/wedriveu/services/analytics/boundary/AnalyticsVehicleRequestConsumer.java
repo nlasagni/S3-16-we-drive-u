@@ -3,6 +3,7 @@ package com.wedriveu.services.analytics.boundary;
 import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -12,7 +13,7 @@ import io.vertx.core.json.JsonObject;
  */
 public class AnalyticsVehicleRequestConsumer extends VerticleConsumer {
     public AnalyticsVehicleRequestConsumer() {
-        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + Constants.RabbitMQ.RoutingKey.ANALYTICS_REQUEST_VEHICLE_LIST);
+        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_REQUEST_VEHICLE_LIST);
     }
 
     @Override
@@ -26,7 +27,7 @@ public class AnalyticsVehicleRequestConsumer extends VerticleConsumer {
                 futureRetriever.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS, Constants.RabbitMQ.RoutingKey.ANALYTICS_REQUEST_VEHICLE_LIST, EventBus.AVAILABLE_ADDRESS_COUNTER_REQUEST, futureConsumer);
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS, Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_REQUEST_VEHICLE_LIST, EventBus.AVAILABLE_ADDRESS_COUNTER_REQUEST, futureConsumer);
     }
 
     @Override

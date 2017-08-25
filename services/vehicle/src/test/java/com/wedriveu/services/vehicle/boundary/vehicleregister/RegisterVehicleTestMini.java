@@ -1,24 +1,27 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
 import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import com.wedriveu.shared.rabbitmq.message.RegisterToServiceResponse;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
+import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_RESPONSE;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(VertxUnitRunner.class)
 public class RegisterVehicleTestMini extends BaseInteractionClient {
@@ -28,48 +31,56 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
     private static final int ASYNC_COUNT = 5;
     private Async async;
     private Vertx vertx;
-    private BootVerticle bootVerticle;
 
     public RegisterVehicleTestMini() {
-        super(QUEUE, VEHICLE, REGISTER_RESPONSE, EVENT_BUS_ADDRESS);
+        super(QUEUE, VEHICLE, REGISTER_REQUEST, REGISTER_RESPONSE, EVENT_BUS_ADDRESS);
     }
 
     @Before
     public void setUp(TestContext context) throws Exception {
-        async = context.async();
+        async = context.async(ASYNC_COUNT);
         vertx = Vertx.vertx();
-        bootVerticle = new BootVerticle();
         super.setup(vertx, completed -> {
             vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
                 vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
+                    async.countDown();
                     String licencePlate = new VehicleFactoryMini().getVehicle().getLicensePlate();
-                    super.declareQueueAndBind(licencePlate, context, context.asyncAssertSuccess(declared -> {
+                    super.declareQueueAndBind(licencePlate, context, declared -> {
+                        context.assertTrue(declared.succeeded());
                         async.complete();
-                    }));
+                    });
                 });
                 vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
-            vertx.deployVerticle(bootVerticle, context.asyncAssertSuccess(onDeploy -> {
+            async.countDown();
+            vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
                 vertx.eventBus().send(Messages.VehicleService.BOOT, null);
             }));
         });
         async.awaitSuccess();
     }
 
+    @After
+    public void tearDown(TestContext context) throws Exception {
+        super.stop(context);
+    }
+
     @Test
     public void publishMessage(TestContext context) throws Exception {
-        super.publishMessageAndWaitResponse(context, VEHICLE, REGISTER_REQUEST, getJson());
+        super.publishMessage(true, context, getJson());
     }
 
     @Override
     protected void checkResponse(TestContext context, JsonObject responseJson) {
-        RegisterToServiceResponse response = responseJson.mapTo(RegisterToServiceResponse.class);
-        context.assertTrue(response.getRegisterOk());
+        assertThat(responseJson.getBoolean(REGISTER_RESULT), instanceOf(Boolean.class));
     }
 
-    private JsonObject getJson() {
+    @Override
+    protected JsonObject getJson() {
         Vehicle vehicle = new VehicleFactoryMini().getVehicle();
-        return VertxJsonMapper.mapInBodyFrom(vehicle);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.put(BODY, JsonObject.mapFrom(vehicle).toString());
+        return jsonObject;
     }
 
 }

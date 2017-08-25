@@ -6,7 +6,6 @@ import com.wedriveu.shared.util.Constants;
 import io.vertx.core.json.JsonObject;
 
 import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_BOOK_ADDRESS;
@@ -46,8 +45,7 @@ public class BookConsumerVerticle extends VerticleConsumer {
     }
 
     private void sendBookingRequestToVehicle(JsonObject requestMessage) {
-        UUID randomId = UUID.randomUUID();
-        vertx.deployVerticle(new BookVehicleVerticle(randomId.toString()), deployed -> {
+        vertx.deployVerticle(new BookVehicleVerticle(), deployed -> {
             eventBus.send(Messages.Booking.BOOK_REQUEST, requestMessage);
         });
 
