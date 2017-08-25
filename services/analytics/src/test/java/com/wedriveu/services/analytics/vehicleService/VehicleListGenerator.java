@@ -1,6 +1,7 @@
 package com.wedriveu.services.analytics.vehicleService;
 
 import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import com.wedriveu.shared.util.Position;
 
 import java.util.ArrayList;

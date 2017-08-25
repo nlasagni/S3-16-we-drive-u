@@ -21,7 +21,6 @@ import static com.wedriveu.shared.util.Constants.EventBus.BODY;
  */
 public abstract class BaseInteractionClient {
 
-    private static final int TIME_OUT = 12000;
     private RabbitMQClient rabbitMQClient;
     private String queue;
     private String consumerExchangeName;
