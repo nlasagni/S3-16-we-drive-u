@@ -1,5 +1,7 @@
 package com.wedriveu.services.booking.app
 
+import java.util.Date
+
 import com.wedriveu.services.booking.entity.{BookingStore, BookingStoreImpl}
 import com.wedriveu.services.booking.util.{ConsumerConfig, RabbitMQConsumers}
 import com.wedriveu.services.shared.model.Booking
@@ -33,6 +35,8 @@ class BookingServiceTest extends AssertionsForJUnit {
   private val VehicleServiceSimulatedQueue = this.getClass.getCanonicalName + "VehicleServiceQueue"
   private val VehicleServiceSimulatedEventBusAddress = this.getClass.getCanonicalName + "VehicleServiceEventBus"
 
+  private val BackOfficeId = "BACKOFFICE_Pippo"
+  private val BookingId = 1000
   private val Username = "Pippo"
   private val LicensePlate = "ABCDEFGHI"
   private val NewLicensePlate = "NewLicensePlate"
@@ -82,6 +86,17 @@ class BookingServiceTest extends AssertionsForJUnit {
     client.stopFuture()
   }
 
+  private def registerConsumerAndPublishMessage[T](
+    config: ConsumerConfig,
+    exchange: String,
+    routingKey: String,
+    message: T
+  ) = {
+    RabbitMQConsumers.createConsumer(client, config).flatMap(_ => {
+      client.basicPublishFuture(exchange, routingKey, VertxJsonMapper.mapInBodyFrom(message))
+    })
+  }
+
   @Test def createBooking(context: TestContext) {
     val async = context.async()
     val queue = UserSimulatedQueue + "CreateBooking"
@@ -100,12 +115,10 @@ class BookingServiceTest extends AssertionsForJUnit {
       String.format(Shared.RabbitMQ.RoutingKey.CREATE_BOOKING_RESPONSE, Username),
       eventBusAddress
     )
-    RabbitMQConsumers.createConsumer(client, config).flatMap(_ => {
-      client.basicPublishFuture(
-        Shared.RabbitMQ.Exchanges.BOOKING,
-        Shared.RabbitMQ.RoutingKey.CREATE_BOOKING_REQUEST,
-        VertxJsonMapper.mapInBodyFrom(createDummyCreateBookingRequest()))
-    })
+    registerConsumerAndPublishMessage(config,
+      Shared.RabbitMQ.Exchanges.BOOKING,
+      Shared.RabbitMQ.RoutingKey.CREATE_BOOKING_REQUEST,
+      createDummyCreateBookingRequest())
     async.awaitSuccess()
   }
 
@@ -119,7 +132,7 @@ class BookingServiceTest extends AssertionsForJUnit {
   }
 
   @Test def changeBooking(context: TestContext): Unit = {
-    val async = context.async(2)
+    val async = context.async()
     val queue = VehicleServiceSimulatedQueue + "ChangeBooking"
     val eventBusAddress = VehicleServiceSimulatedEventBusAddress + "ChangeBooking"
     eventBus.consumer(eventBusAddress, (message: Message[Object]) => message.body() match {
@@ -136,15 +149,10 @@ class BookingServiceTest extends AssertionsForJUnit {
       Shared.RabbitMQ.RoutingKey.CHANGE_BOOKING_RESPONSE,
       eventBusAddress
     )
-    RabbitMQConsumers.createConsumer(client, config).flatMap(_ => {
-      client.basicPublishFuture(
-        Shared.RabbitMQ.Exchanges.BOOKING,
-        Shared.RabbitMQ.RoutingKey.CHANGE_BOOKING_REQUEST,
-        VertxJsonMapper.mapInBodyFrom(createDummyChangeBookingRequest()))
-    }).onComplete {
-      case Success(_) => async.countDown()
-      case Failure(result) => context.fail(result.getCause)
-    }
+    registerConsumerAndPublishMessage(config,
+      Shared.RabbitMQ.Exchanges.BOOKING,
+      Shared.RabbitMQ.RoutingKey.CHANGE_BOOKING_REQUEST,
+      createDummyChangeBookingRequest())
     async.awaitSuccess()
   }
 
@@ -156,9 +164,10 @@ class BookingServiceTest extends AssertionsForJUnit {
   }
 
   @Test def completeBooking(context: TestContext): Unit = {
-    val async = context.async(2)
+    val async = context.async()
     val queue = VehicleServiceSimulatedQueue + "CompleteBooking"
     val eventBusAddress = VehicleServiceSimulatedEventBusAddress + "CompleteBooking"
+    store.addBooking(createBooking())
     eventBus.consumer(eventBusAddress, (message: Message[Object]) => message.body() match {
       case body: JsonObject =>
         val response: CompleteBookingResponse = VertxJsonMapper.mapFromBodyTo(body, classOf[CompleteBookingResponse])
@@ -174,16 +183,15 @@ class BookingServiceTest extends AssertionsForJUnit {
       Shared.RabbitMQ.RoutingKey.COMPLETE_BOOKING_RESPONSE,
       eventBusAddress
     )
-    RabbitMQConsumers.createConsumer(client, config).flatMap(_ => {
-      client.basicPublishFuture(
-        Shared.RabbitMQ.Exchanges.BOOKING,
-        Shared.RabbitMQ.RoutingKey.COMPLETE_BOOKING_REQUEST,
-        VertxJsonMapper.mapInBodyFrom(createDummyCompleteBookingRequest()))
-    }).onComplete {
-      case Success(_) => async.countDown()
-      case Failure(result) => context.fail(result.getCause)
-    }
+    registerConsumerAndPublishMessage(config,
+      Shared.RabbitMQ.Exchanges.BOOKING,
+      Shared.RabbitMQ.RoutingKey.COMPLETE_BOOKING_REQUEST,
+      createDummyCompleteBookingRequest())
     async.awaitSuccess()
+  }
+
+  private def createBooking(): Booking = {
+    new Booking(BookingId, new Date(), Username, LicensePlate, null, null, Booking.STATUS_PROCESSING)
   }
 
   private def createDummyCompleteBookingRequest(): CompleteBookingRequest = {
@@ -194,7 +202,7 @@ class BookingServiceTest extends AssertionsForJUnit {
   }
 
   @Test def findBookingPositions(context: TestContext): Unit = {
-    val async = context.async(2)
+    val async = context.async()
     val queue = VehicleServiceSimulatedQueue + "FindBookingPositions"
     val eventBusAddress = VehicleServiceSimulatedEventBusAddress + "FindBookingPositions"
     eventBus.consumer(eventBusAddress, (message: Message[Object]) => message.body() match {
@@ -212,15 +220,10 @@ class BookingServiceTest extends AssertionsForJUnit {
       Shared.RabbitMQ.RoutingKey.FIND_BOOKING_POSITION_RESPONSE,
       eventBusAddress
     )
-    RabbitMQConsumers.createConsumer(client, config).flatMap(_ => {
-      client.basicPublishFuture(
-        Shared.RabbitMQ.Exchanges.BOOKING,
-        Shared.RabbitMQ.RoutingKey.FIND_BOOKING_POSITION_REQUEST,
-        VertxJsonMapper.mapInBodyFrom(createDummyFindBookingPositionsRequest()))
-    }).onComplete {
-      case Success(_) => async.countDown()
-      case Failure(result) => context.fail(result.getCause)
-    }
+    registerConsumerAndPublishMessage(config,
+      Shared.RabbitMQ.Exchanges.BOOKING,
+      Shared.RabbitMQ.RoutingKey.FIND_BOOKING_POSITION_REQUEST,
+      createDummyFindBookingPositionsRequest())
     async.awaitSuccess()
   }
 
@@ -229,5 +232,37 @@ class BookingServiceTest extends AssertionsForJUnit {
     request.setUsername(Username)
     request
   }
+
+  @Test def findBookings(context: TestContext): Unit = {
+    val async = context.async()
+    val queue = VehicleServiceSimulatedQueue + "GetBookings"
+    val eventBusAddress = VehicleServiceSimulatedEventBusAddress + "GetBookings"
+    eventBus.consumer(eventBusAddress, (message: Message[Object]) => message.body() match {
+      case body: JsonObject =>
+        val bookings = VertxJsonMapper.mapFromBodyToList(body, classOf[Booking])
+        context.assertTrue(bookings != null)
+        async.complete()
+      case _ => context.fail(); async.complete()
+    })
+    val config = ConsumerConfig(
+      queue,
+      durableQueue = false,
+      Shared.RabbitMQ.Exchanges.BOOKING,
+      String.format(Shared.RabbitMQ.RoutingKey.BOOKING_RESPONSE_BOOKING_LIST, BackOfficeId),
+      eventBusAddress
+    )
+    registerConsumerAndPublishMessage(config,
+      Shared.RabbitMQ.Exchanges.BOOKING,
+      Shared.RabbitMQ.RoutingKey.BOOKING_REQUEST_BOOKING_LIST,
+      createDummyGetBookingsRequest())
+    async.awaitSuccess()
+  }
+
+  private def createDummyGetBookingsRequest(): BookingListRequest = {
+    val request = new BookingListRequest
+    request.setBackofficeId(BackOfficeId)
+    request
+  }
+
 
 }

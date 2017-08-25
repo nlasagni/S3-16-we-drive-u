@@ -35,6 +35,12 @@ trait BookingBoundary {
     */
   def handleFindActiveBookingPositionsRequest(): Future[_]
 
+  /** Handles a get all [[com.wedriveu.services.shared.model.Booking]]s request.
+    *
+    * @return The future containing the result of this request.
+    */
+  def handleGetBookingsRequest(): Future[_]
+
 }
 
 /** Represents a [[BookingBoundary]] which implementation will be bounded to a [[ScalaVerticle]].
@@ -59,6 +65,8 @@ object BookingBoundaryVerticle {
         _ => handleCompleteBookingRequest()
       }).flatMap({
         _ => handleFindActiveBookingPositionsRequest()
+      }).flatMap({
+        _ => handleGetBookingsRequest()
       })
     }
 
@@ -92,6 +100,11 @@ object BookingBoundaryVerticle {
       })
     }
 
+    override def handleGetBookingsRequest(): Future[_] = {
+      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.GetBookings).flatMap({ _ =>
+        vertx.deployVerticleFuture(BookingBoundaryPublisherVerticle.GetBookings)
+      })
+    }
   }
 
 }
