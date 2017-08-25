@@ -10,7 +10,6 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_LIST;
-import static com.wedriveu.shared.util.Constants.RabbitMQ;
 
 /**
  * the class for recieving a vehicle list over rabbitMQ with vertx from the vehicle service
@@ -46,7 +45,7 @@ public class BackOfficeVehiclesResponseConsumer extends VerticleConsumer {
             eventBusAvailable = ConstantsBackOffice.EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_WITH_ID;
         }
 
-        startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS,
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS,
                 ANALYTICS_RESPONSE_VEHICLE_LIST + backofficeId,
                 eventBusAvailable,
                 futureConsumer);
