@@ -522,10 +522,10 @@
 status <code>bookingStatus</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Gets the <span class="extype" name="Booking">Booking</span> started by a <span class="extype" name="com.wedriveu.services.shared.model.User">com.wedriveu.services.shared.model.User</span> that has
 status <code>bookingStatus</code>.
 </p></div><dl class="paramcmts block"><dt class="param">username</dt><dd class="cmt"><p>Identifies username to which the booking is associated.</p></dd><dt class="param">bookingStatus</dt><dd class="cmt"><p>The status of the <span class="extype" name="Booking">Booking</span> to be retrieved</p></dd><dt>returns</dt><dd class="cmt"><p>Returns the <span class="extype" name="Booking">Booking</span> associated to the provided username, only if found.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.services.booking.entity.BookingStoreImpl">BookingStoreImpl</a> → <a href="BookingStore.html" class="extype" name="com.wedriveu.services.booking.entity.BookingStore">BookingStore</a></dd></dl></div>
-    </li><li name="com.wedriveu.services.booking.entity.BookingStoreImpl#getBookings" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getBookings():java.util.List[com.wedriveu.services.shared.model.Booking]"></a><a id="getBookings():List[Booking]"></a>
+    </li><li name="com.wedriveu.services.booking.entity.BookingStoreImpl#getBookingsByDate" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getBookingsByDate(fromDate:java.util.Date,toDate:java.util.Date):java.util.List[com.wedriveu.services.shared.model.Booking]"></a><a id="getBookingsByDate(Date,Date):List[Booking]"></a>
       <span class="permalink">
-      <a href="../../../../../com/wedriveu/services/booking/entity/BookingStoreImpl.html#getBookings():java.util.List[com.wedriveu.services.shared.model.Booking]" title="Permalink">
+      <a href="../../../../../com/wedriveu/services/booking/entity/BookingStoreImpl.html#getBookingsByDate(fromDate:java.util.Date,toDate:java.util.Date):java.util.List[com.wedriveu.services.shared.model.Booking]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -534,11 +534,11 @@ status <code>bookingStatus</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getBookings</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="com.wedriveu.services.shared.model.Booking">Booking</span>]</span>
+        <span class="name">getBookingsByDate</span><span class="params">(<span name="fromDate">fromDate: <span class="extype" name="java.util.Date">Date</span></span>, <span name="toDate">toDate: <span class="extype" name="java.util.Date">Date</span></span>)</span><span class="result">: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="com.wedriveu.services.shared.model.Booking">Booking</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Fetches all <span class="extype" name="Booking">Booking</span> stored.</p><div class="fullcomment"><div class="comment cmt"><p>Fetches all <span class="extype" name="Booking">Booking</span> stored.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>All the <span class="extype" name="Booking">Booking</span>s.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.services.booking.entity.BookingStoreImpl">BookingStoreImpl</a> → <a href="BookingStore.html" class="extype" name="com.wedriveu.services.booking.entity.BookingStore">BookingStore</a></dd></dl></div>
+      <p class="shortcomment cmt">Fetches all <span class="extype" name="Booking">Booking</span> stored that are inside the range of specified dates.</p><div class="fullcomment"><div class="comment cmt"><p>Fetches all <span class="extype" name="Booking">Booking</span> stored that are inside the range of specified dates.
+</p></div><dl class="paramcmts block"><dt class="param">fromDate</dt><dd class="cmt"><p>Starting date of the range.</p></dd><dt class="param">toDate</dt><dd class="cmt"><p>End date of the range.</p></dd><dt>returns</dt><dd class="cmt"><p>All the <span class="extype" name="Booking">Booking</span>s inside the range of specified dates.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.wedriveu.services.booking.entity.BookingStoreImpl">BookingStoreImpl</a> → <a href="BookingStore.html" class="extype" name="com.wedriveu.services.booking.entity.BookingStore">BookingStore</a></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
