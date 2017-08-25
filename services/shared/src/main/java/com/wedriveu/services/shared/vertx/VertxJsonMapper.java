@@ -19,11 +19,11 @@ public class VertxJsonMapper {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
-     * maps from a json object to a list of entities
+     * maps from a body of a json object to a list of entities
      * @param jsonObject the json object with inside the entities
      * @param classType the entities that are inside the json object
-     * @param <T>
-     * @return
+     * @param <T> the objects of the returned list
+     * @return a list of object T
      * @throws IOException
      */
     public static <T> List<T> mapFromBodyToList(JsonObject jsonObject, Class<T> classType) throws IOException {
@@ -31,18 +31,40 @@ public class VertxJsonMapper {
         return MAPPER.readValue(jsonObject.getString(BODY), collectionType);
     }
 
+     /**
+     * maps from a json object to an entity contained in the json object
+     * @param jsonObject the json object with inside the entity
+     * @param classType the class of the entity that is inside the json object
+     * @param <T> the type of the object returned
+     * @return an object T
+     * @throws IOException
+     */
     public static <T> T mapTo(JsonObject jsonObject, Class<T> classType) throws IllegalArgumentException {
         if (jsonObject == null) {
             throw new IllegalArgumentException(MAP_TO_ILLEGAL_ARGUMENT);
         }
         return jsonObject.mapTo(classType);
     }
-
+    /**
+     * maps from a json object to an entity contained in the body of a json object
+     * @param jsonObject the json object with inside the entity
+     * @param classType the class of the entity that is inside the json object
+     * @param <T> the type of the object returned
+     * @return an object T
+     * @throws IOException
+     */
     public static <T> T mapFromBodyTo(JsonObject jsonObject, Class<T> classType) throws IllegalArgumentException {
         JsonObject body = new JsonObject(jsonObject.getString(BODY));
         return mapTo(body, classType);
     }
 
+    /**
+     * maps a list of objects T  into the body of a Json object
+     * @param object the list that has to be mappped
+     * @param <T> the classes of the object of the list
+     * @return a json object with inside the body the list
+     * @throws IOException
+     */
     public static <T> JsonObject mapListInBodyFrom(T object) throws IOException {
         StringWriter sw =new StringWriter();
         MAPPER.writeValue(sw,object);
@@ -51,6 +73,13 @@ public class VertxJsonMapper {
         return jsonObject;
     }
 
+    /**
+     * maps an object T  into a Json object
+     * @param object the object that has to be mappped
+     * @param <T> the class of the object
+     * @return a json object with inside the object
+     * @throws IOException
+     */
     public static <T> JsonObject mapFrom(T object) throws IllegalArgumentException {
         if (object == null) {
             throw new IllegalArgumentException(MAP_FROM_ILLEGAL_ARGUMENT);
@@ -58,6 +87,13 @@ public class VertxJsonMapper {
         return JsonObject.mapFrom(object);
     }
 
+    /**
+     * maps an object T  into the body of a Json object
+     * @param object the object that has to be mappped
+     * @param <T> the class of the object
+     * @return a json object with inside the body the object
+     * @throws IOException
+     */
     public static <T> JsonObject mapInBodyFrom(T object) throws IllegalArgumentException {
         JsonObject body = mapFrom(object);
         JsonObject jsonObject = new JsonObject();

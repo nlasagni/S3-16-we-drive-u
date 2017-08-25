@@ -8,10 +8,16 @@ public class EnterVehicleResponse {
 
     private String response;
 
+    /**
+     * @return the response for entering the vehicle
+     */
     public String getResponse(){
         return response;
     }
 
+    /**
+     * @param newResponse the response for entering the vehicle
+     */
     public void setResponse(String newResponse){
         this.response = newResponse;
     }

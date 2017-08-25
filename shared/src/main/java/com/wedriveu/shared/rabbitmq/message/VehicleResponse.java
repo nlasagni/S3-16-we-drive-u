@@ -18,58 +18,100 @@ public class VehicleResponse {
     private long arriveAtDestinationTime;
     private String notEligibleVehicleFound;
 
+    /**
+     * @return the license plate of the vehicle
+     */
     public String getLicensePlate() {
         return licensePlate;
     }
 
+    /**
+     * @param licensePlate the license plate of the vehicle
+     */
     public void setLicensePlate(String licensePlate) {
         this.licensePlate = licensePlate;
     }
 
+    /**
+     * @return the name of the vehicle
+     */
     public String getVehicleName() {
         return vehicleName;
     }
 
+    /**
+     * @param vehicleName the name of the vehicle
+     */
     public void setVehicleName(String vehicleName) {
         this.vehicleName = vehicleName;
     }
 
+    /**
+     * @return the description of the vehicle
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * @param description the description of the vehicle
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * @return the URL of the picture of the vehicle
+     */
     public String getPictureURL() {
         return pictureURL;
     }
 
+    /**
+     * @param pictureURL the URL of the picture of the vehicle
+     */
     public void setPictureURL(String pictureURL) {
         this.pictureURL = pictureURL;
     }
 
+    /**
+     * @return the time when the vehicle has to arrive to the user
+     */
     public long getArriveAtUserTime() {
         return arriveAtUserTime;
     }
 
+    /**
+     * @param arriveAtUserTime the time when the vehicle has to arrive to the user
+     */
     public void setArriveAtUserTime(long arriveAtUserTime) {
         this.arriveAtUserTime = arriveAtUserTime;
     }
 
+    /**
+     * @return the time when the vehicle has to arrive to destination
+     */
     public long getArriveAtDestinationTime() {
         return arriveAtDestinationTime;
     }
 
+    /**
+     * @param arriveAtDestinationTime the time when the vehicle has to arrive to destination
+     */
     public void setArriveAtDestinationTime(long arriveAtDestinationTime) {
         this.arriveAtDestinationTime = arriveAtDestinationTime;
     }
 
+    /**
+     * @return a string that contains if there are no eligible vehicles
+     */
     public String getNotEligibleVehicleFound() {
         return notEligibleVehicleFound;
     }
 
+    /**
+     * @param notEligibleVehicleFound a string that contains if there are no eligible vehicles
+     */
     public void setNotEligibleVehicleFound(String notEligibleVehicleFound) {
         this.notEligibleVehicleFound = notEligibleVehicleFound;
     }

@@ -9,10 +9,16 @@ public class RegisterToServiceRequest {
 
     private String license;
 
+    /**
+     * @return the license of the vehicle that wants to be added
+     */
     public String getLicense() {
         return license;
     }
 
+    /**
+     * @param license the license of the vehicle that wants to be added
+     */
     public void setLicense(String license) {
         this.license = license;
     }
