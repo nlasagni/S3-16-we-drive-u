@@ -252,11 +252,11 @@ public interface Constants {
             /**
              *  The routing key used by booking service to receive a booking list request.
              */
-            String BOOKING_REQUEST_BOOKING_LIST = "booking.request.bydate";
+            String BOOKING_REQUEST_BOOKING_LIST = "booking.request.all";
             /**
              *  The routing key used by booking service to receive a booking list request.
              */
-            String BOOKING_RESPONSE_BOOKING_LIST = "booking.response.bydate.%s";
+            String BOOKING_RESPONSE_BOOKING_LIST = "booking.response.all.%s";
 
         }
     }

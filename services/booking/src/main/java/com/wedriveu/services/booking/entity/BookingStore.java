@@ -2,7 +2,6 @@ package com.wedriveu.services.booking.entity;
 
 import com.wedriveu.services.shared.model.Booking;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,13 +72,11 @@ public interface BookingStore {
     boolean updateBookingLicensePlate(int bookingId, String licensePlate);
 
     /**
-     * Fetches all {@linkplain Booking} stored that are inside the range of specified dates.
+     * Fetches all {@linkplain Booking} stored.
      *
-     * @param fromDate Starting date of the range.
-     * @param toDate   End date of the range.
-     * @return All the {@linkplain Booking}s inside the range of specified dates.
+     * @return All the {@linkplain Booking}s.
      */
-    List<Booking> getBookingsByDate(Date fromDate, Date toDate);
+    List<Booking> getBookings();
 
     /**
      * Deletes a {@linkplain Booking} from the store.

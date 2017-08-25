@@ -5,7 +5,6 @@ import com.wedriveu.services.shared.store.EntityListStoreStrategy;
 import com.wedriveu.shared.util.Log;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,9 +20,10 @@ public class BookingStoreImpl implements BookingStore {
     private static final String GENERATE_ID_ERROR = "Error while generating id";
     private static final String ADD_ERROR = "Error while adding booking";
     private static final String GET_ERROR = "Error while getting booking";
-    private static final String GET_BY_DATE_ERROR = "Error while getting bookings by date";
+    private static final String GET_BOOKINGS_ERROR = "Error while getting all bookings";
     private static final String UPDATE_ERROR = "Error while updating booking";
-    private static final String CLEAR_ERROR = "Error while clearing store";
+    private static final String DELETE_ERROR = "Error while deleting booking";
+    private static final String DELETE_ALL_ERROR = "Error while deleting all bookings";
 
     private EntityListStoreStrategy<Booking> storeStrategy;
 
@@ -162,15 +162,11 @@ public class BookingStoreImpl implements BookingStore {
     }
 
     @Override
-    public List<Booking> getBookingsByDate(Date fromDate, Date toDate) {
+    public List<Booking> getBookings() {
         try {
-            List<Booking> bookings = storeStrategy.getEntities();
-            return bookings.stream()
-                    .filter(b -> b.getDate().getTime() >= fromDate.getTime() &&
-                            b.getDate().getTime() <= toDate.getTime())
-                    .collect(Collectors.toList());
+            return storeStrategy.getEntities();
         } catch (Exception e) {
-            Log.error(TAG, GET_BY_DATE_ERROR, e);
+            Log.error(TAG, GET_BOOKINGS_ERROR, e);
         }
         return new ArrayList<>();
     }
@@ -186,7 +182,7 @@ public class BookingStoreImpl implements BookingStore {
             storeStrategy.storeEntities(updatedBookings);
             return true;
         } catch (Exception e) {
-            Log.error(TAG, GET_BY_DATE_ERROR, e);
+            Log.error(TAG, DELETE_ERROR, e);
         }
         return false;
     }
@@ -196,7 +192,7 @@ public class BookingStoreImpl implements BookingStore {
         try {
             storeStrategy.clear();
         } catch (Exception e) {
-            Log.error(TAG, CLEAR_ERROR, e);
+            Log.error(TAG, DELETE_ALL_ERROR, e);
         }
     }
 
