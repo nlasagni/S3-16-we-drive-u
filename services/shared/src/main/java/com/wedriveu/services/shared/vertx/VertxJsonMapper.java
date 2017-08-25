@@ -18,6 +18,14 @@ public class VertxJsonMapper {
     private static final String MAP_FROM_ILLEGAL_ARGUMENT = "error, provided object to be mapped is null";
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    /**
+     * maps from a json object to a list of entities
+     * @param jsonObject the json object with inside the entities
+     * @param classType the entities that are inside the json object
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
     public static <T> List<T> mapFromBodyToList(JsonObject jsonObject, Class<T> classType) throws IOException {
         JavaType collectionType = MAPPER.getTypeFactory().constructCollectionType(List.class, classType);
         return MAPPER.readValue(jsonObject.getString(BODY), collectionType);

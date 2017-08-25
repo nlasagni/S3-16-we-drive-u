@@ -13,6 +13,8 @@ import io.vertx.core.json.JsonObject;
 import static com.wedriveu.shared.util.Constants.*;
 
 /**
+ * a verticle for receiving the vehicle list from the Vehicle service
+ *
  * @author Stefano Bernagozzi
  */
 public class AnalyticsVehicleListRetrieverConsumer extends VerticleConsumer {

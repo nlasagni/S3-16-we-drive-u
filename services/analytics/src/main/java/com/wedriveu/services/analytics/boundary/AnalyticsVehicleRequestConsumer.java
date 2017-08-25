@@ -8,6 +8,8 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 /**
+ * a verticle for receiving the vehicle counter request
+ *
  * @author Stefano Bernagozzi
  */
 public class AnalyticsVehicleRequestConsumer extends VerticleConsumer {

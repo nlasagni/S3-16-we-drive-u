@@ -12,6 +12,8 @@ import io.vertx.core.json.JsonObject;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_LIST;
 
 /**
+ * a verticle for publishing the vehicle counter to the backoffice
+ *
  * @author Stefano Bernagozzi
  */
 public class AnalyticsVehiclesResponsePublisher extends VerticlePublisher {

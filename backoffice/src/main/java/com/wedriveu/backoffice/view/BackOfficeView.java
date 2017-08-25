@@ -23,12 +23,14 @@ public class BackOfficeView extends JFrame {
     private String buttonRegistrationText = "Register backoffice";
     private String buttonBookingsText = "Get bookings positions";
 
+    /**
+     * creates a new GUI for the backoffice
+     */
     public BackOfficeView() {
         createAndShowGUI();
     }
 
     private void createAndShowGUI() {
-        //Create and set up the window.
         setTitle(backOffice);
         setSize(maxX, maxY);
         setLocationRelativeTo(null);
@@ -54,6 +56,11 @@ public class BackOfficeView extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * updates the text in the GUI with the new vehicle counter
+     *
+     * @param vehicleCounter the new vehicle counter
+     */
     public void updateText(VehicleCounter vehicleCounter) {
         textLabel.setText("<html><body>" +
                 "Available: " + vehicleCounter.getAvailable() + "<br>" +
@@ -64,10 +71,18 @@ public class BackOfficeView extends JFrame {
                 "</body></html>");
     }
 
+    /**
+     * gets the backoffice id included in the text box
+     *
+     * @return a string containing the backoffice id
+     */
     public String getTextBoxContent() {
         return textFieldBackofficeId.getText();
     }
 
+    /**
+     * disables and remove the button and text box of registration and puts a new button for showing vehicles
+     */
     public void disableButtonAndText() {
         getContentPane().remove(buttonRegistration);
         getContentPane().remove(textFieldBackofficeId);
@@ -76,6 +91,11 @@ public class BackOfficeView extends JFrame {
         getContentPane().repaint();
     }
 
+    /**
+     * adds a button listener for the registration button
+     *
+     * @param actionListener An action listener for the registration button
+     */
     public void addButtonListener(ActionListener actionListener) {
         buttonRegistration.addActionListener(actionListener);
     }

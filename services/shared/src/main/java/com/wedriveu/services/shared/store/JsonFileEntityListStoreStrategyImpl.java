@@ -20,6 +20,13 @@ public class JsonFileEntityListStoreStrategyImpl<T> implements EntityListStoreSt
     private ObjectMapper objectMapper;
     private String fileName;
 
+    /**
+     * creates a new store for the entity classes given in the filename file
+     *
+     * @param entityClass the classes to be put in the store
+     * @param fileName the name of the file where the data will be put
+     * @throws Exception in case it cannot write
+     */
     public JsonFileEntityListStoreStrategyImpl(Class<T> entityClass, String fileName) throws Exception {
         this.entityClass = entityClass;
         this.fileName = fileName;
@@ -36,17 +43,35 @@ public class JsonFileEntityListStoreStrategyImpl<T> implements EntityListStoreSt
         }
     }
 
+    /**
+     * gets the list of entities stored in the json file
+     *
+     * @return a list of entities
+     * @throws IOException
+     */
     @Override
     public List<T> getEntities() throws IOException {
         JavaType collectionType = objectMapper.getTypeFactory().constructCollectionType(List.class, entityClass);
         return objectMapper.readValue(file, collectionType);
     }
 
+    /**
+     * stores all the entities in the json file
+     *
+     * @param entity the list of entities to be stored
+     *
+     * @throws IOException
+     */
     @Override
     public void storeEntities(List<T> entity) throws IOException {
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, entity);
     }
 
+    /**
+     * clears the database
+     *
+     * @throws Exception
+     */
     @Override
     public void clear() throws Exception {
         storeEntities(new ArrayList<>());

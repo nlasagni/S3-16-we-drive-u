@@ -11,6 +11,12 @@ import static com.wedriveu.shared.util.Constants.EventBus.BODY;
  */
 public class MessageParser {
 
+    /**
+     * parse the vertx message and returns a json object containing the body of the message
+     *
+     * @param message a vert.x message
+     * @return a json object with the body of the message
+     */
     public static JsonObject getJson(Message message) {
         JsonObject responseJson = (JsonObject) message.body();
         String response = responseJson.getString(BODY);

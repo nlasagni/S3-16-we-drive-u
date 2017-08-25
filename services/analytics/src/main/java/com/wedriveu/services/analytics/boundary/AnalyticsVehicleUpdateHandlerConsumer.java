@@ -11,6 +11,8 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 /**
+ * a verticle for publishing all the updates to the backoffice
+ *
  * @author Stefano Bernagozzi
  */
 public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer {

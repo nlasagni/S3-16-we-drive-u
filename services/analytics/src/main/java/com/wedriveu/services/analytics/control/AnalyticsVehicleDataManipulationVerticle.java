@@ -20,6 +20,8 @@ import java.util.Optional;
 
 
 /**
+ * a verticle for managing updates of the vehicle counter and requests from backoffice
+ *
  * @author Stefano Bernagozzi
  */
 public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {

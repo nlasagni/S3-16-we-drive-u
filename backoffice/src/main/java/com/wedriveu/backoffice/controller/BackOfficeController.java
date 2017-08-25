@@ -26,6 +26,11 @@ public class BackOfficeController extends AbstractVerticle {
     Vertx vertx;
     private Future futureStart;
 
+    /**
+     * the controller class for all the backoffice
+     *
+     * @param vertx the vertx istance used for starting the verticle
+     */
     public BackOfficeController(Vertx vertx) {
         this.vertx = vertx;
     }

@@ -27,7 +27,10 @@ public interface EventBus {
             "analytics.eventbus.availableAddress.fakeVehicleCounterResponse";
     String FAKE_VEHICLE_COUNTER_RESPONSE_TEST_EVENTBUS =
             "analytics.eventbus.availableAddress.test.fakeVehicleCounterResponse";
-
+    String EVENTBUS_SEND_VERTICLE_DEPLOYER =
+            "analytics.eventbus.deployer.send";
+    String EVENTBUS_RECEIVE_VERTICLE_DEPLOYER =
+            "analytics.eventbus.deployer.receive";
 
     String TEST_VEHICLE_LIST_RESPONSE  = "analytics.eventbus.test.vehicleListResponse";
     interface Messages {

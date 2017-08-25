@@ -13,6 +13,12 @@ public class MessageVehicleCounterWithID {
     @JsonProperty("vehicleCounter")
     VehicleCounter vehicleCounter;
 
+    /**
+     * a message sent inside the Analytics service for responding to a vehicle counter request
+     *
+     * @param backofficeID the backoffice id of the applicant
+     * @param vehicleCounter the updated vehicle counter
+     */
     public MessageVehicleCounterWithID(@JsonProperty("backofficeID")
                                                String backofficeID,
                                        @JsonProperty("vehicleCounter")
@@ -21,10 +27,20 @@ public class MessageVehicleCounterWithID {
         this.vehicleCounter = vehicleCounter;
     }
 
+    /**
+     * gets the backoffice id
+     *
+     * @return a string representing the backoffice id
+     */
     public String getBackofficeID() {
         return backofficeID;
     }
 
+    /**
+     * gets the Vehicle counter
+     *
+     * @return the updated vehicle counter
+     */
     public VehicleCounter getVehicleCounter() {
         return vehicleCounter;
     }

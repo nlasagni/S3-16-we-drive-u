@@ -14,6 +14,10 @@ class BrowserForShowingMap extends Pane {
     WebView webView = new WebView();
     WebEngine webEngine = webView.getEngine();
 
+    /**
+     * starts a new browser with google maps with the javascript code  included in the parameter
+     * @param javascriptCode the javascript code for the web page
+     */
     public BrowserForShowingMap(String javascriptCode) {
         String webPage = ConstantsBackOffice.WebPage.HTML_WEB_PAGE_BEFORE_JAVASCRIPT_SCRIPT +
                 javascriptCode +

@@ -13,6 +13,13 @@ public class ButtonEventListener implements ActionListener {
     BackOfficeModel backOfficeModel;
     BackOfficeView backOfficeView;
 
+    /**
+     * the button event listener for the registration button
+     *
+     * @param backOfficeModel an instance of the backoffice model for updating it
+     * @param backOfficeView an instance of the backoffice model for updating it
+     */
+    
     public ButtonEventListener(BackOfficeModel backOfficeModel, BackOfficeView backOfficeView) {
         this.backOfficeModel = backOfficeModel;
         this.backOfficeView = backOfficeView;

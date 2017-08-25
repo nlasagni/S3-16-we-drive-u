@@ -26,15 +26,30 @@ public class BackOfficeModel {
         return backofficeID;
     }
 
+    /**
+     * sets the backoffice id to the string in input and stes the future to complete
+     *
+     * @param backofficeID a string representing the backoffice id
+     */
     public void setBackofficeID(String backofficeID) {
         this.backofficeID = backofficeID;
         registered.complete();
     }
 
+    /**
+     * gets the future that completes when the backoffice id is set
+     *
+     * @return a future that waits for backoffice id set to complete
+     */
     public Future getFuture() {
         return registered;
     }
 
+    /**
+     * updates the vehicle counter stored in the model
+     *
+     * @param vehicleCounter the new vehicle counter
+     */
     public void updateCounter(VehicleCounter vehicleCounter) {
         this.vehicleCounter = vehicleCounter;
     }

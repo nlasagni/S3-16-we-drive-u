@@ -11,6 +11,8 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_V
 import static com.wedriveu.shared.util.Constants.MessagesAnalytics.VEHICLE_REQUEST_ALL_MESSAGE;
 
 /**
+ * a verticle for send a request for the vehicle list
+ *
  * @author Stefano Bernagozzi
  */
 public class AnalyticsVehicleListRequestPublisher extends VerticlePublisher {
