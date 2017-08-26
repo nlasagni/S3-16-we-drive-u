@@ -3,6 +3,8 @@ package com.wedriveu.shared.util;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * a class for store a GPS position
+ *
  * @author Marco Baldassarri
  * @author Michele Donati
  * @since  17/07/2017

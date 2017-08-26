@@ -4,6 +4,8 @@ import static com.wedriveu.shared.util.Constants.Position.EARTH_RADIUS;
 import static com.wedriveu.shared.util.Constants.Position.RANGE;
 
 /**
+ * class for handling distance of positions and convert from decimal to radiants
+ * 
  * @author Marco Baldassarri
  * @since 04/08/2017.
  */

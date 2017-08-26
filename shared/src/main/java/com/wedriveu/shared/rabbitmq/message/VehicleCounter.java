@@ -1,6 +1,8 @@
 package com.wedriveu.shared.rabbitmq.message;
 
 /**
+ * a class for storing a vehicle counter for all the vehicles registered to the service
+ *
  * @author Stefano Bernagozzi
  */
 

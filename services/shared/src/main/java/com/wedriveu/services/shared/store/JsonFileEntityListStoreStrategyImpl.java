@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * class for storing a list of classes into a json file
+ *
  * @author Nicola Lasagni on 31/07/2017.
  */
 public class JsonFileEntityListStoreStrategyImpl<T> implements EntityListStoreStrategy<T> {

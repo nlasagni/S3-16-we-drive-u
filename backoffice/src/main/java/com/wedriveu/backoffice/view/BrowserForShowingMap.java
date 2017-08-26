@@ -7,6 +7,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 /**
+ * a browser for showing a google map with a javascript code inside
+ *
  * @author Stefano Bernagozzi
  */
 class BrowserForShowingMap extends Pane {

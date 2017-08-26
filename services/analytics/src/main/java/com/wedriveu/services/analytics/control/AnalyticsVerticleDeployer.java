@@ -2,10 +2,8 @@ package com.wedriveu.services.analytics.control;
 
 import com.wedriveu.services.analytics.boundary.*;
 import com.wedriveu.services.analytics.util.EventBus;
-import com.wedriveu.services.shared.message.SharedMessages;
 import com.wedriveu.services.shared.rabbitmq.ExchangeManagerVerticleWithQueue;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -13,11 +11,12 @@ import io.vertx.core.eventbus.Message;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.wedriveu.services.analytics.util.EventBus.Messages.ANALYTICS_VEHICLE_LIST_REQUEST_START_MESSAGE;
 
 /**
+ * a verticle that deploys all the other verticles of the analytics service
+ *
  * @author Stefano Bernagozzi
  */
 public class AnalyticsVerticleDeployer extends AbstractVerticle {

@@ -5,6 +5,8 @@ import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 
 
 /**
+ * A message class for the exchange inside the analytics service
+ *
  * @author Stefano Bernagozzi
  */
 public class MessageVehicleCounterWithID {

@@ -11,6 +11,7 @@ import java.util.List;
 import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 
 /**
+ * a class for mapping an object from and to a json object
  * @author Stefano Bernagozzi
  */
 public class VertxJsonMapper {
@@ -24,7 +25,7 @@ public class VertxJsonMapper {
      * @param classType the entities that are inside the json object
      * @param <T> the objects of the returned list
      * @return a list of object T
-     * @throws IOException
+     * @throws IOException if the mapper cannot read the list inside the json object
      */
     public static <T> List<T> mapFromBodyToList(JsonObject jsonObject, Class<T> classType) throws IOException {
         JavaType collectionType = MAPPER.getTypeFactory().constructCollectionType(List.class, classType);
@@ -37,7 +38,7 @@ public class VertxJsonMapper {
      * @param classType the class of the entity that is inside the json object
      * @param <T> the type of the object returned
      * @return an object T
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if the json object is null
      */
     public static <T> T mapTo(JsonObject jsonObject, Class<T> classType) throws IllegalArgumentException {
         if (jsonObject == null) {
@@ -51,7 +52,7 @@ public class VertxJsonMapper {
      * @param classType the class of the entity that is inside the json object
      * @param <T> the type of the object returned
      * @return an object T
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if the json object is null
      */
     public static <T> T mapFromBodyTo(JsonObject jsonObject, Class<T> classType) throws IllegalArgumentException {
         JsonObject body = new JsonObject(jsonObject.getString(BODY));
@@ -63,7 +64,7 @@ public class VertxJsonMapper {
      * @param object the list that has to be mappped
      * @param <T> the classes of the object of the list
      * @return a json object with inside the body the list
-     * @throws IOException
+     * @throws IOException if the mapper cannot write the list inside the json object
      */
     public static <T> JsonObject mapListInBodyFrom(T object) throws IOException {
         StringWriter sw =new StringWriter();
@@ -78,7 +79,7 @@ public class VertxJsonMapper {
      * @param object the object that has to be mappped
      * @param <T> the class of the object
      * @return a json object with inside the object
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if the object is null
      */
     public static <T> JsonObject mapFrom(T object) throws IllegalArgumentException {
         if (object == null) {
@@ -92,7 +93,7 @@ public class VertxJsonMapper {
      * @param object the object that has to be mappped
      * @param <T> the class of the object
      * @return a json object with inside the body the object
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if the object is null
      */
     public static <T> JsonObject mapInBodyFrom(T object) throws IllegalArgumentException {
         JsonObject body = mapFrom(object);

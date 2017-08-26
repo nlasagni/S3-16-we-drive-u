@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
+ * the view of the backoffice, it sets the graphical user interface
+ *
  * @author Stefano Bernagozzi
  */
 public class BackOfficeView extends JFrame {

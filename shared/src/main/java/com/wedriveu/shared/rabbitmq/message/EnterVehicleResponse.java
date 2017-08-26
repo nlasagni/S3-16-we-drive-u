@@ -1,6 +1,8 @@
 package com.wedriveu.shared.rabbitmq.message;
 
 /**
+ * class sent for responding to a vehicle entering request
+ *
  * @author Michele Donati on 17/08/2017.
  */
 

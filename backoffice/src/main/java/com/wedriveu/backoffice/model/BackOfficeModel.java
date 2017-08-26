@@ -11,6 +11,8 @@ import java.util.List;
 
 
 /**
+ * The model of the backoffice that stores the vehicle counter and the backoffice id
+ *
  * @author Stefano Bernagozzi
  */
 public class BackOfficeModel {
@@ -27,7 +29,7 @@ public class BackOfficeModel {
     }
 
     /**
-     * sets the backoffice id to the string in input and stes the future to complete
+     * sets the backoffice id to the string in input and completes the future to allow others to retrieve the backoffice id
      *
      * @param backofficeID a string representing the backoffice id
      */

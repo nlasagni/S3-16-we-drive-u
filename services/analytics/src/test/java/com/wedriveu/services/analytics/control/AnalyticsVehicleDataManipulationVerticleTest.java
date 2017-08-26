@@ -41,7 +41,7 @@ public class AnalyticsVehicleDataManipulationVerticleTest {
         vertx.eventBus().send(EventBus.CONTROLLER_VEHICLE_LIST,
                 VertxJsonMapper.mapInBodyFrom(
                         new AnalyticsVehicleList(VehicleListGenerator.getVehicleList())));
-        vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_UPDATE, res->{
+        vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_RESPONSE, res->{
             MessageVehicleCounterWithID messageVehicleCounterWithID =
                     VertxJsonMapper.mapFromBodyTo((JsonObject) res.body(), MessageVehicleCounterWithID.class);
             assertTrue(VehicleListGenerator.getVehicleCounter().

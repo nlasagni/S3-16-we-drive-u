@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * the controller of the backoffice, that manages the messages received and updates the model
  *
  * @author Stefano Bernagozzi
  */

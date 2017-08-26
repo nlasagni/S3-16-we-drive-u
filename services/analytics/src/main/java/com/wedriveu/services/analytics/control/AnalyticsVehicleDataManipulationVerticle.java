@@ -36,7 +36,7 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
                 new VehiclesCounterAlgorithmImpl());
         vertx.eventBus().consumer(EventBus.CONTROLLER_VEHICLE_LIST, this::convertVehicleList);
         vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_REQUEST, this::handleVehicleCounterRequest);
-        vertx.eventBus().consumer(EventBus.VEHICLE_STORE_UPDATE_REQUEST, this::updateVehicleStore);
+        vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_UPDATE, this::updateVehicleStore);
     }
 
     private void convertVehicleList(Message message) {
@@ -81,7 +81,7 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
     }
 
     private void sendVehicleUpdates() {
-        vertx.eventBus().send(EventBus.VEHICLE_COUNTER_UPDATE,
+        vertx.eventBus().send(EventBus.VEHICLE_COUNTER_RESPONSE,
                 VertxJsonMapper.mapInBodyFrom(new MessageVehicleCounterWithID(
                         "",
                         analyticsStore.getVehicleCounter())));
