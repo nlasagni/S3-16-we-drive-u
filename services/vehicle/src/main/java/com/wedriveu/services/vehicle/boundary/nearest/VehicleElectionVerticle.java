@@ -4,6 +4,7 @@ import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.services.vehicle.util.Time;
 import com.wedriveu.shared.rabbitmq.message.VehicleResponse;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
@@ -24,24 +25,32 @@ import static com.wedriveu.shared.util.Constants.Vehicle.SPEED;
  */
 public class VehicleElectionVerticle extends VerticlePublisher {
 
-    private static final long HOUR_IN_MILLISECONDS = 3600000;
-
     @Override
     public void start(Future<Void> startFuture) throws Exception {
-        vertx.eventBus().consumer(Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST, this::sendVehicleToUser);
+        vertx.eventBus().consumer(Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST,
+                this::sendVehicleToUser);
+        vertx.eventBus().consumer(Messages.VehicleSubstitution.SEND_SUBSTITUTION_VEHICLE_TO_USER,
+                this::sendSubstitutionVehicleToUser);
         super.start(startFuture);
     }
 
     private void sendVehicleToUser(Message message) {
-        JsonObject body = (JsonObject) message.body();
-        String username = body.getString(USERNAME);
-        body.remove(USERNAME);
-        publishToUser(username, createResponse(body));
+        sendVehicle(message, Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE);
     }
 
-    private void publishToUser(String username, JsonObject dataToUser) {
+    private void sendSubstitutionVehicleToUser(Message message) {
+        sendVehicle(message, Constants.RabbitMQ.RoutingKey.VEHICLE_SUBSTITUTION);
+    }
+
+    private void sendVehicle(Message message, String routingKey) {
+        JsonObject body = (JsonObject) message.body();
+        String username = body.getString(USERNAME);
+        publishToUser(username, routingKey, createResponse(body));
+    }
+
+    private void publishToUser(String username, String routingKey, JsonObject dataToUser) {
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE, username),
+                String.format(routingKey, username),
                 dataToUser, onPublish -> {
                     if (!onPublish.succeeded()) {
                         Log.error(VehicleElectionVerticle.class.getSimpleName(),
@@ -63,15 +72,12 @@ public class VehicleElectionVerticle extends VerticlePublisher {
         Double totalDistance = content.getDouble(Constants.Trip.TOTAL_DISTANCE);
         if (speed != null && distanceToUser != null && totalDistance != null) {
             Calendar today = Calendar.getInstance();
-            vehicleResponse.setArriveAtUserTime(today.getTimeInMillis() + getTimeInMilliseconds(distanceToUser, speed));
-            vehicleResponse.setArriveAtDestinationTime(today.getTimeInMillis() + getTimeInMilliseconds(totalDistance, speed));
+            vehicleResponse.setArriveAtUserTime(
+                    today.getTimeInMillis() + Time.getTimeInMilliseconds(distanceToUser, speed));
+            vehicleResponse.setArriveAtDestinationTime(
+                    today.getTimeInMillis() + Time.getTimeInMilliseconds(totalDistance, speed));
         }
         return VertxJsonMapper.mapInBodyFrom(vehicleResponse);
-    }
-
-    private long getTimeInMilliseconds(double distance, double speed) {
-        double hourTime = distance / speed;
-        return (long) hourTime * HOUR_IN_MILLISECONDS;
     }
 
 }

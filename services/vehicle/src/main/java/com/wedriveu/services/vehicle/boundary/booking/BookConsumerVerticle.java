@@ -46,9 +46,9 @@ public class BookConsumerVerticle extends VerticleConsumer {
     }
 
     private void sendBookingRequestToVehicle(JsonObject requestMessage) {
-        UUID randomId = UUID.randomUUID();
-        vertx.deployVerticle(new BookVehicleVerticle(randomId.toString()), deployed -> {
-            eventBus.send(Messages.Booking.BOOK_REQUEST, requestMessage);
+        String id = UUID.randomUUID().toString();
+        vertx.deployVerticle(new BookVehicleVerticle(id, false), deployed -> {
+            eventBus.send(String.format(Messages.Booking.BOOK_REQUEST, id), requestMessage);
         });
 
     }

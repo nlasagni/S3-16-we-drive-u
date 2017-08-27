@@ -1,7 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
-import com.wedriveu.services.shared.util.MessageParser;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
@@ -12,6 +11,7 @@ import java.util.concurrent.TimeoutException;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_REGISTER_ADDRESS;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_REGISTER;
+import static com.wedriveu.shared.util.Constants.EventBus.BODY;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST;
 
 
@@ -42,7 +42,8 @@ public class RegisterConsumerVerticle extends VerticleConsumer {
     @Override
     public void registerConsumer(String eventBus) {
         vertx.eventBus().consumer(eventBus, msg -> {
-            addNewVehicle(MessageParser.getJson(msg));
+            JsonObject body = (JsonObject) msg.body();
+            addNewVehicle(new JsonObject(body.getString(BODY)));
         });
     }
 
