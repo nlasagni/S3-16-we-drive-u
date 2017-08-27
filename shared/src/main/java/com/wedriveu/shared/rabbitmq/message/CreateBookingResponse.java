@@ -11,8 +11,8 @@ public class CreateBookingResponse {
     private boolean success;
     private String errorMessage;
     private String licencePlate;
-    private String driveTimeToUser;
-    private String driveTimeToDestination;
+    private long userArrivalTime;
+    private long destinationArrivalTime;
 
     /**
      * Is success boolean.
@@ -74,17 +74,17 @@ public class CreateBookingResponse {
      *
      * @return the drive time to user
      */
-    public String getDriveTimeToUser() {
-        return driveTimeToUser;
+    public long getUserArrivalTime() {
+        return userArrivalTime;
     }
 
     /**
      * Sets drive time to user.
      *
-     * @param driveTimeToUser the drive time to user
+     * @param userArrivalTime the drive time to user
      */
-    public void setDriveTimeToUser(String driveTimeToUser) {
-        this.driveTimeToUser = driveTimeToUser;
+    public void setUserArrivalTime(long userArrivalTime) {
+        this.userArrivalTime = userArrivalTime;
     }
 
     /**
@@ -92,17 +92,17 @@ public class CreateBookingResponse {
      *
      * @return the drive time to destination
      */
-    public String getDriveTimeToDestination() {
-        return driveTimeToDestination;
+    public long getDestinationArrivalTime() {
+        return destinationArrivalTime;
     }
 
     /**
      * Sets drive time to destination.
      *
-     * @param driveTimeToDestination the drive time to destination
+     * @param destinationArrivalTime the drive time to destination
      */
-    public void setDriveTimeToDestination(String driveTimeToDestination) {
-        this.driveTimeToDestination = driveTimeToDestination;
+    public void setDestinationArrivalTime(long destinationArrivalTime) {
+        this.destinationArrivalTime = destinationArrivalTime;
     }
 
     @Override
@@ -115,14 +115,10 @@ public class CreateBookingResponse {
         }
         CreateBookingResponse that = (CreateBookingResponse) o;
         return success == that.success &&
+                userArrivalTime == that.userArrivalTime &&
+                destinationArrivalTime == that.destinationArrivalTime &&
                 (errorMessage != null ? errorMessage.equals(that.errorMessage) : that.errorMessage == null) &&
-                (licencePlate != null ? licencePlate.equals(that.licencePlate) : that.licencePlate == null) &&
-                (driveTimeToUser != null
-                        ? driveTimeToUser.equals(that.driveTimeToUser)
-                        : that.driveTimeToUser == null) &&
-                (driveTimeToDestination != null
-                        ? driveTimeToDestination.equals(that.driveTimeToDestination)
-                        : that.driveTimeToDestination == null);
+                (licencePlate != null ? licencePlate.equals(that.licencePlate) : that.licencePlate == null);
     }
 
     @Override
@@ -130,11 +126,10 @@ public class CreateBookingResponse {
         int result = (success ? 1 : 0);
         result = 31 * result + (errorMessage != null ? errorMessage.hashCode() : 0);
         result = 31 * result + (licencePlate != null ? licencePlate.hashCode() : 0);
-        result = 31 * result + (driveTimeToUser != null ? driveTimeToUser.hashCode() : 0);
-        result = 31 * result + (driveTimeToDestination != null ? driveTimeToDestination.hashCode() : 0);
+        result = 31 * result + (int) (userArrivalTime ^ (userArrivalTime >>> 32));
+        result = 31 * result + (int) (destinationArrivalTime ^ (destinationArrivalTime >>> 32));
         return result;
     }
-
 
     @Override
     public String toString() {
@@ -142,8 +137,8 @@ public class CreateBookingResponse {
                 "success=" + success +
                 ", errorMessage='" + errorMessage + '\'' +
                 ", licencePlate='" + licencePlate + '\'' +
-                ", driveTimeToUser='" + driveTimeToUser + '\'' +
-                ", driveTimeToDestination='" + driveTimeToDestination + '\'' +
+                ", userArrivalTime=" + userArrivalTime +
+                ", destinationArrivalTime=" + destinationArrivalTime +
                 '}';
     }
 }

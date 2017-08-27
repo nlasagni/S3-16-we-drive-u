@@ -7,25 +7,26 @@ package com.wedriveu.shared.rabbitmq.message;
  */
 public class ChangeBookingResponse {
 
-    private boolean success;
+    private boolean successful;
+    private String username;
     private String licencePlate;
 
     /**
-     * Is success boolean.
+     * Is successful boolean.
      *
-     * @return A boolean indicating the success of this operation
+     * @return A boolean indicating the successful of this operation
      */
-    public boolean isSuccess() {
-        return success;
+    public boolean isSuccessful() {
+        return successful;
     }
 
     /**
-     * Sets success.
+     * Sets successful.
      *
-     * @param success the success of this response result
+     * @param successful the successful of this response result
      */
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setSuccessful(boolean successful) {
+        this.successful = successful;
     }
 
     /**
@@ -56,13 +57,13 @@ public class ChangeBookingResponse {
             return false;
         }
         ChangeBookingResponse that = (ChangeBookingResponse) o;
-        return success == that.success &&
+        return successful == that.successful &&
                 (licencePlate != null ? licencePlate.equals(that.licencePlate) : that.licencePlate == null);
     }
 
     @Override
     public int hashCode() {
-        int result = (success ? 1 : 0);
+        int result = (successful ? 1 : 0);
         result = 31 * result + (licencePlate != null ? licencePlate.hashCode() : 0);
         return result;
     }
@@ -71,8 +72,27 @@ public class ChangeBookingResponse {
     @Override
     public String toString() {
         return "ChangeBookingResponse{" +
-                "success=" + success +
+                "successful=" + successful +
                 ", licencePlate='" + licencePlate + '\'' +
                 '}';
     }
+
+    /**
+     * Gets username.
+     *
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Sets username.
+     *
+     * @param username the username
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 }

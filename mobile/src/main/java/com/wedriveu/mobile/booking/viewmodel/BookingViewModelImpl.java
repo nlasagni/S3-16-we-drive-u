@@ -23,9 +23,12 @@ import com.wedriveu.mobile.store.BookingStore;
 import com.wedriveu.mobile.store.StoreFactoryImpl;
 import com.wedriveu.mobile.store.UserStore;
 import com.wedriveu.mobile.store.VehicleStore;
+import com.wedriveu.mobile.util.Dates;
 import com.wedriveu.shared.rabbitmq.message.CompleteBookingResponse;
 import com.wedriveu.shared.rabbitmq.message.CreateBookingResponse;
 import com.wedriveu.shared.rabbitmq.message.EnterVehicleRequest;
+
+import java.util.Date;
 
 /**
  * @author Nicola Lasagni on 29/07/2017.
@@ -102,14 +105,16 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
                     mRouter.showPopOverDialog(result.getErrorMessage());
                     goToTripScheduling();
                 } else {
+                    Date arriveAtUser = new Date(result.getResult().getUserArrivalTime());
+                    Date arriveAtDestination = new Date(result.getResult().getDestinationArrivalTime());
                     Vehicle vehicle = mVehicleStore.getVehicle();
                     Vehicle newVehicle =
                             new Vehicle(vehicle.getLicencePlate(),
                                     vehicle.getVehicleName(),
                                     vehicle.getDescription(),
                                     vehicle.getPictureURL(),
-                                    result.getResult().getDriveTimeToUser(),
-                                    result.getResult().getDriveTimeToDestination());
+                                    Dates.format(arriveAtUser),
+                                    Dates.format(arriveAtDestination));
                     mVehicleStore.storeVehicle(newVehicle);
                     mRouter.showBookingAcceptedView();
                     subscribeToVehicleUpdates();

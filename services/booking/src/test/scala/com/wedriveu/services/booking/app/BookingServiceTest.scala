@@ -138,7 +138,7 @@ class BookingServiceTest extends AssertionsForJUnit {
     eventBus.consumer(eventBusAddress, (message: Message[Object]) => message.body() match {
       case body: JsonObject =>
         val response: ChangeBookingResponse = VertxJsonMapper.mapFromBodyTo(body, classOf[ChangeBookingResponse])
-        context.assertTrue(response != null && (!response.isSuccess || response.getLicencePlate.equals(NewLicensePlate)))
+        context.assertTrue(response != null && (!response.isSuccessful || response.getLicencePlate.equals(NewLicensePlate)))
         async.complete()
       case _ => context.fail(); async.complete()
     })
@@ -209,7 +209,7 @@ class BookingServiceTest extends AssertionsForJUnit {
       case body: JsonObject =>
         val response: FindBookingPositionsResponse =
           VertxJsonMapper.mapFromBodyTo(body, classOf[FindBookingPositionsResponse])
-        context.assertTrue(response != null && (!response.isSuccess || response.getUserPosition.equals(UserPosition)))
+        context.assertTrue(response != null && (!response.isSuccessful || response.getUserPosition.equals(UserPosition)))
         async.complete()
       case _ => context.fail(); async.complete()
     })
