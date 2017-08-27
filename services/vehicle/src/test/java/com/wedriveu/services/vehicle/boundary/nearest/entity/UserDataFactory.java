@@ -1,6 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.nearest.entity;
 
-import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
+import com.wedriveu.services.vehicle.entity.UserRequest;
 
 /**
  * @author Marco Baldassarri

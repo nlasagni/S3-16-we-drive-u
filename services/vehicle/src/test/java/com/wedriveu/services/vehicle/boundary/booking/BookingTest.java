@@ -3,10 +3,9 @@ package com.wedriveu.services.vehicle.boundary.booking;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.app.BootVerticle;
-import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.booking.entity.BookingRequest;
-import com.wedriveu.services.vehicle.boundary.booking.mock.VehicleMockVerticle;
-import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryFiat;
+import com.wedriveu.services.vehicle.boundary.util.BaseInteractionClient;
+import com.wedriveu.services.vehicle.boundary.util.mock.VehicleBookingMockVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
@@ -36,6 +35,7 @@ public class BookingTest extends BaseInteractionClient {
 
     private static final String EVENT_BUS_ADDRESS = BookingTest.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.booking.test";
+    private static final String USERNAME = "BookingTestUser";
 
     private Vehicle vehicle;
     private Async async;
@@ -50,7 +50,7 @@ public class BookingTest extends BaseInteractionClient {
         async = context.async();
         vertx = Vertx.vertx();
         vehicle = new VehicleFactoryMini().getVehicle();
-        VehicleMockVerticle mockVerticle = new VehicleMockVerticle(vehicle.getLicensePlate());
+        VehicleBookingMockVerticle mockVerticle = new VehicleBookingMockVerticle(USERNAME, vehicle.getLicensePlate());
         vertx.deployVerticle(mockVerticle, onMockDeploy -> {
             super.setup(vertx, completed -> {
                 vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
@@ -88,6 +88,7 @@ public class BookingTest extends BaseInteractionClient {
 
     private JsonObject createRequest() {
         BookVehicleRequest bookingRequest = new BookingRequest().getBookingVehicleRequest();
+        bookingRequest.setUsername(USERNAME);
         bookingRequest.setLicencePlate(vehicle.getLicensePlate());
         return VertxJsonMapper.mapInBodyFrom(bookingRequest);
     }

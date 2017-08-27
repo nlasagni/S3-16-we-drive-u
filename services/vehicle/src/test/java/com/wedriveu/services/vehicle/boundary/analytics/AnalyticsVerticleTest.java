@@ -2,7 +2,7 @@ package com.wedriveu.services.vehicle.boundary.analytics;
 
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.vehicle.app.BootVerticle;
-import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
+import com.wedriveu.services.vehicle.boundary.util.BaseInteractionClient;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;

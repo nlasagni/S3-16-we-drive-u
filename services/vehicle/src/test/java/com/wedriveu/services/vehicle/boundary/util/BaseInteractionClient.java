@@ -1,4 +1,4 @@
-package com.wedriveu.services.vehicle.boundary;
+package com.wedriveu.services.vehicle.boundary.util;
 
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.shared.util.Log;

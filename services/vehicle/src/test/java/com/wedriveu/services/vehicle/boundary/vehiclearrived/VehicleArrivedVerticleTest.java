@@ -1,12 +1,11 @@
 package com.wedriveu.services.vehicle.boundary.vehiclearrived;
 
 import com.wedriveu.services.vehicle.app.BootVerticle;
-import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
+import com.wedriveu.services.vehicle.boundary.util.BaseInteractionClient;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.rabbitmq.message.CompleteBookingRequest;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
