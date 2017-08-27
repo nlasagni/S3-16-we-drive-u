@@ -25,7 +25,6 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
 
     private static final String EVENT_BUS_ADDRESS = RegisterVehicleTestMini.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.mini";
-    private static final int ASYNC_COUNT = 5;
     private Async async;
     private Vertx vertx;
     private BootVerticle bootVerticle;

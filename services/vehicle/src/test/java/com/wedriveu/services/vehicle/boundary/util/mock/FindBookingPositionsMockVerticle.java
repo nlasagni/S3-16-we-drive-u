@@ -30,7 +30,7 @@ public class FindBookingPositionsMockVerticle extends VerticleConsumer {
     private String vehicleLicensePlate;
 
     public FindBookingPositionsMockVerticle(String username, String vehicleLicensePlate) {
-        super(QUEUE);
+        super(QUEUE + username + vehicleLicensePlate);
         this.username = username;
         this.vehicleLicensePlate = vehicleLicensePlate;
     }

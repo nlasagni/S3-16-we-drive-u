@@ -22,7 +22,7 @@ public class VehicleCanDriveMockVerticle extends VerticleConsumer {
     private String vehicleLicensePlate;
 
     public VehicleCanDriveMockVerticle(String username, String vehicleLicensePlate) {
-        super(QUEUE);
+        super(QUEUE + username + vehicleLicensePlate);
         this.username = username;
         this.vehicleLicensePlate = vehicleLicensePlate;
     }

@@ -3,6 +3,7 @@ package com.wedriveu.services.vehicle.boundary.booking;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.json.JsonObject;
 
 import java.io.IOException;

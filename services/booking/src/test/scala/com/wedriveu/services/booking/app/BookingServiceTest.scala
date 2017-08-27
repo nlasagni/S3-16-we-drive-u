@@ -50,11 +50,12 @@ class BookingServiceTest extends AssertionsForJUnit {
     new JsonFileEntityListStoreStrategyImpl[Booking](classOf[Booking], fileName)
   private val store: BookingStore = new BookingStoreImpl(storeStrategy)
 
+  private var vertx: Vertx = _
   private var eventBus: EventBus = _
   private var client: RabbitMQClient = _
 
   @Before def setUp(context: TestContext): Unit = {
-    val vertx = Vertx.vertx()
+    vertx = Vertx.vertx()
     eventBus = vertx.eventBus()
     client = RabbitMQClient.create(vertx, RabbitMQClientFactory.createClientConfig())
     val async = context.async()
@@ -83,7 +84,11 @@ class BookingServiceTest extends AssertionsForJUnit {
   }
 
   @After def tearDown(context: TestContext) {
-    client.stopFuture()
+    val async = context.async()
+    client.stopFuture().onComplete {
+      case Success(_) => async.complete()
+      case Failure(_) => async.complete()
+    }
   }
 
   private def registerConsumerAndPublishMessage[T](

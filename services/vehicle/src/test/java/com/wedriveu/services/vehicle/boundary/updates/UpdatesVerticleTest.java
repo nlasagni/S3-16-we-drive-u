@@ -10,6 +10,8 @@ import com.wedriveu.services.vehicle.boundary.util.mock.VehicleBookingMockVertic
 import com.wedriveu.services.vehicle.boundary.util.mock.VehicleCanDriveMockVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryFiat;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
+import com.wedriveu.services.vehicle.entity.VehicleStore;
+import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.rabbitmq.message.VehicleResponse;
@@ -42,6 +44,7 @@ public class UpdatesVerticleTest extends BaseInteractionClient {
             new Position(44.199940, 12.094194);
 
     private Vertx vertx;
+    private VehicleStore vehicleStore;
     private Vehicle brokenVehicle;
     private Vehicle substitutionVehicle;
     private BootVerticle bootVerticle;
@@ -59,6 +62,7 @@ public class UpdatesVerticleTest extends BaseInteractionClient {
     public void setUp(TestContext context) throws Exception {
         Async async = context.async();
         vertx = Vertx.vertx();
+        vehicleStore = new VehicleStoreImpl();
         bootVerticle = new BootVerticle();
         brokenVehicle = new VehicleFactoryMini().getVehicle();
         brokenVehicle.setStatus(Constants.Vehicle.STATUS_BOOKED);
@@ -102,9 +106,7 @@ public class UpdatesVerticleTest extends BaseInteractionClient {
     }
 
     private void registerVehicle(Vehicle vehicle) {
-        publishMessage(Constants.RabbitMQ.Exchanges.VEHICLE,
-                Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
-                VertxJsonMapper.mapInBodyFrom(vehicle));
+        vehicleStore.addVehicle(vehicle);
     }
 
     @Test

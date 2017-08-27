@@ -76,7 +76,7 @@ public class BookVehicleVerticle extends VerticleConsumer {
         startConsumerWithFuture(
                 Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(BOOK_VEHICLE_RESPONSE, vehicleRequest.getUsername()),
-                EVENT_BUS_BOOK_VEHICLE_ADDRESS,
+                EVENT_BUS_BOOK_VEHICLE_ADDRESS + id,
                 future);
     }
 

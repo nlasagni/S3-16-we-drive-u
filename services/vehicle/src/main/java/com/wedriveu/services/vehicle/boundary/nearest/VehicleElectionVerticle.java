@@ -73,9 +73,9 @@ public class VehicleElectionVerticle extends VerticlePublisher {
         if (speed != null && distanceToUser != null && totalDistance != null) {
             Calendar today = Calendar.getInstance();
             vehicleResponse.setArriveAtUserTime(
-                    today.getTimeInMillis() + Time.getTimeInMilliseconds(distanceToUser, speed));
+                    today.getTimeInMillis() + Time.getDriveTimeInMilliseconds(distanceToUser, speed));
             vehicleResponse.setArriveAtDestinationTime(
-                    today.getTimeInMillis() + Time.getTimeInMilliseconds(totalDistance, speed));
+                    today.getTimeInMillis() + Time.getDriveTimeInMilliseconds(totalDistance, speed));
         }
         return VertxJsonMapper.mapInBodyFrom(vehicleResponse);
     }

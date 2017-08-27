@@ -7,6 +7,7 @@ import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.services.vehicle.util.Time;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
+import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
@@ -55,10 +56,13 @@ public class BookingSessionManager extends AbstractVerticle {
     }
 
     private void getVehicleCompleted(Message message) {
-        Vehicle vehicle = VertxJsonMapper.mapTo((JsonObject) message.body(), Vehicle.class);
-        fillDriveTimes(vehicle);
-        sendStartDrivingCommand();
-        notifyBookingService();
+        JsonObject body = (JsonObject) message.body();
+        if (body != null) {
+            Vehicle vehicle = VertxJsonMapper.mapTo(body, Vehicle.class);
+            fillDriveTimes(vehicle);
+            sendStartDrivingCommand();
+            notifyBookingService();
+        }
         eventBus.send(Messages.Booking.UNDEPLOY, deploymentID());
     }
 
@@ -81,8 +85,8 @@ public class BookingSessionManager extends AbstractVerticle {
         Position vehiclePosition = vehicle.getPosition();
         double distanceToUser = Position.getDistanceInKm(userPosition, vehiclePosition);
         double distanceToDestination = Position.getDistanceInKm(destinationPosition, vehiclePosition);
-        long timeMillisUser = Time.getTimeInMilliseconds(distanceToUser, vehicleResponse.getSpeed());
-        long timeMillisDestination = Time.getTimeInMilliseconds(distanceToDestination, vehicleResponse.getSpeed());
+        long timeMillisUser = Time.getDriveTimeInMilliseconds(distanceToUser, vehicleResponse.getSpeed());
+        long timeMillisDestination = Time.getDriveTimeInMilliseconds(distanceToDestination, vehicleResponse.getSpeed());
         vehicleResponse.setDriveTimeToUser(timeMillisUser);
         vehicleResponse.setDriveTimeToDestination(timeMillisDestination);
     }

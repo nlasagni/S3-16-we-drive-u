@@ -1,6 +1,7 @@
 package com.wedriveu.services.vehicle.control;
 
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;

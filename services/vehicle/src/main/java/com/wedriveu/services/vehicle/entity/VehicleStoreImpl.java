@@ -9,6 +9,7 @@ import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.shared.util.PositionUtils;
 import io.vertx.core.AbstractVerticle;
@@ -41,6 +42,10 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private EventBus eventBus;
     private File file;
 
+    public VehicleStoreImpl() {
+        createJsonFile();
+    }
+
     @Override
     public void start() throws Exception {
         this.eventBus = vertx.eventBus();
@@ -65,7 +70,6 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
                     VertxJsonMapper.mapTo((JsonObject) msg.body(), SubstitutionRequest.class);
             getSubstitutionAvailableVehicles(request);
         });
-        createJsonFile();
     }
 
     private void createJsonFile() {
@@ -135,7 +139,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         String carLicencePlate = vehicleData.getString(Messages.Trip.LICENSE_PLATE);
         Vehicle requestedVehicle = getVehicle(carLicencePlate);
         eventBus.send(String.format(Messages.VehicleStore.GET_VEHICLE_COMPLETED_BOOKING, senderId),
-                VertxJsonMapper.mapFrom(requestedVehicle));
+                requestedVehicle == null ? null :VertxJsonMapper.mapFrom(requestedVehicle));
     }
 
     private void getVehicleForSubstitution(Message message) {

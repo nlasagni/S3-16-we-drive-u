@@ -21,7 +21,7 @@ public class ChangeBookingMockVerticle extends VerticleConsumer {
     private String vehicleLicensePlate;
 
     public ChangeBookingMockVerticle(String username, String vehicleLicensePlate) {
-        super(QUEUE);
+        super(QUEUE + username + vehicleLicensePlate);
         this.username = username;
         this.vehicleLicensePlate = vehicleLicensePlate;
     }
