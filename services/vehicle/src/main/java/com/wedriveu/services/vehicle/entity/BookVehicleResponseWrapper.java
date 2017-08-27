@@ -12,8 +12,8 @@ import com.wedriveu.shared.util.Position;
 
 public class BookVehicleResponseWrapper {
 
-
     private BookVehicleResponse response;
+    private String username;
     private Position userPosition;
     private Position destinationPosition;
 
@@ -23,6 +23,14 @@ public class BookVehicleResponseWrapper {
 
     public void setResponse(BookVehicleResponse response) {
         this.response = response;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Position getUserPosition() {
@@ -40,4 +48,5 @@ public class BookVehicleResponseWrapper {
     public void setDestinationPosition(Position destinationPosition) {
         this.destinationPosition = destinationPosition;
     }
+
 }
