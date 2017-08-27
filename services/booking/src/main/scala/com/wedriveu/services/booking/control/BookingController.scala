@@ -265,6 +265,7 @@ object BookingControllerVerticle {
       } else {
         response.setSuccessful(true)
         response.setLicensePlate(booking.get().getVehicleLicensePlate)
+        response.setUsername(booking.get().getUsername)
         response.setUserPosition(booking.get().getUserPosition)
         response.setDestinationPosition(booking.get().getDestinationPosition)
       }

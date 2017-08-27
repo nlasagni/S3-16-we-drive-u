@@ -25,25 +25,23 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
 
     private static final String EVENT_BUS_ADDRESS = AnalyticsVerticleTest.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.analytics.test";
-    private static final int ASYNC_COUNT = 3;
+
+    private Vertx vertx;
     private BootVerticle bootVerticle;
     private Async async;
-    private Vertx vertx;
 
     public AnalyticsVerticleTest() {
         super(QUEUE, VEHICLE, ANALYTICS_VEHICLES_RESPONSE_ALL, EVENT_BUS_ADDRESS);
     }
 
     @Before
-    @SuppressWarnings("Duplicates")
     public void setUp(TestContext context) throws Exception {
-        async = context.async(ASYNC_COUNT);
         vertx = Vertx.vertx();
         bootVerticle = new BootVerticle();
+        async = context.async();
         super.setup(vertx, completed -> {
             vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
                 vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
-                    async.countDown();
                     super.declareQueueAndBind("", context, declared -> {
                         context.assertTrue(declared.succeeded());
                         async.complete();
@@ -51,7 +49,6 @@ public class AnalyticsVerticleTest extends BaseInteractionClient {
                 });
                 vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
             });
-            async.countDown();
             vertx.deployVerticle(bootVerticle, context.asyncAssertSuccess(onDeploy -> {
                 vertx.eventBus().send(Messages.VehicleService.BOOT, null);
             }));

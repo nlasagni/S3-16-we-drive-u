@@ -1,7 +1,6 @@
 package com.wedriveu.services.vehicle.boundary.updates;
 
 import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.app.BootVerticle;
 import com.wedriveu.services.vehicle.boundary.util.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.util.mock.ChangeBookingMockVerticle;

@@ -12,8 +12,6 @@ import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
-import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -26,7 +24,6 @@ import org.junit.runner.RunWith;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_REQUEST;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_RESPONSE;
-import static org.hamcrest.CoreMatchers.both;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -41,9 +38,10 @@ public class BookingTest extends BaseInteractionClient {
     private static final String QUEUE = "vehicle.queue.booking.test";
     private static final String USERNAME = "BookingTestUser";
 
+    private Vertx vertx;
+    private BootVerticle bootVerticle;
     private Vehicle vehicle;
     private Async async;
-    private Vertx vertx;
     private VehicleStore vehicleStore;
 
     public BookingTest() {
@@ -54,6 +52,7 @@ public class BookingTest extends BaseInteractionClient {
     public void setUp(TestContext context) throws Exception {
         async = context.async();
         vertx = Vertx.vertx();
+        bootVerticle = new BootVerticle();
         vehicleStore = new VehicleStoreImpl();
         vehicle = new VehicleFactoryMini().getVehicle();
         VehicleBookingMockVerticle mockVerticle =
@@ -70,7 +69,7 @@ public class BookingTest extends BaseInteractionClient {
                     });
                     vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
                 });
-                vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
+                vertx.deployVerticle(bootVerticle, context.asyncAssertSuccess(onDeploy -> {
                     vertx.eventBus().send(Messages.VehicleService.BOOT, null);
                 }));
             });

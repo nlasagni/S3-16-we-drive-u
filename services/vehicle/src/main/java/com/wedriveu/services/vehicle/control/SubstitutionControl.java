@@ -164,15 +164,19 @@ public class SubstitutionControl extends AbstractVerticle {
 
     private void sendSubstitutionVehicleToUser(ChangeBookingResponse response,
                                                SubstitutionRequest substitutionRequest) {
-        Vehicle vehicle = substitutionRequest.getSubstitutionVehicle();
-        VehicleResponseCanDrive canDrive = substitutionRequest.getSubstitutionVehicleResponseCanDrive();
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.put(Constants.USERNAME, response.getUsername());
-        jsonObject.put(VEHICLE, JsonObject.mapFrom(vehicle).toString());
-        jsonObject.put(Messages.Trip.DISTANCE_TO_USER, canDrive.getDistanceToUser());
-        jsonObject.put(Messages.Trip.TOTAL_DISTANCE, canDrive.getTotalDistance());
-        jsonObject.put(Messages.Trip.SPEED, canDrive.getVehicleSpeed());
-        eventBus.send(Messages.VehicleSubstitution.SEND_SUBSTITUTION_VEHICLE_TO_USER, jsonObject);
+        if (substitutionRequest == null) {
+            abortSubstitution(response.getUsername());
+        } else {
+            Vehicle vehicle = substitutionRequest.getSubstitutionVehicle();
+            VehicleResponseCanDrive canDrive = substitutionRequest.getSubstitutionVehicleResponseCanDrive();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.put(Constants.USERNAME, response.getUsername());
+            jsonObject.put(VEHICLE, JsonObject.mapFrom(vehicle).toString());
+            jsonObject.put(Messages.Trip.DISTANCE_TO_USER, canDrive.getDistanceToUser());
+            jsonObject.put(Messages.Trip.TOTAL_DISTANCE, canDrive.getTotalDistance());
+            jsonObject.put(Messages.Trip.SPEED, canDrive.getVehicleSpeed());
+            eventBus.send(Messages.VehicleSubstitution.SEND_SUBSTITUTION_VEHICLE_TO_USER, jsonObject);
+        }
     }
 
     private void sendDriveCommandToVehicle(ChangeBookingResponse response,

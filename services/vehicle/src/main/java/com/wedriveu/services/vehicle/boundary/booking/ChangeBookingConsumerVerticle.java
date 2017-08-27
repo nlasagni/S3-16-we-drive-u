@@ -3,6 +3,7 @@ package com.wedriveu.services.vehicle.boundary.booking;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
+import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 
 import java.io.IOException;
@@ -25,16 +26,17 @@ public class ChangeBookingConsumerVerticle extends VerticleConsumer {
     }
 
     @Override
-    public void start() throws Exception {
+    public void start(Future startFuture) throws Exception {
         super.start();
-        startBookConsumer();
+        startConsumerWithFuture(
+                Constants.RabbitMQ.Exchanges.BOOKING,
+                Constants.RabbitMQ.RoutingKey.CHANGE_BOOKING_RESPONSE,
+                EVENT_BUS_CHANGE_BOOKING_ADDRESS,
+                startFuture);
     }
 
     private void startBookConsumer() throws IOException, TimeoutException {
-        startConsumer(false,
-                Constants.RabbitMQ.Exchanges.BOOKING,
-                Constants.RabbitMQ.RoutingKey.CHANGE_BOOKING_RESPONSE,
-                EVENT_BUS_CHANGE_BOOKING_ADDRESS);
+
     }
 
     @Override

@@ -10,15 +10,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Position {
 
-    @JsonProperty
     private double latitude;
-    @JsonProperty
     private double longitude;
 
-    public Position() { }
-
-    public Position(double latitude,
-                    double longitude) {
+    public Position(@JsonProperty("latitude") double latitude,
+                    @JsonProperty("longitude") double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -27,16 +23,8 @@ public class Position {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
     public double getLongitude() {
         return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
     }
 
     public static double getDistanceInKm(Position from, Position to) {

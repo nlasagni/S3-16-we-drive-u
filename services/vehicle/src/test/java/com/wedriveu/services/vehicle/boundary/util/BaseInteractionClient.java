@@ -42,7 +42,11 @@ public abstract class BaseInteractionClient {
         this.vertx = vertx;
         rabbitMQClient = RabbitMQClientFactory.createClient(vertx);
         rabbitMQClient.start(handler);
+    }
 
+    protected static void stop(Handler<AsyncResult<Void>> handler) {
+        handler.handle(Future.succeededFuture());
+        //rabbitMQClient.stop(handler);
     }
 
     private void declareQueue(Handler<AsyncResult<JsonObject>> handler) {
@@ -84,6 +88,7 @@ public abstract class BaseInteractionClient {
                         }
                     });
         }));
+        async.awaitSuccess();
     }
 
     private void handleServiceResponse(TestContext context, Async async, String eventBusAddress) {
