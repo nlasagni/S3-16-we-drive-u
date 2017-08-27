@@ -16,6 +16,12 @@ import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.json.JsonObject;
 
 /**
+ * This {@linkplain AbstractVerticle} manages a {@linkplain Vehicle} {@linkplain SubstitutionCheck},
+ * so it gets the {@linkplain com.wedriveu.services.shared.model.Booking} positions associated to the
+ * {@linkplain Vehicle} to be substituted through the proper boundary that is the
+ * {@linkplain com.wedriveu.services.vehicle.boundary.booking.GetBookingPositionsVerticle}, makes its checks
+ * and sends back the result to the {@linkplain SubstitutionControl}.
+ *
  * @author Nicola Lasagni on 25/08/2017.
  */
 public class SubstitutionChecker extends AbstractVerticle {
@@ -44,7 +50,7 @@ public class SubstitutionChecker extends AbstractVerticle {
     private void getVehicleToCheck() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(Messages.SENDER_ID, id);
-        jsonObject.put(Constants.Vehicle.LICENSE_PLATE, updateToService.getLicense());
+        jsonObject.put(Messages.Trip.LICENSE_PLATE, updateToService.getLicense());
         eventBus.send(Messages.VehicleSubstitution.GET_VEHICLE_FOR_SUBSTITUTION, jsonObject);
     }
 

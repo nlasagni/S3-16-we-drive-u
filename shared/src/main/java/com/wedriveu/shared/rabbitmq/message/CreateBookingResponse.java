@@ -70,36 +70,36 @@ public class CreateBookingResponse {
     }
 
     /**
-     * Gets drive time to user.
+     * Gets the vehicle arrival time to user.
      *
-     * @return the drive time to user
+     * @return the vehicle arrival time to user
      */
     public long getUserArrivalTime() {
         return userArrivalTime;
     }
 
     /**
-     * Sets drive time to user.
+     * Sets the vehicle arrival time to user.
      *
-     * @param userArrivalTime the drive time to user
+     * @param userArrivalTime the vehicle arrival time to user
      */
     public void setUserArrivalTime(long userArrivalTime) {
         this.userArrivalTime = userArrivalTime;
     }
 
     /**
-     * Gets drive time to destination.
+     * Gets the vehicle arrival time to destination.
      *
-     * @return the drive time to destination
+     * @return the vehicle arrival time to destination
      */
     public long getDestinationArrivalTime() {
         return destinationArrivalTime;
     }
 
     /**
-     * Sets drive time to destination.
+     * Sets the vehicle arrival time to destination.
      *
-     * @param destinationArrivalTime the drive time to destination
+     * @param destinationArrivalTime the vehicle arrival time to destination
      */
     public void setDestinationArrivalTime(long destinationArrivalTime) {
         this.destinationArrivalTime = destinationArrivalTime;

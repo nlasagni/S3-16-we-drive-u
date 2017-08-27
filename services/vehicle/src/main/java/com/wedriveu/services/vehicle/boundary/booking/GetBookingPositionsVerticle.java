@@ -19,6 +19,12 @@ import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_Q
 
 
 /**
+ * Boundary {@linkplain VerticleConsumer} that receives
+ * {@linkplain Constants.RabbitMQ.RoutingKey#FIND_BOOKING_POSITION_RESPONSE} messages and
+ * redirect them to the proper control.
+ * Also, it is capable to publish {@linkplain Constants.RabbitMQ.RoutingKey#FIND_BOOKING_POSITION_REQUEST} to
+ * the Booking Service.
+ *
  * @author Nicola Lasagni
  */
 public class GetBookingPositionsVerticle extends VerticleConsumer {

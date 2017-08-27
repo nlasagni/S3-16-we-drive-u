@@ -16,12 +16,12 @@ import java.util.Calendar;
 
 import static com.wedriveu.shared.util.Constants.USERNAME;
 import static com.wedriveu.shared.util.Constants.VEHICLE;
-import static com.wedriveu.shared.util.Constants.Vehicle.SPEED;
 
 /**
  * This Verticle uses RabbitMQ Vertx.x library to publish the chosen vehicle to the client.
  *
  * @author Marco Baldassarri on 4/08/2017.
+ * @author Nicola Lasagni
  */
 public class VehicleElectionVerticle extends VerticlePublisher {
 
@@ -67,9 +67,9 @@ public class VehicleElectionVerticle extends VerticlePublisher {
         vehicleResponse.setDescription(vehicle.getDescription());
         vehicleResponse.setPictureURL(vehicle.getImageUrl());
         vehicleResponse.setNotEligibleVehicleFound(vehicle.getNotEligibleVehicleFound());
-        Double speed = content.getDouble(SPEED);
-        Double distanceToUser = content.getDouble(Constants.Trip.DISTANCE_TO_USER);
-        Double totalDistance = content.getDouble(Constants.Trip.TOTAL_DISTANCE);
+        Double speed = content.getDouble(Messages.Trip.SPEED);
+        Double distanceToUser = content.getDouble(Messages.Trip.DISTANCE_TO_USER);
+        Double totalDistance = content.getDouble(Messages.Trip.TOTAL_DISTANCE);
         if (speed != null && distanceToUser != null && totalDistance != null) {
             Calendar today = Calendar.getInstance();
             vehicleResponse.setArriveAtUserTime(

@@ -281,12 +281,6 @@ public interface Constants {
 
 
     interface Vehicle {
-
-        String NO_ELIGIBLE_VEHICLE = "No vehicles nearby, please try again later or change your address";
-        String NO_ELIGIBLE_VEHICLE_FOR_SUSTITUTION = "No vehicle for substitution, please contact the assistance service.";
-
-        String LICENSE_PLATE = "licensePlate";
-        String SPEED = "speed";
         /**
          * This status means that the {@linkplain Vehicle} can be booked by a user.
          */
@@ -307,11 +301,6 @@ public interface Constants {
          * This status means that the {@linkplain Vehicle} has network issues, so it will come back to the headquarted.
          */
         String STATUS_NETWORK_ISSUES = "net_issues";
-    }
-
-    interface Trip {
-        String DISTANCE_TO_USER = "distanceToUser";
-        String TOTAL_DISTANCE = "totalDistance";
     }
 
     interface MessagesAnalytics {

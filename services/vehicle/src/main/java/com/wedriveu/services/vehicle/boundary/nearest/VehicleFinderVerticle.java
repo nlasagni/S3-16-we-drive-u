@@ -38,6 +38,7 @@ import static com.wedriveu.shared.util.Constants.ZERO;
  * At the end of the process, only one vehicle is being picked up.
  *
  * @author Marco Baldassarri on 5/08/2017.
+ * @author Nicola Lasagni
  */
 public class VehicleFinderVerticle extends VerticleConsumer {
 

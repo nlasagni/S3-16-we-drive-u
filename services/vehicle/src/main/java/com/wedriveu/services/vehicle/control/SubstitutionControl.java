@@ -24,6 +24,16 @@ import static com.wedriveu.shared.util.Constants.USERNAME;
 import static com.wedriveu.shared.util.Constants.VEHICLE;
 
 /**
+ * This {@linkplain AbstractVerticle} manages the whole {@linkplain Vehicle} {@linkplain SubstitutionRequest} process,
+ * so when a {@linkplain SubstitutionCheck} indicates that a substitution is needed, it finds the substitution
+ * {@linkplain Vehicle} by delegating the find-process to the {@linkplain NearestControl}. Once it gets the
+ * result it books the {@linkplain Vehicle} directly through the {@linkplain BookVehicleVerticle} boundary
+ * and updates the {@linkplain com.wedriveu.services.shared.model.Booking} associated to the broken vehicle through the
+ * {@linkplain com.wedriveu.services.vehicle.boundary.booking.ChangeBookingPublisherVerticle} and
+ * {@linkplain com.wedriveu.services.vehicle.boundary.booking.ChangeBookingConsumerVerticle} boundaries.
+ * When this has been done, it communicates to the user the substitution, through the
+ * {@linkplain com.wedriveu.services.vehicle.boundary.nearest.VehicleElectionVerticle} boundary.
+ *
  * @author Nicola Lasagni on 25/08/2017.
  */
 public class SubstitutionControl extends AbstractVerticle {
@@ -159,9 +169,9 @@ public class SubstitutionControl extends AbstractVerticle {
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(Constants.USERNAME, response.getUsername());
         jsonObject.put(VEHICLE, JsonObject.mapFrom(vehicle).toString());
-        jsonObject.put(Constants.Trip.DISTANCE_TO_USER, canDrive.getDistanceToUser());
-        jsonObject.put(Constants.Trip.TOTAL_DISTANCE, canDrive.getTotalDistance());
-        jsonObject.put(Constants.Vehicle.SPEED, canDrive.getVehicleSpeed());
+        jsonObject.put(Messages.Trip.DISTANCE_TO_USER, canDrive.getDistanceToUser());
+        jsonObject.put(Messages.Trip.TOTAL_DISTANCE, canDrive.getTotalDistance());
+        jsonObject.put(Messages.Trip.SPEED, canDrive.getVehicleSpeed());
         eventBus.send(Messages.VehicleSubstitution.SEND_SUBSTITUTION_VEHICLE_TO_USER, jsonObject);
     }
 

@@ -10,6 +10,10 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 /**
+ * This {@linkplain AbstractVerticle} manages the {@linkplain UpdateToService}, if there is an update
+ * with status {@linkplain Constants.Vehicle#STATUS_BROKEN_STOLEN} it delegates the substitution process
+ * to the {@linkplain SubstitutionControl}.
+ *
  * @author Nicola Lasagni on 25/08/2017.
  */
 public class UpdateControl extends AbstractVerticle {

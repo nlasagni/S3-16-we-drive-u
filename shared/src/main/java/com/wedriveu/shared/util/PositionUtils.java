@@ -22,16 +22,8 @@ public class PositionUtils {
                 * Math.cos(fromLongitudeInRad - toLongitudeInRad));
     }
 
-    private static boolean isInRange(Position userPosition, Position vehiclePosition, double range) {
+    public static boolean isInRange(Position userPosition, Position vehiclePosition, double range) {
         return getDistanceInKm(userPosition, vehiclePosition) < range;
-    }
-
-    public static boolean isInRange(Position userPosition, Position vehiclePosition) {
-        return isInRange(userPosition, vehiclePosition, RANGE);
-    }
-
-    public static boolean isInSubstitutionRange(Position userPosition, Position vehiclePosition) {
-        return isInRange(userPosition, vehiclePosition, SUBSTITUTION_RANGE);
     }
 
     private static double toRadiants(double coordinate) {

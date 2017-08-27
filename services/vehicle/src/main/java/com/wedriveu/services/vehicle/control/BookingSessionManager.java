@@ -14,6 +14,12 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 /**
+ * Control {@linkplain AbstractVerticle} that manages a {@linkplain Vehicle} booking session,
+ * so it sends messages to confirm the vehicle {@linkplain BookVehicleResponse} and sends to the vehicle
+ * the {@linkplain DriveCommand} through the proper boundaries, that are
+ * {@linkplain com.wedriveu.services.vehicle.boundary.booking.BookPublisherVerticle} and
+ * {@linkplain com.wedriveu.services.vehicle.boundary.booking.StartDrivingPublisherVerticle}.
+ *
  * @author Nicola Lasagni on 26/08/2017.
  */
 public class BookingSessionManager extends AbstractVerticle {
@@ -23,7 +29,7 @@ public class BookingSessionManager extends AbstractVerticle {
     private BookVehicleResponse vehicleResponse;
     private EventBus eventBus;
 
-    public BookingSessionManager(String id) {
+    BookingSessionManager(String id) {
         this.id = id;
     }
 
@@ -80,4 +86,5 @@ public class BookingSessionManager extends AbstractVerticle {
         vehicleResponse.setDriveTimeToUser(timeMillisUser);
         vehicleResponse.setDriveTimeToDestination(timeMillisDestination);
     }
+
 }

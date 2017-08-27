@@ -13,6 +13,9 @@ import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_Q
 
 
 /**
+ * Boundary {@linkplain VerticleConsumer} that receives
+ * {@linkplain Constants.RabbitMQ.RoutingKey#CHANGE_BOOKING_RESPONSE} messages and redirect them to the proper control.
+ *
  * @author Nicola Lasagni
  */
 public class ChangeBookingConsumerVerticle extends VerticleConsumer {

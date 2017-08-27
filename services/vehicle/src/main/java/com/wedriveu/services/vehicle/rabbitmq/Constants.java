@@ -16,6 +16,9 @@ import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterConsumerVe
  */
 public interface Constants {
 
+    String NO_ELIGIBLE_VEHICLE = "No vehicles nearby, please try again later or change your address";
+    String NO_ELIGIBLE_VEHICLE_FOR_SUSTITUTION = "No vehicle for substitution, please contact the assistance service.";
+
     String REGISTER_RESULT = "vehicleRegisterResult";
 
     //Vehicle Service Queues

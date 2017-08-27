@@ -8,6 +8,7 @@ import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.shared.util.PositionUtils;
 import io.vertx.core.AbstractVerticle;
@@ -24,7 +25,6 @@ import java.util.Optional;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.REGISTER_RESULT;
 import static com.wedriveu.shared.util.Constants.VEHICLE;
-import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
 import static com.wedriveu.shared.util.Constants.Vehicle.STATUS_AVAILABLE;
 
 
@@ -50,7 +50,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         );
         eventBus.consumer(Messages.BookingControl.GET_VEHICLE_BOOKING, this::getVehicleForBooking);
         eventBus.consumer(Messages.VehicleRegister.REGISTER_VEHICLE_REQUEST, this::addVehicle);
-        eventBus.consumer(Messages.VehicleStore.CLEAR_VEHICLES, msg -> clearVehicles());
+        eventBus.consumer(Messages.VehicleStore.CLEAR_VEHICLES, msg -> deleteAllVehicles());
         eventBus.consumer(Messages.Analytics.GET_VEHICLES_REQUEST, this::getVehicleList);
         eventBus.consumer(Messages.VehicleStore.UPDATE_VEHICLE_STATUS, msg -> {
             UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), UpdateToService.class);
@@ -63,7 +63,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         eventBus.consumer(Messages.VehicleSubstitution.GET_AVAILABLE_VEHICLES_FOR_SUBSTITUTION, msg -> {
             SubstitutionRequest request =
                     VertxJsonMapper.mapTo((JsonObject) msg.body(), SubstitutionRequest.class);
-            findSubstitutionVehicle(request);
+            getSubstitutionAvailableVehicles(request);
         });
         createJsonFile();
     }
@@ -80,66 +80,46 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         }
     }
 
-    @Override
-    public void addVehicle(Message message) {
+    private void addVehicle(Message message) {
         JsonObject responseJson = new JsonObject();
         JsonObject vehicleRequesterJson = (JsonObject) message.body();
         Vehicle vehicleRequester = vehicleRequesterJson.mapTo(Vehicle.class);
-        if (vehicleRequester == null || vehicleRequester.getLicensePlate() == null) {
-            responseJson.put(REGISTER_RESULT, false);
+        boolean success = addVehicle(vehicleRequester);
+        responseJson.put(REGISTER_RESULT, success);
+        responseJson.put(Messages.Trip.LICENSE_PLATE,
+                vehicleRequesterJson.getValue(Messages.Trip.LICENSE_PLATE));
+        eventBus.send(Messages.VehicleStore.REGISTER_VEHICLE_COMPLETED, responseJson);
+    }
+
+    @Override
+    public boolean addVehicle(Vehicle vehicle) {
+        if (vehicle == null || vehicle.getLicensePlate() == null) {
+            return false;
         } else {
             List<Vehicle> vehicles = getVehicleList();
-            responseJson.put(LICENSE_PLATE, vehicleRequesterJson.getValue(LICENSE_PLATE));
-            Optional existingVehicle = vehicles.stream().filter(x -> x.equals(vehicleRequester)).findFirst();
-            if (existingVehicle.isPresent()) {
-                responseJson.put(REGISTER_RESULT, false);
-            } else {
-                responseJson.put(REGISTER_RESULT, true);
-                vehicles.add(vehicleRequester);
+            Optional existingVehicle = vehicles.stream().filter(x -> x.equals(vehicle)).findFirst();
+            if (!existingVehicle.isPresent()) {
+                vehicles.add(vehicle);
                 writeJsonVehicleFile((ArrayList<Vehicle>) vehicles);
             }
+            return !existingVehicle.isPresent();
         }
-        eventBus.send(Messages.VehicleStore.REGISTER_VEHICLE_COMPLETED, responseJson);
     }
 
     @Override
     public Vehicle getVehicle(String licensePlate) {
         List<Vehicle> vehicles = getVehicleList();
-        return getRequestedVehicle(vehicles, licensePlate);
-    }
-
-    @Override
-    public void clearVehicles() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(file, new ArrayList<Vehicle>());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        eventBus.send(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, null);
-    }
-
-    @Override
-    public void getAllAvailableVehiclesInRange(Message message) {
-        UserRequest userData = ((JsonObject) message.body()).mapTo(UserRequest.class);
-        Position userPosition = userData.getUserPosition();
-        List<Vehicle> vehicles = getVehicleList();
-        List<Vehicle> availableVehicles = new ArrayList<>(vehicles.size());
         for (Vehicle vehicle : vehicles) {
-            Position vehiclePosition = vehicle.getPosition();
-            if (STATUS_AVAILABLE.equals(vehicle.getStatus()) &&
-                    vehiclePosition != null &&
-                    PositionUtils.isInRange(userPosition, vehiclePosition)) {
-                availableVehicles.add(vehicle);
+            if (vehicle.getLicensePlate().equals(licensePlate)) {
+                return vehicle;
             }
         }
-        userData.setVehicleList(availableVehicles);
-        eventBus.send(Messages.VehicleStore.AVAILABLE_COMPLETED, JsonObject.mapFrom(userData));
+        return null;
     }
 
     private void getVehicleForNearest(Message message, boolean forSubstitution) {
         JsonObject vehicleData = (JsonObject) message.body();
-        String carLicencePlate = vehicleData.getString(LICENSE_PLATE);
+        String carLicencePlate = vehicleData.getString(Messages.Trip.LICENSE_PLATE);
         Vehicle requestedVehicle = getVehicle(carLicencePlate);
         vehicleData.put(VEHICLE, JsonObject.mapFrom(requestedVehicle).toString());
         String address = Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST;
@@ -152,7 +132,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private void getVehicleForBooking(Message message) {
         JsonObject vehicleData = (JsonObject) message.body();
         String senderId = vehicleData.getString(Messages.SENDER_ID);
-        String carLicencePlate = vehicleData.getString(LICENSE_PLATE);
+        String carLicencePlate = vehicleData.getString(Messages.Trip.LICENSE_PLATE);
         Vehicle requestedVehicle = getVehicle(carLicencePlate);
         eventBus.send(String.format(Messages.VehicleStore.GET_VEHICLE_COMPLETED_BOOKING, senderId),
                 VertxJsonMapper.mapFrom(requestedVehicle));
@@ -161,24 +141,41 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private void getVehicleForSubstitution(Message message) {
         JsonObject vehicleData = (JsonObject) message.body();
         String senderId = vehicleData.getString(Messages.SENDER_ID);
-        String carLicencePlate = vehicleData.getString(LICENSE_PLATE);
+        String carLicencePlate = vehicleData.getString(Messages.Trip.LICENSE_PLATE);
         Vehicle requestedVehicle = getVehicle(carLicencePlate);
         eventBus.send(String.format(Messages.VehicleStore.GET_VEHICLE_FOR_SUBSTITUTION_COMPLETED, senderId),
                 requestedVehicle == null ? null : VertxJsonMapper.mapFrom(requestedVehicle));
     }
 
-    private void findSubstitutionVehicle(SubstitutionRequest request) {
-        Position sourcePosition = request.getSubstitutionCheck().getSourcePosition();
+
+    @Override
+    public List<Vehicle> getAllAvailableVehiclesInRange(Position sourcePosition, double range) {
         List<Vehicle> vehicles = getVehicleList();
-        List<Vehicle> availableVehicles = new ArrayList<>(vehicles.size());
+        List<Vehicle> availableVehicles = new ArrayList<>();
         for (Vehicle vehicle : vehicles) {
             Position vehiclePosition = vehicle.getPosition();
             if (STATUS_AVAILABLE.equals(vehicle.getStatus()) &&
                     vehiclePosition != null &&
-                    PositionUtils.isInSubstitutionRange(sourcePosition, vehiclePosition)) {
+                    PositionUtils.isInRange(sourcePosition, vehiclePosition, range)) {
                 availableVehicles.add(vehicle);
             }
         }
+        return availableVehicles;
+    }
+
+    private void getAllAvailableVehiclesInRange(Message message) {
+        UserRequest userData = ((JsonObject) message.body()).mapTo(UserRequest.class);
+        Position userPosition = userData.getUserPosition();
+        List<Vehicle> availableVehicles =
+                getAllAvailableVehiclesInRange(userPosition, Constants.Position.RANGE);
+        userData.setVehicleList(availableVehicles);
+        eventBus.send(Messages.VehicleStore.AVAILABLE_COMPLETED, JsonObject.mapFrom(userData));
+    }
+
+    private void getSubstitutionAvailableVehicles(SubstitutionRequest request) {
+        Position sourcePosition = request.getSubstitutionCheck().getSourcePosition();
+        List<Vehicle> availableVehicles =
+                getAllAvailableVehiclesInRange(sourcePosition, Constants.Position.SUBSTITUTION_RANGE);
         SubstitutionRequest newRequest =
                 new SubstitutionRequest(request.getSubstitutionCheck(),
                         request.getSubstitutionVehicle(),
@@ -186,6 +183,17 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
                         availableVehicles);
         eventBus.send(Messages.VehicleStore.GET_AVAILABLE_VEHICLES_FOR_SUBSTITUTION_COMPLETED,
                 JsonObject.mapFrom(newRequest));
+    }
+
+    @Override
+    public void deleteAllVehicles() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(file, new ArrayList<Vehicle>());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        eventBus.send(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, null);
     }
 
     @Override
@@ -199,18 +207,17 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     }
 
     private void getVehicleList(Message message) {
-        ObjectMapper mapper = new ObjectMapper();
-        List<Vehicle> vehicles = readFromVehiclesDb(mapper);
-        if (vehicles == null) {
-            vehicles = new ArrayList<>();
-        }
+        List<Vehicle> vehicles = getVehicleList();
         AnalyticsVehicleList vehicleList = new AnalyticsVehicleList(vehicles);
         eventBus.send(Messages.VehicleStore.GET_VEHICLE_LIST_COMPLETED,
                 VertxJsonMapper.mapInBodyFrom(vehicleList));
     }
 
     @Override
-    public void updateVehicleInVehicleList(String carLicencePlate, String status, Position position, Date lastUpdate) {
+    public void updateVehicleInVehicleList(String carLicencePlate,
+                                           String status,
+                                           Position position,
+                                           Date lastUpdate) {
         ObjectMapper mapper = new ObjectMapper();
         List<Vehicle> vehicles = getVehicleList();
         for (Vehicle vehicle : vehicles) {
@@ -227,56 +234,9 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         checkDuplicatesAndWriteOnVehiclesDb(vehicles, mapper);
     }
 
-    @Override
-    public void deleteVehicleFromDb(String carLicencePlate) {
-        ObjectMapper mapper = new ObjectMapper();
-        List<Vehicle> vehicles = getVehicleList();
-        for (Vehicle vehicle : vehicles) {
-            if (vehicle.getLicensePlate().equals(carLicencePlate)) {
-                vehicles.remove(vehicle);
-                break;
-            }
-        }
-        checkDuplicatesAndWriteOnVehiclesDb(vehicles, mapper);
-    }
-
-    @Override
-    public void replaceVehicleInDb(String carLicencePlateToDelete, Vehicle replacementVehicle) {
-        ObjectMapper mapper = new ObjectMapper();
-        List<Vehicle> vehicles = getVehicleList();
-        for (Vehicle vehicle : vehicles) {
-            if (vehicle.getLicensePlate().equals(carLicencePlateToDelete)) {
-                vehicles.remove(vehicle);
-                vehicles.add(replacementVehicle);
-                break;
-            }
-        }
-        checkDuplicatesAndWriteOnVehiclesDb(vehicles, mapper);
-    }
-
-    @Override
-    public boolean theVehicleIsInTheDb(String carLicensePlate) {
-        List<Vehicle> vehicles = getVehicleList();
-        for (Vehicle vehicle : vehicles) {
-            if (vehicle.getLicensePlate().equals(carLicensePlate)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void writeJsonVehicleFile(ArrayList<Vehicle> vehicleListToJSon) {
         ObjectMapper mapper = new ObjectMapper();
         checkDuplicatesAndWriteOnVehiclesDb(vehicleListToJSon, mapper);
-    }
-
-    private Vehicle getRequestedVehicle(List<Vehicle> vehicles, String carLicencePlate) {
-        for (Vehicle vehicle : vehicles) {
-            if (vehicle.getLicensePlate().equals(carLicencePlate)) {
-                return vehicle;
-            }
-        }
-        return null;
     }
 
     private List<Vehicle> readFromVehiclesDb(ObjectMapper mapper) {

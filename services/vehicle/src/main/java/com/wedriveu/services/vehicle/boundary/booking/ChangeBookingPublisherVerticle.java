@@ -11,6 +11,9 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
 /**
+ *  * Boundary {@linkplain VerticlePublisher} that sends
+ * {@linkplain Constants.RabbitMQ.RoutingKey#CHANGE_BOOKING_REQUEST} messages to the Booking Service.
+ *
  * @author Nicola Lasagni on 26/08/2017.
  */
 public class ChangeBookingPublisherVerticle extends VerticlePublisher {

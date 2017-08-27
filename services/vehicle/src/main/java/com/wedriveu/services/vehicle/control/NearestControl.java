@@ -21,8 +21,6 @@ import static com.wedriveu.services.vehicle.rabbitmq.Messages.VehicleStore.GET_V
 import static com.wedriveu.services.vehicle.rabbitmq.Messages.VehicleSubstitution.FIND_NEAREST_VEHICLE_FOR_SUBSTITUTION;
 import static com.wedriveu.services.vehicle.rabbitmq.Messages.VehicleSubstitution.SEND_SUBSTITUTION_VEHICLE_TO_USER;
 import static com.wedriveu.shared.util.Constants.*;
-import static com.wedriveu.shared.util.Constants.Vehicle.NO_ELIGIBLE_VEHICLE;
-import static com.wedriveu.shared.util.Constants.Vehicle.NO_ELIGIBLE_VEHICLE_FOR_SUSTITUTION;
 
 
 /**
@@ -58,11 +56,13 @@ public class NearestControl extends AbstractVerticle {
     }
 
     private void handleNoVehicleForSubstitution(Message message) {
-        handleNoVehicle(message, SEND_SUBSTITUTION_VEHICLE_TO_USER, NO_ELIGIBLE_VEHICLE_FOR_SUSTITUTION);
+        handleNoVehicle(message, SEND_SUBSTITUTION_VEHICLE_TO_USER,
+                com.wedriveu.services.vehicle.rabbitmq.Constants.NO_ELIGIBLE_VEHICLE_FOR_SUSTITUTION);
     }
 
     private void handleNoVehicle(Message message) {
-        handleNoVehicle(message, GET_VEHICLE_COMPLETED_NEAREST, NO_ELIGIBLE_VEHICLE);
+        handleNoVehicle(message, GET_VEHICLE_COMPLETED_NEAREST,
+                com.wedriveu.services.vehicle.rabbitmq.Constants.NO_ELIGIBLE_VEHICLE);
     }
 
     private void handleNoVehicle(Message message, String address, String noVehicleMessage) {

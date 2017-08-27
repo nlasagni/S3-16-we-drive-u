@@ -113,4 +113,12 @@ public interface Messages {
     interface UpdateControl {
         String UPDATE_VEHICLE_STATUS = "vehicle.control.update.vehicle.status";
     }
+
+    interface Trip {
+        String DISTANCE_TO_USER = "distanceToUser";
+        String TOTAL_DISTANCE = "totalDistance";
+        String LICENSE_PLATE = "licensePlate";
+        String SPEED = "speed";
+    }
+
 }

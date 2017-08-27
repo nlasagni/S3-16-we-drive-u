@@ -10,6 +10,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 /**
+ *
  * @author Michele Donati on 19/08/2017.
  * @author Nicola Lasagni
  */
