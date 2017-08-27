@@ -23,19 +23,14 @@ public interface VehicleStore {
      */
     void addVehicle(Message vehicle);
 
+    /**
+     * Gets a vehicle from the store.
+     * @param licensePlate The vehicle licence plate
+     * @return The vehicle if found
+     */
+    Vehicle getVehicle(String licensePlate);
 
     void getAllAvailableVehiclesInRange(Message message);
-
-    /**
-     * @param message Identifies the <em>Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.
-     */
-    void getVehicleForNearest(Message message);
-
-    /**
-     * @param message Identifies the <em>com.wedriveu.services.shared.entity.Vehicle</em>'s <em>carLicencePlate</em>
-     *                that must be retreived.
-     */
-    void getVehicleForBooking(Message message);
 
     /**
      * @return Return the entire list of vehicles in the db.
