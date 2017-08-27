@@ -2,7 +2,6 @@ package com.wedriveu.vehicle.boundary;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
 import com.wedriveu.shared.util.Constants;
@@ -118,13 +117,13 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
             JsonObject responseJson = new JsonObject();
             responseJson.put(Constants.EventBus.BODY, responseString);
             rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.VEHICLE,
-                    String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_RESPONSE, vehicle.getVehicle().plate()),
+                    String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_RESPONSE, vehicle.getUsername()),
                     responseJson,
                     onPublish -> {
                         if (!onPublish.succeeded()) {
                             Log.error(TAG, SEND_ERROR, onPublish.cause());
                         }
-                        vehicle.getVehicle().setState(VehicleConstants$.MODULE$.stateBooked());
+                        vehicle.getVehicle().setState(Constants.Vehicle.STATUS_BOOKED);
                         eventBus.send(
                                 String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
                                 new JsonObject());
@@ -141,7 +140,7 @@ public class VehicleVerticleBookImpl extends AbstractVerticle implements Vehicle
         }
         vehicle.setUsername(request.getUsername());
         BookVehicleResponse response = new BookVehicleResponse();
-        response.setBooked(vehicle.getVehicle().getState().equals(Vehicle.STATUS_AVAILABLE));
+        response.setBooked(vehicle.getVehicle().getState().equals(Constants.Vehicle.STATUS_AVAILABLE));
         response.setSpeed(vehicle.getVehicle().speed());
         return response;
     }

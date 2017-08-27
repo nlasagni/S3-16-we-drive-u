@@ -2,8 +2,7 @@ package com.wedriveu.vehicle.entity
 
 import java.util.concurrent.locks.{Condition, ReentrantLock}
 
-import com.wedriveu.shared.util.Position
-import com.wedriveu.vehicle.shared.VehicleConstants
+import com.wedriveu.shared.util.{Constants, Position}
 
 import scala.beans.BeanProperty
 
@@ -45,25 +44,19 @@ class SelfDrivingVehicle(var imageUrl: String,
 
   def checkVehicleIsStolenAndSetBroken(): Boolean = {
     mutex.lock()
-    if (state.equals(VehicleConstants.stateStolen)) {
-      releaseLock()
-      false
-    }
-    else {
-      state = VehicleConstants.stateBroken
-      releaseLock()
-      true
-    }
+    state = Constants.Vehicle.STATUS_BROKEN_STOLEN
+    releaseLock()
+    true
   }
 
   def checkVehicleIsBrokenOrStolenAndSetRecharging(): Boolean = {
     mutex.lock()
-    if (state.equals(VehicleConstants.stateBroken) || state.equals(VehicleConstants.stateStolen)) {
+    if (state.equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)) {
       releaseLock()
       false
     }
     else {
-      state = VehicleConstants.stateRecharging
+      state = Constants.Vehicle.STATUS_RECHARGING
       releaseLock()
       true
     }

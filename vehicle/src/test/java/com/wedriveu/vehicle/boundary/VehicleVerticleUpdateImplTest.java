@@ -1,7 +1,6 @@
 package com.wedriveu.vehicle.boundary;
 
 
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
@@ -40,7 +39,7 @@ public class VehicleVerticleUpdateImplTest {
     private String requestId;
     private VehicleControl vehicleControl;
     private String license = "VEHICLE5";
-    private String state = Vehicle.STATUS_AVAILABLE;
+    private String state = Constants.Vehicle.STATUS_AVAILABLE;
     private double battery = 100.0;
     private double speed = 50.0;
     private VehicleStopView stopUi;

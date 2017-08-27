@@ -114,6 +114,7 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
 
             if (distance <= VehicleConstants.ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS) {
               vehicleControl.setUserOnBoard(false)
+              vehicleControl.setUsername(null)
               eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_NOTIFY, vehicleControl.getVehicle().plate),
                 new JsonObject())
             }
@@ -140,17 +141,8 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
   }
 
   private def checkVehicleIsBrokenOrStolen(): Boolean = {
-    if (selfDrivingVehicle.getState().equals(VehicleConstants.stateStolen)) {
-      stopUi.writeMessageLog(VehicleConstants.stateStolenLog
-          + selfDrivingVehicle.position.getLatitude
-          + VehicleConstants.commaLog
-          + selfDrivingVehicle.position.getLongitude)
-      eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
-        new JsonObject)
-      true
-    }
-    else if (selfDrivingVehicle.getState().equals(VehicleConstants.stateBroken)) {
-      stopUi.writeMessageLog(VehicleConstants.stateBrokenLog
+    if (selfDrivingVehicle.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)) {
+      stopUi.writeMessageLog(VehicleConstants.stateBrokenStolenLog
           + selfDrivingVehicle.position.getLatitude
           + VehicleConstants.commaLog
           + selfDrivingVehicle.position.getLongitude)
@@ -259,7 +251,7 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
   }
 
   override def setVehicleStolen(): Unit = {
-    selfDrivingVehicle.setState(VehicleConstants.stateStolen)
+    selfDrivingVehicle.setState(Constants.Vehicle.STATUS_BROKEN_STOLEN)
     eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
       new JsonObject())
     stopUi.writeMessageLog(VehicleConstants.vehicleSetToStolenLog)
