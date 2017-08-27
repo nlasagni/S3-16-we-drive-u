@@ -113,7 +113,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     private void startFinderConsumer(Future<Void> future) throws IOException, TimeoutException {
         startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE,
                 String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_RESPONSE, username),
-                EVENT_BUS_FINDER_ADDRESS,
+                EVENT_BUS_FINDER_ADDRESS + id,
                 future);
     }
 
