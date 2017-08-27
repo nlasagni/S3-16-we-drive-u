@@ -206,6 +206,11 @@ public interface Constants {
              */
             String VEHICLE_RESPONSE_ENTER_USER = "vehicle.response.enter.user.%s";
             /**
+             * The routing key used by the vehicle service to communicate the substitution of
+             * a broken vehicle.
+             */
+            String VEHICLE_SUBSTITUTION = "vehicle.event.substitution.%s";
+            /**
              * The routing key used to communicate to the booking-service a create booking request.
              */
             String CREATE_BOOKING_REQUEST = "booking.request.create";
@@ -266,14 +271,42 @@ public interface Constants {
          * The predefined range of kilometers used to choose a vehicle nearby a specific user.
          */
         double RANGE = 20;
+        /**
+         * The predefined range of kilometers used to choose a substitution vehicle nearby a specific user.
+         */
+        double SUBSTITUTION_RANGE = 50;
 
         double EARTH_RADIUS = 6372.795477598;
     }
 
 
     interface Vehicle {
+
+        String NO_ELIGIBLE_VEHICLE = "No vehicles nearby, please try again later or change your address";
+        String NO_ELIGIBLE_VEHICLE_FOR_SUSTITUTION = "No vehicle for substitution, please contact the assistance service.";
+
         String LICENSE_PLATE = "licensePlate";
         String SPEED = "speed";
+        /**
+         * This status means that the {@linkplain Vehicle} can be booked by a user.
+         */
+        String STATUS_AVAILABLE = "available";
+        /**
+         * This status means that the {@linkplain Vehicle} has been booked by a user.
+         */
+        String STATUS_BOOKED = "booked";
+        /**
+         * This status means that the {@linkplain Vehicle} is going to recharge itself.
+         */
+        String STATUS_RECHARGING = "recharging";
+        /**
+         * This status means that the {@linkplain Vehicle} is broken or stolen.
+         */
+        String STATUS_BROKEN_STOLEN = "broken_stolen";
+        /**
+         * This status means that the {@linkplain Vehicle} has network issues, so it will come back to the headquarted.
+         */
+        String STATUS_NETWORK_ISSUES = "net_issues";
     }
 
     interface Trip {
