@@ -3,7 +3,6 @@ package com.wedriveu.mobile.login.view;
 /**
  * Models the login View of the Android App, it should contain the Fragment with the Login UI components
  * @author Marco Baldassarri
- * @since 12/07/2017
  */
 public interface LoginView {
 

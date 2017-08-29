@@ -4,10 +4,9 @@ import com.google.android.gms.location.places.Place;
 
 /**
  *
- * Describes the view methods of the Scuedling fragment
+ * Describes the view methods of the Scheduling fragment
  *
  * @author Marco Baldassarri
- * @since 20/07/2017
  */
 public interface SchedulingView {
 

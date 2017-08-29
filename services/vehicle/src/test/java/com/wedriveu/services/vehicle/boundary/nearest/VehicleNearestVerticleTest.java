@@ -1,11 +1,11 @@
 package com.wedriveu.services.vehicle.boundary.nearest;
 
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.vehicle.app.BootVerticle;
-import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.nearest.entity.UserDataFactoryA;
+import com.wedriveu.services.vehicle.boundary.util.BaseInteractionClient;
+import com.wedriveu.services.vehicle.entity.UserRequest;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import com.wedriveu.services.vehicle.rabbitmq.UserRequest;
+import com.wedriveu.shared.rabbitmq.message.VehicleResponse;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -32,9 +32,10 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
     private static final String EVENT_BUS_ADDRESS = VehicleNearestVerticleTest.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.nearest";
     private static final int ASYNC_COUNT = 3;
+
+    private Vertx vertx;
     private BootVerticle bootVerticle;
     private Async async;
-    private Vertx vertx;
 
     public VehicleNearestVerticleTest() {
         super(QUEUE, VEHICLE, VEHICLE_RESPONSE, EVENT_BUS_ADDRESS);
@@ -72,8 +73,8 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
 
     @Override
     protected void checkResponse(TestContext context, JsonObject responseJson) {
-        Vehicle responseVehicle = responseJson.mapTo(Vehicle.class);
-        assertThat(responseVehicle, instanceOf(Vehicle.class));
+        VehicleResponse responseVehicle = responseJson.mapTo(VehicleResponse.class);
+        assertThat(responseVehicle, instanceOf(VehicleResponse.class));
     }
 
     private JsonObject getJson() {

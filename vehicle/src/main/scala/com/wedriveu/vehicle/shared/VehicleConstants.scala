@@ -7,11 +7,6 @@ package com.wedriveu.vehicle.shared
 /** This trait is useful to access vehicle's constants and RabbitMq infrastructure's constants. */
 
 object VehicleConstants {
-  final val stateBroken: String = "broken"
-  final val stateRecharging: String = "recharging"
-  final val stateAvailable: String = "available"
-  final val stateBooked: String = "booked"
-  final val stateStolen: String = "stolen"
   final val earthRadiusInKm: Double = 6372.795477598
   final val maxBatteryValue: Double = 100.0
   final val MAXIMUM_DISTANCE_TO_RECHARGE = 10
@@ -34,8 +29,7 @@ object VehicleConstants {
   val timeInSecondsLog: String = "Time in seconds is:"
   val newPositionLog: String = "New Position = "
   val commaLog: String = " , "
-  val stateBrokenLog: String = "Vehicle is broken. His position is: "
-  val stateStolenLog: String = "Vehicle is stolen. His position is: "
+  val stateBrokenStolenLog: String = "Vehicle is broken or has been stolen. Its position is: "
   val needRechargingLog: String = "Need recharging, next recharging station is at coordinates: "
   val arrivedToRechargeLog: String = "Arrived to recharging station, proceed with the recharge."
   val startRechargeProcessLog: String = "Started the recharge process, 10 seconds until finish..."

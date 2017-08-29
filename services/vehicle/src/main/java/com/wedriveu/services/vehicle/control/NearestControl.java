@@ -1,9 +1,10 @@
 package com.wedriveu.services.vehicle.control;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.shared.message.VehicleResponseCanDrive;
 import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
+import com.wedriveu.services.vehicle.entity.VehicleResponseCanDrive;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AbstractVerticle;
@@ -16,10 +17,10 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.wedriveu.services.shared.model.Vehicle.NO_ELIGIBLE_VEHICLE_RESPONSE;
+import static com.wedriveu.services.vehicle.rabbitmq.Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST;
+import static com.wedriveu.services.vehicle.rabbitmq.Messages.VehicleSubstitution.FIND_NEAREST_VEHICLE_FOR_SUBSTITUTION;
+import static com.wedriveu.services.vehicle.rabbitmq.Messages.VehicleSubstitution.SEND_SUBSTITUTION_VEHICLE_TO_USER;
 import static com.wedriveu.shared.util.Constants.*;
-import static com.wedriveu.shared.util.Constants.Vehicle.LICENSE_PLATE;
-import static com.wedriveu.shared.util.Constants.Vehicle.SPEED;
 
 
 /**
@@ -28,20 +29,24 @@ import static com.wedriveu.shared.util.Constants.Vehicle.SPEED;
  * by deploying and interacting with other Verticles.
  *
  * @author Marco Baldassarri on 02/08/2017.
+ * @author Nicola Lasagni
  */
 public class NearestControl extends AbstractVerticle {
 
     private EventBus eventBus;
-    private static final String AVAILABLE_COMPLETED_FOR_SUBSTITUTION = "store.available.completed.substitution";
-    private static final String NEAREST_VEHICLE_FOR_SUBSTITUTION = "nearest.vehicle.for.substitution";
 
     @Override
     public void start() throws Exception {
         this.eventBus = vertx.eventBus();
         eventBus.consumer(Messages.VehicleStore.AVAILABLE_COMPLETED, this::availableVehiclesCompleted);
         eventBus.consumer(Messages.VehicleFinder.VEHICLE_RESPONSE, this::handleVehicleResponses);
+        eventBus.consumer(Messages.VehicleSubstitution.FIND_NEAREST_VEHICLE_FOR_SUBSTITUTION_COMPLETED,
+                this::handleVehicleResponsesForSubstitution);
         eventBus.consumer(Messages.VehicleFinder.NO_VEHICLE, this::handleNoVehicle);
-        eventBus.consumer(AVAILABLE_COMPLETED_FOR_SUBSTITUTION, this::availableVehiclesCompletedForSubstitution);
+        eventBus.consumer(Messages.VehicleSubstitution.NO_VEHICLE_FOR_SUBSTITUTION,
+                this::handleNoVehicleForSubstitution);
+        eventBus.consumer(Messages.VehicleStore.GET_AVAILABLE_VEHICLES_FOR_SUBSTITUTION_COMPLETED,
+                this::availableVehiclesCompletedForSubstitution);
     }
 
     private void undeployFinder(String deploymentId) {
@@ -50,46 +55,68 @@ public class NearestControl extends AbstractVerticle {
         }
     }
 
+    private void handleNoVehicleForSubstitution(Message message) {
+        handleNoVehicle(message, SEND_SUBSTITUTION_VEHICLE_TO_USER,
+                com.wedriveu.services.vehicle.rabbitmq.Constants.NO_ELIGIBLE_VEHICLE_FOR_SUSTITUTION);
+    }
+
     private void handleNoVehicle(Message message) {
+        handleNoVehicle(message, GET_VEHICLE_COMPLETED_NEAREST,
+                com.wedriveu.services.vehicle.rabbitmq.Constants.NO_ELIGIBLE_VEHICLE);
+    }
+
+    private void handleNoVehicle(Message message, String address, String noVehicleMessage) {
         JsonObject response = (JsonObject) message.body();
         String deploymentId = response.getString(Constants.EventBus.DEPLOYMENT_ID);
         undeployFinder(deploymentId);
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(USERNAME, response.getString(USERNAME));
         Vehicle noEligibleVehicle = new Vehicle();
-        noEligibleVehicle.setNotEligibleVehicleFound(NO_ELIGIBLE_VEHICLE_RESPONSE);
+        noEligibleVehicle.setNotEligibleVehicleFound(noVehicleMessage);
         jsonObject.put(VEHICLE, JsonObject.mapFrom(noEligibleVehicle).toString());
-        vertx.eventBus().send(Messages.VehicleStore.GET_VEHICLE_COMPLETED_NEAREST, jsonObject);
+        vertx.eventBus().send(address, jsonObject);
+    }
+
+    private void handleVehicleResponsesForSubstitution(Message message) {
+        handleVehicleResponses(message, true);
     }
 
     private void handleVehicleResponses(Message message) {
+        handleVehicleResponses(message, false);
+    }
+
+    private void handleVehicleResponses(Message message,
+                                        boolean forSubstitution) {
         JsonObject response = (JsonObject) message.body();
         String deploymentId = response.getString(Constants.EventBus.DEPLOYMENT_ID);
         undeployFinder(deploymentId);
         JsonArray responseListJson = response.getJsonArray(Messages.VehicleFinder.VEHICLE_RESPONSE_RESULT);
-        handleEligibleVehicles(responseListJson);
+        handleEligibleVehicles(responseListJson, forSubstitution);
     }
 
-    private void handleEligibleVehicles(JsonArray responseListJson) {
+    private void handleEligibleVehicles(JsonArray responseListJson, boolean forSubstitution) {
         List<VehicleResponseCanDrive> responseList = new ArrayList<>(responseListJson.size());
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            VehicleResponseCanDrive[] vehicleResponsCanDrives =
+            VehicleResponseCanDrive[] vehicleResponses =
                     objectMapper.readValue(responseListJson.toString(), VehicleResponseCanDrive[].class);
-            responseList = Arrays.asList(vehicleResponsCanDrives);
+            responseList = Arrays.asList(vehicleResponses);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        sendReplyToUser(getEligibleVehicles(responseList));
+        sendReplyToUser(getEligibleVehicles(responseList), forSubstitution);
     }
 
-    private void sendReplyToUser(List<VehicleResponseCanDrive> eligibleVehicles) {
-
-        vertx.eventBus().send(Messages.NearestControl.GET_VEHICLE_NEAREST, getBestVehicle(eligibleVehicles));
+    private void sendReplyToUser(List<VehicleResponseCanDrive> eligibleVehicles,boolean forSubstitution) {
+        String address = Messages.NearestControl.GET_VEHICLE_NEAREST;
+        if (forSubstitution) {
+            address = Messages.VehicleSubstitution.GET_NEAREST_VEHICLE_FOR_SUBSTITUTION;
+        }
+        vertx.eventBus().send(address, getBestVehicle(eligibleVehicles));
     }
 
     private List<VehicleResponseCanDrive> getEligibleVehicles(List<VehicleResponseCanDrive> responseList) {
-        return responseList.stream().filter(x -> x.isEligible()).collect(Collectors.toList());
+        return responseList.stream().filter(VehicleResponseCanDrive::isEligible).collect(Collectors.toList());
     }
 
     private JsonObject getBestVehicle(List<VehicleResponseCanDrive> responseList) {
@@ -97,31 +124,24 @@ public class NearestControl extends AbstractVerticle {
                 v.getDistanceToUser() / v.getVehicleSpeed()
         ));
         VehicleResponseCanDrive chosen = responseList.get(ZERO);
-        JsonObject bestVehicleJson = new JsonObject();
-        bestVehicleJson.put(USERNAME, chosen.getUsername());
-        bestVehicleJson.put(LICENSE_PLATE, chosen.getLicencePlate());
-        bestVehicleJson.put(SPEED, chosen.getVehicleSpeed());
-        bestVehicleJson.put(Trip.DISTANCE_TO_USER, chosen.getDistanceToUser());
-        bestVehicleJson.put(Trip.TOTAL_DISTANCE, chosen.getTotalDistance());
-        return bestVehicleJson;
+        return VertxJsonMapper.mapFrom(chosen);
     }
 
     private void availableVehiclesCompleted(Message message) {
-        UUID uniqueKey = UUID.randomUUID();
         JsonObject userData = (JsonObject) message.body();
-        vertx.deployVerticle(new VehicleFinderVerticle(uniqueKey.toString()), completed -> {
-            if (completed.succeeded()) {
-                this.eventBus.send(Messages.NearestControl.DATA_TO_VEHICLE, userData);
-            }
-        });
+        deployFinderVerticle(Messages.NearestControl.DATA_TO_VEHICLE, userData);
     }
 
     private void availableVehiclesCompletedForSubstitution(Message message) {
-        UUID uniqueKey = UUID.randomUUID();
         JsonObject userData = (JsonObject) message.body();
-        vertx.deployVerticle(new VehicleFinderVerticle(uniqueKey.toString()), completed -> {
-            if (completed.succeeded()) {
-                this.eventBus.send(NEAREST_VEHICLE_FOR_SUBSTITUTION, userData);
+        deployFinderVerticle(FIND_NEAREST_VEHICLE_FOR_SUBSTITUTION, userData);
+    }
+
+    private void deployFinderVerticle(String address, JsonObject data) {
+        String id = UUID.randomUUID().toString();
+        vertx.deployVerticle(new VehicleFinderVerticle(id), handler -> {
+            if (handler.succeeded()) {
+                this.eventBus.send(String.format(address, id), data);
             }
         });
     }

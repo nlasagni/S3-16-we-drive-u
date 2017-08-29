@@ -32,7 +32,6 @@ import static com.wedriveu.mobile.util.Constants.NO_RESPONSE_DATA_ERROR;
  *
  * @author Marco Baldassarri
  * @author Nicola Lasagni
- * @since 18 /07/2017
  */
 public class LoginServiceImpl implements LoginService {
 

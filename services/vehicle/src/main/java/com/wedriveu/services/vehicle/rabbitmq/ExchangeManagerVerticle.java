@@ -1,6 +1,5 @@
-package com.wedriveu.services.shared.rabbitmq;
+package com.wedriveu.services.vehicle.rabbitmq;
 
-import com.wedriveu.services.shared.message.SharedMessages;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
@@ -13,7 +12,6 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.Type.DIRECT;
  * This Verticle is aim to declare and bind the exchange chosen by the Service at its startup.
  *
  * @author Marco Baldassarri
- * @since 11/08/2017.
  */
 public class ExchangeManagerVerticle extends AbstractVerticle {
 
@@ -22,7 +20,7 @@ public class ExchangeManagerVerticle extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
-        vertx.eventBus().consumer(SharedMessages.VehicleService.BIND_EXCHANGE, this::bindExchange);
+        vertx.eventBus().consumer(Messages.VehicleService.DECLARE_EXCHANGE, this::bindExchange);
     }
 
     private void bindExchange(Message message) {
@@ -36,7 +34,7 @@ public class ExchangeManagerVerticle extends AbstractVerticle {
     private void declareExchange(String exchangeName) {
         client.exchangeDeclare(exchangeName, DIRECT, true, false, onDeclareCompleted -> {
             if (onDeclareCompleted.succeeded()) {
-                vertx.eventBus().send(SharedMessages.VehicleService.EXCHANGE_BINDED, null);
+                vertx.eventBus().send(Messages.VehicleService.EXCHANGE_DECLARED, null);
             } else {
                 Log.error(TAG, onDeclareCompleted.cause().getMessage(), onDeclareCompleted.cause());
             }

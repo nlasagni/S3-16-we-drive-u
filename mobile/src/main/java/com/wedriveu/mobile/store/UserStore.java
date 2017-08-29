@@ -7,7 +7,6 @@ import com.wedriveu.mobile.model.User;
  * UserStore stores user credentials after a successful login.
  *
  * @author Marco Baldassarri, Nicola Lasagni
- * @since 12/07/2017
  */
 public interface UserStore {
 

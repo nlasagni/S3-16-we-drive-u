@@ -95,7 +95,8 @@ object Constants {
         /**
           * Address for receiving and sending messages for a change booking response.
           */
-        val ChangeBookingLicensePlateResponse: String = Response + Dot + ChangeBooking + Dot + LicensePlate
+        val ChangeBookingLicensePlateResponse: String =
+          Response + Dot + ChangeBooking + Dot + LicensePlate
         /**
           * Address for receiving and sending messages for a complete booking request.
           */

@@ -1,6 +1,7 @@
 package com.wedriveu.services.vehicle.boundary.vehicleregister.entity;
 
 import com.wedriveu.services.shared.model.Vehicle;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Position;
 
 import java.util.Date;
@@ -11,7 +12,6 @@ import java.util.Date;
 public class VehicleFactoryFiat implements VehicleFactory {
 
     private static final String LICENCE_PLATE = "BBB";
-    private static final String STATUS = "available";
     //rome
     private static final double LATITUDE = 41.903319;
     private static final double LONGITUDE = 12.496441;
@@ -26,7 +26,7 @@ public class VehicleFactoryFiat implements VehicleFactory {
     public Vehicle getVehicle() {
         Vehicle vehicle = new Vehicle();
         vehicle.setLicensePlate(LICENCE_PLATE);
-        vehicle.setStatus(STATUS);
+        vehicle.setStatus(Constants.Vehicle.STATUS_AVAILABLE);
         vehicle.setPosition(POSITION);
         vehicle.setLastUpdate(LAST_UPDATE);
         vehicle.setName(NAME);

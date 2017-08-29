@@ -1,4 +1,4 @@
-package com.wedriveu.services.vehicle.rabbitmq;
+package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wedriveu.services.shared.model.Vehicle;

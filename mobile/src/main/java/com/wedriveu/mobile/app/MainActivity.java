@@ -35,7 +35,6 @@ import com.wedriveu.mobile.util.location.LocationServiceImpl;
  *
  * @author Marco Balsassarri
  * @author Nicola Lasagni
- * @since 4/07/2017
  *
  */
 public class MainActivity extends AppCompatActivity implements LoginRouter,

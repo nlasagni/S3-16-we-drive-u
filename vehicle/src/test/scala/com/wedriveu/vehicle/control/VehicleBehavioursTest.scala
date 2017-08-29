@@ -65,21 +65,21 @@ class VehicleBehavioursTest extends FunSuite with BeforeAndAfterEach {
     vehicleBehaviours.goToRecharge()
     Thread.sleep(timeToSleepTest2)
     assert(vehicleControl.getVehicle().battery == VehicleConstants.maxBatteryValue)
-    assert(vehicleControl.getVehicle().getState().equals(VehicleConstants.stateAvailable))
+    assert(vehicleControl.getVehicle().getState().equals(Constants.Vehicle.STATUS_AVAILABLE))
   }
 
   test("The vehicle state should be broken when the broken event arrives") {
     val vehicleControl: VehicleControl = createVehicleControl(false)
     vehicleControl.subscribeToBrokenEvents()
     Thread.sleep(timeToSleepForBrokenEvent)
-    assert(vehicleControl.getVehicle().getState().equals(VehicleConstants.stateBroken))
+    assert(vehicleControl.getVehicle().getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN))
   }
 
   test("The vehicle state should be stolen when the stolen event arrives") {
     val vehicleControl: VehicleControl = createVehicleControl(false)
     vehicleControl.subscribeToStolenEvents()
     Thread.sleep(timeToSleepForStolenEvent)
-    assert(vehicleControl.getVehicle().getState().equals(VehicleConstants.stateStolen))
+    assert(vehicleControl.getVehicle().getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN))
   }
 
   private def createVehicleControl(debugVar: Boolean): VehicleControl = {

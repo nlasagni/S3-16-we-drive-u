@@ -27,6 +27,8 @@ import scala.util.{Failure, Success}
 /**
   * @author Nicola Lasagni on 19/08/2017.
   */
+
+
 @RunWith(classOf[VertxUnitRunner])
 class BookingServiceTest extends AssertionsForJUnit {
 
@@ -50,13 +52,17 @@ class BookingServiceTest extends AssertionsForJUnit {
     new JsonFileEntityListStoreStrategyImpl[Booking](classOf[Booking], fileName)
   private val store: BookingStore = new BookingStoreImpl(storeStrategy)
 
+  private var vertx: Vertx = _
   private var eventBus: EventBus = _
   private var client: RabbitMQClient = _
+  private var booking: Booking = _
 
   @Before def setUp(context: TestContext): Unit = {
-    val vertx = Vertx.vertx()
+    vertx = Vertx.vertx()
     eventBus = vertx.eventBus()
     client = RabbitMQClient.create(vertx, RabbitMQClientFactory.createClientConfig())
+    booking = dummyBooking()
+    store.deleteAllBookings()
     val async = context.async()
     client.startFuture().flatMap(_ => {
       vertx.deployVerticleFuture(ServiceBoot.Verticle)
@@ -66,6 +72,7 @@ class BookingServiceTest extends AssertionsForJUnit {
       case Success(_) => async.complete()
       case Failure(result) => context.fail(result.getCause)
     }
+    async.awaitSuccess()
   }
 
   private def simulateVehicleService(): Future[_] = {
@@ -82,8 +89,23 @@ class BookingServiceTest extends AssertionsForJUnit {
       response)
   }
 
+  private def dummyBooking(): Booking = {
+    new Booking(
+      store.generateId(),
+      new Date(),
+      Username,
+      LicensePlate,
+      UserPosition,
+      DestinationPosition,
+      Booking.STATUS_PROCESSING)
+  }
+
   @After def tearDown(context: TestContext) {
-    client.stopFuture()
+    val async = context.async()
+    client.stopFuture().onComplete {
+      case Success(_) => async.complete()
+      case Failure(_) => async.complete()
+    }
   }
 
   private def registerConsumerAndPublishMessage[T](
@@ -132,14 +154,17 @@ class BookingServiceTest extends AssertionsForJUnit {
   }
 
   @Test def changeBooking(context: TestContext): Unit = {
+    store.addBooking(booking)
     val async = context.async()
     val queue = VehicleServiceSimulatedQueue + "ChangeBooking"
     val eventBusAddress = VehicleServiceSimulatedEventBusAddress + "ChangeBooking"
     eventBus.consumer(eventBusAddress, (message: Message[Object]) => message.body() match {
       case body: JsonObject =>
         val response: ChangeBookingResponse = VertxJsonMapper.mapFromBodyTo(body, classOf[ChangeBookingResponse])
-        context.assertTrue(response != null && (!response.isSuccess || response.getLicencePlate.equals(NewLicensePlate)))
-        async.complete()
+        if (Username.equals(response.getUsername)) {
+          context.assertTrue(!response.isSuccessful || response.getLicencePlate.equals(NewLicensePlate))
+          async.complete()
+        }
       case _ => context.fail(); async.complete()
     })
     val config = ConsumerConfig(
@@ -164,6 +189,7 @@ class BookingServiceTest extends AssertionsForJUnit {
   }
 
   @Test def completeBooking(context: TestContext): Unit = {
+    store.addBooking(booking)
     val async = context.async()
     val queue = VehicleServiceSimulatedQueue + "CompleteBooking"
     val eventBusAddress = VehicleServiceSimulatedEventBusAddress + "CompleteBooking"
@@ -202,6 +228,7 @@ class BookingServiceTest extends AssertionsForJUnit {
   }
 
   @Test def findBookingPositions(context: TestContext): Unit = {
+    store.addBooking(booking)
     val async = context.async()
     val queue = VehicleServiceSimulatedQueue + "FindBookingPositions"
     val eventBusAddress = VehicleServiceSimulatedEventBusAddress + "FindBookingPositions"
@@ -209,8 +236,11 @@ class BookingServiceTest extends AssertionsForJUnit {
       case body: JsonObject =>
         val response: FindBookingPositionsResponse =
           VertxJsonMapper.mapFromBodyTo(body, classOf[FindBookingPositionsResponse])
-        context.assertTrue(response != null && (!response.isSuccess || response.getUserPosition.equals(UserPosition)))
-        async.complete()
+        if (Username.equals(response.getUsername)) {
+          context.assertTrue(response != null &&
+              (!response.isSuccessful || response.getUserPosition.equals(UserPosition)))
+          async.complete()
+        }
       case _ => context.fail(); async.complete()
     })
     val config = ConsumerConfig(

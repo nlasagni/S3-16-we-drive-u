@@ -1,7 +1,6 @@
 package com.wedriveu.vehicle.boundary;
 
 
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
 import com.wedriveu.shared.rabbitmq.message.VehicleReservationRequest;
 import com.wedriveu.shared.util.Constants;
@@ -52,7 +51,7 @@ public class VehicleVerticleBookImplTest {
         eventBus = vertx.eventBus();
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx, "", "", license, Vehicle.STATUS_AVAILABLE, Constants.HEAD_QUARTER, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx, "", "", license, Constants.Vehicle.STATUS_AVAILABLE, Constants.HEAD_QUARTER, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleBookImpl(vehicleControl);
         setUpAsyncComponents(context);
     }
@@ -69,7 +68,7 @@ public class VehicleVerticleBookImplTest {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
                 rabbitMQClient.queueBind(requestId,
                         Constants.RabbitMQ.Exchanges.VEHICLE,
-                        String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_RESPONSE, license),
+                        String.format(Constants.RabbitMQ.RoutingKey.BOOK_VEHICLE_RESPONSE, USERNAME),
                         onQueueBind -> {
                             vertx.deployVerticle(vehicleVerticle,
                                     new DeploymentOptions().setWorker(true),

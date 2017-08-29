@@ -13,7 +13,6 @@ import io.vertx.core.Vertx
 class VehicleCreator(speed: Double,
   battery: Double,
   doBreak: Boolean,
-  doStolen: Boolean,
   vehiclesCounter: Int,
   indexForImages: Int) extends Thread {
 
@@ -61,11 +60,6 @@ class VehicleCreator(speed: Double,
     if (doBreak) {
       newVehicle.subscribeToBrokenEvents()
     }
-    if (doStolen) {
-      newVehicle.subscribeToStolenEvents()
-    }
-
-
   }
 
   private def randomLicensePlateGenerator(): String = {

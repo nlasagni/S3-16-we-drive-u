@@ -3,10 +3,8 @@ package com.wedriveu.services.vehicle.boundary.nearest;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
+import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.NEAREST_EVENT_BUS_ADDRESS;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_NEAREST;
@@ -26,15 +24,12 @@ public class NearestConsumerVerticle extends VerticleConsumer {
     }
 
     @Override
-    public void start() throws Exception {
+    public void start(Future startFuture) throws Exception {
         super.start();
-        startUserConsumer();
-    }
-
-    private void startUserConsumer() throws IOException, TimeoutException {
-        startConsumerWithDurableQueue(Constants.RabbitMQ.Exchanges.VEHICLE,
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_REQUEST,
-                NEAREST_EVENT_BUS_ADDRESS);
+                NEAREST_EVENT_BUS_ADDRESS,
+                startFuture);
     }
 
     @Override

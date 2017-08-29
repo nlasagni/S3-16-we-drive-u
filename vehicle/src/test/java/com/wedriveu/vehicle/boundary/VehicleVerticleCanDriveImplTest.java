@@ -1,6 +1,5 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.CanDriveRequest;
 import com.wedriveu.shared.rabbitmq.message.CanDriveResponse;
 import com.wedriveu.shared.util.Constants;
@@ -52,7 +51,7 @@ public class VehicleVerticleCanDriveImplTest {
         eventBus = vertx.eventBus();
         stopUi = new VehicleStopViewImpl(vertx, 1);
         vehicleControl =
-                new VehicleControlImpl(vertx, "", "", license, Vehicle.STATUS_AVAILABLE, Constants.HEAD_QUARTER, battery, speed, stopUi, debugVar);
+                new VehicleControlImpl(vertx, "", "", license, Constants.Vehicle.STATUS_AVAILABLE, Constants.HEAD_QUARTER, battery, speed, stopUi, debugVar);
         vehicleVerticle = new VehicleVerticleCanDriveImpl(vehicleControl);
         setUpAsyncComponents(context);
     }

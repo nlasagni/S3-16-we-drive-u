@@ -3,15 +3,15 @@ package com.wedriveu.services.vehicle.boundary.booking;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.app.BootVerticle;
-import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.booking.entity.BookingRequest;
-import com.wedriveu.services.vehicle.boundary.booking.mock.VehicleMockVerticle;
-import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryFiat;
+import com.wedriveu.services.vehicle.boundary.util.BaseInteractionClient;
+import com.wedriveu.services.vehicle.boundary.util.mock.VehicleBookingMockVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
+import com.wedriveu.services.vehicle.entity.VehicleStore;
+import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleRequest;
 import com.wedriveu.shared.rabbitmq.message.BookVehicleResponse;
-import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -36,10 +36,13 @@ public class BookingTest extends BaseInteractionClient {
 
     private static final String EVENT_BUS_ADDRESS = BookingTest.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.booking.test";
+    private static final String USERNAME = "BookingTestUser";
 
+    private Vertx vertx;
+    private BootVerticle bootVerticle;
     private Vehicle vehicle;
     private Async async;
-    private Vertx vertx;
+    private VehicleStore vehicleStore;
 
     public BookingTest() {
         super(QUEUE, VEHICLE, VEHICLE_SERVICE_BOOK_RESPONSE, EVENT_BUS_ADDRESS);
@@ -49,15 +52,16 @@ public class BookingTest extends BaseInteractionClient {
     public void setUp(TestContext context) throws Exception {
         async = context.async();
         vertx = Vertx.vertx();
+        bootVerticle = new BootVerticle();
+        vehicleStore = new VehicleStoreImpl();
         vehicle = new VehicleFactoryMini().getVehicle();
-        VehicleMockVerticle mockVerticle = new VehicleMockVerticle(vehicle.getLicensePlate());
+        VehicleBookingMockVerticle mockVerticle =
+                new VehicleBookingMockVerticle(USERNAME, vehicle.getLicensePlate());
         vertx.deployVerticle(mockVerticle, onMockDeploy -> {
             super.setup(vertx, completed -> {
                 vertx.eventBus().consumer(Messages.VehicleService.BOOT_COMPLETED, onCompleted -> {
                     vertx.eventBus().consumer(Messages.VehicleStore.CLEAR_VEHICLES_COMPLETED, msg -> {
-                        publishMessage(Constants.RabbitMQ.Exchanges.VEHICLE,
-                                Constants.RabbitMQ.RoutingKey.REGISTER_REQUEST,
-                                VertxJsonMapper.mapInBodyFrom(vehicle));
+                        vehicleStore.addVehicle(vehicle);
                         super.declareQueueAndBind(vehicle.getLicensePlate(), context, declared -> {
                             context.assertTrue(declared.succeeded());
                             async.complete();
@@ -65,7 +69,7 @@ public class BookingTest extends BaseInteractionClient {
                     });
                     vertx.eventBus().send(Messages.VehicleStore.CLEAR_VEHICLES, null);
                 });
-                vertx.deployVerticle(new BootVerticle(), context.asyncAssertSuccess(onDeploy -> {
+                vertx.deployVerticle(bootVerticle, context.asyncAssertSuccess(onDeploy -> {
                     vertx.eventBus().send(Messages.VehicleService.BOOT, null);
                 }));
             });
@@ -88,6 +92,7 @@ public class BookingTest extends BaseInteractionClient {
 
     private JsonObject createRequest() {
         BookVehicleRequest bookingRequest = new BookingRequest().getBookingVehicleRequest();
+        bookingRequest.setUsername(USERNAME);
         bookingRequest.setLicencePlate(vehicle.getLicensePlate());
         return VertxJsonMapper.mapInBodyFrom(bookingRequest);
     }

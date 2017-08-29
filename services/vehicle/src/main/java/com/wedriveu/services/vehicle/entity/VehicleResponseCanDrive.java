@@ -1,4 +1,4 @@
-package com.wedriveu.services.shared.message;
+package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class VehicleResponseCanDrive {
 
     @JsonProperty
-    private String licencePlate;
+    private String licensePlate;
 
     @JsonProperty
     private boolean eligible;
@@ -60,12 +60,12 @@ public class VehicleResponseCanDrive {
         this.username = username;
     }
 
-    public String getLicencePlate() {
-        return licencePlate;
+    public String getLicensePlate() {
+        return licensePlate;
     }
 
-    public void setLicencePlate(String licencePlate) {
-        this.licencePlate = licencePlate;
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 
     public boolean isEligible() {
@@ -79,7 +79,7 @@ public class VehicleResponseCanDrive {
     @Override
     public String toString() {
         return "VehicleResponse{" +
-                "licencePlate='" + licencePlate + '\'' +
+                "licensePlate='" + licensePlate + '\'' +
                 ", eligible=" + eligible +
                 ", username='" + username + '\'' +
                 ", distanceToUser=" + distanceToUser +

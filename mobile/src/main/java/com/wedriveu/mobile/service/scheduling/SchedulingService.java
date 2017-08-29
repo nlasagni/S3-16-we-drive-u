@@ -10,7 +10,6 @@ import com.wedriveu.shared.util.Position;
  * based on the coordinates given in input.
  *
  * @author Marco Baldassarri
- * @since 20/07/2017
  */
 public interface SchedulingService {
 

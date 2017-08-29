@@ -2,7 +2,6 @@ package com.wedriveu.services.analytics.boundary;
 
 import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.analytics.vehicleService.VehicleUpdateGenerator;
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
@@ -54,7 +53,7 @@ public class AnalyticsVehicleUpdateHandlerConsumerTest {
                     msg -> {
                         UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), UpdateToService.class);
                         assertTrue(update.getLicense().equals(EventBus.Messages.ANALYTICS_VEHICLE_TEST_LICENSE_PLATE) &&
-                                update.getStatus().equals(Vehicle.STATUS_BOOKED));
+                                update.getStatus().equals(Constants.Vehicle.STATUS_BOOKED));
                         async.complete();
                     });
 

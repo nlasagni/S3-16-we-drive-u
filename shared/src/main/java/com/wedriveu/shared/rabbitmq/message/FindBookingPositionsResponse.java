@@ -9,28 +9,28 @@ import com.wedriveu.shared.util.Position;
  */
 public class FindBookingPositionsResponse {
 
-    private boolean success;
+    private boolean successful;
     private String username;
     private String licensePlate;
     private Position userPosition;
     private Position destinationPosition;
 
     /**
-     * Is success boolean.
+     * Is successful boolean.
      *
      * @return the boolean
      */
-    public boolean isSuccess() {
-        return success;
+    public boolean isSuccessful() {
+        return successful;
     }
 
     /**
-     * Sets success.
+     * Sets successful.
      *
-     * @param success the success
+     * @param successful the successful
      */
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setSuccessful(boolean successful) {
+        this.successful = successful;
     }
 
     /**
@@ -115,7 +115,7 @@ public class FindBookingPositionsResponse {
             return false;
         }
         FindBookingPositionsResponse that = (FindBookingPositionsResponse) o;
-        return success == that.success &&
+        return successful == that.successful &&
                 (username != null ? username.equals(that.username) : that.username == null) &&
                 (licensePlate != null ? licensePlate.equals(that.licensePlate) : that.licensePlate == null) &&
                 (userPosition != null ? userPosition.equals(that.userPosition) : that.userPosition == null) &&
@@ -126,7 +126,7 @@ public class FindBookingPositionsResponse {
 
     @Override
     public int hashCode() {
-        int result = (success ? 1 : 0);
+        int result = (successful ? 1 : 0);
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (licensePlate != null ? licensePlate.hashCode() : 0);
         result = 31 * result + (userPosition != null ? userPosition.hashCode() : 0);
@@ -137,7 +137,7 @@ public class FindBookingPositionsResponse {
     @Override
     public String toString() {
         return "FindBookingPositionsResponse{" +
-                "success=" + success +
+                "successful=" + successful +
                 ", username='" + username + '\'' +
                 ", licensePlate='" + licensePlate + '\'' +
                 ", userPosition=" + userPosition +

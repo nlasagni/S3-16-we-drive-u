@@ -2,7 +2,6 @@ package com.wedriveu.services.vehicle.entity;
 
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.util.Position;
-import io.vertx.core.eventbus.Message;
 
 import java.util.Date;
 import java.util.List;
@@ -12,43 +11,52 @@ import java.util.List;
  *
  * @author Michele Donati
  * @author Marco Baldassarri
+ * @author Nicola Lasagni
  */
 public interface VehicleStore {
 
     /**
-     * A new vehicle is being added to the json file. if the vehicle already exists (the licencePlace is already there)
+     * A new vehicle is being added to the json file.
+     * if the vehicle already exists (the licencePlace is already there)
      * it sends back a message containing a negative boolean, or positive otherwise.
      *
      * @param vehicle Indicates the vehicle the will be added to the db.
+     * @return A boolean indicating the success or failure of this operation.
      */
-    void addVehicle(Message vehicle);
-
-
-    void getAllAvailableVehiclesInRange(Message message);
+    boolean addVehicle(Vehicle vehicle);
 
     /**
-     * @param message Identifies the <em>Vehicle</em>'s <em>carLicencePlate</em> that must be retreived.
+     * Gets a vehicle from the store.
+     *
+     * @param licensePlate The vehicle licence plate
+     * @return The vehicle or {@code null} if no vehicle is found
      */
-    void getVehicleForNearest(Message message);
+    Vehicle getVehicle(String licensePlate);
 
     /**
-     * @param message Identifies the <em>com.wedriveu.services.shared.entity.Vehicle</em>'s <em>carLicencePlate</em>
-     *                that must be retreived.
+     * Searches all available vehicles which are inside the specified {@code range} of a {@code sourcePosition}.
+     *
+     * @param sourcePosition The source position
+     * @param range The range
+     * @return The list of available vehicles or an empty list if no available vehicle is found.
      */
-    void getVehicleForBooking(Message message);
+    List<Vehicle> getAllAvailableVehiclesInRange(Position sourcePosition, double range);
 
     /**
+     * Gets all the vehicles in the store.
+     *
      * @return Return the entire list of vehicles in the db.
      */
     List<Vehicle> getVehicleList();
 
-
     /**
      * Delete all the vehicles from the store.
      */
-    void clearVehicles();
+    void deleteAllVehicles();
 
     /**
+     * Updates vehicle data.
+     *
      * @param carLicencePlate Indicates the id of the vehicle to update.
      * @param state           Indicates the new state to update.
      * @param position        Indicates the new position to update.
@@ -56,20 +64,4 @@ public interface VehicleStore {
      */
     void updateVehicleInVehicleList(String carLicencePlate, String state, Position position, Date lastUpdate);
 
-    /**
-     * @param carLicencePlate Indicates the id of the vehicle to delete.
-     */
-    void deleteVehicleFromDb(String carLicencePlate);
-
-    /**
-     * @param carLicencePlateToDelete Indicates the id of the vehicle to replace.
-     * @param replacementVehicle      Indicates the new vehicle for the replacement.
-     */
-    void replaceVehicleInDb(String carLicencePlateToDelete, Vehicle replacementVehicle);
-
-    /**
-     * @param carLicensePlate Indicates the id of the vehicle that i want to know if it exists.
-     * @return Return True if the vehicle exists in the db, False otherwise.
-     */
-    boolean theVehicleIsInTheDb(String carLicensePlate);
 }

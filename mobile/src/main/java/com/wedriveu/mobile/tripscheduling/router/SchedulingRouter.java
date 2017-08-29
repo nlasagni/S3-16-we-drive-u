@@ -10,7 +10,6 @@ import com.wedriveu.mobile.app.DialogProvider;
  *
  * @author Marco Baldassarri
  * @author Nicola Lasagni
- * @since 20/07/2017
  */
 public interface SchedulingRouter extends DialogProvider {
 

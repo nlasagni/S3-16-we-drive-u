@@ -7,7 +7,6 @@ import com.wedriveu.shared.util.Position;
  * Describes a Vehicle
  *
  * @author Marco Baldassarri
- * @since 12/07/2017
  */
 public class Vehicle {
 

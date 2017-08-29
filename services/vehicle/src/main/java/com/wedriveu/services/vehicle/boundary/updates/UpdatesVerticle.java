@@ -1,13 +1,8 @@
 package com.wedriveu.services.vehicle.boundary.updates;
 
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
-import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import com.wedriveu.services.vehicle.rabbitmq.SubstitutionRequest;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Position;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
@@ -15,15 +10,16 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 /**
- * Created by Michele on 19/08/2017.
+ * This boundary verticle receives messages from {@link Constants.RabbitMQ.RoutingKey#VEHICLE_UPDATE}
+ * and dispatches them to the {@link com.wedriveu.services.vehicle.rabbitmq.Messages.UpdateControl}.
+ *
+ * @author Michele Donati on 19/08/2017.
+ * @author Nicola Lasagni
  */
-
 public class UpdatesVerticle extends AbstractVerticle {
 
-    private static final String TAG = UpdatesVerticle.class.getSimpleName();
     private static final String QUEUE_NAME = "service.updates";
     private static final String EVENT_BUS_ADDRESS = "service.updates.eventbus";
-    private static final String SUBSTITUTION_BUS_ADDRESS = "service.substitution.eventbus";
 
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
@@ -82,14 +78,7 @@ public class UpdatesVerticle extends AbstractVerticle {
 
     private void registerConsumer() {
         eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-            UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), UpdateToService.class);
-            if (update.getStatus().equals(Vehicle.STATUS_BROKEN_STOLEN)) {
-                Position vehiclePosition = update.getPosition();
-                SubstitutionRequest request = new SubstitutionRequest();
-                request.setPosition(vehiclePosition);
-                vertx.eventBus().send(SUBSTITUTION_BUS_ADDRESS, VertxJsonMapper.mapInBodyFrom(request));
-            }
-            eventBus.send(Messages.VehicleStore.UPDATE_VEHICLE_STATUS, VertxJsonMapper.mapInBodyFrom(update));
+            eventBus.send(Messages.UpdateControl.UPDATE_VEHICLE_STATUS, msg.body());
         });
     }
 
