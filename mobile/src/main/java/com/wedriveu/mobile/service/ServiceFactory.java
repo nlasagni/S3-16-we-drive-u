@@ -14,7 +14,6 @@ import com.wedriveu.mobile.store.VehicleStore;
  * 
  * @author Nicola Lasagni
  * @author Marco Baldassarri
- * @since 18/07/2017
  */
 public interface ServiceFactory {
 

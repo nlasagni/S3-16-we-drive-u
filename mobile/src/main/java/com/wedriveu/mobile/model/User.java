@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author Marco Baldassarri
  * @author Nicola Lasagni
- * @since 12/07/2017
  */
 public class User {
 

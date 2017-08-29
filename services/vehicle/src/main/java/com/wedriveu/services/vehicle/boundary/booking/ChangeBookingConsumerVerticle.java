@@ -21,6 +21,9 @@ import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_Q
  */
 public class ChangeBookingConsumerVerticle extends VerticleConsumer {
 
+    /**
+     * Instantiates a new Change booking consumer verticle.
+     */
     public ChangeBookingConsumerVerticle() {
         super(VEHICLE_SERVICE_QUEUE_CHANGE_BOOKING);
     }
@@ -33,10 +36,6 @@ public class ChangeBookingConsumerVerticle extends VerticleConsumer {
                 Constants.RabbitMQ.RoutingKey.CHANGE_BOOKING_RESPONSE,
                 EVENT_BUS_CHANGE_BOOKING_ADDRESS,
                 startFuture);
-    }
-
-    private void startBookConsumer() throws IOException, TimeoutException {
-
     }
 
     @Override

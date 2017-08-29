@@ -10,11 +10,12 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 /**
+ * This boundary verticle receives messages from {@link Constants.RabbitMQ.RoutingKey#VEHICLE_UPDATE}
+ * and dispatches them to the {@link com.wedriveu.services.vehicle.rabbitmq.Messages.UpdateControl}.
  *
  * @author Michele Donati on 19/08/2017.
  * @author Nicola Lasagni
  */
-
 public class UpdatesVerticle extends AbstractVerticle {
 
     private static final String QUEUE_NAME = "service.updates";

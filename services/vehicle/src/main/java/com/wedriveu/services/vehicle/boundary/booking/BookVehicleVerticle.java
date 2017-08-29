@@ -39,6 +39,12 @@ public class BookVehicleVerticle extends VerticleConsumer {
     private boolean forSubstitution;
     private BookVehicleRequest vehicleRequest;
 
+    /**
+     * Instantiates a new Book vehicle verticle.
+     *
+     * @param id              the id of this verticle
+     * @param forSubstitution indicates if this verticle should handle a substitution case
+     */
     public BookVehicleVerticle(String id, boolean forSubstitution) {
         super(String.format(VEHICLE_SERVICE_QUEUE_BOOK_VEHICLE, id));
         this.id = id;

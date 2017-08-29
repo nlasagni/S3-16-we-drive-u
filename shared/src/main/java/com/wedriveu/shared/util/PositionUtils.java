@@ -6,7 +6,6 @@ import static com.wedriveu.shared.util.Constants.Position.SUBSTITUTION_RANGE;
 
 /**
  * @author Marco Baldassarri
- * @since 04/08/2017.
  */
 public class PositionUtils {
 

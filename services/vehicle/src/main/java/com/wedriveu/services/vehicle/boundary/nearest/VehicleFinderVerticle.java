@@ -161,6 +161,10 @@ public class VehicleFinderVerticle extends VerticleConsumer {
                     String.format(Constants.RabbitMQ.RoutingKey.CAN_DRIVE_REQUEST,
                             availableVehicles.get(index).getLicensePlate()), index);
         });
+        startResponseTimeout();
+    }
+
+    private void startResponseTimeout() {
         timerId = vertx.setTimer(TIME_OUT, onTimeOut -> {
             client.stop(onStop -> {
                 if (counter == 0) {
@@ -175,8 +179,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
     private void publishToConsumer(String exchangeName,
                                    String routingKey,
                                    int index) {
-        JsonObject requestJson = new JsonObject();
-        requestJson.put(Constants.EventBus.BODY, getRequestObject(index).encode());
+        JsonObject requestJson = getRequestObject(index);
         client.basicPublish(exchangeName, routingKey, requestJson, onPublish -> {
             if (!onPublish.succeeded()) {
                 Log.error(this.getClass().getSimpleName(),
@@ -193,7 +196,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         CanDriveRequest canDriveRequest = new CanDriveRequest();
         canDriveRequest.setUsername(username);
         canDriveRequest.setDistanceInKm(totalDistance);
-        return JsonObject.mapFrom(canDriveRequest);
+        return VertxJsonMapper.mapInBodyFrom(canDriveRequest);
     }
 
     @Override

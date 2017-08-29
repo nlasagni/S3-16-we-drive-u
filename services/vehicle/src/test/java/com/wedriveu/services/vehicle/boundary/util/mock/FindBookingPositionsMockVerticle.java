@@ -9,6 +9,10 @@ import com.wedriveu.shared.util.Position;
 import io.vertx.core.Future;
 
 /**
+ * A {@link VerticleConsumer} used for test purposes that receives
+ * {@link Constants.RabbitMQ.RoutingKey#FIND_BOOKING_POSITION_REQUEST} messages and reply with
+ * a {@link FindBookingPositionsResponse}.
+ *
  * @author Nicola Lasagni on 22/08/2017.
  */
 public class FindBookingPositionsMockVerticle extends VerticleConsumer {
@@ -29,6 +33,12 @@ public class FindBookingPositionsMockVerticle extends VerticleConsumer {
     private String username;
     private String vehicleLicensePlate;
 
+    /**
+     * Instantiates a new FindBookingPositionsMockVerticle.
+     *
+     * @param username            the username used to create the response
+     * @param vehicleLicensePlate the vehicle license plate used to create the response
+     */
     public FindBookingPositionsMockVerticle(String username, String vehicleLicensePlate) {
         super(QUEUE + username + vehicleLicensePlate);
         this.username = username;

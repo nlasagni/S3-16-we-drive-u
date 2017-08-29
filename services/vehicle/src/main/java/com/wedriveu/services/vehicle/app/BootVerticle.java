@@ -21,12 +21,12 @@ public class BootVerticle extends AbstractVerticle {
     @Override
     public void start() throws Exception {
         vertx.eventBus().consumer(Messages.VehicleService.BOOT, this::declareExchange);
-        vertx.eventBus().consumer(Messages.VehicleService.EXCHANGE_BINDED, this::deployVerticles);
+        vertx.eventBus().consumer(Messages.VehicleService.EXCHANGE_DECLARED, this::deployVerticles);
     }
 
     private void declareExchange(Message message) {
         vertx.deployVerticle(exchangeVerticle, completed -> {
-            vertx.eventBus().send(Messages.VehicleService.BIND_EXCHANGE,
+            vertx.eventBus().send(Messages.VehicleService.DECLARE_EXCHANGE,
                     Constants.RabbitMQ.Exchanges.VEHICLE);
         });
     }

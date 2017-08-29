@@ -9,7 +9,6 @@ import com.wedriveu.mobile.service.ServiceOperationCallback;
  *
  * @author  Marco Baldassarri
  * @author Nicola Lasagni
- * @since 12/07/2017
  */
 public interface LoginService {
 

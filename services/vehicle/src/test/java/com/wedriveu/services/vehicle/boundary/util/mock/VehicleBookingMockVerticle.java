@@ -8,6 +8,10 @@ import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 
 /**
+ * A {@link VerticleConsumer} used for test purposes that receives
+ * {@link Constants.RabbitMQ.RoutingKey#BOOK_VEHICLE_REQUEST} messages and reply with
+ * a {@link BookVehicleResponse}.
+ *
  * @author Nicola Lasagni on 22/08/2017.
  */
 public class VehicleBookingMockVerticle extends VerticleConsumer {
@@ -21,6 +25,12 @@ public class VehicleBookingMockVerticle extends VerticleConsumer {
     private String username;
     private String vehicleLicensePlate;
 
+    /**
+     * Instantiates a new VehicleBookingMockVerticle.
+     *
+     * @param username            the username used to create the response and to publish it
+     * @param vehicleLicensePlate the vehicle license plate used to receive messages and to create the response
+     */
     public VehicleBookingMockVerticle(String username, String vehicleLicensePlate) {
         super(QUEUE + username + vehicleLicensePlate);
         this.username = username;

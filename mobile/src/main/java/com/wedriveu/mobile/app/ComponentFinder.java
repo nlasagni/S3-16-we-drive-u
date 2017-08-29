@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
  *
  * @author Marco Baldassarri
  * @author Nicola Lasagni
- * @since 12/07/2017
  */
 public interface ComponentFinder {
 

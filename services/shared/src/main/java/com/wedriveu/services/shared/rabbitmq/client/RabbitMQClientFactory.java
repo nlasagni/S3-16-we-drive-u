@@ -9,7 +9,6 @@ import io.vertx.rabbitmq.RabbitMQClient;
  * Basic RabbitMQ Client Factory for requesting RabbitMQ client where needed.
  *
  * @author Marco Baldassarri
- * @since 12/08/2017.
  */
 public class RabbitMQClientFactory {
 
