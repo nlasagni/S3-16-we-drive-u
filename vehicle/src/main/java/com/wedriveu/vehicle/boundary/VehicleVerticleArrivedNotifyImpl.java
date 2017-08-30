@@ -65,6 +65,7 @@ public class VehicleVerticleArrivedNotifyImpl extends AbstractVerticle implement
                 Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
                 createNotify(),
                 onPublish -> {
+                    vehicle.setUsername(null);
                     onPublish.succeeded();
                     if (onPublish.failed()) {
                         Log.error(TAG, SEND_ERROR);

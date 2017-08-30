@@ -3,7 +3,7 @@ package com.wedriveu.services.analytics.vehicleService;
 import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
+import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
@@ -28,12 +28,12 @@ public class VehicleUpdateGenerator extends VerticlePublisher {
 
 
     private void sendVehicleUpdateToAnalyticsService(Message message) {
-        UpdateToService updateToService = new UpdateToService();
-        updateToService.setLicense(EventBus.Messages.ANALYTICS_VEHICLE_TEST_LICENSE_PLATE);
-        updateToService.setStatus(Constants.Vehicle.STATUS_BOOKED);
+        VehicleUpdate vehicleUpdate = new VehicleUpdate();
+        vehicleUpdate.setLicense(EventBus.Messages.ANALYTICS_VEHICLE_TEST_LICENSE_PLATE);
+        vehicleUpdate.setStatus(Constants.Vehicle.STATUS_BOOKED);
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE,
-                VertxJsonMapper.mapInBodyFrom(updateToService),
+                VertxJsonMapper.mapInBodyFrom(vehicleUpdate),
                 res-> { });
     }
 

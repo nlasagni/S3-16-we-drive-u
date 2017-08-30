@@ -3,7 +3,7 @@ package com.wedriveu.services.analytics.boundary;
 import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.analytics.vehicleService.VehicleUpdateGenerator;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
+import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -51,7 +51,7 @@ public class AnalyticsVehicleUpdateHandlerConsumerTest {
             jsonObject.put(Constants.EventBus.BODY, "start");
             vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_UPDATE,
                     msg -> {
-                        UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), UpdateToService.class);
+                        VehicleUpdate update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), VehicleUpdate.class);
                         assertTrue(update.getLicense().equals(EventBus.Messages.ANALYTICS_VEHICLE_TEST_LICENSE_PLATE) &&
                                 update.getStatus().equals(Constants.Vehicle.STATUS_BOOKED));
                         async.complete();

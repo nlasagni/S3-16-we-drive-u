@@ -239,6 +239,10 @@ public interface Constants {
              */
             String COMPLETE_BOOKING_RESPONSE_USER = "booking.response.complete.%s";
             /**
+             * The routing key used to communicate to the booking-service an abort booking request.
+             */
+            String ABORT_BOOKING_REQUEST = "booking.request.abort";
+            /**
              * The routing key used to communicate to the booking-service a find bookings by position request.
              */
             String FIND_BOOKING_POSITION_REQUEST = "booking.request.position";
@@ -268,13 +272,17 @@ public interface Constants {
 
     interface Position {
         /**
-         * The predefined range of kilometers used to choose a vehicle nearby a specific user.
+         * The predefined minimum range of kilometers used to choose a vehicle nearby a specific user.
          */
-        double RANGE = 20;
+        double DEFAULT_MIN_RANGE = 0.1;
         /**
-         * The predefined range of kilometers used to choose a substitution vehicle nearby a specific user.
+         * The predefined maximum range of kilometers used to choose a vehicle nearby a specific user.
          */
-        double SUBSTITUTION_RANGE = 50;
+        double DEFAULT_MAX_RANGE = 50.0;
+        /**
+         * The predefined maximum range of kilometers used to choose a substitution vehicle nearby a specific user.
+         */
+        double DEFAULT_SUBSTITUTION_RANGE = 80.0;
 
         double EARTH_RADIUS = 6372.795477598;
     }

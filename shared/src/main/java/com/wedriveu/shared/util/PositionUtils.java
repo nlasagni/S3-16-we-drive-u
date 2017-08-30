@@ -1,8 +1,6 @@
 package com.wedriveu.shared.util;
 
 import static com.wedriveu.shared.util.Constants.Position.EARTH_RADIUS;
-import static com.wedriveu.shared.util.Constants.Position.RANGE;
-import static com.wedriveu.shared.util.Constants.Position.SUBSTITUTION_RANGE;
 
 /**
  * @author Marco Baldassarri
@@ -21,8 +19,12 @@ public class PositionUtils {
                 * Math.cos(fromLongitudeInRad - toLongitudeInRad));
     }
 
-    public static boolean isInRange(Position userPosition, Position vehiclePosition, double range) {
-        return getDistanceInKm(userPosition, vehiclePosition) < range;
+    public static boolean isInRange(Position sourcePosition,
+                                    Position vehiclePosition,
+                                    double minRange,
+                                    double maxRange) {
+        double distance = getDistanceInKm(sourcePosition, vehiclePosition);
+        return distance > minRange && distance <= maxRange;
     }
 
     private static double toRadiants(double coordinate) {

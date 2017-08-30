@@ -9,7 +9,7 @@ package com.wedriveu.vehicle.shared
 object VehicleConstants {
   final val earthRadiusInKm: Double = 6372.795477598
   final val maxBatteryValue: Double = 100.0
-  final val MAXIMUM_DISTANCE_TO_RECHARGE = 10
+  final val MAXIMUM_DISTANCE_TO_RECHARGE = 2.0
   final val ESTIMATED_KILOMETERS_PER_PERCENTAGE = 10
   final val ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS = 0.1
 

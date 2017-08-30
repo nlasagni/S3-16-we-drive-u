@@ -10,7 +10,7 @@ import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
+import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
@@ -61,7 +61,7 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
     }
 
     private void updateVehicleStore(Message message) {
-        UpdateToService vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), UpdateToService.class);
+        VehicleUpdate vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleUpdate.class);
         Optional<AnalyticsVehicle> old = analyticsStore.getVehicleByLicensePlate(vehicle.getLicense());
         boolean sendUpdate = true;
         if (!old.isPresent()) {
