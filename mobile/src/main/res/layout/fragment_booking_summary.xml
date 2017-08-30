@@ -75,7 +75,7 @@
                     android:layout_marginTop="20dp"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    android:text="@string/scheduling_address_label"/>
+                    android:text="@string/scheduling_destination_address_label"/>
 
             <TextView
                     android:id="@+id/pick_up_time"
