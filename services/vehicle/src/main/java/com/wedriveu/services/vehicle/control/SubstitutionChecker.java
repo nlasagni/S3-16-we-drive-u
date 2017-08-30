@@ -6,7 +6,7 @@ import com.wedriveu.services.vehicle.entity.SubstitutionCheck;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.rabbitmq.message.FindBookingPositionsRequest;
 import com.wedriveu.shared.rabbitmq.message.FindBookingPositionsResponse;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
+import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Position;
 import io.vertx.core.AbstractVerticle;
@@ -28,7 +28,7 @@ public class SubstitutionChecker extends AbstractVerticle {
 
     private String id;
     private EventBus eventBus;
-    private UpdateToService updateToService;
+    private VehicleUpdate vehicleUpdate;
     private MessageConsumer getPositionConsumer;
     private boolean substitutionNeeded;
 
@@ -39,8 +39,8 @@ public class SubstitutionChecker extends AbstractVerticle {
     @Override
     public void start() throws Exception {
         eventBus = vertx.eventBus();
-        eventBus.consumer(Messages.VehicleSubstitution.CHECK_FOR_SUBSTITUTION, msg -> {
-            updateToService = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), UpdateToService.class);
+        eventBus.consumer(String.format(Messages.VehicleSubstitution.CHECK_FOR_SUBSTITUTION, id) , msg -> {
+            vehicleUpdate = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), VehicleUpdate.class);
             getVehicleToCheck();
         });
         eventBus.consumer(String.format(Messages.VehicleStore.GET_VEHICLE_FOR_SUBSTITUTION_COMPLETED, id),
@@ -50,7 +50,7 @@ public class SubstitutionChecker extends AbstractVerticle {
     private void getVehicleToCheck() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(Messages.SENDER_ID, id);
-        jsonObject.put(Messages.Trip.LICENSE_PLATE, updateToService.getLicense());
+        jsonObject.put(Messages.Trip.LICENSE_PLATE, vehicleUpdate.getLicense());
         eventBus.send(Messages.VehicleSubstitution.GET_VEHICLE_FOR_SUBSTITUTION, jsonObject);
     }
 
@@ -61,29 +61,29 @@ public class SubstitutionChecker extends AbstractVerticle {
         } else {
             Vehicle vehicle = VertxJsonMapper.mapTo(body, Vehicle.class);
             substitutionNeeded =
-                    Constants.Vehicle.STATUS_BROKEN_STOLEN.equals(updateToService.getStatus()) &&
+                    Constants.Vehicle.STATUS_BROKEN_STOLEN.equals(vehicleUpdate.getStatus()) &&
                             Constants.Vehicle.STATUS_BOOKED.equals(vehicle.getStatus());
             if (substitutionNeeded) {
                 sendGetBookingPositionsRequest();
             } else {
                 SubstitutionCheck check =
                         createSubstitutionCheck(false,
-                                updateToService,
+                                vehicleUpdate,
                                 null,
                                 null);
                 sendCheckCompleted(check);
             }
             eventBus.send(Messages.VehicleStore.UPDATE_VEHICLE_STATUS,
-                    VertxJsonMapper.mapInBodyFrom(updateToService));
+                    VertxJsonMapper.mapInBodyFrom(vehicleUpdate));
         }
     }
 
     private void sendGetBookingPositionsRequest() {
         getPositionConsumer = eventBus.consumer(
-                String.format(Messages.Booking.GET_BOOKING_POSITIONS_COMPLETED, updateToService.getLicense()),
+                String.format(Messages.Booking.GET_BOOKING_POSITIONS_COMPLETED, vehicleUpdate.getLicense()),
                 this::sendCheckResponse);
         FindBookingPositionsRequest request = new FindBookingPositionsRequest();
-        request.setUsername(updateToService.getUsername());
+        request.setUsername(vehicleUpdate.getUsername());
         eventBus.send(Messages.Booking.GET_BOOKING_POSITIONS, VertxJsonMapper.mapFrom(request));
     }
 
@@ -95,10 +95,10 @@ public class SubstitutionChecker extends AbstractVerticle {
             sendCheckFailed();
         } else {
             Position sourcePosition =
-                    updateToService.isUserOnBoard() ? updateToService.getPosition() : response.getUserPosition();
+                    vehicleUpdate.isUserOnBoard() ? vehicleUpdate.getPosition() : response.getUserPosition();
             SubstitutionCheck check =
                     createSubstitutionCheck(substitutionNeeded,
-                            updateToService,
+                            vehicleUpdate,
                             sourcePosition,
                             response.getDestinationPosition());
             sendCheckCompleted(check);
@@ -112,17 +112,17 @@ public class SubstitutionChecker extends AbstractVerticle {
 
     private void sendCheckFailed() {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(Constants.USERNAME, updateToService.getUsername());
+        jsonObject.put(Constants.USERNAME, vehicleUpdate.getUsername());
         eventBus.send(Messages.VehicleSubstitution.CHECK_FOR_SUBSTITUTION_FAILED, jsonObject);
     }
 
     private SubstitutionCheck createSubstitutionCheck(boolean substitutionNeeded,
-                                                      UpdateToService updateToService,
+                                                      VehicleUpdate vehicleUpdate,
                                                       Position sourcePosition,
                                                       Position destinationPosition) {
         return new SubstitutionCheck(id,
                 substitutionNeeded,
-                updateToService,
+                vehicleUpdate,
                 sourcePosition,
                 destinationPosition);
     }

@@ -6,6 +6,7 @@ import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleFinderVerticle;
 import com.wedriveu.services.vehicle.entity.VehicleResponseCanDrive;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
+import com.wedriveu.shared.rabbitmq.message.AbortBookingRequest;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
@@ -58,6 +59,10 @@ public class NearestControl extends AbstractVerticle {
     private void handleNoVehicleForSubstitution(Message message) {
         handleNoVehicle(message, SEND_SUBSTITUTION_VEHICLE_TO_USER,
                 com.wedriveu.services.vehicle.rabbitmq.Constants.NO_ELIGIBLE_VEHICLE_FOR_SUSTITUTION);
+        JsonObject response = (JsonObject) message.body();
+        AbortBookingRequest request = new AbortBookingRequest(response.getString(Constants.USERNAME));
+        eventBus.send(Messages.Booking.ABORT_BOOKING, VertxJsonMapper.mapFrom(request));
+
     }
 
     private void handleNoVehicle(Message message) {

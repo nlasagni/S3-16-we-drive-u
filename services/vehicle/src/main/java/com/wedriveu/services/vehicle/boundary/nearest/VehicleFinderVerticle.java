@@ -78,7 +78,7 @@ public class VehicleFinderVerticle extends VerticleConsumer {
         SubstitutionCheck substitutionCheck = substitutionRequest.getSubstitutionCheck();
         userPosition = substitutionCheck.getSourcePosition();
         destPosition = substitutionCheck.getDestinationPosition();
-        username = substitutionCheck.getUpdateToService().getUsername();
+        username = substitutionCheck.getVehicleUpdate().getUsername();
         responseJsonArray = new JsonArray();
         startFindProcess();
     }

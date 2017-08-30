@@ -12,7 +12,7 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import static com.wedriveu.shared.util.Constants.USERNAME;
 import static com.wedriveu.shared.util.Constants.VEHICLE;
@@ -71,11 +71,11 @@ public class VehicleElectionVerticle extends VerticlePublisher {
         Double distanceToUser = content.getDouble(Messages.Trip.DISTANCE_TO_USER);
         Double totalDistance = content.getDouble(Messages.Trip.TOTAL_DISTANCE);
         if (speed != null && distanceToUser != null && totalDistance != null) {
-            Calendar today = Calendar.getInstance();
+            Date date = new Date();
             vehicleResponse.setArriveAtUserTime(
-                    today.getTimeInMillis() + Time.getDriveTimeInMilliseconds(distanceToUser, speed));
+                    date.getTime() + Time.getDriveTimeInMilliseconds(distanceToUser, speed));
             vehicleResponse.setArriveAtDestinationTime(
-                    today.getTimeInMillis() + Time.getDriveTimeInMilliseconds(totalDistance, speed));
+                    date.getTime() + Time.getDriveTimeInMilliseconds(totalDistance, speed));
         }
         return VertxJsonMapper.mapInBodyFrom(vehicleResponse);
     }

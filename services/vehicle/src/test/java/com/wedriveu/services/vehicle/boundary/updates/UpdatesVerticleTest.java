@@ -12,8 +12,8 @@ import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFact
 import com.wedriveu.services.vehicle.entity.VehicleStore;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.rabbitmq.message.VehicleResponse;
+import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Position;
 import io.vertx.core.*;
@@ -127,14 +127,14 @@ public class UpdatesVerticleTest extends BaseInteractionClient {
     }
 
     private JsonObject createUpdate() {
-        UpdateToService updateToService = new UpdateToService();
-        updateToService.setUsername(USERNAME);
-        updateToService.setLicense(brokenVehicle.getLicensePlate());
-        updateToService.setStatus(brokenVehicle.getStatus());
-        updateToService.setPosition(brokenVehicle.getPosition());
-        updateToService.setUserOnBoard(true);
+        VehicleUpdate vehicleUpdate = new VehicleUpdate();
+        vehicleUpdate.setUsername(USERNAME);
+        vehicleUpdate.setLicense(brokenVehicle.getLicensePlate());
+        vehicleUpdate.setStatus(brokenVehicle.getStatus());
+        vehicleUpdate.setPosition(brokenVehicle.getPosition());
+        vehicleUpdate.setUserOnBoard(true);
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(updateToService).toString());
+        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(vehicleUpdate).toString());
         return jsonObject;
     }
 

@@ -62,9 +62,10 @@ public class SubstitutionControl extends AbstractVerticle {
     }
 
     private void checkAndStartVehicleSubstitution(Message message) {
-        UUID randomId = UUID.randomUUID();
-        vertx.deployVerticle(new SubstitutionChecker(randomId.toString()), onDeploy ->
-                eventBus.send(Messages.VehicleSubstitution.CHECK_FOR_SUBSTITUTION, message.body())
+        String randomId = UUID.randomUUID().toString();
+        vertx.deployVerticle(new SubstitutionChecker(randomId), onDeploy ->
+                eventBus.send(String.format(Messages.VehicleSubstitution.CHECK_FOR_SUBSTITUTION, randomId),
+                        message.body())
         );
     }
 
@@ -77,7 +78,7 @@ public class SubstitutionControl extends AbstractVerticle {
                             null,
                             null,
                             new ArrayList<>());
-            substitutionRequests.put(substitutionCheck.getUpdateToService().getUsername(), request);
+            substitutionRequests.put(substitutionCheck.getVehicleUpdate().getUsername(), request);
             eventBus.send(Messages.VehicleSubstitution.GET_AVAILABLE_VEHICLES_FOR_SUBSTITUTION,
                     JsonObject.mapFrom(request));
         }
@@ -145,7 +146,7 @@ public class SubstitutionControl extends AbstractVerticle {
         BookVehicleResponse response = wrapper.getResponse();
         ChangeBookingRequest changeBookingRequest = new ChangeBookingRequest();
         changeBookingRequest.setNewLicensePlate(response.getLicensePlate());
-        changeBookingRequest.setUsername(substitutionCheck.getUpdateToService().getUsername());
+        changeBookingRequest.setUsername(substitutionCheck.getVehicleUpdate().getUsername());
         eventBus.send(Messages.Booking.CHANGE_BOOKING_REQUEST,
                 VertxJsonMapper.mapFrom(changeBookingRequest));
     }

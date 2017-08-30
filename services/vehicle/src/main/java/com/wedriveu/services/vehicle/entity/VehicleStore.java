@@ -34,13 +34,15 @@ public interface VehicleStore {
     Vehicle getVehicle(String licensePlate);
 
     /**
-     * Searches all available vehicles which are inside the specified {@code range} of a {@code sourcePosition}.
+     * Searches all available vehicles which are inside the specified {@code minRange} and {@code maxRange}
+     * of a {@code sourcePosition}.
      *
      * @param sourcePosition The source position
-     * @param range The range
+     * @param minRange The minimum range
+     * @param maxRange The maximum range
      * @return The list of available vehicles or an empty list if no available vehicle is found.
      */
-    List<Vehicle> getAllAvailableVehiclesInRange(Position sourcePosition, double range);
+    List<Vehicle> getAllAvailableVehiclesInRange(Position sourcePosition, double minRange, double maxRange);
 
     /**
      * Gets all the vehicles in the store.
