@@ -41,6 +41,12 @@ trait BookingBoundary {
     */
   def handleGetBookingsRequest(): Future[_]
 
+  /** Handles an abort [[com.wedriveu.services.shared.model.Booking]] request.
+    *
+    * @return The future containing the result of this request.
+    */
+  def handleAbortBookingRequest(): Future[_]
+
 }
 
 /** Represents a [[BookingBoundary]] which implementation will be bounded to a [[ScalaVerticle]].
@@ -67,6 +73,8 @@ object BookingBoundaryVerticle {
         _ => handleFindActiveBookingPositionsRequest()
       }).flatMap({
         _ => handleGetBookingsRequest()
+      }).flatMap({
+        _ => handleAbortBookingRequest()
       })
     }
 
@@ -104,6 +112,10 @@ object BookingBoundaryVerticle {
       vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.GetBookings).flatMap({ _ =>
         vertx.deployVerticleFuture(BookingBoundaryPublisherVerticle.GetBookings)
       })
+    }
+
+    override def handleAbortBookingRequest(): Future[_] = {
+      vertx.deployVerticleFuture(BookingBoundaryConsumerVerticle.AbortBooking)
     }
   }
 
