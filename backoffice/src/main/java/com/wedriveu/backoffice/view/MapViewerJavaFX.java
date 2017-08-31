@@ -1,5 +1,6 @@
 package com.wedriveu.backoffice.view;
 
+import com.wedriveu.backoffice.util.ConstantsBackOffice;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
@@ -17,10 +18,10 @@ public class MapViewerJavaFX {
     private Stage stage;
 
     private static void initAndShowGUI(String javascriptCode) {
-        JFrame frame = new JFrame("FX");
+        JFrame frame = new JFrame(ConstantsBackOffice.BROWSER_TITLE);
         final JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel);
-        frame.setSize(630,630);
+        frame.setSize(630,680);
         frame.setVisible(true);
 
         Platform.runLater(new Runnable() {

@@ -1,5 +1,7 @@
 package com.wedriveu.backoffice.util;
 
+import static com.wedriveu.shared.util.Constants.HEAD_QUARTER;
+
 /**
  * @author Stefano Bernagozzi
  */
@@ -13,7 +15,7 @@ public interface ConstantsBackOffice {
     int VEHICLE_BROKEN = 1;
     int VEHICLE_NETWORK_ISSUES = 0;
     int VEHICLE_RECHARGING = 0;
-
+    String BROWSER_TITLE = "Booking Positions";
 
 
     interface WebPage {
@@ -32,10 +34,16 @@ public interface ConstantsBackOffice {
                 "    </style>" +
                 "  </head>" +
                 "  <body>" +
+                "Legend: <img src='http://maps.google.com/mapfiles/ms/icons/red-dot.png'> user position" +
+                " <img src='http://maps.google.com/mapfiles/ms/icons/green-dot.png'> destination position" +
                 "    <div id=\"map\"></div>" +
                 "    <script>" +
                 "      function initMap() {" +
-                "        var cesena = {lat: 44.1391000, lng: 12.2431500};" +
+                "        var cesena = {lat: " +
+                HEAD_QUARTER.getLatitude() +
+                ", lng: " +
+                HEAD_QUARTER.getLongitude() +
+                "};" +
                 "        var map = new google.maps.Map(document.getElementById('map'), {" +
                 "          zoom: 7," +
                 "          center: cesena" +
