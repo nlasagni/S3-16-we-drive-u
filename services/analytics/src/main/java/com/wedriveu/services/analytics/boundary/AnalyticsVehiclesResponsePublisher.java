@@ -5,11 +5,12 @@ import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_LIST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_COUNTER;
 
 /**
  * a verticle for publishing the vehicle counter to the backoffice
@@ -36,16 +37,15 @@ public class AnalyticsVehiclesResponsePublisher extends VerticlePublisher {
                 VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), MessageVehicleCounterWithID.class);
         JsonObject dataToUser = VertxJsonMapper.mapInBodyFrom(messageVehicleCounterWithID.getVehicleCounter());
         if (messageVehicleCounterWithID.getBackofficeID().equals("")) {
-            publish(Constants.RabbitMQ.Exchanges.ANALYTICS, ANALYTICS_RESPONSE_VEHICLE_LIST,
+            publish(Constants.RabbitMQ.Exchanges.ANALYTICS,
+                    ANALYTICS_RESPONSE_VEHICLE_COUNTER,
                     dataToUser,
-                    res -> {
-                    });
+                    res -> { });
         } else {
             publish(Constants.RabbitMQ.Exchanges.ANALYTICS,
-                    ANALYTICS_RESPONSE_VEHICLE_LIST + "." + messageVehicleCounterWithID.getBackofficeID(),
+                    ANALYTICS_RESPONSE_VEHICLE_COUNTER + "." + messageVehicleCounterWithID.getBackofficeID(),
                     dataToUser,
-                    res -> {
-                    });
+                    res -> { });
         }
     }
 }

@@ -24,7 +24,7 @@ public class BackOfficeBookingsResponseConsumer extends VerticleConsumer {
      * @param backofficeId the backoffice id
      */
     public BackOfficeBookingsResponseConsumer(String backofficeId) {
-        super(RabbitMQ.Exchanges.BOOKING + String.format(RabbitMQ.RoutingKey.BOOKING_RESPONSE_BOOKING_LIST, backofficeId));
+        super(RabbitMQ.Exchanges.BOOKING +"."+ String.format(RabbitMQ.RoutingKey.BOOKING_RESPONSE_BOOKING_LIST, backofficeId));
         this.backofficeId = backofficeId;
     }
 

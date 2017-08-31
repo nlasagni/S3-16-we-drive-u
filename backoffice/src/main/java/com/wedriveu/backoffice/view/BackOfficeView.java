@@ -88,7 +88,6 @@ public class BackOfficeView extends JFrame {
     public void disableButtonAndText() {
         getContentPane().remove(buttonRegistration);
         getContentPane().remove(textFieldBackofficeId);
-        getContentPane().add(buttonBookings, BorderLayout.PAGE_END);
         getContentPane().revalidate();
         getContentPane().repaint();
     }
@@ -102,4 +101,15 @@ public class BackOfficeView extends JFrame {
         buttonRegistration.addActionListener(actionListener);
     }
 
+    /**
+     * adds the action listener to the get bookings button
+     *
+     * @param actionListener the action listener
+     */
+    public void addButtonBookingListener(ActionListener actionListener) {
+        getContentPane().add(buttonBookings, BorderLayout.PAGE_END);
+        buttonBookings.addActionListener(actionListener);
+        getContentPane().revalidate();
+        getContentPane().repaint();
+    }
 }

@@ -49,5 +49,4 @@ public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer {
         vertx.eventBus().send(EventBus.VEHICLE_COUNTER_UPDATE, VertxJsonMapper.mapInBodyFrom(vehicle));
     }
 
-
 }

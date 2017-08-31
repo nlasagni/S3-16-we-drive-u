@@ -29,7 +29,7 @@ public class AnalyticsVehicleCounterRequestConsumer extends VerticleConsumer {
         });
 
         startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS,
-                Constants.RabbitMQ.RoutingKey.ANALYTICS_REQUEST_VEHICLE_LIST,
+                Constants.RabbitMQ.RoutingKey.ANALYTICS_REQUEST_VEHICLE_COUNTER,
                 ConstantsBackOffice.EventBus.ANALYTICS_VEHICLE_COUNTER_REQUEST_EVENTBUS_AVAILABLE_TEST,
                 futureConsumer);
     }

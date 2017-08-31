@@ -8,7 +8,7 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_REQUEST_VEHICLE_LIST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_REQUEST_VEHICLE_COUNTER;
 
 /**
  * @author Stefano Bernagozzi
@@ -29,7 +29,7 @@ public class VehicleCounterGeneratorRequestHandler extends VerticlePublisher {
     private void requestVehicleCounterToAnalytics(Message message) {
         JsonObject dataToUser = new JsonObject();
         dataToUser.put(Constants.EventBus.BODY, EventBus.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID);
-        publish(Constants.RabbitMQ.Exchanges.ANALYTICS, ANALYTICS_REQUEST_VEHICLE_LIST, dataToUser, published -> {
+        publish(Constants.RabbitMQ.Exchanges.ANALYTICS, ANALYTICS_REQUEST_VEHICLE_COUNTER, dataToUser, published -> {
         });
     }
 }

@@ -1,5 +1,6 @@
 package com.wedriveu.services.analytics.control;
 
+import com.wedriveu.services.analytics.boundary.AnalyticsVehicleUpdateHandlerConsumer;
 import com.wedriveu.services.analytics.entity.AnalyticsStore;
 import com.wedriveu.services.analytics.entity.AnalyticsStoreImpl;
 import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
@@ -12,7 +13,9 @@ import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
@@ -50,6 +53,7 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
             analyticsStore.addVehicle(vehicle.getLicensePlate(), vehicle.getStatus());
         }
         sendVehicleUpdates();
+        vertx.deployVerticle(new AnalyticsVehicleUpdateHandlerConsumer());
     }
 
     private void handleVehicleCounterRequest(Message message) {
@@ -64,16 +68,14 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
 
     private void updateVehicleStore(Message message) {
         UpdateToService vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), UpdateToService.class);
-        Optional<AnalyticsVehicle> old = analyticsStore.getVehicleByLicensePlate(vehicle.getLicense());
+        Optional<AnalyticsVehicle> stored = analyticsStore.getVehicleByLicensePlate(vehicle.getLicense());
         boolean sendUpdate = true;
-        if (!old.isPresent()) {
-            analyticsStore.updateVehicle(vehicle.getLicense(), vehicle.getStatus());
+        if (!stored.isPresent()) {
+            analyticsStore.addVehicle(vehicle.getLicense(), vehicle.getStatus());
+        } else if (!stored.get().getStatus().equals(vehicle.getStatus())) {
+                analyticsStore.updateVehicle(vehicle.getLicense(), vehicle.getStatus());
         } else {
-            if (!old.get().getStatus().equals(vehicle.getStatus())) {
-                analyticsStore.addVehicle(vehicle.getLicense(), vehicle.getStatus());
-            }else {
-                sendUpdate = false;
-            }
+            sendUpdate = false;
         }
         if (sendUpdate) {
             sendVehicleUpdates();
@@ -85,6 +87,7 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
                 VertxJsonMapper.mapInBodyFrom(new MessageVehicleCounterWithID(
                         "",
                         analyticsStore.getVehicleCounter())));
+        Log.info(this.getClass().getSimpleName(), "vehicel counter: " + analyticsStore.getVehicleCounter().toString());
     }
 
 }

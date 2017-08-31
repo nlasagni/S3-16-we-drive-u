@@ -37,7 +37,7 @@ public interface ConstantsBackOffice {
                 "      function initMap() {" +
                 "        var cesena = {lat: 44.1391000, lng: 12.2431500};" +
                 "        var map = new google.maps.Map(document.getElementById('map'), {" +
-                "          zoom: 4," +
+                "          zoom: 7," +
                 "          center: cesena" +
                 "        });" ;
         /**

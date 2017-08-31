@@ -56,21 +56,14 @@ public class BackOfficeController extends AbstractVerticle {
         futureModel.setHandler(res -> {
             Future futureVerticle1 = Future.future();
             vertx.deployVerticle(new BackOfficeVehiclesResponseConsumer(
-                            "." + backOfficeModel.getBackofficeID() + ".updates",
-                            ""),
+                    backOfficeModel.getBackofficeID(), true),
                     futureVerticle1.completer());
             futures.add(futureVerticle1);
             Future futureVerticle2 = Future.future();
             vertx.deployVerticle(new BackOfficeVehiclesResponseConsumer(
-                            "." + backOfficeModel.getBackofficeID(),
-                            "." + backOfficeModel.getBackofficeID()),
+                            backOfficeModel.getBackofficeID(), false),
                     futureVerticle2.completer());
             futures.add(futureVerticle2);
-            Future futureVerticle3 = Future.future();
-            vertx.deployVerticle(new BackOfficeVehicleRequestPublisher(
-                            backOfficeModel.getBackofficeID()),
-                    futureVerticle3.completer());
-            futures.add(futureVerticle3);
             Future futureVerticle4 = Future.future();
             vertx.deployVerticle(new BackOfficeBookingsRequestPublisher(
                             backOfficeModel.getBackofficeID()),
@@ -82,7 +75,13 @@ public class BackOfficeController extends AbstractVerticle {
                     futureVerticle5.completer());
             futures.add(futureVerticle5);
             CompositeFuture.all(futures).setHandler(resAllFutures-> {
-                futureStart.complete();
+                ButtonEventListenerBooking buttonEventListenerBooking = new ButtonEventListenerBooking(vertx);
+                backOfficeView.addButtonBookingListener(buttonEventListenerBooking);
+                vertx.deployVerticle(new BackOfficeVehicleRequestPublisher(
+                                backOfficeModel.getBackofficeID()),fu -> {
+                         futureStart.complete();
+                });
+
             });
         });
     }

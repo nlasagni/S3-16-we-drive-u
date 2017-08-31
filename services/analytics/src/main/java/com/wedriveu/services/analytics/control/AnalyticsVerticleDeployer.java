@@ -51,9 +51,6 @@ public class AnalyticsVerticleDeployer extends AbstractVerticle {
         vertx.deployVerticle(new AnalyticsVehicleDataManipulationVerticle(), controlFuture.completer());
         futures.add(controlFuture);
 
-        Future vehicleUpdate = Future.future();
-        vertx.deployVerticle(new AnalyticsVehicleUpdateHandlerConsumer(), vehicleUpdate.completer());
-        futures.add(vehicleUpdate);
 
         Future counterRequest = Future.future();
         vertx.deployVerticle(new AnalyticsVehicleRequestConsumer(), counterRequest.completer());

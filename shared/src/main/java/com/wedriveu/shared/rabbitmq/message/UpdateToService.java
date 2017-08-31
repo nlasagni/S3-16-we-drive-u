@@ -13,6 +13,7 @@ public class UpdateToService {
     private Position position;
     private String status;
     private String license;
+    private String username;
     private String failureMessage;
     private boolean userOnBoard;
 
@@ -118,5 +119,13 @@ public class UpdateToService {
                 ", failureMessage='" + failureMessage + '\'' +
                 ", userOnBoard=" + userOnBoard +
                 '}';
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

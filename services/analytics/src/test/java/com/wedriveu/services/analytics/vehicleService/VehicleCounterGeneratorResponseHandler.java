@@ -9,7 +9,7 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_LIST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_COUNTER;
 
 /**
  * @author Stefano Bernagozzi
@@ -17,7 +17,7 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_R
 public class VehicleCounterGeneratorResponseHandler  extends VerticleConsumer{
 
         public VehicleCounterGeneratorResponseHandler() {
-            super(Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ ANALYTICS_RESPONSE_VEHICLE_LIST +"." + EventBus.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID +".test");
+            super(Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ ANALYTICS_RESPONSE_VEHICLE_COUNTER +"." + EventBus.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID +".test");
         }
 
         @Override
@@ -33,7 +33,7 @@ public class VehicleCounterGeneratorResponseHandler  extends VerticleConsumer{
             });
 
             startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS,
-                    ANALYTICS_RESPONSE_VEHICLE_LIST +"." + EventBus.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID,
+                    ANALYTICS_RESPONSE_VEHICLE_COUNTER +"." + EventBus.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID,
                     EventBus.AVAILABLE_ADDRESS_FAKE_VEHICLE_COUNTER_RESPONSE,
                     futureConsumer);
         }

@@ -35,7 +35,7 @@ public class BackOfficeVehiclesResponseConsumerTest {
         vertx = Vertx.vertx();
         futures = new ArrayList<>();
         Future retrieveFuture = Future.future();
-        vertx.deployVerticle(new BackOfficeVehiclesResponseConsumer(ConstantsBackOffice.Queues.ANALYTYCS_VEHICLE_COUNTER_RESPONSE_QUEUE_TEST, ""), retrieveFuture.completer());
+        vertx.deployVerticle(new BackOfficeVehiclesResponseConsumer(ConstantsBackOffice.TEST_BACKOFFICE_ID, true), retrieveFuture.completer());
         futures.add(retrieveFuture);
 
         Future generatorRequestHandlerFuture = Future.future();
