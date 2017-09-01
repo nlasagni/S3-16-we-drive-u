@@ -32,7 +32,7 @@ public class VertxJsonMapper {
         return MAPPER.readValue(jsonObject.getString(BODY), collectionType);
     }
 
-     /**
+    /**
      * maps from a json object to an entity contained in the json object
      * @param jsonObject the json object with inside the entity
      * @param classType the class of the entity that is inside the json object

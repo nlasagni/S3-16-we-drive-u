@@ -8,7 +8,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
-import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
@@ -38,17 +37,18 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     protected void startConsumerWithFuture(String exchange,
                                            String routingKey,
                                            String eventBusAddress,
-                                           Future future)
-            throws IOException, TimeoutException {
+                                           Future future) throws IOException, TimeoutException {
         startConsumer(onStart -> {
-            declareQueue(onQueue -> {
+            declareQueue(true, onQueue -> {
                 if (onQueue.succeeded()) {
                     bindQueueToExchange(exchange,
-                            routingKey,
-                            onBind -> {
+                            routingKey, onBind -> {
                                 if (onBind.succeeded()) {
                                     registerConsumer(eventBusAddress);
-                                    basicConsume(eventBusAddress, future == null ? null : future.completer());
+                                    basicConsume(eventBusAddress);
+                                    if (future != null) {
+                                        future.complete();
+                                    }
                                 } else {
                                     Log.error(queueName + " bind ", onBind.cause().getLocalizedMessage(), onBind.cause());
                                 }
@@ -61,23 +61,45 @@ public abstract class VerticleConsumer extends AbstractVerticle {
     }
 
     private void startConsumer(Handler<AsyncResult<Void>> handler) throws java.io.IOException, TimeoutException {
-        client.start(handler);
+        client.start(onStartCompleted -> {
+            if (onStartCompleted.succeeded()) {
+                handler.handle(Future.succeededFuture());
+            } else {
+                handler.handle(Future.failedFuture(onStartCompleted.cause().getMessage()));
+            }
+        });
     }
 
-    private void declareQueue(Handler<AsyncResult<JsonObject>> handler) {
-        client.queueDeclare(queueName, true, false, false, handler);
+    private void declareQueue(boolean durableQueue, Handler<AsyncResult<Void>> handler) {
+        client.queueDeclare(queueName, durableQueue, false, false, onDeclareCompleted -> {
+            if (onDeclareCompleted.succeeded()) {
+                handler.handle(Future.succeededFuture());
+            } else {
+                handler.handle(Future.failedFuture(onDeclareCompleted.cause().getMessage()));
+            }
+        });
     }
 
     private void bindQueueToExchange(String exchangeName,
                                      String baseRoutingKey,
                                      Handler<AsyncResult<Void>> handler) {
-        client.queueBind(queueName, exchangeName, baseRoutingKey, handler);
+        client.queueBind(queueName,
+                exchangeName,
+                baseRoutingKey,
+                onBind -> {
+                    if (onBind.succeeded()) {
+                        handler.handle(Future.succeededFuture());
+                    } else {
+                        handler.handle(io.vertx.core.Future.failedFuture(onBind.cause().getMessage()));
+                    }
+                });
     }
 
     public abstract void registerConsumer(String eventBus);
 
-    private void basicConsume(String eventBus, Handler<AsyncResult<Void>> handler) {
-        client.basicConsume(queueName, eventBus, handler);
+    private void basicConsume(String eventBus) {
+        client.basicConsume(queueName, eventBus, handler -> {
+        });
     }
 
 }

@@ -270,7 +270,6 @@ public interface Constants {
              *  The routing key used by booking service to receive a booking list request.
              */
             String BOOKING_RESPONSE_BOOKING_LIST = "booking.response.all.%s";
-
         }
     }
 
