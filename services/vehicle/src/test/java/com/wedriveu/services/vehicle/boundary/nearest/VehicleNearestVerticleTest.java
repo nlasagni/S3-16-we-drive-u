@@ -11,7 +11,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +32,7 @@ public class VehicleNearestVerticleTest extends BaseInteractionClient {
     private static final String EVENT_BUS_ADDRESS = VehicleNearestVerticleTest.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.nearest";
     private static final int ASYNC_COUNT = 3;
+
     private Vertx vertx;
     private BootVerticle bootVerticle;
     private Async async;
