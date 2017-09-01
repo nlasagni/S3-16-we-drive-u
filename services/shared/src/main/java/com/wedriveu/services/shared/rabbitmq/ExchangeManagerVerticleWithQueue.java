@@ -1,6 +1,5 @@
 package com.wedriveu.services.shared.rabbitmq;
 
-import com.wedriveu.services.shared.message.SharedMessages;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
