@@ -39,6 +39,7 @@ public class VehicleElectionVerticle extends VerticlePublisher {
     }
 
     private void sendSubstitutionVehicleToUser(Message message) {
+
         sendVehicle(message, Constants.RabbitMQ.RoutingKey.VEHICLE_SUBSTITUTION);
     }
 

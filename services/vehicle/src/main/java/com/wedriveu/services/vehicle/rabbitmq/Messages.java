@@ -199,10 +199,6 @@ public interface Messages {
          * The constant UNDEPLOY.
          */
         String UNDEPLOY = "vehicle.substitution.undeploy";
-        /**
-         *
-         */
-        String COMPLETE_BOOKING = "vehicle.substitution.complete.booking";
     }
 
     /**
