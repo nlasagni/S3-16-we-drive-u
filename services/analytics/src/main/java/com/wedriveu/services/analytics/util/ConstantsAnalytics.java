@@ -2,6 +2,7 @@ package com.wedriveu.services.analytics.util;
 
 /**
  * @author Nicola Lasagni on 21/08/2017.
+ * @author Stefano Bernagozzi on 31/08/2017.
  */
 public interface ConstantsAnalytics {
 
