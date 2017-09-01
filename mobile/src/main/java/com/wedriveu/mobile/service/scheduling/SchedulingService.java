@@ -2,7 +2,7 @@ package com.wedriveu.mobile.service.scheduling;
 
 import com.google.android.gms.location.places.Place;
 import com.wedriveu.mobile.model.Vehicle;
-import com.wedriveu.mobile.service.ServiceOperationCallback;
+import com.wedriveu.mobile.service.ServiceOperationHandler;
 import com.wedriveu.shared.util.Position;
 
 /**
@@ -10,7 +10,6 @@ import com.wedriveu.shared.util.Position;
  * based on the coordinates given in input.
  *
  * @author Marco Baldassarri
- * @since 20/07/2017
  */
 public interface SchedulingService {
 
@@ -18,8 +17,11 @@ public interface SchedulingService {
      * Calls the vehicle service and perform a HTTP request to get the chosen vehicle
      *
      * @param destination The GPS coordinates given by the user.
-     * @param callback
+     * @param handler
      */
-    void findNearestVehicle(Position userPosition, Place destination, ServiceOperationCallback<Vehicle> callback);
+    <T> void findNearestVehicle(String username,
+                                Position userPosition,
+                                Place destination,
+                                ServiceOperationHandler<T, Vehicle> handler);
 
 }

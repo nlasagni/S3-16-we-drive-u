@@ -22,7 +22,7 @@ class RechargingLatchedThread(selfDrivingVehicle: SelfDrivingVehicle,
   override def run(): Unit = {
     for (i <- 0 until 10 by 1) {
       try {
-        if (!selfDrivingVehicle.getState().equals(VehicleConstants.stateBroken)) {
+        if (!selfDrivingVehicle.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)) {
           Thread.sleep(oneSecondInMillis)
         }
         else {
@@ -34,7 +34,7 @@ class RechargingLatchedThread(selfDrivingVehicle: SelfDrivingVehicle,
       }
     }
     selfDrivingVehicle.battery = VehicleConstants.maxBatteryValue
-    selfDrivingVehicle.setState(VehicleConstants.stateAvailable)
+    selfDrivingVehicle.setState(Constants.Vehicle.STATUS_AVAILABLE)
     eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, selfDrivingVehicle.plate), new JsonObject())
   }
 

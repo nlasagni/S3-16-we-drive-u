@@ -2,10 +2,9 @@ package com.wedriveu.mobile.app;
 
 /**
  *
- *Dialog provider interface
+ * Represent an entity capable of showing dialogs.
  * 
  * @author Nicola Lasagni
- * @since 18/07/2017
  */
 public interface DialogProvider {
 

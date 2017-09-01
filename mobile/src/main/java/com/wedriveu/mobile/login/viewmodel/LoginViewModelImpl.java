@@ -5,18 +5,21 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import com.wedriveu.mobile.app.ComponentFinder;
+import com.wedriveu.mobile.app.FactoryProvider;
 import com.wedriveu.mobile.login.router.LoginRouter;
 import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.model.User;
-import com.wedriveu.mobile.service.ServiceFactoryImpl;
-import com.wedriveu.mobile.service.ServiceOperationCallback;
+import com.wedriveu.mobile.service.ServiceFactory;
 import com.wedriveu.mobile.service.ServiceResult;
 import com.wedriveu.mobile.service.login.LoginService;
-import com.wedriveu.mobile.store.StoreFactoryImpl;
+import com.wedriveu.mobile.store.StoreFactory;
 import com.wedriveu.mobile.store.UserStore;
 
 /**
- * Created by Marco on 12/07/2017.
+ * The {@linkplain LoginViewModel} implementation.
+ *
+ * @author Marco on 12/07/2017.
+ * @author Nicola Lasagni
  */
 public class LoginViewModelImpl extends Fragment implements LoginViewModel {
 
@@ -24,7 +27,13 @@ public class LoginViewModelImpl extends Fragment implements LoginViewModel {
     private LoginService mLoginService;
     private UserStore mUserStore;
     private LoginRouter mRouter;
+    private LoginServiceHandler<User> mLoginHandler;
 
+    /**
+     * New instance of a {@linkplain LoginViewModel}.
+     *
+     * @return the booking view model
+     */
     public static LoginViewModelImpl newInstance(String viewId) {
         LoginViewModelImpl fragment = new LoginViewModelImpl();
         fragment.setRetainInstance(true);
@@ -47,19 +56,17 @@ public class LoginViewModelImpl extends Fragment implements LoginViewModel {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mUserStore = StoreFactoryImpl.getInstance().createUserStore(getContext());
-        mLoginService = ServiceFactoryImpl.getInstance().createLoginService(getActivity());
+        mLoginHandler = new LoginHandler(this);
+        StoreFactory storeFactory = ((FactoryProvider) getActivity()).provideStoreFactory();
+        ServiceFactory serviceFactory = ((FactoryProvider) getActivity()).provideServiceFactory();
+        mUserStore = storeFactory.createUserStore();
+        mLoginService = serviceFactory.createLoginService();
     }
 
     @Override
     public void onLoginButtonClick(String username, String password) {
         mRouter.showProgressDialog();
-        mLoginService.login(username, password, new ServiceOperationCallback<User>() {
-            @Override
-            public void onServiceOperationFinished(ServiceResult<User> result) {
-                onLoginFinished(result.getResult(), result.getErrorMessage());
-            }
-        });
+        mLoginService.login(username, password, mLoginHandler);
     }
 
     private void onLoginFinished(User user, String errorMessage) {
@@ -73,6 +80,18 @@ public class LoginViewModelImpl extends Fragment implements LoginViewModel {
                 mUserStore.storeUser(user);
                 mRouter.showTripScheduling();
             }
+        }
+    }
+
+    private static class LoginHandler extends LoginServiceHandler<User> {
+
+        LoginHandler(LoginViewModelImpl weakReference) {
+            super(weakReference);
+        }
+
+        @Override
+        protected void handleMessage(LoginViewModelImpl weakReference, ServiceResult<User> result) {
+            weakReference.onLoginFinished(result.getResult(), result.getErrorMessage());
         }
     }
 

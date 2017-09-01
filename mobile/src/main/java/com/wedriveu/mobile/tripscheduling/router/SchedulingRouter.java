@@ -10,13 +10,12 @@ import com.wedriveu.mobile.app.DialogProvider;
  *
  * @author Marco Baldassarri
  * @author Nicola Lasagni
- * @since 20/07/2017
  */
 public interface SchedulingRouter extends DialogProvider {
 
     /**
      * Shows the Booking confirmation to the user
      */
-    void showBooking();
+    void showBookingSummary();
 
 }

@@ -8,6 +8,9 @@ import io.vertx.scala.rabbitmq.RabbitMQClient
 
 import scala.concurrent.Future
 
+/** Creates a [[BootManager]] that boots the [[BookingBoundary]]
+  *
+  */
 object BootBoundary {
 
   /**

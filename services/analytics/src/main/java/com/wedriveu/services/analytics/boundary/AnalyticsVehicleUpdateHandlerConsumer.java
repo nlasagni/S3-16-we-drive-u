@@ -3,7 +3,7 @@ package com.wedriveu.services.analytics.boundary;
 import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
+import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -45,7 +45,7 @@ public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer {
     }
 
     private void sendToController(Message message) {
-        UpdateToService vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), UpdateToService.class);
+        VehicleUpdate vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleUpdate.class);
         vertx.eventBus().send(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_UPDATE, VertxJsonMapper.mapInBodyFrom(vehicle));
     }
 

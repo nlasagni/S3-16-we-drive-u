@@ -4,11 +4,10 @@ import android.support.v4.app.Fragment;
 
 /**
  *
- * Component finder interface
+ * Represents an entity capable of retrieving view and viewmodels android components.
  *
  * @author Marco Baldassarri
  * @author Nicola Lasagni
- * @since 12/07/2017
  */
 public interface ComponentFinder {
 

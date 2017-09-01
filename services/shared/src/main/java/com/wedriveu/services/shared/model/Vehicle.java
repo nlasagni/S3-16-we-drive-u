@@ -1,6 +1,5 @@
 package com.wedriveu.services.shared.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wedriveu.shared.util.Position;
 
@@ -12,32 +11,7 @@ import java.util.Date;
  * @author Marco Baldassarri
  * @author Michele
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Vehicle {
-
-    /**
-     * This status means that the {@linkplain Vehicle} can be booked by a {@linkplain User}.
-     */
-    public static final String STATUS_AVAILABLE = "available";
-    /**
-     * This status means that the {@linkplain Vehicle} has been booked by a {@linkplain User}.
-     */
-    public static final String STATUS_BOOKED = "booked";
-    /**
-     * This status means that the {@linkplain Vehicle} is going to recharge itself.
-     */
-    public static final String STATUS_RECHARGING = "recharging";
-    /**
-     * This status means that the {@linkplain Vehicle} is broken or stolen.
-     */
-    public static final String STATUS_BROKEN_STOLEN = "broken_stolen";
-    /**
-     * This status means that the {@linkplain Vehicle} has network issues, so it will come back to the headquarted.
-     */
-    public static final String STATUS_NETWORK_ISSUES = "net_issues";
-
-    public static final String NO_ELIGIBLE_VEHICLE_RESPONSE = "No vehicles nearby, " +
-            "please try again later or change your address";
 
     private String licensePlate;
     private String status;

@@ -1,12 +1,12 @@
 package com.wedriveu.mobile.service.login;
 
-import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Message;
 import android.util.Log;
 import com.rabbitmq.client.ExceptionHandler;
 import com.wedriveu.mobile.model.User;
 import com.wedriveu.mobile.service.ServiceExceptionHandler;
-import com.wedriveu.mobile.service.ServiceOperationCallback;
+import com.wedriveu.mobile.service.ServiceOperationHandler;
 import com.wedriveu.mobile.service.ServiceResult;
 import com.wedriveu.shared.rabbitmq.communication.DefaultRabbitMqCommunicationManager;
 import com.wedriveu.shared.rabbitmq.communication.RabbitMqCommunicationManager;
@@ -28,34 +28,29 @@ import static com.wedriveu.mobile.util.Constants.CLOSE_COMMUNICATION_ERROR;
 import static com.wedriveu.mobile.util.Constants.NO_RESPONSE_DATA_ERROR;
 
 /**
- * The type Login service.
+ * The effective {@linkplain LoginService} implementation
  *
  * @author Marco Baldassarri
  * @author Nicola Lasagni
- * @since 18 /07/2017
  */
 public class LoginServiceImpl implements LoginService {
 
     private static final String TAG = LoginServiceImpl.class.getSimpleName();
     private static final String LOGIN_ERROR = "Error occurred while performing login operation.";
 
-    private Activity mActivity;
     private RabbitMqCommunicationManager mCommunicationManager;
 
     /**
-     * Instantiates a new {@linkplain LoginService}.
-     *
-     * @param activity the activity used to perform needed callback actions on the UI thread.
+     * Instantiates a new LoginService.
      */
-    public LoginServiceImpl(Activity activity) {
-        mActivity = activity;
+    public LoginServiceImpl() {
         mCommunicationManager = new DefaultRabbitMqCommunicationManager();
     }
 
     @Override
-    public void login(final String username,
+    public <T> void login(final String username,
                       final String password,
-                      final ServiceOperationCallback<User> callback) {
+                      final ServiceOperationHandler<T, User> handler) {
         new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -91,7 +86,9 @@ public class LoginServiceImpl implements LoginService {
                     Log.e(TAG, LOGIN_ERROR, e);
                     result = new ServiceResult<>(null, LOGIN_ERROR);
                 }
-                handleResponse(result, callback);
+                Message message = handler.obtainMessage();
+                message.obj = result;
+                handler.sendMessage(message);
                 return null;
             }
 
@@ -124,7 +121,7 @@ public class LoginServiceImpl implements LoginService {
 
     private LoginResponse subscribeForResponse(String requestId, BlockingQueue<LoginResponse> responseBlockingQueue)
             throws IOException, InterruptedException {
-        RabbitMqConsumerStrategy<LoginResponse> strategy = new LoginConsumerStrategy(requestId, responseBlockingQueue);
+        RabbitMqConsumerStrategy<LoginResponse> strategy = new LoginSynchronousConsumerStrategy(requestId, responseBlockingQueue);
         mCommunicationManager.registerConsumer(strategy, LoginResponse.class);
         return responseBlockingQueue.poll(com.wedriveu.mobile.util.Constants.SERVICE_OPERATION_TIMEOUT,
                 TimeUnit.MILLISECONDS);
@@ -142,16 +139,6 @@ public class LoginServiceImpl implements LoginService {
             error = response.getErrorMessage();
         }
         return new ServiceResult<>(user, error);
-    }
-
-    private void handleResponse(final ServiceResult<User> result,
-                                final ServiceOperationCallback<User> callback) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                callback.onServiceOperationFinished(result);
-            }
-        });
     }
 
 }

@@ -7,25 +7,44 @@ package com.wedriveu.shared.rabbitmq.message;
  */
 public class ChangeBookingResponse {
 
-    private boolean success;
+    private boolean successful;
+    private String username;
     private String licencePlate;
 
     /**
-     * Is success boolean.
+     * Is successful boolean.
      *
      * @return A boolean indicating the success of this operation
      */
-    public boolean isSuccess() {
-        return success;
+    public boolean isSuccessful() {
+        return successful;
     }
 
     /**
-     * Sets success.
+     * Sets successful.
      *
-     * @param success the success of this response result
+     * @param successful the successful of this response result
      */
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setSuccessful(boolean successful) {
+        this.successful = successful;
+    }
+
+    /**
+     * Gets username.
+     *
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Sets username.
+     *
+     * @param username the username
+     */
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
@@ -37,7 +56,6 @@ public class ChangeBookingResponse {
         return licencePlate;
     }
 
-
     /**
      * Sets vehicle licence plate.
      *
@@ -47,6 +65,7 @@ public class ChangeBookingResponse {
         this.licencePlate = licencePlate;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -55,23 +74,25 @@ public class ChangeBookingResponse {
         if (!(o instanceof ChangeBookingResponse)) {
             return false;
         }
-        ChangeBookingResponse that = (ChangeBookingResponse) o;
-        return success == that.success &&
-                (licencePlate != null ? licencePlate.equals(that.licencePlate) : that.licencePlate == null);
+        ChangeBookingResponse response = (ChangeBookingResponse) o;
+        return successful == response.successful &&
+                (username != null ? username.equals(response.username) : response.username == null) &&
+                (licencePlate != null ? licencePlate.equals(response.licencePlate) : response.licencePlate == null);
     }
 
     @Override
     public int hashCode() {
-        int result = (success ? 1 : 0);
+        int result = (successful ? 1 : 0);
+        result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (licencePlate != null ? licencePlate.hashCode() : 0);
         return result;
     }
 
-
     @Override
     public String toString() {
         return "ChangeBookingResponse{" +
-                "success=" + success +
+                "successful=" + successful +
+                ", username='" + username + '\'' +
                 ", licencePlate='" + licencePlate + '\'' +
                 '}';
     }

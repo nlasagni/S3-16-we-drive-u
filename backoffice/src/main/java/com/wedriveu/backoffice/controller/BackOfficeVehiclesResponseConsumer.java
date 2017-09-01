@@ -12,6 +12,7 @@ import io.vertx.core.json.JsonObject;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_COUNTER;
 import static com.wedriveu.shared.util.Constants.RabbitMQ;
 
+
 /**
  * the class for recieving a vehicle list over rabbitMQ with vertx from the vehicle service
  *

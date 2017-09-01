@@ -29,6 +29,11 @@ public class Booking {
      * so it means that a {@linkplain Vehicle} has taken the {@linkplain User} to its destination successfully.
      */
     public static final String STATUS_COMPLETED = "completed";
+    /**
+     * This status represents a {@linkplain Booking} that has been aborted,
+     * so it means that a {@linkplain Vehicle} was unable to take the {@linkplain User} to its destination successfully.
+     */
+    public static final String STATUS_ABORTED = "aborted";
 
     private int id;
     private Date date;

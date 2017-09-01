@@ -102,7 +102,7 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
           if (!debugVar && !testVar) {
             val millisecondsForUpdateMeters: Int =
               ((metersRunBeforeUpdate * VehicleConstants.oneSecondInMillis) / (selfDrivingVehicle.speed / 3.6)).toInt
-            Thread.sleep(millisecondsForUpdateMeters)
+              Thread.sleep(millisecondsForUpdateMeters)
           }
           eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
             new JsonObject())
@@ -140,17 +140,8 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
   }
 
   private def checkVehicleIsBrokenOrStolen(): Boolean = {
-    if (selfDrivingVehicle.getState().equals(VehicleConstants.stateStolen)) {
-      stopUi.writeMessageLog(VehicleConstants.stateStolenLog
-          + selfDrivingVehicle.position.getLatitude
-          + VehicleConstants.commaLog
-          + selfDrivingVehicle.position.getLongitude)
-      eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
-        new JsonObject)
-      true
-    }
-    else if (selfDrivingVehicle.getState().equals(VehicleConstants.stateBroken)) {
-      stopUi.writeMessageLog(VehicleConstants.stateBrokenLog
+    if (selfDrivingVehicle.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)) {
+      stopUi.writeMessageLog(VehicleConstants.stateBrokenStolenLog
           + selfDrivingVehicle.position.getLatitude
           + VehicleConstants.commaLog
           + selfDrivingVehicle.position.getLongitude)
@@ -203,7 +194,7 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
         new JsonObject())
       val randomNumber1: Double = Math.random()
       val randomNumber2: Double = Math.random()
-      val distance: Double = 20.0 * Math.sqrt(randomNumber1)
+      val distance: Double = VehicleConstants.MAXIMUM_DISTANCE_TO_RECHARGE * Math.sqrt(randomNumber1)
       val bearing: Double = 2 * Math.PI * randomNumber2
       val newLatitude: Double = selfDrivingVehicle.position.getLatitude +
           Math.asin(Math.sin(selfDrivingVehicle.position.getLatitude)
@@ -259,7 +250,7 @@ class VehicleBehavioursImpl(vehicleControl: VehicleControl,
   }
 
   override def setVehicleStolen(): Unit = {
-    selfDrivingVehicle.setState(VehicleConstants.stateStolen)
+    selfDrivingVehicle.setState(Constants.Vehicle.STATUS_BROKEN_STOLEN)
     eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleControl.getVehicle().plate),
       new JsonObject())
     stopUi.writeMessageLog(VehicleConstants.vehicleSetToStolenLog)

@@ -22,7 +22,7 @@ public class BookingStoreImpl implements BookingStore {
     private SharedPreferences mSharedPreferences;
     private ObjectMapper mObjectMapper;
 
-    BookingStoreImpl(Context context) {
+    public BookingStoreImpl(Context context) {
         mSharedPreferences = context.getSharedPreferences(BOOKING_PREFERENCE_NAME, Context.MODE_PRIVATE);
         mObjectMapper = new ObjectMapper();
     }

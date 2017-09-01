@@ -4,13 +4,15 @@ import com.google.android.gms.location.places.Place;
 
 /**
  *
- * Describes the view methods of the Scuedling fragment
+ * Describes the view methods of the Scheduling fragment
  *
  * @author Marco Baldassarri
- * @since 20/07/2017
  */
 public interface SchedulingView {
 
+    /**
+     * The id of this view.
+     */
     String ID = SchedulingView.class.getSimpleName();
 
     /**
@@ -29,10 +31,18 @@ public interface SchedulingView {
 
     /**
      *
-     * Shows the user the address selected by the Google Place Autocomplete
+     * Shows the user the pick up address selected by the Google Place Autocomplete
      *
      * @param address the place chosen by the user during the interaction.
      */
-    void showSelectedAddress(Place address);
+    void showPickUpAddress(Place address);
+
+    /**
+     *
+     * Shows the user the destination address selected by the Google Place Autocomplete
+     *
+     * @param address the place chosen by the user during the interaction.
+     */
+    void showDestinationAddress(Place address);
 
 }

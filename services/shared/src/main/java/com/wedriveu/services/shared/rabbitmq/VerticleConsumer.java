@@ -8,6 +8,7 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
 
 import java.io.IOException;
@@ -17,7 +18,6 @@ import java.util.concurrent.TimeoutException;
  * Basic Vert.x RabbitMQ Consumer Verticle. Used to properly handle inbound messages from external publishers.
  *
  * @author Marco Baldassarri
- * @since 29/07/2017
  */
 public abstract class VerticleConsumer extends AbstractVerticle {
 
@@ -35,25 +35,20 @@ public abstract class VerticleConsumer extends AbstractVerticle {
         client = RabbitMQClientFactory.createClient(vertx);
     }
 
-    protected void startConsumerWithDurableQueue(String exchange, String routingKey, String eventBusAddress)
-            throws IOException, TimeoutException {
-        startConsumer(true, exchange, routingKey, eventBusAddress);
-    }
-
-
-    protected void startConsumerWithFuture(String exchange, String routingKey, String eventBusAddress, Future future)
+    protected void startConsumerWithFuture(String exchange,
+                                           String routingKey,
+                                           String eventBusAddress,
+                                           Future future)
             throws IOException, TimeoutException {
         startConsumer(onStart -> {
-            declareQueue(true, onQueue -> {
+            declareQueue(onQueue -> {
                 if (onQueue.succeeded()) {
                     bindQueueToExchange(exchange,
-                            routingKey, onBind -> {
+                            routingKey,
+                            onBind -> {
                                 if (onBind.succeeded()) {
                                     registerConsumer(eventBusAddress);
-                                    basicConsume(eventBusAddress);
-                                    if (future != null) {
-                                        future.complete();
-                                    }
+                                    basicConsume(eventBusAddress, future == null ? null : future.completer());
                                 } else {
                                     Log.error(queueName + " bind ", onBind.cause().getLocalizedMessage(), onBind.cause());
                                 }
@@ -65,51 +60,24 @@ public abstract class VerticleConsumer extends AbstractVerticle {
         });
     }
 
-    protected void startConsumer(boolean durable, String exchange, String routingKey, String eventBusAddress)
-            throws IOException, TimeoutException {
-        startConsumerWithFuture(exchange, routingKey, eventBusAddress, null);
-    }
-
     private void startConsumer(Handler<AsyncResult<Void>> handler) throws java.io.IOException, TimeoutException {
-        client.start(onStartCompleted -> {
-            if (onStartCompleted.succeeded()) {
-                handler.handle(Future.succeededFuture());
-            } else {
-                handler.handle(Future.failedFuture(onStartCompleted.cause().getMessage()));
-            }
-        });
+        client.start(handler);
     }
 
-    private void declareQueue(boolean durableQueue, Handler<AsyncResult<Void>> handler) {
-        client.queueDeclare(queueName, durableQueue, false, false, onDeclareCompleted -> {
-            if (onDeclareCompleted.succeeded()) {
-                handler.handle(Future.succeededFuture());
-            } else {
-                handler.handle(Future.failedFuture(onDeclareCompleted.cause().getMessage()));
-            }
-        });
+    private void declareQueue(Handler<AsyncResult<JsonObject>> handler) {
+        client.queueDeclare(queueName, true, false, false, handler);
     }
 
     private void bindQueueToExchange(String exchangeName,
                                      String baseRoutingKey,
                                      Handler<AsyncResult<Void>> handler) {
-        client.queueBind(queueName,
-                exchangeName,
-                baseRoutingKey,
-                onBind -> {
-                    if (onBind.succeeded()) {
-                        handler.handle(Future.succeededFuture());
-                    } else {
-                        handler.handle(io.vertx.core.Future.failedFuture(onBind.cause().getMessage()));
-                    }
-                });
+        client.queueBind(queueName, exchangeName, baseRoutingKey, handler);
     }
 
     public abstract void registerConsumer(String eventBus);
 
-    private void basicConsume(String eventBus) {
-        client.basicConsume(queueName, eventBus, handler -> {
-        });
+    private void basicConsume(String eventBus, Handler<AsyncResult<Void>> handler) {
+        client.basicConsume(queueName, eventBus, handler);
     }
 
 }

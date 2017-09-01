@@ -1,13 +1,12 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Position;
+import com.wedriveu.vehicle.boundary.mock.UserEnterVehicleMockVerticle;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.wedriveu.vehicle.mock.UserEnterVehicleMockVerticle;
 import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
@@ -80,7 +79,7 @@ public class VehicleChangePositionAndNotifyTest {
                 "",
                 "",
                 LICENSE,
-                Vehicle.STATUS_AVAILABLE,
+                Constants.Vehicle.STATUS_AVAILABLE,
                 HEAD_QUARTER,
                 BATTERY,
                 SPEED,

@@ -1,9 +1,8 @@
 package com.wedriveu.services.vehicle.app;
 
-import com.wedriveu.services.shared.message.SharedMessages;
-import com.wedriveu.services.shared.rabbitmq.ExchangeManagerVerticle;
 import com.wedriveu.services.vehicle.boundary.nearest.NearestConsumerVerticle;
 import com.wedriveu.services.vehicle.control.VerticleDeployer;
+import com.wedriveu.services.vehicle.rabbitmq.ExchangeManagerVerticle;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
 import io.vertx.core.AbstractVerticle;
@@ -17,17 +16,17 @@ import io.vertx.core.eventbus.Message;
  */
 public class BootVerticle extends AbstractVerticle {
 
-    ExchangeManagerVerticle exchangeVerticle = new ExchangeManagerVerticle();
+    private ExchangeManagerVerticle exchangeVerticle = new ExchangeManagerVerticle();
 
     @Override
     public void start() throws Exception {
         vertx.eventBus().consumer(Messages.VehicleService.BOOT, this::declareExchange);
-        vertx.eventBus().consumer(SharedMessages.VehicleService.EXCHANGE_BINDED, this::deployVerticles);
+        vertx.eventBus().consumer(Messages.VehicleService.EXCHANGE_DECLARED, this::deployVerticles);
     }
 
     private void declareExchange(Message message) {
         vertx.deployVerticle(exchangeVerticle, completed -> {
-            vertx.eventBus().send(SharedMessages.VehicleService.BIND_EXCHANGE,
+            vertx.eventBus().send(Messages.VehicleService.DECLARE_EXCHANGE,
                     Constants.RabbitMQ.Exchanges.VEHICLE);
         });
     }
@@ -36,11 +35,11 @@ public class BootVerticle extends AbstractVerticle {
         vertx.deployVerticle(new VerticleDeployer(), deployerCompleted -> {
             if (deployerCompleted.succeeded()) {
                 vertx.deployVerticle(new NearestConsumerVerticle(), onNearestCompleted -> {
+                    vertx.undeploy(exchangeVerticle.deploymentID());
                     vertx.eventBus().send(Messages.VehicleService.BOOT_COMPLETED, null);
                 });
             }
         });
-        vertx.undeploy(exchangeVerticle.deploymentID());
     }
 
 }

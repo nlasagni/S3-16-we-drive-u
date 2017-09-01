@@ -1,9 +1,9 @@
 package com.wedriveu.services.booking.control
 
-import java.util.{Calendar, Date}
+import java.util.Date
 
 import com.wedriveu.services.booking.entity.{BookingStore, BookingStoreImpl}
-import com.wedriveu.services.booking.util.{Constants, Dates}
+import com.wedriveu.services.booking.util.Constants
 import com.wedriveu.services.shared.model.Booking
 import com.wedriveu.services.shared.store.{EntityListStoreStrategy, JsonFileEntityListStoreStrategyImpl}
 import com.wedriveu.services.shared.vertx.VertxJsonMapper
@@ -54,6 +54,12 @@ trait BookingController {
     */
   def findAllBookings(getRequest: BookingListRequest): Unit
 
+  /** Aborts a [[com.wedriveu.services.shared.model.Booking]].
+    *
+    * @param abortRequest The request data needed to abort a [[com.wedriveu.services.shared.model.Booking]].
+    */
+  def abortBooking(abortRequest: AbortBookingRequest): Unit
+
 }
 
 /** Represents a [[BookingController]] which implementation will be bounded to a [[ScalaVerticle]].
@@ -70,7 +76,7 @@ object BookingControllerVerticle {
 
   private[this] class BookingControllerVerticleImpl extends BookingControllerVerticle {
 
-    private val Timer = 15000
+    private val Timer = 20000
     private val InvalidOperationMessage = "Invalid message received"
     private val BookingAlreadyStarted = "A booking process has not yet been completed for this user."
     private val VehicleAlreadyBooked = "This vehicle has already been booked."
@@ -117,6 +123,11 @@ object BookingControllerVerticle {
         classOf[BookingListRequest],
         (request: BookingListRequest) => {
           findAllBookings(request)
+        })
+      registerConsumer(Constants.EventBus.Address.Booking.AbortBookingRequest,
+        classOf[AbortBookingRequest],
+        (request: AbortBookingRequest) => {
+          abortBooking(request)
         })
     }
 
@@ -176,15 +187,15 @@ object BookingControllerVerticle {
           BookingAlreadyStarted)
       } else {
         val id = store.generateId()
-        val result = store.addBooking(new Booking(
-          id,
-          new Date(),
-          request.getUsername,
-          request.getLicensePlate,
-          request.getUserPosition,
-          request.getDestinationPosition,
-          Booking.STATUS_STARTED
-        )
+        val result = store.addBooking(
+          new Booking(
+            id,
+            new Date(),
+            request.getUsername,
+            request.getLicensePlate,
+            request.getUserPosition,
+            request.getDestinationPosition,
+            Booking.STATUS_STARTED)
         )
         if (result) {
           val bookVehicleRequest = new BookVehicleRequest
@@ -215,15 +226,11 @@ object BookingControllerVerticle {
         timerIds.filter(map => map._1.equals(booking.getUsername)).foreach(map => vertx.cancelTimer(map._2))
         if (response.getBooked) {
           store.updateBookingStatus(booking.getId, Booking.STATUS_PROCESSING)
-          val arriveAtUserCalendar = Calendar.getInstance()
-          val arriveAtDestinationCalendar = Calendar.getInstance()
-          arriveAtUserCalendar.setTimeInMillis(booking.getDate.getTime + response.getDriveTimeToUser)
-          arriveAtDestinationCalendar.setTimeInMillis(booking.getDate.getTime + response.getDriveTimeToDestination)
           val bookingResponse = new CreateBookingResponse
           bookingResponse.setSuccess(true)
           bookingResponse.setLicencePlate(response.getLicensePlate)
-          bookingResponse.setDriveTimeToUser(Dates.format(arriveAtUserCalendar.getTime))
-          bookingResponse.setDriveTimeToDestination(Dates.format(arriveAtDestinationCalendar.getTime))
+          bookingResponse.setUserArrivalTime(booking.getDate.getTime + response.getDriveTimeToUser)
+          bookingResponse.setDestinationArrivalTime(booking.getDate.getTime + response.getDriveTimeToDestination)
           sendMessage(Constants.EventBus.Address.Booking.CreateBookingResponse, booking.getUsername, bookingResponse)
         } else {
           sendCreateBookingErrorResponse(
@@ -239,10 +246,11 @@ object BookingControllerVerticle {
       val booking = store.getBookingByUser(changeRequest.getUsername, Booking.STATUS_PROCESSING)
       val response = new ChangeBookingResponse
       response.setLicencePlate(changeRequest.getNewLicensePlate)
+      response.setUsername(changeRequest.getUsername)
       if (!booking.isPresent) {
-        response.setSuccess(false)
+        response.setSuccessful(false)
       } else {
-        response.setSuccess(store.updateBookingLicensePlate(booking.get().getId, changeRequest.getNewLicensePlate))
+        response.setSuccessful(store.updateBookingLicensePlate(booking.get().getId, changeRequest.getNewLicensePlate))
       }
       sendMessage(Constants.EventBus.Address.Booking.ChangeBookingLicensePlateResponse, response)
     }
@@ -251,10 +259,11 @@ object BookingControllerVerticle {
       val username = completeRequest.getUsername
       val booking = store.getBookingByUser(username, Booking.STATUS_PROCESSING)
       val response = new CompleteBookingResponse
-      if (!booking.isPresent)
+      if (!booking.isPresent) {
         response.setSuccess(false)
-      else
+      } else {
         response.setSuccess(store.updateBookingStatus(booking.get().getId, Booking.STATUS_COMPLETED))
+      }
       sendMessage(Constants.EventBus.Address.Booking.CompleteBookingVehicleServiceResponse, response)
       sendMessage(Constants.EventBus.Address.Booking.CompleteBookingUserResponse, username, response)
     }
@@ -263,10 +272,11 @@ object BookingControllerVerticle {
       val booking = store.getBookingByUser(findRequest.getUsername, Booking.STATUS_PROCESSING)
       val response = new FindBookingPositionsResponse
       if (!booking.isPresent) {
-        response.setSuccess(false)
+        response.setSuccessful(false)
       } else {
-        response.setSuccess(true)
+        response.setSuccessful(true)
         response.setLicensePlate(booking.get().getVehicleLicensePlate)
+        response.setUsername(booking.get().getUsername)
         response.setUserPosition(booking.get().getUserPosition)
         response.setDestinationPosition(booking.get().getDestinationPosition)
       }
@@ -276,6 +286,14 @@ object BookingControllerVerticle {
     override def findAllBookings(getRequest: BookingListRequest): Unit = {
       val id = getRequest.getBackofficeId
       sendListInMessage(Constants.EventBus.Address.Booking.GetBookingsResponse, id, store.getBookings)
+    }
+
+    override def abortBooking(abortRequest: AbortBookingRequest): Unit = {
+      val username = abortRequest.getUsername
+      val booking = store.getBookingByUser(username, Booking.STATUS_PROCESSING)
+      if (booking.isPresent) {
+        store.updateBookingStatus(booking.get().getId, Booking.STATUS_ABORTED)
+      }
     }
   }
 

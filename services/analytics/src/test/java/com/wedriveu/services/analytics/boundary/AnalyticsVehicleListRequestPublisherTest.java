@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wedriveu.shared.util.Constants.*;
+import static com.wedriveu.shared.util.Constants.MessagesAnalytics;
 import static org.junit.Assert.assertTrue;
 
 /**

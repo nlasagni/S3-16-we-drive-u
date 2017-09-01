@@ -1,7 +1,8 @@
 package com.wedriveu.mobile.service.login;
 
+import android.os.Handler;
 import com.wedriveu.mobile.model.User;
-import com.wedriveu.mobile.service.ServiceOperationCallback;
+import com.wedriveu.mobile.service.ServiceOperationHandler;
 
 /**
  *
@@ -9,7 +10,6 @@ import com.wedriveu.mobile.service.ServiceOperationCallback;
  *
  * @author  Marco Baldassarri
  * @author Nicola Lasagni
- * @since 12/07/2017
  */
 public interface LoginService {
 
@@ -18,8 +18,9 @@ public interface LoginService {
      *
      * @param username username login credential
      * @param password password login credential
-     * @param callback method called from the LoginService in order to give the proper result back to the ViewModel
+     * @param handler {@link Handler} called from the LoginService in order to give the proper result
+     *                               back to the caller
      */
-    void login(String username, String password, ServiceOperationCallback<User> callback);
+    <T> void login(String username, String password, ServiceOperationHandler<T, User> handler);
 
 }

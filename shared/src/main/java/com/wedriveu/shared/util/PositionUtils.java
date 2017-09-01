@@ -1,13 +1,11 @@
 package com.wedriveu.shared.util;
 
 import static com.wedriveu.shared.util.Constants.Position.EARTH_RADIUS;
-import static com.wedriveu.shared.util.Constants.Position.RANGE;
 
 /**
  * class for handling distance of positions and convert from decimal to radiants
  *
  * @author Marco Baldassarri
- * @since 04/08/2017.
  */
 public class PositionUtils {
 
@@ -31,12 +29,19 @@ public class PositionUtils {
 
     /**
      *
-     * @param userPosition the user position
+     * @param sourcePosition the source position
      * @param vehiclePosition the vehicle position
-     * @return true if the vehicle is in range of 20 km from the user, false otherwise
+     * @param minRange the minimum range
+     * @param maxRange the maximum range
+     * @return true if the vehicle is inside the specified {@code minRange} and {@code maxRange}
+     *         of a {@code sourcePosition}.
      */
-    public static boolean isInRange(Position userPosition, Position vehiclePosition) {
-        return getDistanceInKm(userPosition, vehiclePosition) < RANGE;
+    public static boolean isInRange(Position sourcePosition,
+                                    Position vehiclePosition,
+                                    double minRange,
+                                    double maxRange) {
+        double distance = getDistanceInKm(sourcePosition, vehiclePosition);
+        return distance > minRange && distance <= maxRange;
     }
 
     /**
