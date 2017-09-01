@@ -175,8 +175,10 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="object" href="BootController$.html" title=""></a>
-                        <a href="BootController$.html" title="">
+                        <a class="object" href="BootController$.html" title="Creates a BootManager that boots the BookingController
+"></a>
+                        <a href="BootController$.html" title="Creates a BootManager that boots the BookingController
+">
                           BootController
                         </a>
                       </li>
@@ -263,7 +265,24 @@
 
         <div class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="com.wedriveu.services.booking.control.BookingController#changeProcessingBookingLicensePlate" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+              <ol><li name="com.wedriveu.services.booking.control.BookingController#abortBooking" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="abortBooking(abortRequest:com.wedriveu.shared.rabbitmq.message.AbortBookingRequest):Unit"></a><a id="abortBooking(AbortBookingRequest):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../com/wedriveu/services/booking/control/BookingControllerVerticle.html#abortBooking(abortRequest:com.wedriveu.shared.rabbitmq.message.AbortBookingRequest):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">abortBooking</span><span class="params">(<span name="abortRequest">abortRequest: <span class="extype" name="com.wedriveu.shared.rabbitmq.message.AbortBookingRequest">AbortBookingRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Aborts a <span class="extype" name="com.wedriveu.services.shared.model.Booking">com.wedriveu.services.shared.model.Booking</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Aborts a <span class="extype" name="com.wedriveu.services.shared.model.Booking">com.wedriveu.services.shared.model.Booking</span>.
+</p></div><dl class="paramcmts block"><dt class="param">abortRequest</dt><dd class="cmt"><p>The request data needed to abort a <span class="extype" name="com.wedriveu.services.shared.model.Booking">com.wedriveu.services.shared.model.Booking</span>.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BookingController.html" class="extype" name="com.wedriveu.services.booking.control.BookingController">BookingController</a></dd></dl></div>
+    </li><li name="com.wedriveu.services.booking.control.BookingController#changeProcessingBookingLicensePlate" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="changeProcessingBookingLicensePlate(changeRequest:com.wedriveu.shared.rabbitmq.message.ChangeBookingRequest):Unit"></a><a id="changeProcessingBookingLicensePlate(ChangeBookingRequest):Unit"></a>
       <span class="permalink">
       <a href="../../../../../com/wedriveu/services/booking/control/BookingControllerVerticle.html#changeProcessingBookingLicensePlate(changeRequest:com.wedriveu.shared.rabbitmq.message.ChangeBookingRequest):Unit" title="Permalink">
@@ -318,6 +337,23 @@
       <p class="shortcomment cmt">Creates a booking and books a vehicle.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a booking and books a vehicle.
 </p></div><dl class="paramcmts block"><dt class="param">bookingRequest</dt><dd class="cmt"><p>The request data needed to create a <span class="extype" name="com.wedriveu.services.shared.model.Booking">com.wedriveu.services.shared.model.Booking</span>
                       and to book the chosen vehicle.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BookingController.html" class="extype" name="com.wedriveu.services.booking.control.BookingController">BookingController</a></dd></dl></div>
+    </li><li name="com.wedriveu.services.booking.control.BookingController#findAllBookings" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="findAllBookings(getRequest:com.wedriveu.shared.rabbitmq.message.BookingListRequest):Unit"></a><a id="findAllBookings(BookingListRequest):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../com/wedriveu/services/booking/control/BookingControllerVerticle.html#findAllBookings(getRequest:com.wedriveu.shared.rabbitmq.message.BookingListRequest):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">findAllBookings</span><span class="params">(<span name="getRequest">getRequest: <span class="extype" name="com.wedriveu.shared.rabbitmq.message.BookingListRequest">BookingListRequest</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Gets all the <span class="extype" name="com.wedriveu.services.shared.model.Booking">com.wedriveu.services.shared.model.Booking</span>s stored.</p><div class="fullcomment"><div class="comment cmt"><p>Gets all the <span class="extype" name="com.wedriveu.services.shared.model.Booking">com.wedriveu.services.shared.model.Booking</span>s stored.
+</p></div><dl class="paramcmts block"><dt class="param">getRequest</dt><dd class="cmt"><p>The request data needed to find all the <span class="extype" name="com.wedriveu.services.shared.model.Booking">com.wedriveu.services.shared.model.Booking</span>s.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BookingController.html" class="extype" name="com.wedriveu.services.booking.control.BookingController">BookingController</a></dd></dl></div>
     </li><li name="com.wedriveu.services.booking.control.BookingController#findProcessingBookingPositions" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="findProcessingBookingPositions(findRequest:com.wedriveu.shared.rabbitmq.message.FindBookingPositionsRequest):Unit"></a><a id="findProcessingBookingPositions(FindBookingPositionsRequest):Unit"></a>
       <span class="permalink">
@@ -336,7 +372,8 @@
       <p class="shortcomment cmt">Gets the positions of a <span class="extype" name="com.wedriveu.services.shared.model.Booking">com.wedriveu.services.shared.model.Booking</span> that is in status
 <span class="extype" name="Booking.STATUS_PROCESSING">Booking.STATUS_PROCESSING</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Gets the positions of a <span class="extype" name="com.wedriveu.services.shared.model.Booking">com.wedriveu.services.shared.model.Booking</span> that is in status
 <span class="extype" name="Booking.STATUS_PROCESSING">Booking.STATUS_PROCESSING</span>.
-</p></div><dl class="paramcmts block"><dt class="param">findRequest</dt><dd class="cmt"><p>The request data needed to find a <span class="extype" name="com.wedriveu.services.shared.model.Booking">com.wedriveu.services.shared.model.Booking</span> positions.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BookingController.html" class="extype" name="com.wedriveu.services.booking.control.BookingController">BookingController</a></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">findRequest</dt><dd class="cmt"><p>The request data needed to find a
+                   <span class="extype" name="com.wedriveu.services.shared.model.Booking">com.wedriveu.services.shared.model.Booking</span> positions.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BookingController.html" class="extype" name="com.wedriveu.services.booking.control.BookingController">BookingController</a></dd></dl></div>
     </li></ol>
             </div>
 

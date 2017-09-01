@@ -163,32 +163,42 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.wedriveu.services.analytics">analytics</a></dd></dl></div>
     </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="class" href="AnalyticsVehicleListRequestPublisher.html" title=""></a>
-                        <a href="AnalyticsVehicleListRequestPublisher.html" title="">
+                        <a class="class" href="AnalyticsVehicleListRequestPublisher.html" title="a verticle for send a request for the vehicle list
+"></a>
+                        <a href="AnalyticsVehicleListRequestPublisher.html" title="a verticle for send a request for the vehicle list
+">
                           AnalyticsVehicleListRequestPublisher
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="class" href="" title=""></a>
-                        <a href="" title="">
+                        <a class="class" href="" title="a verticle for receiving the vehicle list from the Vehicle service
+"></a>
+                        <a href="" title="a verticle for receiving the vehicle list from the Vehicle service
+">
                           AnalyticsVehicleListRetrieverConsumer
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="class" href="AnalyticsVehicleRequestConsumer.html" title=""></a>
-                        <a href="AnalyticsVehicleRequestConsumer.html" title="">
+                        <a class="class" href="AnalyticsVehicleRequestConsumer.html" title="a verticle for receiving the vehicle counter request
+"></a>
+                        <a href="AnalyticsVehicleRequestConsumer.html" title="a verticle for receiving the vehicle counter request
+">
                           AnalyticsVehicleRequestConsumer
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="class" href="AnalyticsVehicleUpdateHandlerConsumer.html" title=""></a>
-                        <a href="AnalyticsVehicleUpdateHandlerConsumer.html" title="">
+                        <a class="class" href="AnalyticsVehicleUpdateHandlerConsumer.html" title="a verticle for publishing all the updates to the backoffice
+"></a>
+                        <a href="AnalyticsVehicleUpdateHandlerConsumer.html" title="a verticle for publishing all the updates to the backoffice
+">
                           AnalyticsVehicleUpdateHandlerConsumer
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="class" href="AnalyticsVehiclesResponsePublisher.html" title=""></a>
-                        <a href="AnalyticsVehiclesResponsePublisher.html" title="">
+                        <a class="class" href="AnalyticsVehiclesResponsePublisher.html" title="a verticle for publishing the vehicle counter to the backoffice
+"></a>
+                        <a href="AnalyticsVehiclesResponsePublisher.html" title="a verticle for publishing the vehicle counter to the backoffice
+">
                           AnalyticsVehiclesResponsePublisher
                         </a>
                       </li>
@@ -219,7 +229,8 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>a verticle for receiving the vehicle list from the Vehicle service
+</p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -684,60 +695,6 @@
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="symbol">classOf[java.lang.Exception]</span>
-    </span>)</span>
-              
-        </dd></dl></div>
-    </li><li name="com.wedriveu.services.shared.rabbitmq.VerticleConsumer#startConsumer" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="startConsumer(x$1:Boolean,x$2:String,x$3:String,x$4:String):Unit"></a><a id="startConsumer(Boolean,String,String,String):Unit"></a>
-      <span class="permalink">
-      <a href="../../../../../com/wedriveu/services/analytics/boundary/AnalyticsVehicleListRetrieverConsumer.html#startConsumer(x$1:Boolean,x$2:String,x$3:String,x$4:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">startConsumer</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="arg1">arg1: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg2">arg2: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg3">arg3: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../shared/rabbitmq/index.html" class="extype" name="com.wedriveu.services.shared.rabbitmq">com.wedriveu.services.shared.rabbitmq</a>] </dd><dt>Definition Classes</dt><dd>VerticleConsumer</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="defval" name="classOf[java.util.concurrent.TimeoutException]">...</span>
-    </span>)</span>
-              
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[java.io.IOException]</span>
-    </span>)</span>
-              
-        </dd></dl></div>
-    </li><li name="com.wedriveu.services.shared.rabbitmq.VerticleConsumer#startConsumerWithDurableQueue" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="startConsumerWithDurableQueue(x$1:String,x$2:String,x$3:String):Unit"></a><a id="startConsumerWithDurableQueue(String,String,String):Unit"></a>
-      <span class="permalink">
-      <a href="../../../../../com/wedriveu/services/analytics/boundary/AnalyticsVehicleListRetrieverConsumer.html#startConsumerWithDurableQueue(x$1:String,x$2:String,x$3:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">startConsumerWithDurableQueue</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg1">arg1: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg2">arg2: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../shared/rabbitmq/index.html" class="extype" name="com.wedriveu.services.shared.rabbitmq">com.wedriveu.services.shared.rabbitmq</a>] </dd><dt>Definition Classes</dt><dd>VerticleConsumer</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="defval" name="classOf[java.util.concurrent.TimeoutException]">...</span>
-    </span>)</span>
-              
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[java.io.IOException]</span>
     </span>)</span>
               
         </dd></dl></div>

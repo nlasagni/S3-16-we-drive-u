@@ -3,8 +3,8 @@ com.wedriveu.services.vehicle.boundary.analytics
 com.wedriveu.services.vehicle.boundary.booking
 com.wedriveu.services.vehicle.boundary.nearest
 com.wedriveu.services.vehicle.boundary.updates
-com.wedriveu.services.vehicle.boundary.vehiclearrived
 com.wedriveu.services.vehicle.boundary.vehicleregister
 com.wedriveu.services.vehicle.control
 com.wedriveu.services.vehicle.entity
 com.wedriveu.services.vehicle.rabbitmq
+com.wedriveu.services.vehicle.util
