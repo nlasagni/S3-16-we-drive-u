@@ -14,6 +14,10 @@ public interface Constants {
      */
     com.wedriveu.shared.util.Position HEAD_QUARTER =
             new com.wedriveu.shared.util.Position(44.1454528, 12.2474513);
+    /**
+     * string for formatting two strings with a dot between them
+     */
+    String FORMAT_WITH_DOT = "%s.%s";
 
     /**
      * Constants related to the Vertx Event bus.

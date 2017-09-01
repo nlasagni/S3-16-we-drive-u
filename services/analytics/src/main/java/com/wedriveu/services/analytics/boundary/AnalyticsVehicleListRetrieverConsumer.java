@@ -1,11 +1,9 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -19,7 +17,9 @@ import static com.wedriveu.shared.util.Constants.*;
  */
 public class AnalyticsVehicleListRetrieverConsumer extends VerticleConsumer {
     public AnalyticsVehicleListRetrieverConsumer() {
-        super(RabbitMQ.Exchanges.ANALYTICS + "." + RabbitMQ.RoutingKey.ANALYTICS_VEHICLES_RESPONSE_ALL + ".test");
+        super(String.format(com.wedriveu.shared.util.Constants.FORMAT_WITH_DOT,
+                RabbitMQ.Exchanges.ANALYTICS,
+                RabbitMQ.RoutingKey.ANALYTICS_VEHICLES_RESPONSE_ALL));
     }
 
     @Override
@@ -33,7 +33,10 @@ public class AnalyticsVehicleListRetrieverConsumer extends VerticleConsumer {
                 futureRetriever.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, RabbitMQ.RoutingKey.ANALYTICS_VEHICLES_RESPONSE_ALL, EventBus.AVAILABLE_ADDRESS_VEHICLE_LIST_RETRIEVER_VERTICLE, futureConsumer);
+        startConsumerWithFuture(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE,
+                RabbitMQ.RoutingKey.ANALYTICS_VEHICLES_RESPONSE_ALL,
+                ConstantsAnalytics.EventBus.AVAILABLE_ADDRESS_VEHICLE_LIST_RETRIEVER_VERTICLE,
+                futureConsumer);
     }
 
     @Override
@@ -44,7 +47,7 @@ public class AnalyticsVehicleListRetrieverConsumer extends VerticleConsumer {
     private void sendToController(Message message) {
         AnalyticsVehicleList vehicleListObject =
                 VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), AnalyticsVehicleList.class);
-        vertx.eventBus().send(EventBus.CONTROLLER_VEHICLE_LIST, VertxJsonMapper.mapInBodyFrom(vehicleListObject));
+        vertx.eventBus().send(ConstantsAnalytics.EventBus.CONTROLLER_VEHICLE_LIST, VertxJsonMapper.mapInBodyFrom(vehicleListObject));
     }
 
 }

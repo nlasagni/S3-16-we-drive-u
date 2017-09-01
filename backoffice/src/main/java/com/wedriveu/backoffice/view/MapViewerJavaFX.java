@@ -4,7 +4,6 @@ import com.wedriveu.backoffice.util.ConstantsBackOffice;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 import javax.swing.*;
 
@@ -14,22 +13,18 @@ import javax.swing.*;
  * @author Stefano Bernagozzi
  */
 public class MapViewerJavaFX {
-    BrowserForShowingMap browserForShowingMap;
-    private Stage stage;
+    private static final int FRAME_WIDTH = 630;
+    private static final int FRAME_HEIGHT = 680;
+
 
     private static void initAndShowGUI(String javascriptCode) {
         JFrame frame = new JFrame(ConstantsBackOffice.BROWSER_TITLE);
         final JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel);
-        frame.setSize(630,680);
+        frame.setSize(FRAME_WIDTH,FRAME_HEIGHT);
         frame.setVisible(true);
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                initFX(fxPanel, javascriptCode);
-            }
-        });
+        Platform.runLater(() -> initFX(fxPanel, javascriptCode));
     }
 
     private static void initFX(JFXPanel fxPanel, String javascriptCode) {
@@ -44,11 +39,6 @@ public class MapViewerJavaFX {
      * @param javascriptCode the javascript code that the user wants to insert in the html page
      */
     public static void run(String javascriptCode) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                initAndShowGUI(javascriptCode);
-            }
-        });
+        SwingUtilities.invokeLater(() -> initAndShowGUI(javascriptCode));
     }
 }

@@ -15,15 +15,50 @@ public interface ConstantsBackOffice {
     int VEHICLE_BROKEN = 1;
     int VEHICLE_NETWORK_ISSUES = 0;
     int VEHICLE_RECHARGING = 0;
+
+    /**
+     * string for setting window title of the browser window
+     */
     String BROWSER_TITLE = "Booking Positions";
+    /**
+     * string for appending updates to a queue name
+     */
+    String UPDATES_CONSTANT = ".updates";
+    /**
+     * string for creating the base of a routing key with dot between two string and a dot at the end of them
+     */
+    String ROUTING_KEY_BASE_FORMAT = "%s.%s.";
+
+    /**
+     * string for setting the label of the car counter
+     */
+    String LABEL_TEXT = "<html><body>" +
+            "Available: %s<br>" +
+            "Broken: %s<br>" +
+            "Booked: %s<br>" +
+            "Recharging: %s<br>" +
+            "Network Issues: %s<br>" +
+            "</body></html>";
 
 
     interface WebPage {
+        /**
+         * javascript code for creating a new red google maps marker with 2 positions given by the user
+         */
+        String JAVASCRIPT_MARKER_CODE_STARTING_POSITION = "new google.maps.Marker({position: {lat: %s"+
+                ", lng: %s },map: map," +
+                "icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'});";
+        /**
+         * javascript code for creating a new green google maps marker with 2 positions given by the user
+         */
+        String JAVASCRIPT_MARKER_CODE_DESTINATION_POSITION = "new google.maps.Marker({position: {lat: %s"+
+                ", lng: %s },map: map," +
+                "icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'});";
 
         /**
-         * the first half of the google maps HTML page, before Javascript code
+         * the google maps HTML page
          */
-        String HTML_WEB_PAGE_BEFORE_JAVASCRIPT_SCRIPT = "<!DOCTYPE html>" +
+        String HTML_WEB_PAGE_CODE = "<!DOCTYPE html>" +
                 "<html>" +
                 "  <head>" +
                 "    <style>" +
@@ -47,11 +82,8 @@ public interface ConstantsBackOffice {
                 "        var map = new google.maps.Map(document.getElementById('map'), {" +
                 "          zoom: 7," +
                 "          center: cesena" +
-                "        });" ;
-        /**
-         * the second half of the google maps HTML page, after the javascript code
-         */
-        String HTML_WEB_PAGE_AFTER_JAVASCRIPT_SCRIPT =
+                "        });" +
+                "%s" +
                 "}" +
                 "    </script>" +
                 "    <script async defer" +

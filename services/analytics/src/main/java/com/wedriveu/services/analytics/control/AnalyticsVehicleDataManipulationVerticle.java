@@ -5,17 +5,14 @@ import com.wedriveu.services.analytics.entity.AnalyticsStore;
 import com.wedriveu.services.analytics.entity.AnalyticsStoreImpl;
 import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
 import com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithmImpl;
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.shared.model.AnalyticsVehicle;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
-import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
@@ -29,7 +26,6 @@ import java.util.Optional;
  */
 public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
     private AnalyticsStore analyticsStore;
-
     private static final String DATABASE_FILE_NAME = "analytics.json";
 
     @Override
@@ -37,9 +33,9 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
         analyticsStore = new AnalyticsStoreImpl(
                 new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, DATABASE_FILE_NAME),
                 new VehiclesCounterAlgorithmImpl());
-        vertx.eventBus().consumer(EventBus.CONTROLLER_VEHICLE_LIST, this::convertVehicleList);
-        vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_REQUEST, this::handleVehicleCounterRequest);
-        vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_UPDATE, this::updateVehicleStore);
+        vertx.eventBus().consumer(ConstantsAnalytics.EventBus.CONTROLLER_VEHICLE_LIST, this::convertVehicleList);
+        vertx.eventBus().consumer(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_REQUEST, this::handleVehicleCounterRequest);
+        vertx.eventBus().consumer(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_UPDATE, this::updateVehicleStore);
     }
 
     private void convertVehicleList(Message message) {
@@ -58,8 +54,8 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
 
     private void handleVehicleCounterRequest(Message message) {
         JsonObject dataToUser = new JsonObject(message.body().toString());
-        String backofficeId = dataToUser.getValue(Constants.EventBus.BODY).toString();
-        vertx.eventBus().send(EventBus.VEHICLE_COUNTER_RESPONSE,
+        String backofficeId = dataToUser.getValue(com.wedriveu.shared.util.Constants.EventBus.BODY).toString();
+        vertx.eventBus().send(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_RESPONSE,
                 VertxJsonMapper.mapInBodyFrom(new MessageVehicleCounterWithID(
                         backofficeId,
                         analyticsStore.getVehicleCounter())));
@@ -83,11 +79,10 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
     }
 
     private void sendVehicleUpdates() {
-        vertx.eventBus().send(EventBus.VEHICLE_COUNTER_RESPONSE,
+        vertx.eventBus().send(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_RESPONSE,
                 VertxJsonMapper.mapInBodyFrom(new MessageVehicleCounterWithID(
                         "",
                         analyticsStore.getVehicleCounter())));
-        Log.info(this.getClass().getSimpleName(), "vehicel counter: " + analyticsStore.getVehicleCounter().toString());
     }
 
 }

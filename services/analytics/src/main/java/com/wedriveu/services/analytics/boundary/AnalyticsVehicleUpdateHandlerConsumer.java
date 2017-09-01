@@ -1,11 +1,9 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.UpdateToService;
-import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -17,7 +15,9 @@ import io.vertx.core.json.JsonObject;
  */
 public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer {
     public AnalyticsVehicleUpdateHandlerConsumer() {
-        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE);
+        super(String.format(com.wedriveu.shared.util.Constants.FORMAT_WITH_DOT,
+                com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.ANALYTICS,
+                com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE));
     }
 
     @Override
@@ -31,9 +31,9 @@ public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer {
                 futureRequest.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE,
-                Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE,
-                EventBus.AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER,
+        startConsumerWithFuture(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE,
+                com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE,
+                ConstantsAnalytics.EventBus.AVAILABLE_ADDRESS_VEHICLE_UPDATE_HANDLER,
                 futureConsumer);
 
     }
@@ -46,7 +46,7 @@ public class AnalyticsVehicleUpdateHandlerConsumer extends VerticleConsumer {
 
     private void sendToController(Message message) {
         UpdateToService vehicle = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), UpdateToService.class);
-        vertx.eventBus().send(EventBus.VEHICLE_COUNTER_UPDATE, VertxJsonMapper.mapInBodyFrom(vehicle));
+        vertx.eventBus().send(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_UPDATE, VertxJsonMapper.mapInBodyFrom(vehicle));
     }
 
 }

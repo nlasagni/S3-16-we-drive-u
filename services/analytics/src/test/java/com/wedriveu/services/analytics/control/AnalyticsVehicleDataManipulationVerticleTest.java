@@ -1,12 +1,10 @@
 package com.wedriveu.services.analytics.control;
 
-import com.wedriveu.services.analytics.entity.AnalyticsStore;
 import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.analytics.vehicleService.VehicleListGenerator;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -38,10 +36,10 @@ public class AnalyticsVehicleDataManipulationVerticleTest {
     @Test
     public void testInsertion(TestContext context) {
         Async async = context.async();
-        vertx.eventBus().send(EventBus.CONTROLLER_VEHICLE_LIST,
+        vertx.eventBus().send(ConstantsAnalytics.EventBus.CONTROLLER_VEHICLE_LIST,
                 VertxJsonMapper.mapInBodyFrom(
                         new AnalyticsVehicleList(VehicleListGenerator.getVehicleList())));
-        vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_RESPONSE, res->{
+        vertx.eventBus().consumer(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_RESPONSE, res->{
             MessageVehicleCounterWithID messageVehicleCounterWithID =
                     VertxJsonMapper.mapFromBodyTo((JsonObject) res.body(), MessageVehicleCounterWithID.class);
             assertTrue(VehicleListGenerator.getVehicleCounter().

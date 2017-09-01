@@ -1,9 +1,8 @@
 package com.wedriveu.services.analytics.vehicleService;
 
 
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
-import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -30,7 +29,7 @@ public class VehicleListGeneratorRequestHandler extends VerticleConsumer {
                 futureRequest.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE, RabbitMQ.RoutingKey.ANALYTICS_VEHICLE_REQUEST_ALL, EventBus.AVAILABLE_ADDRESS_FAKE_GENERATOR, futureConsumer);
+        startConsumerWithFuture(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE, RabbitMQ.RoutingKey.ANALYTICS_VEHICLE_REQUEST_ALL, ConstantsAnalytics.EventBus.AVAILABLE_ADDRESS_FAKE_GENERATOR, futureConsumer);
 
     }
 
@@ -41,8 +40,8 @@ public class VehicleListGeneratorRequestHandler extends VerticleConsumer {
 
     private void sendToResponseHandler(Message message) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(Constants.EventBus.BODY,
-                ((JsonObject) message.body()).getValue(Constants.EventBus.BODY));
-        vertx.eventBus().send(EventBus.TEST_VEHICLE_LIST_REQUEST, jsonObject);
+        jsonObject.put(com.wedriveu.shared.util.Constants.EventBus.BODY,
+                ((JsonObject) message.body()).getValue(com.wedriveu.shared.util.Constants.EventBus.BODY));
+        vertx.eventBus().send(ConstantsAnalytics.EventBus.TEST_VEHICLE_LIST_REQUEST, jsonObject);
     }
 }

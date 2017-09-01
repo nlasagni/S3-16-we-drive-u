@@ -21,9 +21,9 @@ class BrowserForShowingMap extends Pane {
      * @param javascriptCode the javascript code for the web page
      */
     public BrowserForShowingMap(String javascriptCode) {
-        String webPage = ConstantsBackOffice.WebPage.HTML_WEB_PAGE_BEFORE_JAVASCRIPT_SCRIPT +
-                javascriptCode +
-                ConstantsBackOffice.WebPage.HTML_WEB_PAGE_AFTER_JAVASCRIPT_SCRIPT;
+        String webPage = String.format(
+                ConstantsBackOffice.WebPage.HTML_WEB_PAGE_CODE ,
+                javascriptCode);
         webEngine.loadContent(webPage);
         webEngine.setOnAlert(e -> Log.error(this.getClass().getSimpleName(), e.toString()));
         getChildren().add(webView);

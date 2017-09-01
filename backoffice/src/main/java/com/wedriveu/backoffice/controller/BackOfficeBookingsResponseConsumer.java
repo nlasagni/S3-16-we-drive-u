@@ -4,6 +4,7 @@ import com.wedriveu.backoffice.util.ConstantsBackOffice;
 import com.wedriveu.services.shared.model.Booking;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
+import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -24,7 +25,9 @@ public class BackOfficeBookingsResponseConsumer extends VerticleConsumer {
      * @param backofficeId the backoffice id
      */
     public BackOfficeBookingsResponseConsumer(String backofficeId) {
-        super(RabbitMQ.Exchanges.BOOKING +"."+ String.format(RabbitMQ.RoutingKey.BOOKING_RESPONSE_BOOKING_LIST, backofficeId));
+        super(String.format(Constants.FORMAT_WITH_DOT,
+                RabbitMQ.Exchanges.BOOKING,
+                String.format(RabbitMQ.RoutingKey.BOOKING_RESPONSE_BOOKING_LIST, backofficeId)));
         this.backofficeId = backofficeId;
     }
 

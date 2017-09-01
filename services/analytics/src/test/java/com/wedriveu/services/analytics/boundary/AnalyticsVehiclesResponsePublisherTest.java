@@ -4,18 +4,14 @@ import com.wedriveu.services.analytics.entity.AnalyticsStore;
 import com.wedriveu.services.analytics.entity.AnalyticsStoreImpl;
 import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
 import com.wedriveu.services.analytics.entity.VehiclesCounterAlgorithmImpl;
-import com.wedriveu.services.analytics.util.EventBus;
-import com.wedriveu.services.analytics.vehicleService.VehicleCounterGeneratorRequestHandler;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.analytics.vehicleService.VehicleCounterGeneratorResponseHandler;
 import com.wedriveu.services.analytics.vehicleService.VehicleListGenerator;
 import com.wedriveu.services.shared.model.AnalyticsVehicle;
-import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
-import com.wedriveu.shared.util.Constants;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -68,11 +64,11 @@ public class AnalyticsVehiclesResponsePublisherTest {
     public void testVehicleResponsePublisher(TestContext context) {
         Async async = context.async();
         CompositeFuture.all(futures).setHandler(completed -> {
-            vertx.eventBus().send(EventBus.VEHICLE_COUNTER_RESPONSE,
+            vertx.eventBus().send(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_RESPONSE,
                     VertxJsonMapper.mapInBodyFrom(new MessageVehicleCounterWithID(
-                            EventBus.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID,
+                            ConstantsAnalytics.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID,
                             analyticsStore.getVehicleCounter())));
-            vertx.eventBus().consumer(EventBus.FAKE_VEHICLE_COUNTER_RESPONSE_TEST_EVENTBUS, res-> {
+            vertx.eventBus().consumer(ConstantsAnalytics.EventBus.FAKE_VEHICLE_COUNTER_RESPONSE_TEST, res-> {
                 VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) res.body(), VehicleCounter.class);
                 assertTrue(vehicleCounter.equals(analyticsStore.getVehicleCounter()));
                 async.complete();

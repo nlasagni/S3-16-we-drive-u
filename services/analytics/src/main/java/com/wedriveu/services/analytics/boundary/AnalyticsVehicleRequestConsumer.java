@@ -1,9 +1,7 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
-import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -15,7 +13,9 @@ import io.vertx.core.json.JsonObject;
  */
 public class AnalyticsVehicleRequestConsumer extends VerticleConsumer {
     public AnalyticsVehicleRequestConsumer() {
-        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + Constants.RabbitMQ.RoutingKey.ANALYTICS_REQUEST_VEHICLE_COUNTER);
+        super(String.format(com.wedriveu.shared.util.Constants.FORMAT_WITH_DOT,
+                com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.ANALYTICS,
+                com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_REQUEST_VEHICLE_COUNTER));
     }
 
     @Override
@@ -29,7 +29,10 @@ public class AnalyticsVehicleRequestConsumer extends VerticleConsumer {
                 futureRetriever.fail(v.cause());
             }
         });
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS, Constants.RabbitMQ.RoutingKey.ANALYTICS_REQUEST_VEHICLE_COUNTER, EventBus.AVAILABLE_ADDRESS_COUNTER_REQUEST, futureConsumer);
+        startConsumerWithFuture(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.ANALYTICS,
+                com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_REQUEST_VEHICLE_COUNTER,
+                ConstantsAnalytics.EventBus.AVAILABLE_ADDRESS_COUNTER_REQUEST,
+                futureConsumer);
     }
 
     @Override
@@ -39,9 +42,9 @@ public class AnalyticsVehicleRequestConsumer extends VerticleConsumer {
 
     private void sendToController(Message message) {
         JsonObject dataToUser = new JsonObject(message.body().toString());
-        String backofficeId = dataToUser.getValue(Constants.EventBus.BODY).toString();
-        dataToUser.put(Constants.EventBus.BODY, backofficeId);
-        vertx.eventBus().send(EventBus.VEHICLE_COUNTER_REQUEST, dataToUser);
+        String backofficeId = dataToUser.getValue(com.wedriveu.shared.util.Constants.EventBus.BODY).toString();
+        dataToUser.put(com.wedriveu.shared.util.Constants.EventBus.BODY, backofficeId);
+        vertx.eventBus().send(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_REQUEST, dataToUser);
     }
 
 }

@@ -1,14 +1,12 @@
 package com.wedriveu.services.analytics.boundary;
 
 
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.analytics.vehicleService.VehicleListGenerator;
 import com.wedriveu.services.analytics.vehicleService.VehicleListGeneratorResponseHandler;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.util.Constants;
-import com.wedriveu.shared.util.Log;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -23,7 +21,6 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wedriveu.shared.util.Constants.*;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -58,9 +55,9 @@ public class AnalyticsVehicleListRetrieverConsumerTest {
         Async async = context.async();
         CompositeFuture.all(futures).setHandler(completed -> {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.put(Constants.EventBus.BODY, EventBus.Messages.ANALYTICS_VEHICLE_LIST_RESPONSE_START_MESSAGE_TEST);
-            vertx.eventBus().send(EventBus.TEST_VEHICLE_LIST_RESPONSE, jsonObject);
-            vertx.eventBus().consumer(EventBus.CONTROLLER_VEHICLE_LIST,
+            jsonObject.put(com.wedriveu.shared.util.Constants.EventBus.BODY, ConstantsAnalytics.Messages.ANALYTICS_VEHICLE_LIST_RESPONSE_START_MESSAGE_TEST);
+            vertx.eventBus().send(ConstantsAnalytics.EventBus.TEST_VEHICLE_LIST_RESPONSE, jsonObject);
+            vertx.eventBus().consumer(ConstantsAnalytics.EventBus.CONTROLLER_VEHICLE_LIST,
                     msg -> {
                         AnalyticsVehicleList vehicleList = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), AnalyticsVehicleList.class);
                         assertTrue(vehicleList.equals(vehicleListObject));
