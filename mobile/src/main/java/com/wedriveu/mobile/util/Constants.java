@@ -39,26 +39,32 @@ public interface Constants {
          * The user queue name, must be completed with the username,
          * see {@linkplain String#format(String, Object...)}.
          */
-        String USER = "user.%s";
+        String USER = "mobile.user.%s";
         /**
-         * The enter vehicle queue name, must be completed with the username,
+         * The enter vehicle queue name, must be completed with an id,
          * see {@linkplain String#format(String, Object...)}.
          */
-        String ENTER_VEHICLE = "vehicle.enter.%s";
+        String ENTER_VEHICLE = "mobile.vehicle.enter.%s";
         /**
-         * The enter vehicle queue name, must be completed with the username,
+         * The enter vehicle queue name, must be completed with an id,
          * see {@linkplain String#format(String, Object...)}.
          */
-        String VEHICLE_UPDATE = "vehicle.update.%s";
+        String VEHICLE_UPDATE = "mobile.vehicle.update.%s";
         /**
-         * The enter vehicle queue name, must be completed with the username,
+         * The enter vehicle queue name, must be completed with an id,
          * see {@linkplain String#format(String, Object...)}.
          */
-        String VEHICLE_ARRIVED = "vehicle.arrived.%s";
+        String VEHICLE_ARRIVED = "mobile.vehicle.arrived.%s";
         /**
-         *
+         * The vehicle substitution queue name, must be completed with an id,
+         * see {@linkplain String#format(String, Object...)}.
          */
-        String BOOKING = "booking.%s";
+        String VEHICLE_SUBSTITUTION = "mobile.vehicle.substitution.%s";
+        /**
+         * The vehicle booking queue name, must be completed with an id,
+         * see {@linkplain String#format(String, Object...)}.
+         */
+        String BOOKING = "mobile.booking.%s";
     }
 
 }
