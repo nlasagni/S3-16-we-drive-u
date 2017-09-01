@@ -20,7 +20,8 @@ import com.wedriveu.mobile.login.view.LoginView;
 import com.wedriveu.mobile.login.view.LoginViewImpl;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModelImpl;
-import com.wedriveu.mobile.store.StoreFactoryImpl;
+import com.wedriveu.mobile.service.ServiceFactory;
+import com.wedriveu.mobile.store.StoreFactory;
 import com.wedriveu.mobile.store.UserStore;
 import com.wedriveu.mobile.tripscheduling.router.SchedulingRouter;
 import com.wedriveu.mobile.tripscheduling.view.SchedulingView;
@@ -32,15 +33,20 @@ import com.wedriveu.mobile.util.location.LocationService;
 import com.wedriveu.mobile.util.location.LocationServiceImpl;
 
 /**
+ * The entry point {@link AppCompatActivity} of this app.
+ * It handles all the routing operations to navigate from an app module to another.
+ * Also, it exposes its capability of finding android components through the
+ * {@linkplain ComponentFinder} interface and of providing factories through the
+ * {@linkplain FactoryProvider} interface.
  *
  * @author Marco Balsassarri
  * @author Nicola Lasagni
- *
  */
 public class MainActivity extends AppCompatActivity implements LoginRouter,
                                                                SchedulingRouter,
                                                                BookingRouter,
-                                                               ComponentFinder {
+                                                               ComponentFinder,
+                                                               FactoryProvider {
 
     private FragmentManager mFragmentManager;
     private LocationService mLocationService;
@@ -51,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements LoginRouter,
         setContentView(R.layout.activity_main);
         mFragmentManager = getSupportFragmentManager();
         mLocationService = LocationServiceImpl.getInstance(this);
-        UserStore userStore = StoreFactoryImpl.getInstance().createUserStore(this);
+        UserStore userStore = provideStoreFactory().createUserStore();
         if (savedInstanceState == null) {
             if (userStore.getUser() != null) {
                 showTripScheduling();
@@ -62,16 +68,16 @@ public class MainActivity extends AppCompatActivity implements LoginRouter,
     }
 
     private void showLogin() {
-        LoginViewImpl loginViewFragment = LoginViewImpl.newInstance(LoginViewModel.TAG);
-        LoginViewModelImpl loginViewModel = LoginViewModelImpl.newInstance(LoginView.TAG);
+        LoginViewImpl loginViewFragment = LoginViewImpl.newInstance(LoginViewModel.ID);
+        LoginViewModelImpl loginViewModel = LoginViewModelImpl.newInstance(LoginView.ID);
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.add(loginViewModel, LoginViewModel.TAG);
-        transaction.replace(R.id.fragment_container, loginViewFragment, LoginView.TAG);
+        transaction.add(loginViewModel, LoginViewModel.ID);
+        transaction.replace(R.id.fragment_container, loginViewFragment, LoginView.ID);
         transaction.commit();
     }
 
     @Override
-    public Fragment getView(String tag){
+    public Fragment getView(String tag) {
         return mFragmentManager.findFragmentByTag(tag);
     }
 
@@ -84,13 +90,23 @@ public class MainActivity extends AppCompatActivity implements LoginRouter,
     public void showTripScheduling() {
         SchedulingViewModelImpl schedulingViewModel = SchedulingViewModelImpl.newInstance();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        Fragment loginViewModel = getViewModel(LoginViewModel.TAG);
+        Fragment loginViewModel = getViewModel(LoginViewModel.ID);
         if (loginViewModel != null) {
             transaction.remove(loginViewModel);
         }
         transaction.add(schedulingViewModel, SchedulingViewModel.ID);
         transaction.replace(R.id.fragment_container, SchedulingViewImpl.newInstance(), SchedulingView.ID);
         transaction.commit();
+    }
+
+    @Override
+    public StoreFactory provideStoreFactory() {
+        return (Application) getApplication();
+    }
+
+    @Override
+    public ServiceFactory provideServiceFactory() {
+        return (Application) getApplication();
     }
 
     @Override
@@ -151,14 +167,14 @@ public class MainActivity extends AppCompatActivity implements LoginRouter,
     }
 
     @Override
-    public void showBooking() {
+    public void showBookingSummary() {
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         Fragment schedulingViewModel = getViewModel(SchedulingViewModel.ID);
         if (schedulingViewModel != null) {
             transaction.remove(schedulingViewModel);
         }
         transaction.add(BookingViewModelImpl.newInstance(), BookingViewModel.ID);
-        transaction.replace(R.id.fragment_container, new BookingViewImpl(), BookingView.ID);
+        transaction.replace(R.id.fragment_container, new BookingSummaryView(), BookingSummaryView.ID);
         transaction.commit();
     }
 
@@ -169,39 +185,61 @@ public class MainActivity extends AppCompatActivity implements LoginRouter,
     }
 
     @Override
-    public void showBookingAcceptedView() {
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, new AcceptedBookingViewImpl(), AcceptedBookingViewImpl.ID);
-        transaction.commit();
+    public void showUserTravellingView() {
+        showBookingView(new BookingUserTravellingView(), BookingUserTravellingView.ID);
     }
 
     @Override
     public void showEnterVehicleView() {
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, new EnterVehicleView(), EnterVehicleView.ID);
-        transaction.commit();
+        showBookingView(new BookingEnterVehicleView(), BookingEnterVehicleView.ID);
     }
 
     @Override
-    public void showTravellingView() {
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, new TravellingBookingViewImpl(), TravellingBookingViewImpl.ID);
-        transaction.commit();
+    public void showDestinationTravellingView() {
+        showBookingView(new BookingDestinationTravellingView(), BookingDestinationTravellingView.ID);
     }
 
     @Override
-    public void onBackPressed() {}
+    public void showSubstitutionView() {
+        showBookingView(new BookingSubstitutionView(), BookingSubstitutionView.ID);
+    }
+
+    @Override
+    public void showSubstitutionTravellingView() {
+        showBookingView(new BookingUserSubstitutionTravellingView(), BookingUserSubstitutionTravellingView.ID);
+    }
+
+    private void showBookingView(Fragment bookingView, String tag) {
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, bookingView, tag);
+        transaction.commit();
+    }
+
+    private boolean isBookingSessionActive() {
+        return getViewModel(BookingViewModel.ID) != null;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isBookingSessionActive()) {
+            showPopOverDialog(getString(R.string.booking_session_active));
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     private void removeAllFragments() {
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         String[] tags = {
                 SchedulingView.ID,
                 SchedulingViewModel.ID,
-                BookingView.ID,
+                BookingSummaryView.ID,
                 BookingViewModel.ID,
-                AcceptedBookingViewImpl.ID,
-                EnterVehicleView.ID,
-                TravellingBookingViewImpl.ID
+                BookingUserTravellingView.ID,
+                BookingEnterVehicleView.ID,
+                BookingDestinationTravellingView.ID,
+                BookingSubstitutionView.ID,
+                BookingUserSubstitutionTravellingView.ID
         };
         for (String tag : tags) {
             Fragment fragment = getViewModel(tag);
