@@ -11,10 +11,24 @@ import com.wedriveu.mobile.model.Vehicle;
  */
 public interface PresentationModelFactory {
 
+    /**
+     * Create booking summary presentation model.
+     *
+     * @param user    the user used to create the presentation model
+     * @param vehicle the vehicle used to create the presentation model
+     * @param booking the booking used to create the presentation model
+     * @return the booking summary presentation model
+     */
     BookingSummaryPresentationModel createBookingSummaryPresentationModel(User user,
                                                                           Vehicle vehicle,
                                                                           Booking booking);
 
+    /**
+     * Create travelling marker presentation model.
+     *
+     * @param vehicle the vehicle used to create the presentation model
+     * @return the travelling marker presentation model
+     */
     TravellingMarkerPresentationModel createTravellingMarkerPresentationModel(Vehicle vehicle);
 
 }
