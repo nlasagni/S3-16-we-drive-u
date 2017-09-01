@@ -4,9 +4,9 @@ import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Position;
+import com.wedriveu.vehicle.boundary.mock.UserEnterVehicleMockVerticle;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
-import com.wedriveu.vehicle.mock.UserEnterVehicleMockVerticle;
 import com.wedriveu.vehicle.shared.VehicleConstants$;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
@@ -109,15 +109,15 @@ public class VehicleChangePositionAndNotifyTest {
         config.put(Constants.RabbitMQ.ConfigKey.PORT, Constants.RabbitMQ.Broker.PORT);
         rabbitMQClient = io.vertx.rabbitmq.RabbitMQClient.create(vertx, config);
         rabbitMQClient.start(onStart ->
-                rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
-                    requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
-                    rabbitMQClient.queueBind(requestId,
-                            Constants.RabbitMQ.Exchanges.VEHICLE,
-                            Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
-                            onQueueBind -> {});
-                    context.assertTrue(onQueueDeclare.succeeded());
-                    future.complete();
-                })
+            rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
+                requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
+                rabbitMQClient.queueBind(requestId,
+                        Constants.RabbitMQ.Exchanges.VEHICLE,
+                        Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
+                        onQueueBind -> {});
+                context.assertTrue(onQueueDeclare.succeeded());
+                future.complete();
+            })
         );
     }
 

@@ -2,6 +2,7 @@ package com.wedriveu.vehicle.boundary;
 
 import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
 import com.wedriveu.vehicle.control.VehicleControlImpl;
 import io.vertx.core.Vertx;
@@ -23,7 +24,6 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class VehicleVerticleArrivedNotifyImplTest {
 
-    private static final String JSON_QUEUE_KEY = "queue";
     private static final String QUEUE = VehicleVerticleArrivedNotifyImplTest.class.getCanonicalName();
     private static final String EVENT_BUS_ADDRESS =
             VehicleVerticleArrivedNotifyImplTest.class.getCanonicalName();
@@ -32,7 +32,6 @@ public class VehicleVerticleArrivedNotifyImplTest {
     private EventBus eventBus;
     private RabbitMQClient rabbitMQClient;
     private VehicleVerticleArrivedNotifyImpl vehicleVerticle;
-    private String requestId;
     private VehicleControl vehicleControl;
     private String license = "VEHICLE4";
     private String state = "available";
