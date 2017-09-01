@@ -6,7 +6,7 @@ import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_ANALYTICS_ADDRESS;
-import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_REGISTER;
+import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_ANALYTICS;
 import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_VEHICLE_REQUEST_ALL;
 
 
@@ -19,7 +19,7 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_V
 public class AnalyticsConsumerVerticle extends VerticleConsumer {
 
     public AnalyticsConsumerVerticle() {
-        super(VEHICLE_SERVICE_QUEUE_REGISTER);
+        super(VEHICLE_SERVICE_QUEUE_ANALYTICS);
     }
 
     @Override

@@ -59,18 +59,8 @@ public abstract class BaseInteractionClient {
         rabbitMQClient.start(handler);
     }
 
-    private void declareQueue(Handler<AsyncResult<Void>> handler) {
-        rabbitMQClient.queueDeclare(queue, true, false, false, onDeclareCompleted -> {
-            if (onDeclareCompleted.succeeded()) {
-                handler.handle(Future.succeededFuture());
-            } else {
-                handler.handle(Future.failedFuture(onDeclareCompleted.cause().getMessage()));
-            }
-        });
-    }
-
-    protected void stop(TestContext context) {
-        rabbitMQClient.stop(context.asyncAssertSuccess());
+    private void declareQueue(Handler<AsyncResult<JsonObject>> handler) {
+        rabbitMQClient.queueDeclare(queue, true, false, false, handler);
     }
 
     /**
@@ -90,7 +80,7 @@ public abstract class BaseInteractionClient {
     }
 
     private void bindQueueToExchange(String keyName, Handler<AsyncResult<Void>> handler) {
-        if (!keyName.isEmpty()) {
+        if (keyName != null && !keyName.isEmpty()) {
             consumerRoutingKey = String.format(consumerRoutingKey, keyName);
         }
         rabbitMQClient.queueBind(queue, consumerExchangeName, consumerRoutingKey,
@@ -149,4 +139,5 @@ public abstract class BaseInteractionClient {
      * @param responseJson the response json extracted from the RabbitMQ message
      */
     protected abstract void checkResponse(TestContext context, JsonObject responseJson);
+
 }

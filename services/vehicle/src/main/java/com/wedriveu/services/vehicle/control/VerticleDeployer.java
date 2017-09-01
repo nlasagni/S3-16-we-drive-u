@@ -9,6 +9,7 @@ import com.wedriveu.services.vehicle.boundary.booking.CompleteBookingVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterConsumerVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterPublisherVerticle;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -58,6 +59,7 @@ public class VerticleDeployer extends AbstractVerticle {
             if (completed.succeeded()) {
                 startFuture.complete();
             } else {
+                Log.error(this.getClass().getSimpleName(), completed.cause());
                 startFuture.fail(completed.cause());
             }
         });

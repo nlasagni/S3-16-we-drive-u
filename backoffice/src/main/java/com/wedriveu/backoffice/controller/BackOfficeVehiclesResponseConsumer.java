@@ -22,8 +22,8 @@ public class BackOfficeVehiclesResponseConsumer extends VerticleConsumer {
     private String backofficeId;
     private static final String ROUTING_KEY_BASE =
             String.format(ConstantsBackOffice.ROUTING_KEY_BASE_FORMAT,
-                    Constants.RabbitMQ.Exchanges.ANALYTICS,
-                    ANALYTICS_RESPONSE_VEHICLE_COUNTER);
+                            Constants.RabbitMQ.Exchanges.ANALYTICS,
+                            ANALYTICS_RESPONSE_VEHICLE_COUNTER);
     private boolean updates;
 
     /**

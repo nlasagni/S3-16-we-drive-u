@@ -1,4 +1,4 @@
-package com.wedriveu.vehicle.mock;
+package com.wedriveu.vehicle.boundary.mock;
 
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
