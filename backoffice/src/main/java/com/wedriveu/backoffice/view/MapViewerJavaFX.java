@@ -1,26 +1,44 @@
 package com.wedriveu.backoffice.view;
 
+import com.wedriveu.backoffice.util.ConstantsBackOffice;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+
+import javax.swing.*;
+
 /**
+ *class for showing a google map into a swing frame
+ *
  * @author Stefano Bernagozzi
  */
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+public class MapViewerJavaFX {
+    private static final int FRAME_WIDTH = 630;
+    private static final int FRAME_HEIGHT = 680;
 
-public class MapViewerJavaFX extends Application {
-    BrowserForShowingMap browserForShowingMap;
-    private Stage stage;
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        Parameters parameters = getParameters ();
-        this.stage = stage;
-        browserForShowingMap = new BrowserForShowingMap(parameters.getRaw().get(0));
-        Scene scene = new Scene(browserForShowingMap);
-        stage.setScene(scene);
-        stage.setWidth(630);
-        stage.setHeight(630);
-        stage.show();
+    private static void initAndShowGUI(String javascriptCode) {
+        JFrame frame = new JFrame(ConstantsBackOffice.BROWSER_TITLE);
+        final JFXPanel fxPanel = new JFXPanel();
+        frame.add(fxPanel);
+        frame.setSize(FRAME_WIDTH,FRAME_HEIGHT);
+        frame.setVisible(true);
+
+        Platform.runLater(() -> initFX(fxPanel, javascriptCode));
     }
 
+    private static void initFX(JFXPanel fxPanel, String javascriptCode) {
+        Scene scene = new Scene(
+                new BrowserForShowingMap(javascriptCode));
+        fxPanel.setScene(scene);
+    }
+
+    /**
+     * create a new google map html page with the javscript code inside and puts it on a new frame
+     *
+     * @param javascriptCode the javascript code that the user wants to insert in the html page
+     */
+    public static void run(String javascriptCode) {
+        SwingUtilities.invokeLater(() -> initAndShowGUI(javascriptCode));
+    }
 }

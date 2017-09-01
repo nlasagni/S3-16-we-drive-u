@@ -9,7 +9,9 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_LIST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_COUNTER;
+import static com.wedriveu.shared.util.Constants.RabbitMQ;
+
 
 /**
  * the class for recieving a vehicle list over rabbitMQ with vertx from the vehicle service
@@ -18,37 +20,38 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_R
  */
 public class BackOfficeVehiclesResponseConsumer extends VerticleConsumer {
     private String backofficeId;
+    private static final String ROUTING_KEY_BASE =
+            String.format(ConstantsBackOffice.ROUTING_KEY_BASE_FORMAT,
+                            Constants.RabbitMQ.Exchanges.ANALYTICS,
+                            ANALYTICS_RESPONSE_VEHICLE_COUNTER);
+    private boolean updates;
 
     /**
-     * @param queueName the rabbitMQ queue name
-     * @param backofficeId null in case you want to listen over the backoffice update queue,
-     *                     "." + backoffice id in case you want to listen in your own routing key (only for the initial update)
+     * sets the backoffice id and if it is the update queue
+     *
+     * @param backofficeId the backoffice id
+     * @param updates if it listens on the update queue or on his own queue
      */
-    public BackOfficeVehiclesResponseConsumer(String queueName, String backofficeId) {
-        super(Constants.RabbitMQ.Exchanges.ANALYTICS + "." + ANALYTICS_RESPONSE_VEHICLE_LIST + queueName);
+    public BackOfficeVehiclesResponseConsumer(String backofficeId, boolean updates) {
+        super(ROUTING_KEY_BASE + backofficeId + (updates ? ConstantsBackOffice.UPDATES_CONSTANT : ""));
         this.backofficeId = backofficeId;
+        this.updates = updates;
     }
 
     @Override
     public void start(Future futureRetriever) throws Exception {
         super.start();
-        Future<Void> futureConsumer = Future.future();
-        futureConsumer.setHandler(v -> {
-            if (v.succeeded()) {
-                futureRetriever.complete();
-            } else {
-                futureRetriever.fail(v.cause());
-            }
-        });
-        String eventBusAvailable = ConstantsBackOffice.EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_NO_ID;
-        if (!backofficeId.equals("")) {
-            eventBusAvailable = ConstantsBackOffice.EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_WITH_ID;
+        if (updates) {
+            startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS,
+                    ANALYTICS_RESPONSE_VEHICLE_COUNTER,
+                    ConstantsBackOffice.EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_NO_ID,
+                    futureRetriever);
+        } else {
+            startConsumerWithFuture(RabbitMQ.Exchanges.ANALYTICS,
+                    String.format(Constants.FORMAT_WITH_DOT, ANALYTICS_RESPONSE_VEHICLE_COUNTER , backofficeId),
+                    ConstantsBackOffice.EventBus.AVAILABLE_ADDRESS_RABBITMQ_LISTENER_UPDATE_WITH_ID,
+                    futureRetriever);
         }
-
-        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS,
-                ANALYTICS_RESPONSE_VEHICLE_LIST + backofficeId,
-                eventBusAvailable,
-                futureConsumer);
     }
 
     @Override

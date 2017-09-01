@@ -1,6 +1,6 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.analytics.vehicleService.VehicleUpdateGenerator;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
@@ -48,16 +48,16 @@ public class AnalyticsVehicleUpdateHandlerConsumerTest {
         Async async = context.async();
         CompositeFuture.all(futures).setHandler(completed -> {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.put(Constants.EventBus.BODY, "start");
-            vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_UPDATE,
+            jsonObject.put(com.wedriveu.shared.util.Constants.EventBus.BODY, "start");
+            vertx.eventBus().consumer(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_UPDATE,
                     msg -> {
                         VehicleUpdate update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), VehicleUpdate.class);
-                        assertTrue(update.getLicense().equals(EventBus.Messages.ANALYTICS_VEHICLE_TEST_LICENSE_PLATE) &&
+                        assertTrue(update.getLicense().equals(ConstantsAnalytics.Messages.ANALYTICS_VEHICLE_TEST_LICENSE_PLATE) &&
                                 update.getStatus().equals(Constants.Vehicle.STATUS_BOOKED));
                         async.complete();
                     });
 
-            vertx.eventBus().send(EventBus.TEST_VEHICLE_UPDATE, jsonObject);
+            vertx.eventBus().send(ConstantsAnalytics.EventBus.TEST_VEHICLE_UPDATE, jsonObject);
         });
         async.awaitSuccess();
     }

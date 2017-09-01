@@ -10,10 +10,16 @@ public class VehicleReservationRequest {
 
     private String username;
 
+    /**
+     * @return the username that wants to book the vehicle
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * @param username the username that wants to book the vehicle
+     */
     public void setUsername(String username){
         this.username = username;
     }

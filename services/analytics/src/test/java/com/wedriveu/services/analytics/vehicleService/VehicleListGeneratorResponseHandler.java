@@ -1,11 +1,10 @@
 package com.wedriveu.services.analytics.vehicleService;
 
-import com.wedriveu.services.analytics.util.EventBus;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.util.Constants;
+import com.wedriveu.services.analytics.util.*;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -29,14 +28,14 @@ public class VehicleListGeneratorResponseHandler extends VerticlePublisher {
     }
 
     private void startConsumer() {
-        vertx.eventBus().consumer(EventBus.TEST_VEHICLE_LIST_RESPONSE, this::sendVehicleListToAnalyticsService);
+        vertx.eventBus().consumer(ConstantsAnalytics.EventBus.TEST_VEHICLE_LIST_RESPONSE, this::sendVehicleListToAnalyticsService);
     }
 
 
     private void sendVehicleListToAnalyticsService(Message message) {
         List<Vehicle> vehicleList = VehicleListGenerator.getVehicleList();
         JsonObject vehicleListJson = VertxJsonMapper.mapInBodyFrom(new AnalyticsVehicleList(vehicleList));
-        publish(Constants.RabbitMQ.Exchanges.VEHICLE, ANALYTICS_VEHICLES_RESPONSE_ALL, vehicleListJson, published -> { });
+        publish(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.VEHICLE, ANALYTICS_VEHICLES_RESPONSE_ALL, vehicleListJson, published -> { });
     }
 
 }

@@ -41,7 +41,7 @@ public class BackOfficeVehicleRequestPublisherTest {
     }
 
     @Test
-    public void testVehicleResponsePublisher(TestContext context) {
+    public void testVehicleRequestPublisher(TestContext context) {
         Async async = context.async();
         CompositeFuture.all(futures).setHandler(completed -> {
             vertx.eventBus().consumer(ConstantsBackOffice.EventBus.BACKOFFICE_VEHICLE_COUNTER_REQUEST_TEST, res -> {

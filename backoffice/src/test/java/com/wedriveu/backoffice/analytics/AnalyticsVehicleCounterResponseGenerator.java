@@ -8,7 +8,7 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_LIST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_COUNTER;
 
 /**
  * @author Stefano Bernagozzi
@@ -36,7 +36,7 @@ public class AnalyticsVehicleCounterResponseGenerator extends VerticlePublisher 
                             ConstantsBackOffice.VEHICLE_BROKEN,
                             ConstantsBackOffice.VEHICLE_NETWORK_ISSUES,
                             ConstantsBackOffice.VEHICLE_RECHARGING));
-            publish(Constants.RabbitMQ.Exchanges.ANALYTICS, ANALYTICS_RESPONSE_VEHICLE_LIST,
+            publish(Constants.RabbitMQ.Exchanges.ANALYTICS, ANALYTICS_RESPONSE_VEHICLE_COUNTER,
                     dataToUser,
                     res -> {
                     });

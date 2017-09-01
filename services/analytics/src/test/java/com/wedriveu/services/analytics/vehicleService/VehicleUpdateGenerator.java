@@ -1,6 +1,7 @@
 package com.wedriveu.services.analytics.vehicleService;
 
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
+import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
@@ -23,13 +24,13 @@ public class VehicleUpdateGenerator extends VerticlePublisher {
     }
 
     private void startConsumer() {
-        vertx.eventBus().consumer(EventBus.TEST_VEHICLE_UPDATE, this::sendVehicleUpdateToAnalyticsService);
+        vertx.eventBus().consumer(ConstantsAnalytics.EventBus.TEST_VEHICLE_UPDATE, this::sendVehicleUpdateToAnalyticsService);
     }
 
 
     private void sendVehicleUpdateToAnalyticsService(Message message) {
         VehicleUpdate vehicleUpdate = new VehicleUpdate();
-        vehicleUpdate.setLicense(EventBus.Messages.ANALYTICS_VEHICLE_TEST_LICENSE_PLATE);
+        vehicleUpdate.setLicense(ConstantsAnalytics.Messages.ANALYTICS_VEHICLE_TEST_LICENSE_PLATE);
         vehicleUpdate.setStatus(Constants.Vehicle.STATUS_BOOKED);
         publish(Constants.RabbitMQ.Exchanges.VEHICLE,
                 Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE,

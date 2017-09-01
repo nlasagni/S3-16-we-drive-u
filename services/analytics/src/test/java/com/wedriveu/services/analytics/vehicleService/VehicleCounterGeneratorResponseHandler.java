@@ -1,15 +1,14 @@
 package com.wedriveu.services.analytics.vehicleService;
 
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
-import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_LIST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_COUNTER;
 
 /**
  * @author Stefano Bernagozzi
@@ -17,7 +16,7 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_R
 public class VehicleCounterGeneratorResponseHandler  extends VerticleConsumer{
 
         public VehicleCounterGeneratorResponseHandler() {
-            super(Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ ANALYTICS_RESPONSE_VEHICLE_LIST +"." + EventBus.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID +".test");
+            super(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ ANALYTICS_RESPONSE_VEHICLE_COUNTER +"." + ConstantsAnalytics.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID +".test");
         }
 
         @Override
@@ -32,9 +31,9 @@ public class VehicleCounterGeneratorResponseHandler  extends VerticleConsumer{
                 }
             });
 
-            startConsumerWithFuture(Constants.RabbitMQ.Exchanges.ANALYTICS,
-                    ANALYTICS_RESPONSE_VEHICLE_LIST +"." + EventBus.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID,
-                    EventBus.AVAILABLE_ADDRESS_FAKE_VEHICLE_COUNTER_RESPONSE,
+            startConsumerWithFuture(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.ANALYTICS,
+                    ANALYTICS_RESPONSE_VEHICLE_COUNTER +"." + ConstantsAnalytics.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID,
+                    ConstantsAnalytics.EventBus.AVAILABLE_ADDRESS_FAKE_VEHICLE_COUNTER_RESPONSE,
                     futureConsumer);
         }
 
@@ -45,6 +44,6 @@ public class VehicleCounterGeneratorResponseHandler  extends VerticleConsumer{
 
         private void sendUpdatesToController(Message message) {
             VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
-            vertx.eventBus().send(EventBus.FAKE_VEHICLE_COUNTER_RESPONSE_TEST_EVENTBUS, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
+            vertx.eventBus().send(ConstantsAnalytics.EventBus.FAKE_VEHICLE_COUNTER_RESPONSE_TEST, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
         }
 }

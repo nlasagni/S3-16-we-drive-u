@@ -1,11 +1,10 @@
 package com.wedriveu.services.analytics.boundary;
 
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.analytics.vehicleService.VehicleCounterGeneratorRequestHandler;
 import com.wedriveu.services.analytics.vehicleService.VehicleListGenerator;
 import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.shared.util.Constants;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -52,13 +51,13 @@ public class AnalyticsVehicleRequestConsumerTest {
         Async async = context.async();
         CompositeFuture.all(futures).setHandler(completed -> {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.put(Constants.EventBus.BODY, "test");
-            vertx.eventBus().send(EventBus.AVAILABLE_ADDRESS_FAKE_VEHICLE_COUNTER_REQUEST, jsonObject);
-            vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_REQUEST,
+            jsonObject.put(com.wedriveu.shared.util.Constants.EventBus.BODY, "test");
+            vertx.eventBus().send(ConstantsAnalytics.EventBus.AVAILABLE_ADDRESS_FAKE_VEHICLE_COUNTER_REQUEST, jsonObject);
+            vertx.eventBus().consumer(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_REQUEST,
                     msg -> {
                         JsonObject dataToUser = new JsonObject(msg.body().toString());
-                        String backofficeId = dataToUser.getValue(Constants.EventBus.BODY).toString();
-                        assertTrue(backofficeId.equals(EventBus.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID));
+                        String backofficeId = dataToUser.getValue(com.wedriveu.shared.util.Constants.EventBus.BODY).toString();
+                        assertTrue(backofficeId.equals(ConstantsAnalytics.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID));
                         async.complete();
                     });
         });

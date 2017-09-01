@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * the controller of the backoffice, that manages the messages received and updates the model
  *
  * @author Stefano Bernagozzi
  */
@@ -26,6 +27,11 @@ public class BackOfficeController extends AbstractVerticle {
     Vertx vertx;
     private Future futureStart;
 
+    /**
+     * the controller class for all the backoffice
+     *
+     * @param vertx the vertx istance used for starting the verticle
+     */
     public BackOfficeController(Vertx vertx) {
         this.vertx = vertx;
     }
@@ -50,21 +56,14 @@ public class BackOfficeController extends AbstractVerticle {
         futureModel.setHandler(res -> {
             Future futureVerticle1 = Future.future();
             vertx.deployVerticle(new BackOfficeVehiclesResponseConsumer(
-                            "." + backOfficeModel.getBackofficeID() + ".updates",
-                            ""),
+                    backOfficeModel.getBackofficeID(), true),
                     futureVerticle1.completer());
             futures.add(futureVerticle1);
             Future futureVerticle2 = Future.future();
             vertx.deployVerticle(new BackOfficeVehiclesResponseConsumer(
-                            "." + backOfficeModel.getBackofficeID(),
-                            "." + backOfficeModel.getBackofficeID()),
+                            backOfficeModel.getBackofficeID(), false),
                     futureVerticle2.completer());
             futures.add(futureVerticle2);
-            Future futureVerticle3 = Future.future();
-            vertx.deployVerticle(new BackOfficeVehicleRequestPublisher(
-                            backOfficeModel.getBackofficeID()),
-                    futureVerticle3.completer());
-            futures.add(futureVerticle3);
             Future futureVerticle4 = Future.future();
             vertx.deployVerticle(new BackOfficeBookingsRequestPublisher(
                             backOfficeModel.getBackofficeID()),
@@ -76,7 +75,13 @@ public class BackOfficeController extends AbstractVerticle {
                     futureVerticle5.completer());
             futures.add(futureVerticle5);
             CompositeFuture.all(futures).setHandler(resAllFutures-> {
-                futureStart.complete();
+                ButtonEventListenerBooking buttonEventListenerBooking = new ButtonEventListenerBooking(vertx);
+                backOfficeView.addButtonBookingListener(buttonEventListenerBooking);
+                vertx.deployVerticle(new BackOfficeVehicleRequestPublisher(
+                                backOfficeModel.getBackofficeID()),fu -> {
+                         futureStart.complete();
+                });
+
             });
         });
     }

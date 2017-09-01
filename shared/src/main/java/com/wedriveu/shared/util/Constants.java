@@ -14,6 +14,10 @@ public interface Constants {
      */
     com.wedriveu.shared.util.Position HEAD_QUARTER =
             new com.wedriveu.shared.util.Position(44.1454528, 12.2474513);
+    /**
+     * string for formatting two strings with a dot between them
+     */
+    String FORMAT_WITH_DOT = "%s.%s";
 
     /**
      * Constants related to the Vertx Event bus.
@@ -253,11 +257,11 @@ public interface Constants {
             /**
              *  The routing key used by backoffice to request a vehicle counter.
              */
-            String ANALYTICS_REQUEST_VEHICLE_LIST = "analytics.request.vehicleList";
+            String ANALYTICS_REQUEST_VEHICLE_COUNTER = "analytics.request.vehicle";
             /**
              *  The routing key used by backoffice to receive a vehicle counter.
              */
-            String ANALYTICS_RESPONSE_VEHICLE_LIST = "analytics.response.vehicles";
+            String ANALYTICS_RESPONSE_VEHICLE_COUNTER = "analytics.response.vehicles";
             /**
              *  The routing key used by booking service to receive a booking list request.
              */
