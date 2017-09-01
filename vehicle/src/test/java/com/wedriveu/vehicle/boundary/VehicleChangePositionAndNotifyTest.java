@@ -109,15 +109,15 @@ public class VehicleChangePositionAndNotifyTest {
         config.put(Constants.RabbitMQ.ConfigKey.PORT, Constants.RabbitMQ.Broker.PORT);
         rabbitMQClient = io.vertx.rabbitmq.RabbitMQClient.create(vertx, config);
         rabbitMQClient.start(onStart ->
-            rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
-                requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
-                rabbitMQClient.queueBind(requestId,
-                        Constants.RabbitMQ.Exchanges.VEHICLE,
-                        Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
-                        onQueueBind -> {});
-                context.assertTrue(onQueueDeclare.succeeded());
-                future.complete();
-            })
+                rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
+                    requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
+                    rabbitMQClient.queueBind(requestId,
+                            Constants.RabbitMQ.Exchanges.VEHICLE,
+                            Constants.RabbitMQ.RoutingKey.VEHICLE_ARRIVED,
+                            onQueueBind -> {});
+                    context.assertTrue(onQueueDeclare.succeeded());
+                    future.complete();
+                })
         );
     }
 
