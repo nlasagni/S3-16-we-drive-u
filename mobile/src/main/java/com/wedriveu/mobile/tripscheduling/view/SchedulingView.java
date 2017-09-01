@@ -10,6 +10,9 @@ import com.google.android.gms.location.places.Place;
  */
 public interface SchedulingView {
 
+    /**
+     * The id of this view.
+     */
     String ID = SchedulingView.class.getSimpleName();
 
     /**
@@ -28,10 +31,18 @@ public interface SchedulingView {
 
     /**
      *
-     * Shows the user the address selected by the Google Place Autocomplete
+     * Shows the user the pick up address selected by the Google Place Autocomplete
      *
      * @param address the place chosen by the user during the interaction.
      */
-    void showSelectedAddress(Place address);
+    void showPickUpAddress(Place address);
+
+    /**
+     *
+     * Shows the user the destination address selected by the Google Place Autocomplete
+     *
+     * @param address the place chosen by the user during the interaction.
+     */
+    void showDestinationAddress(Place address);
 
 }

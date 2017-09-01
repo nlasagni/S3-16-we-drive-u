@@ -16,6 +16,6 @@ public interface SchedulingRouter extends DialogProvider {
     /**
      * Shows the Booking confirmation to the user
      */
-    void showBooking();
+    void showBookingSummary();
 
 }
