@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * The {@link ServiceConsumerStrategy} abstract class that simply offers the message
+ * The {@link ServiceSynchronousConsumerStrategy} abstract class that simply offers the message
  * consumed through the dedicated {@linkplain BlockingQueue<T>} and let the subclasses
  * define the {@linkplain RabbitMqConsumerStrategy#configureQueue(RabbitMqCommunication)}
  * implementation.
@@ -17,13 +17,16 @@ import java.util.concurrent.BlockingQueue;
  * @param <T> the type of the message consumed
  * @author Nicola Lasagni on 10/08/2017.
  */
-public abstract class ServiceConsumerStrategy<T> implements RabbitMqConsumerStrategy<T> {
+public abstract class ServiceSynchronousConsumerStrategy<T> implements RabbitMqConsumerStrategy<T> {
 
-    private String mTag;
     private BlockingQueue<T> mResponse;
 
-    public ServiceConsumerStrategy(String tag, BlockingQueue<T> response) {
-        mTag = tag;
+    /**
+     * Instantiates a new ServiceConsumerStrategy.
+     *
+     * @param response the response
+     */
+    public ServiceSynchronousConsumerStrategy(BlockingQueue<T> response) {
         mResponse = response;
     }
 
@@ -37,8 +40,7 @@ public abstract class ServiceConsumerStrategy<T> implements RabbitMqConsumerStra
 
     @Override
     public void handleShutdown(ShutdownSignalException e) {
-        Log.e(mTag, e.getLocalizedMessage(), e);
-        mResponse.offer(null);
+        Log.e(this.getClass().getSimpleName(), e.getLocalizedMessage(), e);
     }
 
 }
