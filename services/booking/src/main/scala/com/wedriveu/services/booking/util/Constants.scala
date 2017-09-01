@@ -132,11 +132,11 @@ object Constants {
         /**
           * Address for receiving and sending messages for an abort booking request.
           */
-        val AbortBookingRequest: String = Request + Dot + GetBookings
+        val AbortBookingRequest: String = Request + Dot + "abort"
         /**
           * Address for receiving and sending messages for an abort booking response.
           */
-        val AbortGetBookingResponse: String = Response + Dot + GetBookings
+        val AbortGetBookingResponse: String = Response + Dot + "abort"
 
       }
 
