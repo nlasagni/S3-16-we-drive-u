@@ -6,7 +6,10 @@ package com.wedriveu.mobile.login.view;
  */
 public interface LoginView {
 
-    String TAG = LoginView.class.getSimpleName();
+    /**
+     * The id of this view.
+     */
+    String ID = LoginView.class.getSimpleName();
 
     /**
      * Method called during the View creation. Sets the listeners for the UI components in the LoginView.
