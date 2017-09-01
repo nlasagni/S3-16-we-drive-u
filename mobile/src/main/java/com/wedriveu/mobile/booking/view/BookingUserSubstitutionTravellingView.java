@@ -1,7 +1,6 @@
 package com.wedriveu.mobile.booking.view;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.wedriveu.mobile.R;
@@ -37,9 +36,6 @@ public class BookingUserSubstitutionTravellingView extends AbstractBookingTravel
     @Override
     public void renderView(BookingSummaryPresentationModel presentationModel) {
         super.renderView(presentationModel);
-        //TODO
-        Log.e(this.getClass().getSimpleName(), "renderView");
-
         mPickUpTime.setText(presentationModel.getPickUpTime());
         mArriveTime.setText(presentationModel.getArriveTime());
     }

@@ -8,11 +8,16 @@ import com.wedriveu.mobile.booking.viewmodel.BookingViewModel;
 import com.wedriveu.mobile.booking.viewmodel.model.BookingSummaryPresentationModel;
 
 /**
+ * The view that allow the user to enter into the booked vehicle.
+ *
  * @author Nicola Lasagni on 19/08/2017.
  */
-public class EnterVehicleView extends AbstractBookingView {
+public class BookingEnterVehicleView extends AbstractBookingView {
 
-    public static final String ID = EnterVehicleView.class.getSimpleName();
+    /**
+     * The id of this view.
+     */
+    public static final String ID = BookingEnterVehicleView.class.getSimpleName();
 
     @Override
     protected int getLayoutResource() {

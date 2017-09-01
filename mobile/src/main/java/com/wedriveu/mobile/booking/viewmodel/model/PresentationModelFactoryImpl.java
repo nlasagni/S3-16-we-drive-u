@@ -7,15 +7,23 @@ import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.model.Booking;
 import com.wedriveu.mobile.model.User;
 import com.wedriveu.mobile.model.Vehicle;
+import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Position;
 
 /**
+ * The {@linkplain PresentationModelFactory} implementation.
+ *
  * @author Nicola Lasagni on 28/08/2017.
  */
 public class PresentationModelFactoryImpl implements PresentationModelFactory {
 
     private Context mContext;
 
+    /**
+     * Instantiates a new PresentationModelFactory.
+     *
+     * @param context the context needed to retrieve the data to be displayed
+     */
     public PresentationModelFactoryImpl(Context context) {
         mContext = context;
     }
@@ -32,8 +40,15 @@ public class PresentationModelFactoryImpl implements PresentationModelFactory {
         presentationModel.setPickUpTime(mContext.getString(R.string.vehicle_pickup_time, vehicle.getArriveAtUserTime()));
         presentationModel.setArriveTime(mContext.getString(R.string.vehicle_arrives_at, vehicle.getArriveAtDestinationTime()));
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        presentationModel.setUserMarker(createMarkerAndAddToBounds(user.getUsername(), null, booking.getUserPosition(), builder));
-        presentationModel.setDestinationMarker(createMarkerAndAddToBounds(booking.getDestinationAddress(), null, booking.getDestinationPosition(), builder));
+        TravellingMarkerPresentationModel userMarker =
+                createMarkerAndAddToBounds(user.getUsername(), null, booking.getUserPosition(), builder);
+        TravellingMarkerPresentationModel destinationMarker =
+                createMarkerAndAddToBounds(booking.getDestinationAddress(), null, booking.getDestinationPosition(), builder);
+        TravellingMarkerPresentationModel headQuarterMarker =
+                createMarkerAndAddToBounds(mContext.getString(R.string.vehicles_head_quarter), null, Constants.HEAD_QUARTER, builder);
+        presentationModel.setUserMarker(userMarker);
+        presentationModel.setDestinationMarker(destinationMarker);
+        presentationModel.setHeadQuarterMarker(headQuarterMarker);
         presentationModel.setMapBounds(builder.build());
         return presentationModel;
     }

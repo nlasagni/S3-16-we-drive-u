@@ -1,7 +1,6 @@
 package com.wedriveu.mobile.booking.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -74,9 +73,9 @@ public abstract class AbstractBookingTravellingView extends AbstractBookingView 
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         if (mPresentationModel != null) {
-            mGoogleMap.clear();
             addMarker(mPresentationModel.getUserMarker());
             addMarker(mPresentationModel.getDestinationMarker());
+            addMarker(mPresentationModel.getHeadQuarterMarker());
             mGoogleMap.moveCamera(
                     CameraUpdateFactory.newLatLngBounds(mPresentationModel.getMapBounds(), MAP_PADDING));
         }
@@ -97,9 +96,10 @@ public abstract class AbstractBookingTravellingView extends AbstractBookingView 
     public void showTravellingMarker(TravellingMarkerPresentationModel presentationModel) {
         if (mGoogleMap != null) {
             if (mVehicleMarker != null) {
-                mVehicleMarker.remove();
+                mVehicleMarker.setPosition(presentationModel.getPosition());
+            } else {
+                mVehicleMarker = addMarker(presentationModel);
             }
-            mVehicleMarker = addMarker(presentationModel);
         } else {
             mMap.getMapAsync(this);
         }

@@ -79,14 +79,14 @@ public class BookingSummaryView extends AbstractBookingView {
     private void acceptBooking() {
         BookingViewModel presenter = getViewModel();
         if (presenter != null) {
-            presenter.onAcceptButtonClick();
+            presenter.onAcceptBookingButtonClick();
         }
     }
 
     private void declineBooking() {
         BookingViewModel presenter = getViewModel();
         if (presenter != null) {
-            presenter.onDeclineButtonClick();
+            presenter.onDeclineBookingButtonClick();
         }
     }
 

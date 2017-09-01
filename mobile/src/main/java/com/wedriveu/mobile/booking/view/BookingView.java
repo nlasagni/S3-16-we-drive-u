@@ -3,7 +3,7 @@ package com.wedriveu.mobile.booking.view;
 import com.wedriveu.mobile.booking.viewmodel.model.BookingSummaryPresentationModel;
 
 /**
- * The base view of a booking.
+ * The base view of the booking summary.
  *
  * @author Nicola Lasagni on 28/07/2017.
  */
