@@ -14,6 +14,10 @@ public interface Constants {
      */
     com.wedriveu.shared.util.Position HEAD_QUARTER =
             new com.wedriveu.shared.util.Position(44.1454528, 12.2474513);
+    /**
+     * string for formatting two strings with a dot between them
+     */
+    String FORMAT_WITH_DOT = "%s.%s";
 
     /**
      * Constants related to the Vertx Event bus.
@@ -206,6 +210,11 @@ public interface Constants {
              */
             String VEHICLE_RESPONSE_ENTER_USER = "vehicle.response.enter.user.%s";
             /**
+             * The routing key used by the vehicle service to communicate the substitution of
+             * a broken vehicle.
+             */
+            String VEHICLE_SUBSTITUTION = "vehicle.event.substitution.%s";
+            /**
              * The routing key used to communicate to the booking-service a create booking request.
              */
             String CREATE_BOOKING_REQUEST = "booking.request.create";
@@ -234,6 +243,10 @@ public interface Constants {
              */
             String COMPLETE_BOOKING_RESPONSE_USER = "booking.response.complete.%s";
             /**
+             * The routing key used to communicate to the booking-service an abort booking request.
+             */
+            String ABORT_BOOKING_REQUEST = "booking.request.abort";
+            /**
              * The routing key used to communicate to the booking-service a find bookings by position request.
              */
             String FIND_BOOKING_POSITION_REQUEST = "booking.request.position";
@@ -244,32 +257,61 @@ public interface Constants {
             /**
              *  The routing key used by backoffice to request a vehicle counter.
              */
-            String ROUTING_KEY_ANALYTICS_REQUEST_VEHICLE_LIST = "analytics.request.vehicleList";
+            String ANALYTICS_REQUEST_VEHICLE_COUNTER = "analytics.request.vehicle";
             /**
              *  The routing key used by backoffice to receive a vehicle counter.
              */
-            String ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST = "analytics.response.vehicles";
+            String ANALYTICS_RESPONSE_VEHICLE_COUNTER = "analytics.response.vehicles";
+            /**
+             *  The routing key used by booking service to receive a booking list request.
+             */
+            String BOOKING_REQUEST_BOOKING_LIST = "booking.request.all";
+            /**
+             *  The routing key used by booking service to receive a booking list request.
+             */
+            String BOOKING_RESPONSE_BOOKING_LIST = "booking.response.all.%s";
         }
     }
 
     interface Position {
         /**
-         * The predefined range of kilometers used to choose a vehicle nearby a specific user.
+         * The predefined minimum range of kilometers used to choose a vehicle nearby a specific user.
          */
-        double RANGE = 20;
+        double DEFAULT_MIN_RANGE = 0.1;
+        /**
+         * The predefined maximum range of kilometers used to choose a vehicle nearby a specific user.
+         */
+        double DEFAULT_MAX_RANGE = 50.0;
+        /**
+         * The predefined maximum range of kilometers used to choose a substitution vehicle nearby a specific user.
+         */
+        double DEFAULT_SUBSTITUTION_RANGE = 80.0;
 
         double EARTH_RADIUS = 6372.795477598;
     }
 
 
     interface Vehicle {
-        String LICENSE_PLATE = "licensePlate";
-        String SPEED = "speed";
-    }
-
-    interface Trip {
-        String DISTANCE_TO_USER = "distanceToUser";
-        String TOTAL_DISTANCE = "totalDistance";
+        /**
+         * This status means that the {@linkplain Vehicle} can be booked by a user.
+         */
+        String STATUS_AVAILABLE = "available";
+        /**
+         * This status means that the {@linkplain Vehicle} has been booked by a user.
+         */
+        String STATUS_BOOKED = "booked";
+        /**
+         * This status means that the {@linkplain Vehicle} is going to recharge itself.
+         */
+        String STATUS_RECHARGING = "recharging";
+        /**
+         * This status means that the {@linkplain Vehicle} is broken or stolen.
+         */
+        String STATUS_BROKEN_STOLEN = "broken_stolen";
+        /**
+         * This status means that the {@linkplain Vehicle} has network issues, so it will come back to the headquarted.
+         */
+        String STATUS_NETWORK_ISSUES = "net_issues";
     }
 
     interface MessagesAnalytics {

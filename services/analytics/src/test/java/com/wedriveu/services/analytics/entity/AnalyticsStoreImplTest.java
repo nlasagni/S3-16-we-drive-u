@@ -2,10 +2,10 @@ package com.wedriveu.services.analytics.entity;
 
 
 import com.wedriveu.services.shared.model.AnalyticsVehicle;
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.store.EntityListStoreStrategy;
 import com.wedriveu.services.shared.store.JsonFileEntityListStoreStrategyImpl;
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter;
+import com.wedriveu.shared.util.Constants;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ public class AnalyticsStoreImplTest {
                 new JsonFileEntityListStoreStrategyImpl<>(AnalyticsVehicle.class, DATABASE_FILE_NAME);
         analyticsStore = new AnalyticsStoreImpl(storeStrategy, vehiclesCounterAlgorithm);
         analyticsStore.clear();
-        vehicle = new AnalyticsVehicle(VEHICLE_1_LICENSE_PLATE, Vehicle.STATUS_AVAILABLE);
+        vehicle = new AnalyticsVehicle(VEHICLE_1_LICENSE_PLATE, Constants.Vehicle.STATUS_AVAILABLE);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class AnalyticsStoreImplTest {
     @Test
     public void updateVehicle() throws Exception {
         boolean insertionSucceded = insertVehicleIntoDatabase();
-        final String NEW_STATUS = Vehicle.STATUS_BROKEN_STOLEN;
+        final String NEW_STATUS = Constants.Vehicle.STATUS_BROKEN_STOLEN;
         boolean updateSucceded = analyticsStore.updateVehicle(vehicle.getLicensePlate(), NEW_STATUS);
         Optional<AnalyticsVehicle> vehicleFromStore = analyticsStore.getVehicleByLicensePlate(vehicle.getLicensePlate());
         assertTrue(insertionSucceded &&
@@ -85,11 +85,11 @@ public class AnalyticsStoreImplTest {
 
 
     private void addSomeVehiclesToDatabase(int available, int broken, int booked, int networkIssues, int recharging) {
-        addVehiclesWithStatus(available, Vehicle.STATUS_AVAILABLE);
-        addVehiclesWithStatus(broken, Vehicle.STATUS_BROKEN_STOLEN);
-        addVehiclesWithStatus(booked, Vehicle.STATUS_BOOKED);
-        addVehiclesWithStatus(networkIssues, Vehicle.STATUS_NETWORK_ISSUES);
-        addVehiclesWithStatus(recharging, Vehicle.STATUS_RECHARGING);
+        addVehiclesWithStatus(available, Constants.Vehicle.STATUS_AVAILABLE);
+        addVehiclesWithStatus(broken, Constants.Vehicle.STATUS_BROKEN_STOLEN);
+        addVehiclesWithStatus(booked, Constants.Vehicle.STATUS_BOOKED);
+        addVehiclesWithStatus(networkIssues, Constants.Vehicle.STATUS_NETWORK_ISSUES);
+        addVehiclesWithStatus(recharging, Constants.Vehicle.STATUS_RECHARGING);
 
     }
 

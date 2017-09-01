@@ -5,6 +5,7 @@ import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqCommunicationCo
 import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqQueueConfig;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqCloseCommunicationStrategy;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqConsumerStrategy;
+import com.wedriveu.shared.util.Log;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,22 +13,21 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * Default implementation of a {@linkplain RabbitMqCommunicationManager}.
+ *
  * @author Nicola Lasagni on 09/08/2017.
  */
 public class DefaultRabbitMqCommunicationManager implements RabbitMqCommunicationManager {
 
-    private static final long SUBSCRIBER_TIME = 1000;
     private static final String ILLEGAL_COMMUNICATION_STATE =
             "Communication has not been set up or has been closed";
 
-    private int subscribersCounter;
     private RabbitMqCommunication mCommunication;
-    private Map<Integer, Thread> subscribers = new HashMap<>();
 
     private void checkState() throws IllegalStateException {
         if (mCommunication == null ||
                 mCommunication.getChannel() == null ||
-                !mCommunication.getChannel().isOpen()) {
+                !mCommunication.getConnection().isOpen()) {
             throw new IllegalStateException(ILLEGAL_COMMUNICATION_STATE);
         }
     }
@@ -62,12 +62,12 @@ public class DefaultRabbitMqCommunicationManager implements RabbitMqCommunicatio
     }
 
     @Override
-    public <T> void registerConsumer(final RabbitMqConsumerStrategy<T> strategy,
+    public <T> String registerConsumer(final RabbitMqConsumerStrategy<T> strategy,
                                      final Class<T> messageClass) throws IOException {
         checkState();
-        String queue = strategy.configureQueue(mCommunication);
+        final String queue = strategy.configureQueue(mCommunication);
         Channel channel = mCommunication.getChannel();
-        channel.basicConsume(queue, new DefaultConsumer(channel) {
+        return channel.basicConsume(queue, new DefaultConsumer(channel) {
             @Override
             public void handleDelivery(String consumerTag,
                                        Envelope envelope,
@@ -87,64 +87,35 @@ public class DefaultRabbitMqCommunicationManager implements RabbitMqCommunicatio
                 }
             }
         });
+
     }
 
     @Override
-    public <T> int subscribeConsumer(final RabbitMqConsumerStrategy<T> strategy,
-                                      final Class<T> messageClass) throws IOException {
-        subscribersCounter++;
-        final String queue = strategy.configureQueue(mCommunication);
-        Thread subscriber = new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Channel channel = mCommunication.getChannel();
-                        QueueingConsumer consumer = new QueueingConsumer(channel);
-                        channel.basicConsume(queue, true, consumer);
-                        QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-                        T response = null;
-                        if (delivery.getBody() != null && delivery.getBody().length > 0) {
-                            response = RabbitMqMessageMapper.mapFromByteArray(delivery.getBody(), messageClass);
-                        }
-                        strategy.handleMessage(response);
-                    } catch (InterruptedException e) {
-                        break;
-                    } catch (Exception e) {
-                        try {
-                            Thread.sleep(SUBSCRIBER_TIME);
-                        } catch (InterruptedException ie) {
-                            break;
-                        }
-                    }
-                }
-            }
-        };
-        subscriber.start();
-        subscribers.put(subscribersCounter, subscriber);
-        return subscribersCounter;
-    }
-
-    @Override
-    public void unsubscribeConsumer(int subscriberId) throws IOException {
-        if (subscribers.containsKey(subscriberId)) {
-            subscribers.get(subscriberId).interrupt();
+    public void unregisterConsumer(String consumerTag) throws IOException {
+        if (mCommunication != null && mCommunication.getChannel() != null) {
+            mCommunication.getChannel().basicCancel(consumerTag);
         }
+    }
+
+    @Override
+    public void closeCommunication() throws IOException, TimeoutException {
+        closeCommunication(null);
     }
 
     @Override
     public void closeCommunication(RabbitMqCloseCommunicationStrategy strategy) throws IOException, TimeoutException {
-        checkState();
-        Channel channel = mCommunication.getChannel();
-        if (channel != null) {
-            if (strategy != null) {
-                strategy.closeCommunication(mCommunication);
+        if (mCommunication != null) {
+            Channel channel = mCommunication.getChannel();
+            if (channel != null) {
+                if (strategy != null) {
+                    strategy.closeCommunication(mCommunication);
+                }
+                channel.close();
             }
-            channel.close();
-        }
-        Connection connection = mCommunication.getConnection();
-        if (connection != null) {
-            connection.close();
+            Connection connection = mCommunication.getConnection();
+            if (connection != null) {
+                connection.close();
+            }
         }
     }
 

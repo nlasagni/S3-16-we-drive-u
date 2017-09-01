@@ -142,7 +142,7 @@ public class VehicleVerticleRegisterImpl extends AbstractVerticle implements Veh
             String newLicensePlate = calculateNewLicensePlate(vehicle);
             registerToService(newLicensePlate);
         }
-        vehicle.getVehicle().setState(vehicleConstants.stateAvailable());
+        vehicle.getVehicle().setState(Constants.Vehicle.STATUS_AVAILABLE);
         eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicle.getVehicle().plate()),
                 new JsonObject());
     }

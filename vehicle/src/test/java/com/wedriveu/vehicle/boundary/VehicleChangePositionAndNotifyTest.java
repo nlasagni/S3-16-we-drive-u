@@ -1,6 +1,5 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.shared.rabbitmq.message.ArrivedNotify;
 import com.wedriveu.shared.rabbitmq.message.DriveCommand;
 import com.wedriveu.shared.util.Constants;
@@ -80,7 +79,7 @@ public class VehicleChangePositionAndNotifyTest {
                 "",
                 "",
                 LICENSE,
-                Vehicle.STATUS_AVAILABLE,
+                Constants.Vehicle.STATUS_AVAILABLE,
                 HEAD_QUARTER,
                 BATTERY,
                 SPEED,

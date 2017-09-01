@@ -54,11 +54,6 @@ class VehicleConfiguratorViewImpl()
   val checkBoxYesBreak: JCheckBox = new JCheckBox(yesCommandBreak)
   val noCommandBreak: String = "no"
   val checkBoxNoBreak: JCheckBox = new JCheckBox(noCommandBreak)
-  val stolenLabel: JLabel = new JLabel("Can be stolen?")
-  val yesCommandStolen: String = "yes."
-  val checkBoxYesStolen: JCheckBox = new JCheckBox(yesCommandStolen)
-  val noCommandStolen: String = "no."
-  val checkBoxNoStolen: JCheckBox = new JCheckBox(noCommandStolen)
   val startCommand: String = "Start Vehicle"
   val startButton: JButton = new JButton(startCommand)
   setSize(200, 250)
@@ -66,8 +61,6 @@ class VehicleConfiguratorViewImpl()
   startButton.addActionListener(this)
   checkBoxYesBreak.addActionListener(this)
   checkBoxNoBreak.addActionListener(this)
-  checkBoxYesStolen.addActionListener(this)
-  checkBoxNoStolen.addActionListener(this)
 
   val groupLayout: GroupLayout = new GroupLayout(panel)
   panel.setLayout(groupLayout)
@@ -89,11 +82,6 @@ class VehicleConfiguratorViewImpl()
                 .addComponent(checkBoxYesBreak)
                 .addComponent(checkBoxNoBreak)
             )
-            .addComponent(stolenLabel)
-            .addGroup(groupLayout.createSequentialGroup()
-                .addComponent(checkBoxYesStolen)
-                .addComponent(checkBoxNoStolen)
-            )
             .addComponent(startButton)
         )
   )
@@ -111,10 +99,6 @@ class VehicleConfiguratorViewImpl()
         .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
             .addComponent(checkBoxYesBreak)
             .addComponent(checkBoxNoBreak))
-        .addComponent(stolenLabel)
-        .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-            .addComponent(checkBoxYesStolen)
-            .addComponent(checkBoxNoStolen))
         .addComponent(startButton)
   )
 
@@ -149,18 +133,6 @@ class VehicleConfiguratorViewImpl()
         errorInCanBreakMessageTitle,
         JOptionPane.ERROR_MESSAGE)
     }
-    else if (!checkBoxYesStolen.isSelected && !checkBoxNoStolen.isSelected) {
-      JOptionPane.showMessageDialog(this,
-        errorInCanStolenMessage,
-        errorInCanStolenMessageTitle,
-        JOptionPane.ERROR_MESSAGE)
-    }
-    else if (checkBoxYesBreak.isSelected && checkBoxYesStolen.isSelected) {
-      JOptionPane.showMessageDialog(this,
-        errorInCanStolenAndBrokenMessage,
-        errorInCanStolenAndBrokenMessageTitle,
-        JOptionPane.ERROR_MESSAGE)
-    }
     else {
       if (indexForImages == 6) {
         indexForImages = 0
@@ -168,7 +140,6 @@ class VehicleConfiguratorViewImpl()
       new VehicleCreator(speedTextField.getText.toDouble,
         batteryTextField.getText.toDouble,
         checkBoxYesBreak.isSelected,
-        checkBoxYesStolen.isSelected,
         vehiclesCounter,
         indexForImages).start()
       vehiclesCounter += 1
@@ -179,12 +150,6 @@ class VehicleConfiguratorViewImpl()
     }
     case command if command == noCommandBreak => if (checkBoxYesBreak.isSelected) {
       checkBoxYesBreak.setSelected(false)
-    }
-    case command if command == yesCommandStolen => if (checkBoxNoStolen.isSelected) {
-      checkBoxNoStolen.setSelected(false)
-    }
-    case command if command == noCommandStolen => if (checkBoxYesStolen.isSelected) {
-      checkBoxYesStolen.setSelected(false)
     }
     case _ => println(notCommandFoundError)
   }

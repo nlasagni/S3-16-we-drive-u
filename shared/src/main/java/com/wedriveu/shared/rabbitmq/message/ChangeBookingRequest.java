@@ -73,4 +73,5 @@ public class ChangeBookingRequest {
                 ", newLicensePlate='" + newLicensePlate + '\'' +
                 '}';
     }
+
 }

@@ -3,46 +3,55 @@ package com.wedriveu.shared.util;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * a class for store a GPS position
+ *
  * @author Marco Baldassarri
  * @author Michele Donati
- * @since  17/07/2017
  */
 
 public class Position {
 
-    @JsonProperty
     private double latitude;
-    @JsonProperty
     private double longitude;
 
-    public Position() { }
-
-    public Position(double latitude,
-                    double longitude) {
+    /**
+     * @param latitude the latitude express in decimal degrees
+     * @param longitude the longitude express in decimal degrees
+     */
+    public Position(@JsonProperty("latitude") double latitude,
+                    @JsonProperty("longitude") double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
+    /**
+     * @return the latitude express in decimal degrees
+     */
     public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
+    /**
+     * @return the longitude express in decimal degrees
+     */
     public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
+    /**
+     * returns the distance between two points
+     * @param from the starting point
+     * @param to the ending point
+     * @return the distance between the two points expressed in kilometers
+     */
     public static double getDistanceInKm(Position from, Position to) {
         return PositionUtils.getDistanceInKm(from, to);
     }
 
+    /**
+     * @param to a position point
+     * @return the distance between the position inside the class and the position given expressed in kilometers
+     */
     public double getDistanceInKm(Position to) {
         return PositionUtils.getDistanceInKm(new Position(this.latitude, this.longitude), to);
     }

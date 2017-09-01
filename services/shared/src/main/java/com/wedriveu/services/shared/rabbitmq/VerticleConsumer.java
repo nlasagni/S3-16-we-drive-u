@@ -17,7 +17,6 @@ import java.util.concurrent.TimeoutException;
  * Basic Vert.x RabbitMQ Consumer Verticle. Used to properly handle inbound messages from external publishers.
  *
  * @author Marco Baldassarri
- * @since 29/07/2017
  */
 public abstract class VerticleConsumer extends AbstractVerticle {
 
@@ -35,14 +34,10 @@ public abstract class VerticleConsumer extends AbstractVerticle {
         client = RabbitMQClientFactory.createClient(vertx);
     }
 
-    protected void startConsumerWithDurableQueue(String exchange, String routingKey, String eventBusAddress)
-            throws IOException, TimeoutException {
-        startConsumer(true, exchange, routingKey, eventBusAddress);
-    }
-
-
-    protected void startConsumerWithFuture(String exchange, String routingKey, String eventBusAddress, Future future)
-            throws IOException, TimeoutException {
+    protected void startConsumerWithFuture(String exchange,
+                                           String routingKey,
+                                           String eventBusAddress,
+                                           Future future) throws IOException, TimeoutException {
         startConsumer(onStart -> {
             declareQueue(true, onQueue -> {
                 if (onQueue.succeeded()) {
@@ -63,11 +58,6 @@ public abstract class VerticleConsumer extends AbstractVerticle {
                 }
             });
         });
-    }
-
-    protected void startConsumer(boolean durable, String exchange, String routingKey, String eventBusAddress)
-            throws IOException, TimeoutException {
-        startConsumerWithFuture(exchange, routingKey, eventBusAddress, null);
     }
 
     private void startConsumer(Handler<AsyncResult<Void>> handler) throws java.io.IOException, TimeoutException {

@@ -10,10 +10,16 @@ public class RegisterToServiceResponse {
 
     private boolean registerOk;
 
+    /**
+     * @return the status of the registration
+     */
     public boolean getRegisterOk() {
         return registerOk;
     }
 
+    /**
+     * @param registerOk the status of the registration
+     */
     public void setRegisterOk(boolean registerOk) {
         this.registerOk = registerOk;
     }

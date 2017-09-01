@@ -2,15 +2,18 @@ package com.wedriveu.mobile.store;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 import com.wedriveu.mobile.model.Vehicle;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertTrue;
 
 /**
  * @author  Nicola Lasagni on 29/07/2017.
  */
+@RunWith(AndroidJUnit4.class)
 public class VehicleStoreTest {
 
     private static final String DUMMY_VEHICLE_NAME = "Mini Cooper";
@@ -50,6 +53,7 @@ public class VehicleStoreTest {
     private Vehicle createDummyVehicle() {
         Vehicle vehicle =
                 new Vehicle(DUMMY_VEHICLE_LICENSE_PLATE,
+                        null,
                         DUMMY_VEHICLE_NAME,
                         DUMMY_VEHICLE_DESCRIPTION,
                         null,

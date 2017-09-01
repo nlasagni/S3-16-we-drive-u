@@ -2,7 +2,7 @@ package com.wedriveu.services.vehicle.boundary.vehicleregister;
 
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.vehicle.app.BootVerticle;
-import com.wedriveu.services.vehicle.boundary.BaseInteractionClient;
+import com.wedriveu.services.vehicle.boundary.util.BaseInteractionClient;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.entity.VehicleFactoryMini;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import io.vertx.core.Vertx;
@@ -28,7 +28,6 @@ public class RegisterVehicleTestMini extends BaseInteractionClient {
 
     private static final String EVENT_BUS_ADDRESS = RegisterVehicleTestMini.class.getCanonicalName();
     private static final String QUEUE = "vehicle.queue.mini";
-    private static final int ASYNC_COUNT = 5;
     private Async async;
     private Vertx vertx;
 

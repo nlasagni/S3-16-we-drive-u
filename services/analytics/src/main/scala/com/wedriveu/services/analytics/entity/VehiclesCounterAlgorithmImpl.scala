@@ -1,8 +1,9 @@
 package com.wedriveu.services.analytics.entity
 
 
-import com.wedriveu.services.shared.model.{AnalyticsVehicle, Vehicle}
+import com.wedriveu.services.shared.model.AnalyticsVehicle
 import com.wedriveu.shared.rabbitmq.message.VehicleCounter
+import com.wedriveu.shared.util.Constants
 
 import scala.collection.JavaConverters._
 
@@ -23,11 +24,11 @@ class VehiclesCounterAlgorithmImpl extends VehiclesCounterAlgorithm {
   private[this] final def vehicleCounterRecursive(vehicleList: List[AnalyticsVehicle], counter: VehicleCounter): Boolean = vehicleList match {
     case x :: tail =>
       x.getStatus match {
-        case Vehicle.STATUS_AVAILABLE => counter.increaseAvailable()
-        case Vehicle.STATUS_BROKEN_STOLEN => counter.increaseBroken()
-        case Vehicle.STATUS_BOOKED => counter.increaseBooked()
-        case Vehicle.STATUS_NETWORK_ISSUES => counter.increaseNetworkIssues()
-        case Vehicle.STATUS_RECHARGING => counter.increaseRecharging()
+        case Constants.Vehicle.STATUS_AVAILABLE => counter.increaseAvailable()
+        case Constants.Vehicle.STATUS_BROKEN_STOLEN => counter.increaseBroken()
+        case Constants.Vehicle.STATUS_BOOKED => counter.increaseBooked()
+        case Constants.Vehicle.STATUS_NETWORK_ISSUES => counter.increaseNetworkIssues()
+        case Constants.Vehicle.STATUS_RECHARGING => counter.increaseRecharging()
         case _ =>
       }
       vehicleCounterRecursive(tail, counter)

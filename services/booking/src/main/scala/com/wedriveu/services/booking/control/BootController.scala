@@ -5,7 +5,8 @@ import io.vertx.lang.scala.ScalaVerticle
 
 import scala.concurrent.Future
 
-/**
+/** Creates a [[BootManager]] that boots the [[BookingController]]
+  *
   * @author Nicola Lasagni on 18/08/2017.
   */
 object BootController {

@@ -1,7 +1,7 @@
 package com.wedriveu.vehicle.control
 
 import com.rabbitmq.client._
-import com.wedriveu.shared.util.Position
+import com.wedriveu.shared.util.{Constants, Position}
 import com.wedriveu.vehicle.boundary.{VehicleStopView, _}
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
@@ -44,7 +44,7 @@ trait VehicleControl {
     *
     * @return The username of the user.
     */
-  def getUsername(): String
+  def getUsername: String
 
   /** This method permits to define the username of the user associated to this vehicle.
     *
@@ -150,12 +150,11 @@ class VehicleControlImpl(vertx: Vertx,
 
   override def subscribeToMovementAndChangePositionEvents(): Unit = {
     vehicleEventsObservables.movementAndChangePositionObservable().subscribe(event => {
-      if (!vehicleGiven.getState().equals(VehicleConstants.stateRecharging)
-          || !vehicleGiven.getState().equals(VehicleConstants.stateBroken)) {
+      if (!vehicleGiven.getState().equals(Constants.Vehicle.STATUS_RECHARGING)
+          || !vehicleGiven.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)) {
         executeBehaviour(vehicleBehaviours.movementAndPositionChange, event)
-        if (!vehicleGiven.getState().equals(VehicleConstants.stateRecharging)
-            && !vehicleGiven.getState().equals(VehicleConstants.stateBroken)
-            && !vehicleGiven.getState().equals(VehicleConstants.stateStolen)
+        if (!vehicleGiven.getState().equals(Constants.Vehicle.STATUS_RECHARGING)
+            && !vehicleGiven.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)
             && !userOnBoard
             && !debugVar) {
           executeBehaviour(vehicleBehaviours.goToRecharge)
@@ -192,17 +191,16 @@ class VehicleControlImpl(vertx: Vertx,
   override def changePositionUponBooking(userPosition: Position,
     destinationPosition: Position,
     notRealisticVar: Boolean): Unit = {
-    if (!vehicleGiven.getState().equals(VehicleConstants.stateRecharging) ||
-        !vehicleGiven.getState().equals(VehicleConstants.stateBroken)) {
+    if (!vehicleGiven.getState().equals(Constants.Vehicle.STATUS_RECHARGING) ||
+        !vehicleGiven.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)) {
       executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition, notRealisticVar)
     }
   }
 
   override def goToDestination(position: Position): Unit = {
     executeBehaviour(vehicleBehaviours.movementAndPositionChange, position)
-    if (!vehicleGiven.getState().equals(VehicleConstants.stateRecharging)
-        && !vehicleGiven.getState().equals(VehicleConstants.stateBroken)
-        && !vehicleGiven.getState().equals(VehicleConstants.stateStolen)
+    if (!vehicleGiven.getState().equals(Constants.Vehicle.STATUS_RECHARGING)
+        && !vehicleGiven.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)
         && !userOnBoard
         && !debugVar) {
       executeBehaviour(vehicleBehaviours.goToRecharge)

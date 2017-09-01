@@ -3,9 +3,7 @@ package com.wedriveu.services.vehicle.boundary.analytics;
 import com.wedriveu.services.shared.rabbitmq.VerticleConsumer;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
 import com.wedriveu.shared.util.Constants;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+import io.vertx.core.Future;
 
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_ANALYTICS_ADDRESS;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_REGISTER;
@@ -25,15 +23,12 @@ public class AnalyticsConsumerVerticle extends VerticleConsumer {
     }
 
     @Override
-    public void start() throws Exception {
+    public void start(Future<Void> startFuture) throws Exception {
         super.start();
-        startVehicleRegisterConsumer();
-    }
-
-    private void startVehicleRegisterConsumer() throws IOException, TimeoutException {
-        startConsumer(false, Constants.RabbitMQ.Exchanges.VEHICLE,
+        startConsumerWithFuture(Constants.RabbitMQ.Exchanges.VEHICLE,
                 ANALYTICS_VEHICLE_REQUEST_ALL,
-                EVENT_BUS_ANALYTICS_ADDRESS);
+                EVENT_BUS_ANALYTICS_ADDRESS,
+                startFuture);
     }
 
     @Override

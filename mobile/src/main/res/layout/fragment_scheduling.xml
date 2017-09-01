@@ -8,7 +8,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="40dp">
+            android:padding="20dp">
 
         <TextView
                 android:layout_width="match_parent"
@@ -24,10 +24,38 @@
                 android:layout_marginTop="40dp"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
-                android:text="@string/scheduling_address_label"/>
+                android:text="@string/scheduling_user_address_label"/>
 
         <EditText
-                android:id="@+id/address"
+                android:id="@+id/pick_up_address"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="start"
+                android:inputType="text"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"
+                android:textSize="18sp"
+                android:focusable="false"
+                android:hint="@string/scheduling_address_hint"/>
+
+        <CheckBox
+                android:id="@+id/use_my_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scheduling_use_my_position"
+                android:textColor="@android:color/black"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:text="@string/scheduling_destination_address_label"/>
+
+        <EditText
+                android:id="@+id/destination_address"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -45,7 +73,7 @@
             android:id="@+id/search_vehicle_button"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:background="@color/colorAccent"
             android:textColor="@android:color/white"
             android:text="@string/scheduling_search_vehicle"

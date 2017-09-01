@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import com.google.android.gms.location.places.Place;
 import com.wedriveu.mobile.R;
@@ -18,13 +20,23 @@ import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModel;
 import com.wedriveu.mobile.tripscheduling.viewmodel.SchedulingViewModelImpl;
 
 /**
- * Created by Marco on 18/07/2017.
+ * The {@linkplain SchedulingView} implementation.
+ *
+ * @author Marco on 18/07/2017.
+ * @author Nicola Lasagni
  */
 public class SchedulingViewImpl extends Fragment implements SchedulingView, View.OnClickListener {
 
-    private EditText mAddressEditText;
+    private CheckBox mUseMyPosition;
+    private EditText mPickUpAddressEditText;
+    private EditText mDestinationAddressEditText;
     private Button mSearchVehicleButton;
 
+    /**
+     * New instance of a {@link SchedulingView}.
+     *
+     * @return the scheduling view
+     */
     public static SchedulingViewImpl newInstance() {
         return new SchedulingViewImpl();
     }
@@ -43,44 +55,55 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
     }
 
     private void setupUIComponents(View view){
-        mAddressEditText = (EditText) view.findViewById(R.id.address);
+        mUseMyPosition = (CheckBox) view.findViewById(R.id.use_my_position);
+        mPickUpAddressEditText = (EditText) view.findViewById(R.id.pick_up_address);
+        mDestinationAddressEditText = (EditText) view.findViewById(R.id.destination_address);
         mSearchVehicleButton = (Button) view.findViewById(R.id.search_vehicle_button);
+        mUseMyPosition.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPickUpAddressEditText.setEnabled(!isChecked);
+                mPickUpAddressEditText.setFocusable(!isChecked);
+            }
+        });
     }
 
     @Override
     public void renderView() {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.scheduling_title);
         mSearchVehicleButton.setOnClickListener(this);
-        mAddressEditText.setOnClickListener(this);
+        mPickUpAddressEditText.setOnClickListener(this);
+        mDestinationAddressEditText.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.address:
-                getAddress();
-                break;
-            case R.id.search_vehicle_button:
-                if(mAddressEditText.getText().toString().trim().length() == 0) {
-                    renderError(getString(R.string.destination_address_not_filled));
-                } else {
-                    startVehicleSearch();
-                }
-                break;
+        int viewId = view.getId();
+        if (viewId == R.id.pick_up_address || viewId == R.id.destination_address) {
+            getAddress(viewId == R.id.destination_address);
+        } else if (viewId == R.id.search_vehicle_button) {
+            if (!mUseMyPosition.isChecked() &&
+                    mPickUpAddressEditText.getText().toString().trim().isEmpty()) {
+                renderError(getString(R.string.pick_up_position_not_filled));
+            } else if(mDestinationAddressEditText.getText().toString().trim().length() == 0) {
+                renderError(getString(R.string.destination_address_not_filled));
+            } else {
+                startVehicleSearch();
+            }
         }
     }
 
-    private void getAddress() {
+    private void getAddress(boolean forDestination) {
         SchedulingViewModel viewModel = getViewModel();
         if(viewModel != null ){
-            viewModel.startPlaceAutocomplete();
+            viewModel.startPlaceAutocomplete(forDestination);
         }
     }
 
     private void startVehicleSearch() {
         SchedulingViewModel viewModel = getViewModel();
         if (viewModel != null) {
-            viewModel.onSearchVehicleButtonClick();
+            viewModel.onSearchVehicleButtonClick(mUseMyPosition.isChecked());
         }
     }
 
@@ -106,8 +129,13 @@ public class SchedulingViewImpl extends Fragment implements SchedulingView, View
     }
 
     @Override
-    public void showSelectedAddress(Place address) {
-        mAddressEditText.setText(address.getAddress());
+    public void showPickUpAddress(Place address) {
+        mPickUpAddressEditText.setText(address.getAddress());
+    }
+
+    @Override
+    public void showDestinationAddress(Place address) {
+        mDestinationAddressEditText.setText(address.getAddress());
     }
 
 }

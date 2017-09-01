@@ -9,14 +9,25 @@ import io.vertx.rabbitmq.RabbitMQClient;
  * Basic RabbitMQ Client Factory for requesting RabbitMQ client where needed.
  *
  * @author Marco Baldassarri
- * @since 12/08/2017.
  */
 public class RabbitMQClientFactory {
 
+    /**
+     * creates a new rabbitMQ client with the given vert.x instance
+     *
+     * @param vertx the vert.x instance
+     *
+     * @return a new rabbitmq client
+     */
     public static RabbitMQClient createClient(Vertx vertx) {
         return RabbitMQClient.create(vertx, createClientConfig());
     }
 
+    /**
+     * creates the configuration of the client
+     *
+     * @return a json object with the configuration of the client
+     */
     public static JsonObject createClientConfig() {
         JsonObject config = new JsonObject();
         config.put(Constants.RabbitMQ.ConfigKey.HOST, Constants.RabbitMQ.Broker.HOST);

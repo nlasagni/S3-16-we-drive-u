@@ -1,8 +1,7 @@
 package com.wedriveu.vehicle.boundary;
 
 
-import com.wedriveu.services.shared.model.Vehicle;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
+import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
@@ -40,7 +39,7 @@ public class VehicleVerticleUpdateImplTest {
     private String requestId;
     private VehicleControl vehicleControl;
     private String license = "VEHICLE5";
-    private String state = Vehicle.STATUS_AVAILABLE;
+    private String state = Constants.Vehicle.STATUS_AVAILABLE;
     private double battery = 100.0;
     private double speed = 50.0;
     private VehicleStopView stopUi;
@@ -105,7 +104,7 @@ public class VehicleVerticleUpdateImplTest {
             MessageConsumer<JsonObject> consumer = eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
                 JsonObject updateJson = new JsonObject(msg.body().getString(Constants.EventBus.BODY));
                 Log.info(TAG, updateJson.toString());
-                UpdateToService updateArrived = updateJson.mapTo(UpdateToService.class);
+                VehicleUpdate updateArrived = updateJson.mapTo(VehicleUpdate.class);
                 context.assertTrue(updateArrived.getPosition().equals(Constants.HEAD_QUARTER)
                         && updateArrived.getStatus().equals(state)
                         && updateArrived.getLicense().equals(license)

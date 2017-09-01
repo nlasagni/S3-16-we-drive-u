@@ -1,17 +1,18 @@
 package com.wedriveu.services.analytics.boundary;
 
 import com.wedriveu.services.analytics.entity.MessageVehicleCounterWithID;
-import com.wedriveu.services.analytics.util.EventBus;
+import com.wedriveu.services.analytics.util.ConstantsAnalytics;
 import com.wedriveu.services.shared.rabbitmq.VerticlePublisher;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
-import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST;
+import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_RESPONSE_VEHICLE_COUNTER;
 
 /**
+ * a verticle for publishing the vehicle counter to the backoffice
+ *
  * @author Stefano Bernagozzi
  */
 public class AnalyticsVehiclesResponsePublisher extends VerticlePublisher {
@@ -26,24 +27,25 @@ public class AnalyticsVehiclesResponsePublisher extends VerticlePublisher {
     }
 
     private void startConsumer() {
-        vertx.eventBus().consumer(EventBus.VEHICLE_COUNTER_RESPONSE, this::sendVehicleCounterToBackOffice);
+        vertx.eventBus().consumer(ConstantsAnalytics.EventBus.VEHICLE_COUNTER_RESPONSE, this::sendVehicleCounterToBackOffice);
     }
 
     private void sendVehicleCounterToBackOffice(Message message) {
         MessageVehicleCounterWithID messageVehicleCounterWithID =
                 VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), MessageVehicleCounterWithID.class);
         JsonObject dataToUser = VertxJsonMapper.mapInBodyFrom(messageVehicleCounterWithID.getVehicleCounter());
-        if (messageVehicleCounterWithID.getBackofficeID().equals("")) {
-            publish(Constants.RabbitMQ.Exchanges.ANALYTICS, ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST,
+        if (messageVehicleCounterWithID.getBackofficeID().isEmpty()) {
+            publish(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.ANALYTICS,
+                    ANALYTICS_RESPONSE_VEHICLE_COUNTER,
                     dataToUser,
-                    res -> {
-                    });
+                    res -> { });
         } else {
-            publish(Constants.RabbitMQ.Exchanges.ANALYTICS,
-                    ROUTING_KEY_ANALYTICS_RESPONSE_VEHICLE_LIST + "." + messageVehicleCounterWithID.getBackofficeID(),
+            publish(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.ANALYTICS,
+                    String.format(com.wedriveu.shared.util.Constants.FORMAT_WITH_DOT,
+                            ANALYTICS_RESPONSE_VEHICLE_COUNTER,
+                            messageVehicleCounterWithID.getBackofficeID()),
                     dataToUser,
-                    res -> {
-                    });
+                    res -> { });
         }
     }
 }

@@ -12,9 +12,9 @@ public class Main {
         Vertx vertx = Vertx.vertx();
         vertx.deployVerticle(new BackofficeController(vertx), completed -> {
             if (completed.succeeded()) {
-                Log.info("correctly started Analytics service");
+                Log.info("correctly started backoffice");
             } else {
-                Log.error("main analytics service", completed.cause().getLocalizedMessage(), completed.cause());
+                Log.error("main backoffice", completed.cause().getLocalizedMessage(), completed.cause());
             }
         });
 

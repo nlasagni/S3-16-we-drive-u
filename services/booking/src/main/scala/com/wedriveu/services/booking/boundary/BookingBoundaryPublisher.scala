@@ -10,15 +10,23 @@ import io.vertx.scala.rabbitmq.RabbitMQClient
 
 import scala.concurrent.Future
 
-/**
+/** A boundary message publisher used by the [[BookingBoundary]].
+  *
   * @author Nicola Lasagni on 18/08/2017.
   */
 trait BookingBoundaryPublisher {
 
+  /** Publishes a message
+    *
+    * @param message The message to be published
+    */
   def publish(message: JsonObject): Unit
 
 }
 
+/** Creates all the [[BookingBoundaryPublisher]] needed.
+  *
+  */
 object BookingBoundaryPublisherVerticle {
 
   /**
@@ -45,6 +53,10 @@ object BookingBoundaryPublisherVerticle {
     * The [[ScalaVerticle]] name to deploy a [[FindBookingPositionPublisher]]
     */
   val FindBookingPosition: String = s"scala:${classOf[FindBookingPositionPublisher].getName}"
+  /**
+    * The [[ScalaVerticle]] name to deploy a [[GetBookingsPublisher]]
+    */
+  val GetBookings: String = s"scala:${classOf[GetBookingsPublisher].getName}"
 
   private[this] class BookingBoundaryPublisherVerticleImpl(
     private val address: String,
@@ -118,6 +130,12 @@ object BookingBoundaryPublisherVerticle {
     Constants.EventBus.Address.Booking.FindBookingPositionResponse,
     Shared.RabbitMQ.Exchanges.BOOKING,
     Shared.RabbitMQ.RoutingKey.FIND_BOOKING_POSITION_RESPONSE
+  )
+
+  private[this] class GetBookingsPublisher extends BookingBoundaryPublisherVerticleImpl(
+    Constants.EventBus.Address.Booking.GetBookingsResponse,
+    Shared.RabbitMQ.Exchanges.BOOKING,
+    Shared.RabbitMQ.RoutingKey.BOOKING_RESPONSE_BOOKING_LIST
   )
 
 }

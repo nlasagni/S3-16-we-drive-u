@@ -44,6 +44,14 @@ object Constants {
       * A queue to receive book vehicle booking response messages.
       */
     val BookVehicle: String = Response + Dot + "bookVehicle"
+    /**
+      * A queue to receive book vehicle booking response messages.
+      */
+    val GetBookings: String = Find + Dot + "allBookings"
+    /**
+      * A queue to receive book vehicle booking response messages.
+      */
+    val AbortBookings: String = Request + Dot + "abort"
 
   }
 
@@ -72,6 +80,7 @@ object Constants {
         private val ChangeBooking = "change.booking"
         private val CompleteBooking = "complete.booking"
         private val FindBooking = "find.booking"
+        private val GetBookings = "getBookings"
         private val LicensePlate = "licensePlate"
         private val Position = "position"
 
@@ -90,7 +99,8 @@ object Constants {
         /**
           * Address for receiving and sending messages for a change booking response.
           */
-        val ChangeBookingLicensePlateResponse: String = Response + Dot + ChangeBooking + Dot + LicensePlate
+        val ChangeBookingLicensePlateResponse: String =
+          Response + Dot + ChangeBooking + Dot + LicensePlate
         /**
           * Address for receiving and sending messages for a complete booking request.
           */
@@ -111,6 +121,22 @@ object Constants {
           * Address for receiving and sending messages for a find booking position response.
           */
         val FindBookingPositionResponse: String = Response + Dot + FindBooking + Dot + Position
+        /**
+          * Address for receiving and sending messages for a get all bookings request.
+          */
+        val GetBookingsRequest: String = Request + Dot + GetBookings
+        /**
+          * Address for receiving and sending messages for a get all bookings response.
+          */
+        val GetBookingsResponse: String = Response + Dot + GetBookings
+        /**
+          * Address for receiving and sending messages for an abort booking request.
+          */
+        val AbortBookingRequest: String = Request + Dot + "abort"
+        /**
+          * Address for receiving and sending messages for an abort booking response.
+          */
+        val AbortGetBookingResponse: String = Response + Dot + "abort"
 
       }
 
