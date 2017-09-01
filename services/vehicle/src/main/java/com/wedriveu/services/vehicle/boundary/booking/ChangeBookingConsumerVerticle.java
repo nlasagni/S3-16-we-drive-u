@@ -6,9 +6,6 @@ import com.wedriveu.shared.util.Constants;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
-
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.EVENT_BUS_CHANGE_BOOKING_ADDRESS;
 import static com.wedriveu.services.vehicle.rabbitmq.Constants.VEHICLE_SERVICE_QUEUE_CHANGE_BOOKING;
 

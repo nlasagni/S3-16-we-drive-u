@@ -5,7 +5,7 @@ import com.wedriveu.services.vehicle.boundary.analytics.AnalyticsPublisherVertic
 import com.wedriveu.services.vehicle.boundary.booking.*;
 import com.wedriveu.services.vehicle.boundary.nearest.VehicleElectionVerticle;
 import com.wedriveu.services.vehicle.boundary.updates.UpdatesVerticle;
-import com.wedriveu.services.vehicle.boundary.vehiclearrived.VehicleArrivedVerticle;
+import com.wedriveu.services.vehicle.boundary.booking.CompleteBookingVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterConsumerVerticle;
 import com.wedriveu.services.vehicle.boundary.vehicleregister.RegisterPublisherVerticle;
 import com.wedriveu.services.vehicle.entity.VehicleStoreImpl;
@@ -40,8 +40,9 @@ public class VerticleDeployer extends AbstractVerticle {
                 new BookingControl(),
                 new BookConsumerVerticle(),
                 new BookPublisherVerticle(),
+                new AbortBookingPublisherVerticle(),
                 new StartDrivingPublisherVerticle(),
-                new VehicleArrivedVerticle(),
+                new CompleteBookingVerticle(),
                 new UpdatesVerticle(),
                 new UpdateControl(),
                 new SubstitutionControl(),

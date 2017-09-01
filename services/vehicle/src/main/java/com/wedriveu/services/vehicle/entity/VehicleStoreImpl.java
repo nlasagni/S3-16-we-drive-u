@@ -7,7 +7,7 @@ import com.wedriveu.services.shared.model.AnalyticsVehicleList;
 import com.wedriveu.services.shared.model.Vehicle;
 import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.services.vehicle.rabbitmq.Messages;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
+import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Position;
 import com.wedriveu.shared.util.PositionUtils;
@@ -57,7 +57,7 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         eventBus.consumer(Messages.VehicleStore.CLEAR_VEHICLES, msg -> deleteAllVehicles());
         eventBus.consumer(Messages.Analytics.GET_VEHICLES_REQUEST, this::getVehicleList);
         eventBus.consumer(Messages.VehicleStore.UPDATE_VEHICLE_STATUS, msg -> {
-            UpdateToService update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), UpdateToService.class);
+            VehicleUpdate update = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), VehicleUpdate.class);
             updateVehicleInVehicleList(update.getLicense(), update.getStatus(), update.getPosition(), new Date());
         });
         eventBus.consumer(Messages.VehicleSubstitution.GET_VEHICLE_FOR_SUBSTITUTION, this::getVehicleForSubstitution);
@@ -152,14 +152,14 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
 
 
     @Override
-    public List<Vehicle> getAllAvailableVehiclesInRange(Position sourcePosition, double range) {
+    public List<Vehicle> getAllAvailableVehiclesInRange(Position sourcePosition, double minRange, double maxRange) {
         List<Vehicle> vehicles = getVehicleList();
         List<Vehicle> availableVehicles = new ArrayList<>();
         for (Vehicle vehicle : vehicles) {
             Position vehiclePosition = vehicle.getPosition();
             if (STATUS_AVAILABLE.equals(vehicle.getStatus()) &&
                     vehiclePosition != null &&
-                    PositionUtils.isInRange(sourcePosition, vehiclePosition, range)) {
+                    PositionUtils.isInRange(sourcePosition, vehiclePosition, minRange, maxRange)) {
                 availableVehicles.add(vehicle);
             }
         }
@@ -170,7 +170,9 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
         UserRequest userData = ((JsonObject) message.body()).mapTo(UserRequest.class);
         Position userPosition = userData.getUserPosition();
         List<Vehicle> availableVehicles =
-                getAllAvailableVehiclesInRange(userPosition, Constants.Position.RANGE);
+                getAllAvailableVehiclesInRange(userPosition,
+                        Constants.Position.DEFAULT_MIN_RANGE,
+                        Constants.Position.DEFAULT_MAX_RANGE);
         userData.setVehicleList(availableVehicles);
         eventBus.send(Messages.VehicleStore.AVAILABLE_COMPLETED, JsonObject.mapFrom(userData));
     }
@@ -178,7 +180,9 @@ public class VehicleStoreImpl extends AbstractVerticle implements VehicleStore {
     private void getSubstitutionAvailableVehicles(SubstitutionRequest request) {
         Position sourcePosition = request.getSubstitutionCheck().getSourcePosition();
         List<Vehicle> availableVehicles =
-                getAllAvailableVehiclesInRange(sourcePosition, Constants.Position.SUBSTITUTION_RANGE);
+                getAllAvailableVehiclesInRange(sourcePosition,
+                        Constants.Position.DEFAULT_MIN_RANGE,
+                        Constants.Position.DEFAULT_SUBSTITUTION_RANGE);
         SubstitutionRequest newRequest =
                 new SubstitutionRequest(request.getSubstitutionCheck(),
                         request.getSubstitutionVehicle(),

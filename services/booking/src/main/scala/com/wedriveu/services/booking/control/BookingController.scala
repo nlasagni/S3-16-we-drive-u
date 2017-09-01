@@ -54,6 +54,12 @@ trait BookingController {
     */
   def findAllBookings(getRequest: BookingListRequest): Unit
 
+  /** Aborts a [[com.wedriveu.services.shared.model.Booking]].
+    *
+    * @param abortRequest The request data needed to abort a [[com.wedriveu.services.shared.model.Booking]].
+    */
+  def abortBooking(abortRequest: AbortBookingRequest): Unit
+
 }
 
 /** Represents a [[BookingController]] which implementation will be bounded to a [[ScalaVerticle]].
@@ -70,7 +76,7 @@ object BookingControllerVerticle {
 
   private[this] class BookingControllerVerticleImpl extends BookingControllerVerticle {
 
-    private val Timer = 15000
+    private val Timer = 20000
     private val InvalidOperationMessage = "Invalid message received"
     private val BookingAlreadyStarted = "A booking process has not yet been completed for this user."
     private val VehicleAlreadyBooked = "This vehicle has already been booked."
@@ -117,6 +123,11 @@ object BookingControllerVerticle {
         classOf[BookingListRequest],
         (request: BookingListRequest) => {
           findAllBookings(request)
+        })
+      registerConsumer(Constants.EventBus.Address.Booking.AbortBookingRequest,
+        classOf[AbortBookingRequest],
+        (request: AbortBookingRequest) => {
+          abortBooking(request)
         })
     }
 
@@ -275,6 +286,14 @@ object BookingControllerVerticle {
     override def findAllBookings(getRequest: BookingListRequest): Unit = {
       val id = getRequest.getBackofficeId
       sendListInMessage(Constants.EventBus.Address.Booking.GetBookingsResponse, id, store.getBookings)
+    }
+
+    override def abortBooking(abortRequest: AbortBookingRequest): Unit = {
+      val username = abortRequest.getUsername
+      val booking = store.getBookingByUser(username, Booking.STATUS_PROCESSING)
+      if (booking.isPresent) {
+        store.updateBookingStatus(booking.get().getId, Booking.STATUS_ABORTED)
+      }
     }
   }
 

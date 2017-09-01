@@ -37,8 +37,17 @@ case class ConsumerConfig(
 
 }
 
+/** Utility object for creating RabbitMQ consumers.
+  *
+  */
 object RabbitMQConsumers {
 
+  /** Creates a consumer.
+    *
+    * @param client The [[RabbitMQClient]] with which create the consumer
+    * @param config The [[ConsumerConfig]] with which create the consumer
+    * @return A [[Future]] of the result of this operation
+    */
   def createConsumer(client: RabbitMQClient, config: ConsumerConfig): Future[_] = {
     client.startFuture().flatMap(_ =>
       declareQueue(client, config)

@@ -16,12 +16,21 @@ import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.login.viewmodel.LoginViewModel;
 import com.wedriveu.mobile.util.Constants;
 
+/**
+ * The effective login view implementation.
+ */
 public class LoginViewImpl extends Fragment implements LoginView {
 
     private Button mLoginButton;
     private EditText mUsername;
     private EditText mPassword;
 
+    /**
+     * New instance of a {@linkplain LoginView}.
+     *
+     * @param viewModelId the view model id
+     * @return the login view
+     */
     public static LoginViewImpl newInstance(String viewModelId) {
         LoginViewImpl fragment = new LoginViewImpl();
         Bundle arguments = new Bundle();

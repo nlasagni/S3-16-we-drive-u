@@ -10,15 +10,23 @@ import io.vertx.scala.rabbitmq.RabbitMQClient
 
 import scala.concurrent.Future
 
-/**
+/** A boundary message publisher used by the [[BookingBoundary]].
+  *
   * @author Nicola Lasagni on 18/08/2017.
   */
 trait BookingBoundaryPublisher {
 
+  /** Publishes a message
+    *
+    * @param message The message to be published
+    */
   def publish(message: JsonObject): Unit
 
 }
 
+/** Creates all the [[BookingBoundaryPublisher]] needed.
+  *
+  */
 object BookingBoundaryPublisherVerticle {
 
   /**

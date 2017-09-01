@@ -21,7 +21,7 @@ public class UserStoreImpl implements UserStore {
     private SharedPreferences mSharedPreferences;
     private ObjectMapper mObjectMapper;
 
-    UserStoreImpl(Context context) {
+    public UserStoreImpl(Context context) {
         mSharedPreferences = context.getSharedPreferences(USER_PREFERENCE_NAME, Context.MODE_PRIVATE);
         mObjectMapper = new ObjectMapper();
     }

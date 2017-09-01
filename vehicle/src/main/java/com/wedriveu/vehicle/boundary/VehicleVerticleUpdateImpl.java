@@ -1,6 +1,6 @@
 package com.wedriveu.vehicle.boundary;
 
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
+import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
 import com.wedriveu.shared.util.Constants;
 import com.wedriveu.shared.util.Log;
 import com.wedriveu.vehicle.control.VehicleControl;
@@ -78,22 +78,22 @@ public class VehicleVerticleUpdateImpl extends AbstractVerticle implements Vehic
     }
 
     private JsonObject createUpdate() {
-        UpdateToService updateToService = new UpdateToService();
-        updateToService.setPosition(vehicle.getVehicle().position());
-        updateToService.setLicense(vehicle.getVehicle().plate());
+        VehicleUpdate vehicleUpdate = new VehicleUpdate();
+        vehicleUpdate.setPosition(vehicle.getVehicle().position());
+        vehicleUpdate.setLicense(vehicle.getVehicle().plate());
         String state = vehicle.getVehicle().getState();
-        updateToService.setStatus(state);
-        updateToService.setUserOnBoard(vehicle.getUserOnBoard());
-        updateToService.setUsername(vehicle.getUsername());
+        vehicleUpdate.setStatus(state);
+        vehicleUpdate.setUserOnBoard(vehicle.getUserOnBoard());
+        vehicleUpdate.setUsername(vehicle.getUsername());
         String message;
         if (state.equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)) {
             message = FAILURE_MESSAGE;
         } else {
             message = NOT_FAILURE_MESSAGE;
         }
-        updateToService.setFailureMessage(message);
+        vehicleUpdate.setFailureMessage(message);
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(updateToService).toString());
+        jsonObject.put(Constants.EventBus.BODY, JsonObject.mapFrom(vehicleUpdate).toString());
         return jsonObject;
     }
 

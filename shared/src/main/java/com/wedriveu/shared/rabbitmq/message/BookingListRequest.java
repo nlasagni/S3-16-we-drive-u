@@ -4,6 +4,7 @@ package com.wedriveu.shared.rabbitmq.message;
  * @author Stefano Bernagozzi
  */
 public class BookingListRequest {
+
     private String backofficeId;
 
     /**

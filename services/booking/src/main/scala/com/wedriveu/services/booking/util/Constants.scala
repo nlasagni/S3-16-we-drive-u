@@ -48,6 +48,10 @@ object Constants {
       * A queue to receive book vehicle booking response messages.
       */
     val GetBookings: String = Find + Dot + "allBookings"
+    /**
+      * A queue to receive book vehicle booking response messages.
+      */
+    val AbortBookings: String = Request + Dot + "abort"
 
   }
 
@@ -125,6 +129,14 @@ object Constants {
           * Address for receiving and sending messages for a get all bookings response.
           */
         val GetBookingsResponse: String = Response + Dot + GetBookings
+        /**
+          * Address for receiving and sending messages for an abort booking request.
+          */
+        val AbortBookingRequest: String = Request + Dot + "abort"
+        /**
+          * Address for receiving and sending messages for an abort booking response.
+          */
+        val AbortGetBookingResponse: String = Response + Dot + "abort"
 
       }
 

@@ -11,14 +11,14 @@
             android:gravity="center"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            android:text="@string/booking_accepted"/>
+            android:text="@string/destination"/>
 
 
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/confirmation"
+            android:src="@drawable/vehicle_blue"
             android:layout_gravity="center_horizontal"/>
 
     <FrameLayout
@@ -33,7 +33,6 @@
                 android:layout_height="match_parent"/>
 
     </FrameLayout>
-
 
 
 </LinearLayout>

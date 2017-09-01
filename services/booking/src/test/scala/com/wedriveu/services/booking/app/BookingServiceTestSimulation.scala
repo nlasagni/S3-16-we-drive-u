@@ -21,6 +21,13 @@ object BookingServiceTestSimulation {
     eventBusAddress: String,
     response: BookVehicleResponse
   ): Future[_] = {
+    eventBus.consumer(eventBusAddress, (msg: Message[Object]) => {
+      client.basicPublishFuture(
+        Shared.RabbitMQ.Exchanges.VEHICLE,
+        Shared.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_RESPONSE,
+        VertxJsonMapper.mapInBodyFrom(response)
+      )
+    })
     client.exchangeDeclareFuture(
       Shared.RabbitMQ.Exchanges.VEHICLE,
       Shared.RabbitMQ.Exchanges.Type.DIRECT,
@@ -40,14 +47,6 @@ object BookingServiceTestSimulation {
         Shared.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_REQUEST
       )
     }).flatMap(_ => {
-      eventBus.consumer(eventBusAddress, (msg: Message[Object]) => {
-        client.basicPublish(
-          Shared.RabbitMQ.Exchanges.VEHICLE,
-          Shared.RabbitMQ.RoutingKey.VEHICLE_SERVICE_BOOK_RESPONSE,
-          VertxJsonMapper.mapInBodyFrom(response),
-          _ => {}
-        )
-      })
       client.basicConsumeFuture(queue, eventBusAddress)
     })
   }

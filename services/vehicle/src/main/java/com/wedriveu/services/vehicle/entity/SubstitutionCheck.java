@@ -1,7 +1,7 @@
 package com.wedriveu.services.vehicle.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wedriveu.shared.rabbitmq.message.UpdateToService;
+import com.wedriveu.shared.rabbitmq.message.VehicleUpdate;
 import com.wedriveu.shared.util.Position;
 
 /**
@@ -13,7 +13,7 @@ public class SubstitutionCheck {
 
     private String checkerId;
     private boolean needed;
-    private UpdateToService updateToService;
+    private VehicleUpdate vehicleUpdate;
     private Position sourcePosition;
     private Position destinationPosition;
 
@@ -22,18 +22,18 @@ public class SubstitutionCheck {
      *
      * @param checkerId           the checker id
      * @param needed              the needed
-     * @param updateToService     the update to service
+     * @param vehicleUpdate     the update to service
      * @param sourcePosition      the source position
      * @param destinationPosition the destination position
      */
     public SubstitutionCheck(@JsonProperty("checkerId") String checkerId,
                              @JsonProperty("needed") boolean needed,
-                             @JsonProperty("updateToService") UpdateToService updateToService,
+                             @JsonProperty("updateToService") VehicleUpdate vehicleUpdate,
                              @JsonProperty("sourcePosition") Position sourcePosition,
                              @JsonProperty("destinationPosition") Position destinationPosition) {
         this.checkerId = checkerId;
         this.needed = needed;
-        this.updateToService = updateToService;
+        this.vehicleUpdate = vehicleUpdate;
         this.sourcePosition = sourcePosition;
         this.destinationPosition = destinationPosition;
     }
@@ -61,8 +61,8 @@ public class SubstitutionCheck {
      *
      * @return the update to service
      */
-    public UpdateToService getUpdateToService() {
-        return updateToService;
+    public VehicleUpdate getVehicleUpdate() {
+        return vehicleUpdate;
     }
 
     /**
@@ -94,9 +94,9 @@ public class SubstitutionCheck {
         SubstitutionCheck that = (SubstitutionCheck) o;
         return needed == that.needed &&
                 (checkerId != null ? checkerId.equals(that.checkerId) : that.checkerId == null) &&
-                (updateToService != null
-                        ? updateToService.equals(that.updateToService)
-                        : that.updateToService == null) &&
+                (vehicleUpdate != null
+                        ? vehicleUpdate.equals(that.vehicleUpdate)
+                        : that.vehicleUpdate == null) &&
                 (sourcePosition != null
                         ? sourcePosition.equals(that.sourcePosition)
                         : that.sourcePosition == null) &&
@@ -109,7 +109,7 @@ public class SubstitutionCheck {
     public int hashCode() {
         int result = checkerId != null ? checkerId.hashCode() : 0;
         result = 31 * result + (needed ? 1 : 0);
-        result = 31 * result + (updateToService != null ? updateToService.hashCode() : 0);
+        result = 31 * result + (vehicleUpdate != null ? vehicleUpdate.hashCode() : 0);
         result = 31 * result + (sourcePosition != null ? sourcePosition.hashCode() : 0);
         result = 31 * result + (destinationPosition != null ? destinationPosition.hashCode() : 0);
         return result;
@@ -120,7 +120,7 @@ public class SubstitutionCheck {
         return "SubstitutionCheck{" +
                 "checkerId='" + checkerId + '\'' +
                 ", needed=" + needed +
-                ", updateToService=" + updateToService +
+                ", vehicleUpdate=" + vehicleUpdate +
                 ", sourcePosition=" + sourcePosition +
                 ", destinationPosition=" + destinationPosition +
                 '}';

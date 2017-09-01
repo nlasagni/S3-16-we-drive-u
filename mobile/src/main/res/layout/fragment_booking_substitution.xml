@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:gravity="center">
 
     <TextView
             android:layout_width="match_parent"
@@ -11,28 +12,15 @@
             android:gravity="center"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            android:text="@string/destination"/>
+            android:text="@string/substitution"/>
 
 
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:src="@drawable/vehicle_blue"
+            android:src="@drawable/warning"
             android:layout_gravity="center_horizontal"/>
-
-    <FrameLayout
-            android:id="@+id/map_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="25dp">
-
-        <com.google.android.gms.maps.MapView
-                android:id="@+id/map"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-    </FrameLayout>
 
 
 </LinearLayout>

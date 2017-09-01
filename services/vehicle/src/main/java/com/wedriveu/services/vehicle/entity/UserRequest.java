@@ -26,17 +26,6 @@ public class UserRequest {
     @JsonProperty
     private List<Vehicle> vehicleList;
 
-    @JsonProperty
-    private double tripDistance;
-
-    public double getTripDistance() {
-        return tripDistance;
-    }
-
-    public void setTripDistance(double tripDistance) {
-        this.tripDistance = tripDistance;
-    }
-
     public List<Vehicle> getVehicleList() {
         return vehicleList;
     }

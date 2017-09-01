@@ -7,7 +7,7 @@ import com.wedriveu.shared.util.Position;
  *
  * @author Michele Donati on 11/08/2017
  */
-public class UpdateToService {
+public class VehicleUpdate {
 
     private Position position;
     private String status;
@@ -129,10 +129,10 @@ public class UpdateToService {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UpdateToService)) {
+        if (!(o instanceof VehicleUpdate)) {
             return false;
         }
-        UpdateToService that = (UpdateToService) o;
+        VehicleUpdate that = (VehicleUpdate) o;
         return userOnBoard == that.userOnBoard &&
                 (position != null ? position.equals(that.position) : that.position == null) &&
                 (status != null ? status.equals(that.status) : that.status == null) &&
@@ -154,7 +154,7 @@ public class UpdateToService {
 
     @Override
     public String toString() {
-        return "UpdateToService{" +
+        return "VehicleUpdate{" +
                 "position=" + position +
                 ", status='" + status + '\'' +
                 ", license='" + license + '\'' +

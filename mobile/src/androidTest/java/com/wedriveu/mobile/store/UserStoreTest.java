@@ -10,8 +10,9 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+
 /**
- * Created by nicolalasagni on 18/07/2017.
+ * @author Nicola Lasagni on 18/07/2017.
  */
 @RunWith(AndroidJUnit4.class)
 public class UserStoreTest {

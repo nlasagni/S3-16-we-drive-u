@@ -61,26 +61,21 @@ public interface RabbitMqCommunicationManager {
      * @param messageClass the message class
      * @throws IOException the io exception
      */
-    <T> void registerConsumer(RabbitMqConsumerStrategy<T> strategy, Class<T> messageClass) throws IOException;
-
-
-    /**
-     * Subscribes a consumer of messages that are sent to the queue
-     * specified in {@linkplain RabbitMqConsumerStrategy#configureQueue(RabbitMqCommunication)}.
-     *
-     * @param <T>          the type parameter
-     * @param strategy     the strategy
-     * @param messageClass the message class
-     * @throws IOException the io exception
-     */
-    <T> int subscribeConsumer(RabbitMqConsumerStrategy<T> strategy, Class<T> messageClass) throws IOException;
+    <T> String registerConsumer(RabbitMqConsumerStrategy<T> strategy, Class<T> messageClass) throws IOException;
 
     /**
-     *
-     * @param subscriberId
-     * @throws IOException
+     * Unregister a consumer of messages.
+     * @param consumerTag The tag of the consumer to be unregistered.
      */
-    void unsubscribeConsumer(int subscriberId) throws IOException;
+    void unregisterConsumer(String consumerTag) throws IOException;
+
+    /**
+     * Close the {@linkplain RabbitMqCommunication}.
+     *
+     * @throws IOException      if something goes wrong during the communication closing
+     * @throws TimeoutException if something goes wrong during the communication closing
+     */
+    void closeCommunication() throws IOException, TimeoutException;
 
     /**
      * Close the {@linkplain RabbitMqCommunication}.

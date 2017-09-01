@@ -7,7 +7,7 @@ package com.wedriveu.services.vehicle.util;
  */
 public class Time {
 
-    private static final long HOUR_IN_MILLISECONDS = 3600000;
+    private static final double HOUR_IN_MILLISECONDS = 3600000.0;
 
     /**
      * Calculates the drive time in milliseconds given a distance and a speed.
@@ -16,8 +16,7 @@ public class Time {
      * @return The drive time in milliseconds
      */
     public static long getDriveTimeInMilliseconds(double distance, double speed) {
-        double hourTime = (distance / speed) * HOUR_IN_MILLISECONDS;
-        return (long) hourTime;
+        return (long) ((distance / speed) * HOUR_IN_MILLISECONDS);
     }
 
 }

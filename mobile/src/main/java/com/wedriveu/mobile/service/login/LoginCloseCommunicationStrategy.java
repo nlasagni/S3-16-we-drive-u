@@ -6,7 +6,7 @@ import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqCloseCommunic
 import java.io.IOException;
 
 /**
- * The {@linkplain LoginCloseCommunicationStrategy} used by the {@linkplain LoginServiceImpl}
+ * The {@linkplain RabbitMqCloseCommunicationStrategy} used by the {@linkplain LoginServiceImpl}
  * to close a {@linkplain RabbitMqCommunication}.
  *
  * @author Nicola Lasagni on 09/08/2017.

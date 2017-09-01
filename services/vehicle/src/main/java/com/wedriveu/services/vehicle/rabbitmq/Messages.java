@@ -154,7 +154,7 @@ public interface Messages {
         /**
          * The constant CHECK_FOR_SUBSTITUTION.
          */
-        String CHECK_FOR_SUBSTITUTION = "vehicle.substitution.check";
+        String CHECK_FOR_SUBSTITUTION = "vehicle.substitution.check.%s";
         /**
          * The constant CHECK_FOR_SUBSTITUTION_COMPLETED.
          */
@@ -246,6 +246,10 @@ public interface Messages {
         /**
          * The constant UNDEPLOY.
          */
+        String ABORT_BOOKING = "booking.book.abort";
+        /**
+         * The constant UNDEPLOY.
+         */
         String UNDEPLOY = "booking.book.vehicle.verticle.undeploy";
 
     }
@@ -297,7 +301,7 @@ public interface Messages {
         /**
          * The key used put/get the vehicle speed into a message.
          */
-        String SPEED = "speed";
+        String SPEED = "vehicleSpeed";
     }
 
 }

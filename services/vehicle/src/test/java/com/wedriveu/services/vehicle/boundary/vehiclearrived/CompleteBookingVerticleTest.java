@@ -19,18 +19,18 @@ import org.junit.runner.RunWith;
  * @author Nicola Lasagni on 23/08/2017.
  */
 @RunWith(VertxUnitRunner.class)
-public class VehicleArrivedVerticleTest extends BaseInteractionClient {
+public class CompleteBookingVerticleTest extends BaseInteractionClient {
 
-    private static final String QUEUE = VehicleArrivedVerticleTest.class.getCanonicalName() + ".Queue";
+    private static final String QUEUE = CompleteBookingVerticleTest.class.getCanonicalName() + ".Queue";
     private static final String EVENT_BUS_ADDRESS =
-            VehicleArrivedVerticleTest.class.getCanonicalName() + ".EventBus";
+            CompleteBookingVerticleTest.class.getCanonicalName() + ".EventBus";
     private static final String USERNAME = "username";
     private static final String LICENSE_PLATE = "licensePlate";
 
     private Vertx vertx;
     private BootVerticle bootVerticle;
 
-    public VehicleArrivedVerticleTest() {
+    public CompleteBookingVerticleTest() {
         super(
                 QUEUE,
                 Constants.RabbitMQ.Exchanges.BOOKING,
