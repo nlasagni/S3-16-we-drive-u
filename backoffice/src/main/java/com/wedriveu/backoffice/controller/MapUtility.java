@@ -27,8 +27,8 @@ public class MapUtility {
         for (Booking book: bookings) {
             builder.append(
                     String.format(ConstantsBackOffice.WebPage.JAVASCRIPT_MARKER_CODE_STARTING_POSITION,
-                            book.getUserPosition().getLatitude(),
-                            book.getUserPosition().getLongitude()));
+                        book.getUserPosition().getLatitude(),
+                        book.getUserPosition().getLongitude()));
             builder.append(
                     String.format(ConstantsBackOffice.WebPage.JAVASCRIPT_MARKER_CODE_DESTINATION_POSITION,
                             book.getDestinationPosition().getLatitude(),

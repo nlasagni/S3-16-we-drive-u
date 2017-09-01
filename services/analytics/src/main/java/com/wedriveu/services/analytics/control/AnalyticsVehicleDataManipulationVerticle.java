@@ -69,7 +69,7 @@ public class AnalyticsVehicleDataManipulationVerticle extends AbstractVerticle {
         if (!stored.isPresent()) {
             analyticsStore.addVehicle(vehicle.getLicense(), vehicle.getStatus());
         } else if (!stored.get().getStatus().equals(vehicle.getStatus())) {
-            analyticsStore.updateVehicle(vehicle.getLicense(), vehicle.getStatus());
+                analyticsStore.updateVehicle(vehicle.getLicense(), vehicle.getStatus());
         } else {
             sendUpdate = false;
         }

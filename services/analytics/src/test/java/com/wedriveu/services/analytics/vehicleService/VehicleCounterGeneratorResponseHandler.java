@@ -15,35 +15,35 @@ import static com.wedriveu.shared.util.Constants.RabbitMQ.RoutingKey.ANALYTICS_R
  */
 public class VehicleCounterGeneratorResponseHandler  extends VerticleConsumer{
 
-    public VehicleCounterGeneratorResponseHandler() {
-        super(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ ANALYTICS_RESPONSE_VEHICLE_COUNTER +"." + ConstantsAnalytics.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID +".test");
-    }
+        public VehicleCounterGeneratorResponseHandler() {
+            super(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.ANALYTICS +"."+ ANALYTICS_RESPONSE_VEHICLE_COUNTER +"." + ConstantsAnalytics.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID +".test");
+        }
 
-    @Override
-    public void start(Future futureRetriever) throws Exception {
-        super.start();
-        Future<Void> futureConsumer = Future.future();
-        futureConsumer.setHandler(v -> {
-            if (v.succeeded()) {
-                futureRetriever.complete();
-            } else {
-                futureRetriever.fail(v.cause());
-            }
-        });
+        @Override
+        public void start(Future futureRetriever) throws Exception {
+            super.start();
+            Future<Void> futureConsumer = Future.future();
+            futureConsumer.setHandler(v -> {
+                if (v.succeeded()) {
+                    futureRetriever.complete();
+                } else {
+                    futureRetriever.fail(v.cause());
+                }
+            });
 
-        startConsumerWithFuture(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.ANALYTICS,
-                ANALYTICS_RESPONSE_VEHICLE_COUNTER +"." + ConstantsAnalytics.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID,
-                ConstantsAnalytics.EventBus.AVAILABLE_ADDRESS_FAKE_VEHICLE_COUNTER_RESPONSE,
-                futureConsumer);
-    }
+            startConsumerWithFuture(com.wedriveu.shared.util.Constants.RabbitMQ.Exchanges.ANALYTICS,
+                    ANALYTICS_RESPONSE_VEHICLE_COUNTER +"." + ConstantsAnalytics.Messages.ANALYTICS_VEHICLE_COUNTER_TEST_BACKOFFICE_ID,
+                    ConstantsAnalytics.EventBus.AVAILABLE_ADDRESS_FAKE_VEHICLE_COUNTER_RESPONSE,
+                    futureConsumer);
+        }
 
-    @Override
-    public void registerConsumer(String eventBus) {
-        vertx.eventBus().consumer(eventBus, this::sendUpdatesToController);
-    }
+        @Override
+        public void registerConsumer(String eventBus) {
+            vertx.eventBus().consumer(eventBus, this::sendUpdatesToController);
+        }
 
-    private void sendUpdatesToController(Message message) {
-        VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
-        vertx.eventBus().send(ConstantsAnalytics.EventBus.FAKE_VEHICLE_COUNTER_RESPONSE_TEST, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
-    }
+        private void sendUpdatesToController(Message message) {
+            VehicleCounter vehicleCounter = VertxJsonMapper.mapFromBodyTo((JsonObject) message.body(), VehicleCounter.class);
+            vertx.eventBus().send(ConstantsAnalytics.EventBus.FAKE_VEHICLE_COUNTER_RESPONSE_TEST, VertxJsonMapper.mapInBodyFrom(vehicleCounter));
+        }
 }

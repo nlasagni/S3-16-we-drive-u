@@ -56,7 +56,7 @@ public class BackOfficeController extends AbstractVerticle {
         futureModel.setHandler(res -> {
             Future futureVerticle1 = Future.future();
             vertx.deployVerticle(new BackOfficeVehiclesResponseConsumer(
-                            backOfficeModel.getBackofficeID(), true),
+                    backOfficeModel.getBackofficeID(), true),
                     futureVerticle1.completer());
             futures.add(futureVerticle1);
             Future futureVerticle2 = Future.future();
@@ -78,8 +78,8 @@ public class BackOfficeController extends AbstractVerticle {
                 ButtonEventListenerBooking buttonEventListenerBooking = new ButtonEventListenerBooking(vertx);
                 backOfficeView.addButtonBookingListener(buttonEventListenerBooking);
                 vertx.deployVerticle(new BackOfficeVehicleRequestPublisher(
-                        backOfficeModel.getBackofficeID()),fu -> {
-                    futureStart.complete();
+                                backOfficeModel.getBackofficeID()),fu -> {
+                         futureStart.complete();
                 });
 
             });

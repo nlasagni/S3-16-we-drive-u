@@ -67,11 +67,11 @@ public class BackOfficeView extends JFrame {
      */
     public void updateText(VehicleCounter vehicleCounter) {
         textLabel.setText(String.format(ConstantsBackOffice.LABEL_TEXT,
-                vehicleCounter.getAvailable(),
-                vehicleCounter.getBrokenStolen() ,
-                vehicleCounter.getBooked() ,
-                vehicleCounter.getRecharging() ,
-                vehicleCounter.getNetworkIssues()));
+                        vehicleCounter.getAvailable(),
+                        vehicleCounter.getBrokenStolen() ,
+                        vehicleCounter.getBooked() ,
+                        vehicleCounter.getRecharging() ,
+                        vehicleCounter.getNetworkIssues()));
     }
 
     /**

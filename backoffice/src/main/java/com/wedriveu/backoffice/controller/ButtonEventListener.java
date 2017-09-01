@@ -21,7 +21,7 @@ public class ButtonEventListener implements ActionListener {
      * @param backOfficeModel an instance of the backoffice model for updating it
      * @param backOfficeView an instance of the backoffice view for updating it
      */
-
+    
     public ButtonEventListener(BackOfficeModel backOfficeModel, BackOfficeView backOfficeView) {
         this.backOfficeModel = backOfficeModel;
         this.backOfficeView = backOfficeView;
