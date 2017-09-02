@@ -11,7 +11,6 @@ import com.wedriveu.mobile.service.ServiceResult;
 import com.wedriveu.shared.rabbitmq.communication.DefaultRabbitMqCommunicationManager;
 import com.wedriveu.shared.rabbitmq.communication.RabbitMqCommunicationManager;
 import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqCommunicationConfig;
-import com.wedriveu.shared.rabbitmq.communication.config.RabbitMqQueueConfig;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqCloseCommunicationStrategy;
 import com.wedriveu.shared.rabbitmq.communication.strategy.RabbitMqConsumerStrategy;
 import com.wedriveu.shared.rabbitmq.message.LoginRequest;
@@ -70,17 +69,6 @@ public class LoginServiceImpl implements LoginService {
                     final BlockingQueue<LoginResponse> response = new ArrayBlockingQueue<>(1);
                     LoginResponse responseBody = subscribeForResponse(requestId, response);
                     result = createServiceResult(responseBody, password);
-                    if (result.succeeded()) {
-                        String userQueue = String.format(com.wedriveu.mobile.util.Constants.Queue.USER, request.getUsername());
-                        RabbitMqQueueConfig queueConfig =
-                                new RabbitMqQueueConfig.Builder()
-                                        .queueName(userQueue)
-                                        .durable(true)
-                                        .exclusive(false)
-                                        .autoDelete(true)
-                                        .build();
-                        mCommunicationManager.addQueue(queueConfig);
-                    }
                     closeCommunication(requestId);
                 } catch (IOException | TimeoutException | InterruptedException e) {
                     Log.e(TAG, LOGIN_ERROR, e);

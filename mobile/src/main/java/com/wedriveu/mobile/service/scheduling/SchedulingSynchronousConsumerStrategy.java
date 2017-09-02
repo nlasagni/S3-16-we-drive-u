@@ -28,7 +28,7 @@ class SchedulingSynchronousConsumerStrategy extends ServiceSynchronousConsumerSt
         String queue = String.format(com.wedriveu.mobile.util.Constants.Queue.USER, mUsername);
         String routingKey = String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE, mUsername);
         Channel channel = communication.getChannel();
-        channel.queueDeclare(queue, true, false, true, null);
+        channel.queueDeclare(queue, true, false, false, null);
         channel.queueBind(queue, Constants.RabbitMQ.Exchanges.VEHICLE, routingKey);
         return queue;
     }

@@ -123,6 +123,7 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
     @Override
     public void onAcceptBookingButtonClick() {
         mRouter.showProgressDialog();
+        acceptBookingHandler.refreshReference(this);
         mBookingService.acceptBooking(mUserStore.getUser().getUsername(),
                 mBookingStore.getBooking(),
                 acceptBookingHandler);
@@ -136,12 +137,14 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
     @Override
     public void onEnterVehicleButtonClick() {
         mRouter.showProgressDialog();
+        enterVehicleAndUnsubscribeHandler.refreshReference(this);
         mVehicleService.enterVehicleAndUnsubscribe(enterVehicleAndUnsubscribeHandler);
     }
 
     private void goToTripScheduling() {
         mBookingStore.clear();
         mVehicleStore.clear();
+        mStopHandler.refreshReference(this);
         mVehicleService.stop(mStopHandler);
     }
 
@@ -158,6 +161,7 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
             updateVehicle(response.getResult());
             mRouter.showUserTravellingView();
             showBookingSummary(BookingUserTravellingView.ID);
+            mStartHandler.refreshReference(this);
             mVehicleService.start(mStartHandler);
         }
     }
@@ -183,10 +187,17 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
             mRouter.showPopOverDialog(errorMessage);
             goToTripScheduling();
         } else {
-            mVehicleService.subscribeToVehicleUpdates(vehicleUpdatesHandler);
-            mVehicleService.subscribeToEnterVehicle(enterVehicleHandler);
-            mVehicleService.subscribeToVehicleSubstitution(vehicleSubstitutionHandler);
+            subscribeToMainVehicleEvents();
         }
+    }
+
+    private void subscribeToMainVehicleEvents() {
+        vehicleUpdatesHandler.refreshReference(this);
+        enterVehicleHandler.refreshReference(this);
+        vehicleSubstitutionHandler.refreshReference(this);
+        mVehicleService.subscribeToVehicleUpdates(vehicleUpdatesHandler);
+        mVehicleService.subscribeToEnterVehicle(enterVehicleHandler);
+        mVehicleService.subscribeToVehicleSubstitution(vehicleSubstitutionHandler);
     }
 
     private void onVehicleUpdated(ServiceResult<VehicleUpdate> result) {
@@ -301,9 +312,7 @@ public class BookingViewModelImpl extends Fragment implements BookingViewModel {
             mBookingStore.storeBooking(newBooking);
             mVehicleStore.storeVehicle(substitutionVehicle);
             mRouter.showSubstitutionTravellingView();
-            mVehicleService.subscribeToVehicleUpdates(vehicleUpdatesHandler);
-            mVehicleService.subscribeToEnterVehicle(enterVehicleHandler);
-            mVehicleService.subscribeToVehicleSubstitution(vehicleSubstitutionHandler);
+            subscribeToMainVehicleEvents();
             showBookingSummary(BookingUserSubstitutionTravellingView.ID);
         }
     }

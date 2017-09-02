@@ -41,7 +41,7 @@ class VehicleUpdateConsumerStrategy implements RabbitMqConsumerStrategy<VehicleU
         String queue = String.format(com.wedriveu.mobile.util.Constants.Queue.VEHICLE_UPDATE, randomId);
         String routingKey = Constants.RabbitMQ.RoutingKey.VEHICLE_UPDATE;
         Channel channel = communication.getChannel();
-        channel.queueDeclare(queue, false, false, true, null);
+        channel.queueDeclare(queue, true, false, true, null);
         channel.queueBind(queue, Constants.RabbitMQ.Exchanges.VEHICLE, routingKey);
         return queue;
     }

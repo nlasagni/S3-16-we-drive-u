@@ -12,6 +12,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
+import com.wedriveu.mobile.R;
 import com.wedriveu.mobile.app.ComponentFinder;
 import com.wedriveu.mobile.app.FactoryProvider;
 import com.wedriveu.mobile.model.Booking;
@@ -113,7 +114,13 @@ public class SchedulingViewModelImpl extends Fragment implements SchedulingViewM
             LatLng pickUp = mPickUpPlace.getLatLng();
             mUserPosition = new Position(pickUp.latitude, pickUp.longitude);
         }
-        mSchedulingService.findNearestVehicle(username, mUserPosition, mDestinationPlace, mFindNearestVehictledHandler);
+        if (mUserPosition.getLatitude() != 0 && mUserPosition.getLongitude() != 0 && mDestinationPlace != null) {
+            mFindNearestVehictledHandler.refreshReference(this);
+            mSchedulingService.findNearestVehicle(username, mUserPosition, mDestinationPlace, mFindNearestVehictledHandler);
+        } else {
+            SchedulingView schedulingView = (SchedulingView) getComponentFinder().getView(SchedulingView.ID);
+            schedulingView.renderError(getString(R.string.scheduling_position_not_found));
+        }
     }
 
     @Override

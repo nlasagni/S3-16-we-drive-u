@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference;
  */
 public abstract class ServiceOperationHandler<WR, T> extends Handler {
 
-    private final WeakReference<WR> mWeakReference;
+    private WeakReference<WR> mWeakReference;
 
     /**
      * Instantiates a new ServiceOperationHandler.
@@ -33,6 +33,16 @@ public abstract class ServiceOperationHandler<WR, T> extends Handler {
         if (weakReference != null) {
             handleMessage(weakReference, result);
         }
+    }
+
+    /**
+     * Refreshes the handler reference.
+     *
+     * @param weakReference the reference to be refreshed
+     */
+    public void refreshReference(WR weakReference) {
+        mWeakReference.clear();
+        mWeakReference = new WeakReference<>(weakReference);
     }
 
     /**
