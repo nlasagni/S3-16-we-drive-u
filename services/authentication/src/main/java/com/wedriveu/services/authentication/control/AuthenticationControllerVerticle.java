@@ -64,6 +64,7 @@ public class AuthenticationControllerVerticle extends AbstractVerticle implement
             String userId = Credentials.generateUserId(username);
             boolean added = userStore.addUser(new User(userId, password));
             response.setSuccess(added);
+            response.setUserId(userId);
         } else {
             response.setErrorMessage(Constants.USERNAME_PASSWORD_WRONG);
         }
