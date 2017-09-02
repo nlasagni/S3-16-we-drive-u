@@ -8,6 +8,7 @@ package com.wedriveu.shared.rabbitmq.message;
 public class LoginResponse {
 
     private boolean success;
+    private String userId;
     private String errorMessage;
 
     /**
@@ -29,6 +30,24 @@ public class LoginResponse {
     }
 
     /**
+     * Gets user id.
+     *
+     * @return the user id
+     */
+    public String getUserId() {
+        return userId;
+    }
+
+    /**
+     * Sets user id.
+     *
+     * @param userId the user id
+     */
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    /**
      * Gets error message.
      *
      * @return the error message
@@ -46,24 +65,25 @@ public class LoginResponse {
         this.errorMessage = errorMessage;
     }
 
+
     @Override
-    public boolean equals(Object other) {
-        if (this == other) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (other == null || getClass() != other.getClass()) {
+        if (!(o instanceof LoginResponse)) {
             return false;
         }
-        LoginResponse otherLoginResponse = (LoginResponse) other;
-        return success == otherLoginResponse.success &&
-                (errorMessage != null
-                        ? errorMessage.equals(otherLoginResponse.errorMessage)
-                        : otherLoginResponse.errorMessage == null);
+        LoginResponse that = (LoginResponse) o;
+        return success == that.success &&
+                (userId != null ? userId.equals(that.userId) : that.userId == null) &&
+                (errorMessage != null ? errorMessage.equals(that.errorMessage) : that.errorMessage == null);
     }
 
     @Override
     public int hashCode() {
-        int result = (isSuccess() ? 1 : 0);
+        int result = (success ? 1 : 0);
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (errorMessage != null ? errorMessage.hashCode() : 0);
         return result;
     }
@@ -72,8 +92,8 @@ public class LoginResponse {
     public String toString() {
         return "LoginResponse{" +
                 "success=" + success +
+                ", userId='" + userId + '\'' +
                 ", errorMessage='" + errorMessage + '\'' +
                 '}';
     }
-
 }

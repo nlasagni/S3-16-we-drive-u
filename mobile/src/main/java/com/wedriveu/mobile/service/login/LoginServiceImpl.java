@@ -49,8 +49,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public <T> void login(final String username,
-                      final String password,
-                      final ServiceOperationHandler<T, User> handler) {
+                          final String password,
+                          final ServiceOperationHandler<T, User> handler) {
         new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -69,7 +69,7 @@ public class LoginServiceImpl implements LoginService {
                     sendRequest(request);
                     final BlockingQueue<LoginResponse> response = new ArrayBlockingQueue<>(1);
                     LoginResponse responseBody = subscribeForResponse(requestId, response);
-                    result = createServiceResult(responseBody, request);
+                    result = createServiceResult(responseBody, password);
                     if (result.succeeded()) {
                         String userQueue = String.format(com.wedriveu.mobile.util.Constants.Queue.USER, request.getUsername());
                         RabbitMqQueueConfig queueConfig =
@@ -127,14 +127,13 @@ public class LoginServiceImpl implements LoginService {
                 TimeUnit.MILLISECONDS);
     }
 
-    private ServiceResult<User> createServiceResult(LoginResponse response,
-                                                    LoginRequest request) throws IOException {
+    private ServiceResult<User> createServiceResult(LoginResponse response, String password) throws IOException {
         User user = null;
         String error = "";
         if (response == null) {
             error = NO_RESPONSE_DATA_ERROR;
         } else if (response.isSuccess()) {
-            user = new User(request.getUsername(), request.getPassword());
+            user = new User(response.getUserId(), password);
         } else {
             error = response.getErrorMessage();
         }

@@ -6,14 +6,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * User model class.
  *
  * @author Michele on 12/07/2017.
+ * @author Nicola Lasagni
  */
 public class User {
 
     private static final String PASSWORD = "password";
+    /**
+     * The predefined user of the system.
+     */
     public static final User[] USERS = {
             new User("michele", PASSWORD),
             new User("stefano", PASSWORD),
             new User("nicola", PASSWORD),
+            new User("marco", PASSWORD),
             new User("anna", PASSWORD),
             new User("paolo", PASSWORD),
             new User("danilo", PASSWORD),
@@ -60,6 +65,7 @@ public class User {
     public String getPassword() {
         return this.password;
     }
+
 
     @Override
     public boolean equals(Object o) {
