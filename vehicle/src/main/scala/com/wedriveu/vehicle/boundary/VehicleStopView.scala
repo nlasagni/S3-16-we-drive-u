@@ -80,6 +80,7 @@ class VehicleStopViewImpl(vertx: Vertx, vehicleIdentifier: Int)
 
   addWindowListener(new WindowAdapter {
     override def windowClosing(e: WindowEvent): Unit = {
+      forceStop()
       unsubscribeToEvents()
       dispose()
     }
@@ -102,13 +103,15 @@ class VehicleStopViewImpl(vertx: Vertx, vehicleIdentifier: Int)
   }
 
   override def actionPerformed(e: ActionEvent): Unit = e.getActionCommand match {
-    case command if command == stopCommand =>
-      vehicleAssociated.getVehicle().setState(Constants.Vehicle.STATUS_BROKEN_STOLEN)
-      eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleAssociated.getVehicle().plate),
-        new JsonObject())
-      writeMessageLog(forceBrokenStatus + vehicleAssociated.getVehicle().getState())
-
+    case command if command == stopCommand => forceStop()
     case _ => println(notCommandFoundError)
+  }
+
+  private def forceStop(): Unit = {
+    vehicleAssociated.getVehicle().setState(Constants.Vehicle.STATUS_BROKEN_STOLEN)
+    eventBus.send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, vehicleAssociated.getVehicle().plate),
+      new JsonObject())
+    writeMessageLog(forceBrokenStatus + vehicleAssociated.getVehicle().getState())
   }
 
   private def unsubscribeToEvents(): Unit = {

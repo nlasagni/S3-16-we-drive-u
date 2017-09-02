@@ -4,6 +4,8 @@ import java.awt.event.{ActionEvent, ActionListener, WindowAdapter, WindowEvent}
 import javax.swing._
 
 import com.wedriveu.vehicle.control.VehicleCreator
+import com.wedriveu.vehicle.shared.VehicleConstants
+import io.vertx.core.{AsyncResult, Vertx}
 
 /**
   * @author Michele Donati 02/08/2017.
@@ -28,7 +30,8 @@ class VehicleConfiguratorViewImpl()
   val speedMaxBound: Double = 100.0
   val errorInSpeedValueMessage: String = "Speed value should be set between 20 and 100 Km/h"
   val errorInSpeedValueMessageTitle: String = "Speed not correctly set error"
-  val errorInBatteryValueMessage: String = "Battery value should be set between 0 and 100."
+  val errorInBatteryValueMessage: String =
+    "Battery value should be set between " + VehicleConstants.RechargingThreshold + " and 100."
   val errorInBatteryValueMessageTitle: String = "Battery not correctly set error"
   val errorInCanBreakMessage: String = "At least one option of 'Can Break?' checkbox should be selected."
   val errorInCanBreakMessageTitle: String = "Break events not selected error"
@@ -114,7 +117,7 @@ class VehicleConfiguratorViewImpl()
 
   override def actionPerformed(e: ActionEvent): Unit = e.getActionCommand match {
     case command if command == startCommand => if (batteryTextField.getText.isEmpty
-        || (batteryTextField.getText.toDouble < valueUnderZero)
+        || (batteryTextField.getText.toDouble < VehicleConstants.RechargingThreshold)
         || (batteryTextField.getText.toDouble > valueOverOneHundred)) {
       JOptionPane.showMessageDialog(this, errorInBatteryValueMessage,
         errorInBatteryValueMessageTitle,
@@ -137,13 +140,18 @@ class VehicleConfiguratorViewImpl()
       if (indexForImages == 6) {
         indexForImages = 0
       }
-      new VehicleCreator(speedTextField.getText.toDouble,
-        batteryTextField.getText.toDouble,
-        checkBoxYesBreak.isSelected,
-        vehiclesCounter,
-        indexForImages).start()
-      vehiclesCounter += 1
-      indexForImages += 1
+      val vertx: Vertx = Vertx.vertx()
+      vertx.executeBlocking((async: io.vertx.core.Future[Object]) => {
+        new VehicleCreator(vertx,
+          speedTextField.getText.toDouble,
+          batteryTextField.getText.toDouble,
+          checkBoxYesBreak.isSelected,
+          vehiclesCounter,
+          indexForImages).start()
+        vehiclesCounter += 1
+        indexForImages += 1
+        async.complete()
+      }, (result: AsyncResult[Object]) => {})
     }
     case command if command == yesCommandBreak => if (checkBoxNoBreak.isSelected) {
       checkBoxNoBreak.setSelected(false)
