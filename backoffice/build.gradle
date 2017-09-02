@@ -16,7 +16,7 @@ jar {
     destinationDir = new File("$releasesClientFolder")
     manifest {
         attributes 'Implementation-Version': project.version,
-                'Main-Class': 'Main'
+                'Main-Class': 'com.wedriveu.backoffice.Main'
     }
     from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {}
 }

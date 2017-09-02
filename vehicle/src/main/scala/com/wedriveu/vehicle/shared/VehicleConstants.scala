@@ -12,9 +12,9 @@ object VehicleConstants {
   final val MAXIMUM_DISTANCE_TO_RECHARGE = 2.0
   final val ESTIMATED_KILOMETERS_PER_PERCENTAGE = 10
   final val ARRIVED_MAXIMUM_DISTANCE_IN_KILOMETERS = 0.1
+  val RechargingThreshold = 50.0
 
   val zeroBattery: Double = 0.0
-  val batteryThreshold: Double = 20.0
 
   // This value indicates the battery consumed after 10 seconds of the vehicle journey. The vehicle consumes 1% of
   // battery every 10Km.
@@ -38,6 +38,7 @@ object VehicleConstants {
   val vehicleSetToBrokenLog: String = "Vehicle is broken, please send substitute"
   val vehicleIsAlreadyStolenLog: String = "The vehicle is stolen actually, but it is also broken"
   val vehicleSetToStolenLog: String = "Vehicle is stolen, please contact authorities"
+  val noNeedToRechargeLog: String = "No need to recharge, battery value is over " + RechargingThreshold + "."
   val cantRechargeLog: String = "Can't recharge, vehicle is broken/stolen."
 
 }

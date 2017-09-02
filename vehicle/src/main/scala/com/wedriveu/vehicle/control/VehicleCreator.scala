@@ -10,7 +10,8 @@ import io.vertx.core.Vertx
   * @author Michele Donati on 02/08/2017.
   */
 
-class VehicleCreator(speed: Double,
+class VehicleCreator(vertx: Vertx,
+  speed: Double,
   battery: Double,
   doBreak: Boolean,
   vehiclesCounter: Int,
@@ -19,8 +20,6 @@ class VehicleCreator(speed: Double,
   override def run(): Unit = {
     val randomPlate: String = randomLicensePlateGenerator()
     val initialState: String = ""
-    val vertx: Vertx = Vertx.vertx()
-
     val imageList: Array[String] = Array(
       "http://static.allaguida.it/r/843x0/www.allaguida.it/img/Fiat-500.jpg",
       "https://www.cinquecosebelle.it/wp-content/uploads/2016/09/macchine-7-posti-fiat-freemont.jpg",
@@ -33,12 +32,12 @@ class VehicleCreator(speed: Double,
     )
 
     val descriptions: Array[String] = Array(
-      "Fiat 500, colore bianco, tre porte, quattro sedili, motore a metano.",
-      "Fiat Freemont, colore rosso, cinque porte, sette sedili, motore diesel",
-      "BMW 530D Touring, colore nero, cinque porte, cinque sedili, motore benzina",
-      "Dacia Lodgy, colore sabbia, cinque porte, sette sedili, motore metano",
-      "Mercedes CLA, colore grigio argentato, cinque porte, cinque sedili, motore diesel",
-      "Mercedes C43 AMG Coupe, colore bianco, tre porte, due sedili, motore benzina"
+      "Fiat 500, colore bianco, tre porte, quattro sedili, motore elettrico.",
+      "Fiat Freemont, colore rosso, cinque porte, sette sedili, motore elettrico",
+      "BMW 530D Touring, colore nero, cinque porte, cinque sedili, motore elettrico",
+      "Dacia Lodgy, colore sabbia, cinque porte, sette sedili, motore elettrico",
+      "Mercedes CLA, colore grigio argentato, cinque porte, cinque sedili, motore elettrico",
+      "Mercedes C43 AMG Coupe, colore bianco, tre porte, due sedili, motore elettrico"
     )
 
     val stopUi: VehicleStopView = new VehicleStopViewImpl(vertx, vehiclesCounter)

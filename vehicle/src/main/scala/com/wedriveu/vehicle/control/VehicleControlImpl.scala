@@ -6,7 +6,10 @@ import com.wedriveu.vehicle.boundary.{VehicleStopView, _}
 import com.wedriveu.vehicle.entity.SelfDrivingVehicle
 import com.wedriveu.vehicle.shared.VehicleConstants
 import com.wedriveu.vehicle.simulation.{VehicleEventsObservables, VehicleEventsObservablesImpl}
-import io.vertx.core.{DeploymentOptions, Vertx}
+import io.vertx.core.json.JsonObject
+import io.vertx.core.{AsyncResult, DeploymentOptions, Handler, Vertx}
+
+import scala.concurrent.Future
 
 /**
   * @author Michele Donati on 28/07/2017.
@@ -22,9 +25,6 @@ trait VehicleControl {
     * @return Returns the instance of the vehicle.
     */
   def getVehicle(): SelfDrivingVehicle
-
-  /** This method permits, at configurator will, to pick up Movement and Position changes events. */
-  def subscribeToMovementAndChangePositionEvents(): Unit
 
   /** This method permits, at configurator will, to pick up Vehicle Broken events. */
   def subscribeToBrokenEvents(): Unit
@@ -111,6 +111,7 @@ class VehicleControlImpl(vertx: Vertx,
   var vehicleVerticleUpdate: VehicleVerticleUpdateImpl = _
   var vehicleVerticleRegister: VehicleVerticleRegisterImpl = _
   var vehicleVerticleForUser: VehicleVerticleForUserImpl = _
+  private val workerPoolName = "controlWorkerPool"
 
   stopUi.setVehicleAssociated(this)
 
@@ -148,23 +149,7 @@ class VehicleControlImpl(vertx: Vertx,
 
   override def getVehicle(): SelfDrivingVehicle = vehicleGiven
 
-  override def subscribeToMovementAndChangePositionEvents(): Unit = {
-    vehicleEventsObservables.movementAndChangePositionObservable().subscribe(event => {
-      if (!vehicleGiven.getState().equals(Constants.Vehicle.STATUS_RECHARGING)
-          || !vehicleGiven.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)) {
-        executeBehaviour(vehicleBehaviours.movementAndPositionChange, event)
-        if (!vehicleGiven.getState().equals(Constants.Vehicle.STATUS_RECHARGING)
-            && !vehicleGiven.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)
-            && !userOnBoard
-            && !debugVar) {
-          executeBehaviour(vehicleBehaviours.goToRecharge)
-        }
-      }
-    })
-  }
-
-
-  override def getUsername(): String = username
+  override def getUsername: String = username
 
   override def setUsername(newUsername: String): Unit = {
     username = newUsername
@@ -193,18 +178,43 @@ class VehicleControlImpl(vertx: Vertx,
     notRealisticVar: Boolean): Unit = {
     if (!vehicleGiven.getState().equals(Constants.Vehicle.STATUS_RECHARGING) ||
         !vehicleGiven.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)) {
-      executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition, notRealisticVar)
+      val executor = vertx.createSharedWorkerExecutor(workerPoolName)
+      executor.executeBlocking((async: io.vertx.core.Future[Object]) => {
+        executeBehaviour(vehicleBehaviours.positionChangeUponBooking, userPosition, destinationPosition, notRealisticVar)
+        async.complete()
+      }, (result: AsyncResult[Object]) => {
+        executor.close()
+      })
     }
   }
 
   override def goToDestination(position: Position): Unit = {
-    executeBehaviour(vehicleBehaviours.movementAndPositionChange, position)
-    if (!vehicleGiven.getState().equals(Constants.Vehicle.STATUS_RECHARGING)
-        && !vehicleGiven.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)
-        && !userOnBoard
-        && !debugVar) {
-      executeBehaviour(vehicleBehaviours.goToRecharge)
-    }
+    val executor = vertx.createSharedWorkerExecutor(workerPoolName)
+    executor.executeBlocking((async: io.vertx.core.Future[Object]) => {
+      executeBehaviour(vehicleBehaviours.movementAndPositionChange, position)
+      async.complete()
+    }, (result: AsyncResult[Object]) => {
+      executor.close()
+      if (!vehicleGiven.getState().equals(Constants.Vehicle.STATUS_RECHARGING)
+          && !vehicleGiven.getState().equals(Constants.Vehicle.STATUS_BROKEN_STOLEN)
+          && !userOnBoard
+          && !debugVar) {
+        checkAndGoToRecharge()
+      }
+    })
+  }
+
+  private def checkAndGoToRecharge(): Unit = vehicleGiven.battery match {
+    case b if b < VehicleConstants.RechargingThreshold =>
+      val executor = vertx.createSharedWorkerExecutor(workerPoolName)
+      executor.executeBlocking((async: io.vertx.core.Future[Object]) => {
+        executeBehaviour(vehicleBehaviours.goToRecharge)
+        async.complete()
+      }, (result: AsyncResult[Object]) => {executor.close()})
+    case _ =>
+      vehicleGiven.setState(Constants.Vehicle.STATUS_AVAILABLE)
+      vertx.eventBus().send(String.format(Constants.EventBus.EVENT_BUS_ADDRESS_UPDATE, getVehicle().plate), null)
+      stopUi.writeMessageLog(VehicleConstants.noNeedToRechargeLog)
   }
 
   override def getBehavioursControl(): VehicleBehaviours = vehicleBehaviours

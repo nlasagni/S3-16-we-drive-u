@@ -11,10 +11,21 @@ public class User {
 
     private static final String PASSWORD = "password";
     public static final User[] USERS = {
-            new User("Michele", PASSWORD),
-            new User("Stefano", PASSWORD),
-            new User("Nicola", PASSWORD),
-            new User("Marco", PASSWORD),
+            new User("michele", PASSWORD),
+            new User("stefano", PASSWORD),
+            new User("nicola", PASSWORD),
+            new User("anna", PASSWORD),
+            new User("paolo", PASSWORD),
+            new User("danilo", PASSWORD),
+            new User("mirko", PASSWORD),
+            new User("giulia", PASSWORD),
+            new User("giulio", PASSWORD),
+            new User("roberto", PASSWORD),
+            new User("alessandro", PASSWORD),
+            new User("claudio", PASSWORD),
+            new User("antonio", PASSWORD),
+            new User("chiara", PASSWORD),
+            new User("simone", PASSWORD)
     };
 
     private String username;
