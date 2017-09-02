@@ -63,7 +63,7 @@ public interface ConstantsBackOffice {
                 "  <head>" +
                 "    <style>" +
                 "       #map {" +
-                "        height: 600px;" +
+                "        height: 570px;" +
                 "        width: 600px;" +
                 "       }" +
                 "    </style>" +
@@ -80,8 +80,9 @@ public interface ConstantsBackOffice {
                 HEAD_QUARTER.getLongitude() +
                 "};" +
                 "        var map = new google.maps.Map(document.getElementById('map'), {" +
-                "          zoom: 7," +
-                "          center: cesena" +
+                "          zoom: 9," +
+                "          center: cesena," +
+                "          mapTypeControl: false" +
                 "        });" +
                 "%s" +
                 "}" +

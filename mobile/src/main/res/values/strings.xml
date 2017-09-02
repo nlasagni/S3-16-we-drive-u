@@ -27,6 +27,7 @@
     <string name="scheduling_arrive_at_label">Arrive at</string>
     <string name="scheduling_arrive_at_hint">Select time</string>
     <string name="scheduling_search_vehicle">Search Vehicle</string>
+    <string name="scheduling_position_not_found">Unable to find correct positions, please type the again</string>
     <!-- VEHICLE -->
     <string name="vehicle_title">This vehicle is for you</string>
     <string name="vehicle_license_plate">License Plate: %s</string>
