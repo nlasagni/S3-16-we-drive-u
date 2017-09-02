@@ -27,5 +27,6 @@ class SchedulingCloseCommunicationStrategy implements RabbitMqCloseCommunication
         String routingKey = String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_RESPONSE, mUsername);
         Channel channel = communication.getChannel();
         channel.queueUnbind(queue, Constants.RabbitMQ.Exchanges.VEHICLE, routingKey);
+        communication.getChannel().queueDelete(queue);
     }
 }

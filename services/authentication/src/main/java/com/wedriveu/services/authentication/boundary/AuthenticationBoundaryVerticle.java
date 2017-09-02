@@ -1,21 +1,17 @@
 package com.wedriveu.services.authentication.boundary;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wedriveu.services.authentication.control.CredentialsChecker;
-import com.wedriveu.services.authentication.control.CredentialsCheckerImpl;
 import com.wedriveu.services.authentication.util.Constants;
 import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
+import com.wedriveu.services.shared.vertx.VertxJsonMapper;
 import com.wedriveu.shared.rabbitmq.message.LoginRequest;
 import com.wedriveu.shared.rabbitmq.message.LoginResponse;
 import com.wedriveu.shared.util.Log;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rabbitmq.RabbitMQClient;
-
-import java.io.IOException;
 
 /**
  * @author Stefano Bernagozzi on 11/07/2017.
@@ -24,26 +20,47 @@ import java.io.IOException;
  *         This class represents the Boundary of the Authentication micro-service.
  *         It allows users to login into the WeDriveU system through its API.
  */
-public class AuthenticationBoundaryVerticleImpl extends AbstractVerticle implements AuthenticationBoundary {
+public class AuthenticationBoundaryVerticle extends AbstractVerticle implements AuthenticationBoundary {
 
-    private static final String TAG = AuthenticationBoundaryVerticleImpl.class.getSimpleName();
+    private static final String TAG = AuthenticationBoundaryVerticle.class.getSimpleName();
     private static final String QUEUE_NAME = "service.authentication";
     private static final String EVENT_BUS_ADDRESS = "service.authentication.login";
-    private static final String READ_ERROR = "Error occurred while reading request.";
     private static final String SEND_ERROR = "Error occurred while sending response.";
-    private static final String SERVICE_ILLEGAL_STATE = "The service has not been started yet or it has been stopped.";
 
-    private CredentialsChecker checker;
-    private ObjectMapper objectMapper;
     private RabbitMQClient rabbitMQClient;
     private EventBus eventBus;
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
         eventBus = vertx.eventBus();
-        checker = new CredentialsCheckerImpl();
-        objectMapper = new ObjectMapper();
+        eventBus.consumer(Constants.EventBus.LOGIN_COMPLETED, this::sendResponse);
         startService(startFuture);
+    }
+
+    @Override
+    public void login(LoginRequest loginRequest) {
+        eventBus.send(Constants.EventBus.START_LOGIN, VertxJsonMapper.mapInBodyFrom(loginRequest));
+    }
+
+    private void registerConsumer() {
+        eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
+            LoginRequest request = VertxJsonMapper.mapFromBodyTo((JsonObject) msg.body(), LoginRequest.class);
+            login(request);
+        });
+    }
+
+    private void sendResponse(Message<JsonObject> message) {
+        String requestId = message.body().getString(Constants.Message.REQUEST_ID);
+        JsonObject responseString = new JsonObject(message.body().getString(Constants.Message.RESPONSE));
+        LoginResponse response = VertxJsonMapper.mapTo(responseString, LoginResponse.class);
+        rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.NO_EXCHANGE,
+                requestId,
+                VertxJsonMapper.mapInBodyFrom(response),
+                onPublish -> {
+                    if (!onPublish.succeeded()) {
+                        Log.error(TAG, SEND_ERROR, onPublish.cause());
+                    }
+                });
     }
 
     private void startService(Future<Void> future) {
@@ -104,67 +121,6 @@ public class AuthenticationBoundaryVerticleImpl extends AbstractVerticle impleme
 
     private void basicConsume(Future<Void> future) {
         rabbitMQClient.basicConsume(QUEUE_NAME, EVENT_BUS_ADDRESS, future.completer());
-    }
-
-    private void registerConsumer() {
-        eventBus.consumer(EVENT_BUS_ADDRESS, msg -> {
-            String requestId = "";
-            LoginResponse response = new LoginResponse();
-            try {
-                JsonObject message = new JsonObject(msg.body().toString());
-                LoginRequest loginRequest =
-                        objectMapper.readValue(message.getString(Constants.EventBus.BODY),
-                                LoginRequest.class);
-                requestId = loginRequest.getRequestId();
-                response = checkCredentials(loginRequest);
-            } catch (IOException e) {
-                Log.error(TAG, READ_ERROR, e);
-                response.setErrorMessage(e.getMessage());
-            }
-            if (!requestId.trim().isEmpty()) {
-                sendResponse(requestId, response);
-            }
-        });
-    }
-
-    private void sendResponse(String requestId, LoginResponse response) {
-        try {
-            String responseString = objectMapper.writeValueAsString(response);
-            JsonObject responseJson = new JsonObject();
-            responseJson.put(Constants.EventBus.BODY, responseString);
-            rabbitMQClient.basicPublish(Constants.RabbitMQ.Exchanges.NO_EXCHANGE,
-                    requestId,
-                    responseJson,
-                    onPublish -> {
-                        if (!onPublish.succeeded()) {
-                            Log.error(TAG, SEND_ERROR, onPublish.cause());
-                        }
-                    });
-        } catch (JsonProcessingException e) {
-            Log.error(TAG, SEND_ERROR, e);
-        }
-    }
-
-    @Override
-    public LoginResponse checkCredentials(LoginRequest loginRequest) throws IllegalStateException {
-        if (checkIllegalState()) {
-            throw new IllegalStateException(SERVICE_ILLEGAL_STATE);
-        }
-        String username = loginRequest.getUsername();
-        String password = loginRequest.getPassword();
-        LoginResponse response = new LoginResponse();
-        if (username == null || password == null) {
-            response.setErrorMessage(Constants.USERNAME_PASSWORD_MISSING);
-        } else if (checker.confirmCredentials(username, password)) {
-            response.setSuccess(true);
-        } else {
-            response.setErrorMessage(Constants.USERNAME_PASSWORD_WRONG);
-        }
-        return response;
-    }
-
-    private boolean checkIllegalState() {
-        return context == null || deploymentID().isEmpty();
     }
 
 }

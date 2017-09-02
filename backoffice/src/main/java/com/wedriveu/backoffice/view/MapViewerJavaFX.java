@@ -14,7 +14,7 @@ import javax.swing.*;
  */
 public class MapViewerJavaFX {
     private static final int FRAME_WIDTH = 630;
-    private static final int FRAME_HEIGHT = 680;
+    private static final int FRAME_HEIGHT = 700;
 
 
     private static void initAndShowGUI(String javascriptCode) {

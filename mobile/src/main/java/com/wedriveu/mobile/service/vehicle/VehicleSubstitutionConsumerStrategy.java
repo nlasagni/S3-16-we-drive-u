@@ -48,7 +48,7 @@ public class VehicleSubstitutionConsumerStrategy implements RabbitMqConsumerStra
         String queue = String.format(com.wedriveu.mobile.util.Constants.Queue.VEHICLE_SUBSTITUTION, randomId);
         String routingKey = String.format(Constants.RabbitMQ.RoutingKey.VEHICLE_SUBSTITUTION, mUsername);
         Channel channel = communication.getChannel();
-        channel.queueDeclare(queue, false, false, true, null);
+        channel.queueDeclare(queue, true, false, true, null);
         channel.queueBind(queue, Constants.RabbitMQ.Exchanges.VEHICLE, routingKey);
         return queue;
     }

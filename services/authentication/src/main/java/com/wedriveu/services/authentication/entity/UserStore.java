@@ -7,20 +7,24 @@ package com.wedriveu.services.authentication.entity;
 import com.wedriveu.services.shared.model.User;
 
 /**
+ * The interface User store. This inteface models the <em>Users' database domain</em>.
+ *
  * @author Michele Donati
- *         This inteface models the <em>Users' database domain</em>.
+ * @author Nicola Lasagni
  */
 public interface UserStore {
 
     /**
-     * Maps an <em>User</em> object in a JSon object.
+     * Adds a User into the store.
+     *
+     * @param user the user to be added
+     * @return true if this operation was successful, false otherwise
      */
-    void mapEntityToJson();
+    boolean addUser(User user);
 
     /**
-     * @param username Identifies the <em>User</em>'s <em>username</em> that must be authenticated.
-     * @return Returns the <em>User</em> authenticated, only if the authentication is succesfull.
+     * Clears the store
      */
-    User getUser(String username);
+    void clear();
 
 }
