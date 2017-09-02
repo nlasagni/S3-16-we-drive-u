@@ -7,11 +7,16 @@ import com.wedriveu.shared.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Created by Michele on 12/07/2017.
+ * The effective UserStore implementation.
+ *
+ * @author Michele Donati on 12/07/2017.
+ * @author Nicola Lasagni
  */
 public class UserStoreImpl implements UserStore {
 
@@ -20,6 +25,11 @@ public class UserStoreImpl implements UserStore {
 
     private File file;
 
+    /**
+     * Instantiates a new UserStore.
+     *
+     * @throws IOException if it wasn't possible to create the store data container.
+     */
     public UserStoreImpl() throws IOException {
         new File(STORE_FOLDER).mkdir();
         file = new File(STORE_FOLDER + File.separator + USERS_DATABASE_FILENAME);
@@ -27,25 +37,27 @@ public class UserStoreImpl implements UserStore {
     }
 
     @Override
-    public void mapEntityToJson() {
-        List<User> userListToJSon = Arrays.asList(User.USERS);
-        writeJSonUsersFile(userListToJSon);
+    public boolean addUser(User user) {
+        List<User> users = getUsers();
+        users.add(user);
+        writeJSonUsersFile(users);
+        return true;
     }
 
     @Override
-    public User getUser(String username) {
-        ObjectMapper mapper = new ObjectMapper();
+    public void clear() {
+        writeJSonUsersFile(new ArrayList<>());
+    }
 
+    private List<User> getUsers() {
+        List<User> users = new ArrayList<>();
         try {
-            List<User> users =
-                    mapper.readValue(file, new TypeReference<List<User>>() {
-                    });
-            return getRequestedUuser(users, username);
+            ObjectMapper mapper = new ObjectMapper();
+            users = mapper.readValue(file, new TypeReference<List<User>>() {});
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return null;
+        return users;
     }
 
     private void writeJSonUsersFile(List<User> userListToJSon) {
@@ -61,7 +73,7 @@ public class UserStoreImpl implements UserStore {
         }
     }
 
-    private User getRequestedUuser(List<User> users, String username) {
+    private User getRequestedUser(List<User> users, String username) {
         for (User user : users) {
             if (user.getUsername().equals(username)) {
                 return user;

@@ -16,9 +16,7 @@ public interface AuthenticationBoundary {
      * This method checks the credentials from user's input.
      *
      * @param loginRequest The request with which check the credentials.
-     * @return A {@linkplain LoginResponse} as a result of this check operation.
-     * @throws IllegalStateException If the service has not been started yet or if it has been stopped.
      */
-    LoginResponse checkCredentials(LoginRequest loginRequest) throws IllegalStateException;
+    void login(LoginRequest loginRequest);
 
 }

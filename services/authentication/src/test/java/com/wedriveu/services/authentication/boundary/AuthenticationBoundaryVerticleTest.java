@@ -1,9 +1,14 @@
 package com.wedriveu.services.authentication.boundary;
 
+import com.wedriveu.services.authentication.control.AuthenticationControllerVerticle;
+import com.wedriveu.services.authentication.entity.UserStore;
+import com.wedriveu.services.authentication.entity.UserStoreImpl;
 import com.wedriveu.services.shared.model.User;
+import com.wedriveu.services.shared.rabbitmq.client.RabbitMQClientFactory;
 import com.wedriveu.shared.rabbitmq.message.LoginRequest;
 import com.wedriveu.shared.rabbitmq.message.LoginResponse;
 import com.wedriveu.shared.util.Constants;
+import com.wedriveu.shared.util.Log;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -21,38 +26,40 @@ import org.junit.runner.RunWith;
  * @author Nicola Lasagni on 05/08/2017.
  */
 @RunWith(VertxUnitRunner.class)
-public class AuthenticationBoundaryVerticleImplTest {
+public class AuthenticationBoundaryVerticleTest {
 
     private static final String JSON_QUEUE_KEY = "queue";
-    private static final String EVENT_BUS_ADDRESS = AuthenticationBoundaryVerticleImplTest.class.getCanonicalName();
+    private static final String EVENT_BUS_ADDRESS = AuthenticationBoundaryVerticleTest.class.getCanonicalName();
 
     private Vertx vertx;
     private EventBus eventBus;
     private RabbitMQClient rabbitMQClient;
-    private AuthenticationBoundaryVerticleImpl authenticationService;
+    private UserStore userStore;
+    private AuthenticationBoundaryVerticle authenticationBoundary;
+    private AuthenticationControllerVerticle authenticationController;
     private String requestId;
 
     @Before
     public void setUp(TestContext context) throws Exception {
         vertx = Vertx.vertx();
         eventBus = vertx.eventBus();
-        authenticationService = new AuthenticationBoundaryVerticleImpl();
+        userStore = new UserStoreImpl();
+        authenticationBoundary = new AuthenticationBoundaryVerticle();
+        authenticationController = new AuthenticationControllerVerticle();
         setUpAsyncComponents(context);
     }
 
     private void setUpAsyncComponents(TestContext context) {
         Async async = context.async(3);
-        JsonObject config = new JsonObject();
-        config.put(Constants.RabbitMQ.ConfigKey.HOST, Constants.RabbitMQ.Broker.HOST);
-        config.put(Constants.RabbitMQ.ConfigKey.PASSWORD, Constants.RabbitMQ.Broker.PASSWORD);
-        config.put(Constants.RabbitMQ.ConfigKey.PORT, Constants.RabbitMQ.Broker.PORT);
-        rabbitMQClient = io.vertx.rabbitmq.RabbitMQClient.create(vertx, config);
+        rabbitMQClient = RabbitMQClientFactory.createClient(vertx);
         rabbitMQClient.start(onStart -> {
             rabbitMQClient.queueDeclareAuto(onQueueDeclare -> {
                 requestId = onQueueDeclare.result().getString(JSON_QUEUE_KEY);
                 context.assertTrue(onQueueDeclare.succeeded());
-                vertx.deployVerticle(authenticationService, context.asyncAssertSuccess(onDeploy -> {
-                    async.complete();
+                vertx.deployVerticle(authenticationController, context.asyncAssertSuccess(onControllerDeploy -> {
+                    vertx.deployVerticle(authenticationBoundary, context.asyncAssertSuccess(onDeploy -> {
+                        async.complete();
+                    }));
                 }));
                 async.countDown();
             });
@@ -63,6 +70,7 @@ public class AuthenticationBoundaryVerticleImplTest {
 
     @After
     public void tearDown(TestContext context) throws Exception {
+        userStore.clear();
         rabbitMQClient.stop(context.asyncAssertSuccess());
     }
 
