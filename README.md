@@ -29,12 +29,16 @@ Il client principale è la App Android, contenuta nel file con estensione ".apk"
 E' necessario scaricarla nel proprio dispositivo ed avviarla.
 Una volta avviata è necessario fare il login, alcuni account disponibili sono:
 
-- Username: "Michele", Password: "password"
-- Username: "Stefano", Password: "password"
-- Username: "Marco", Password: "password"
-- Username: "Nicola", Password: "password"
+- Username: ”michele”, Password: ”password” 
+- Username: ”stefano”, Password: ”password” 
+- Username: ”marco”, Password: ”password” 
+- Username: ”nicola”, Password: ”password” 
+- Username: ”giulia”, Password: ”password”
+- Username: ”anna”, Password: ”password”
+- Username: ”paolo”, Password: ”password” 
+- Username: ”simone”, Password: ”password”
 
-Una volta loggati si potrà scegliere la destinazione del viaggio, attendere la proposta di un veicolo e infine
+Una volta loggati si potrà scegliere la sorgente e la destinazione del viaggio, attendere la proposta di un veicolo e infine
 confermare la prenotazione attendendo l'arrivo del veicolo.
 
 Per quanto riguarda il backoffice è necessario avviare il file "wedriveu-backoffice-xxx.jar", inserire un id
